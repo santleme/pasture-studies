@@ -1,0 +1,10 @@
+{
+  "kernel": "pascalcoimbra/pasture-studies",
+  "kaggle_kernel_version": "5",
+  "source_commit": "42a4387ab65553c734a63411b277d0b842ca8660",
+  "kaggle_cli_version": "2.2.4",
+  "mode": "SMOKE",
+  "metadata_sha256": "5d9c5c8462c2f1ce351e7450487ab5dda822bdb13238650784bb958aba399b51",
+  "staged_notebook_sha256": "e461d8ebb09eb075b5d7cd9281d3b998f39d519d7422f4104b22574e976c8e3f",
+  "recorded_at_utc": "2026-10-18T23:07:28.340836+00:00"
+}

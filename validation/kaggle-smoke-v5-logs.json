@@ -1,0 +1,329 @@
+[{"stream_name":"stderr","time":7.64256308,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.642636378,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.642643219,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.642648033,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":8.254992833,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.255019605,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.255024117,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.255027909,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":9.405437605,"data":"Python: 3.13.15 (main, Aug  6 2026, 11:06:22) [GCC 13.3.0]\n"}
+,{"stream_name":"stdout","time":9.405465511,"data":"Platform: Linux-6.18.48+-x86_64-with-glibc2.39\n"}
+,{"stream_name":"stdout","time":9.405470409,"data":"Work root: /kaggle/working\n"}
+,{"stream_name":"stdout","time":9.405474269,"data":"Run ID: mvp1-run-s-9bf89d749181\n"}
+,{"stream_name":"stdout","time":9.405477934,"data":"Execution mode: SMOKE\n"}
+,{"stream_name":"stdout","time":9.405481747,"data":"Artifacts: /kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181\n"}
+,{"stream_name":"stderr","time":9.451284957,"data":"Cloning into '/kaggle/working/pasture-studies'...\n"}
+,{"stream_name":"stdout","time":9.606900638,"data":"$ git clone --no-checkout --no-tags https://github.com/santleme/pasture-studies.git /kaggle/working/pasture-studies\n"}
+,{"stream_name":"stderr","time":9.653609021,"data":"Cloning into '/kaggle/working/pasture-studies'...\n"}
+,{"stream_name":"stderr","time":9.653634605,"data":"\n"}
+,{"stream_name":"stderr","time":9.653639214,"data":"Cloning into '/kaggle/working/pasture-studies'...\n"}
+,{"stream_name":"stdout","time":13.509923254,"data":"$ git -C /kaggle/working/pasture-studies fetch --depth 1 origin 42a4387ab65553c734a63411b277d0b842ca8660\n"}
+,{"stream_name":"stderr","time":13.541462818,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":13.541490553,"data":" * branch            42a4387ab65553c734a63411b277d0b842ca8660 -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":13.744870957,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":13.744904834,"data":" * branch            42a4387ab65553c734a63411b277d0b842ca8660 -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":13.744911809,"data":"\n"}
+,{"stream_name":"stderr","time":13.744915302999999,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":13.744920495,"data":" * branch            42a4387ab65553c734a63411b277d0b842ca8660 -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stdout","time":13.745919134,"data":"$ git -C /kaggle/working/pasture-studies checkout --detach FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":13.813742608,"data":"HEAD is now at 42a4387 Preserve smoke lineage in checkpoints\n"}
+,{"stream_name":"stdout","time":13.824043544,"data":"Resolved source commit: 42a4387ab65553c734a63411b277d0b842ca8660\n"}
+,{"stream_name":"stderr","time":13.82412464,"data":"HEAD is now at 42a4387 Preserve smoke lineage in checkpoints\n"}
+,{"stream_name":"stderr","time":13.824141147,"data":"\n"}
+,{"stream_name":"stderr","time":13.824157831,"data":"HEAD is now at 42a4387 Preserve smoke lineage in checkpoints\n"}
+,{"stream_name":"stdout","time":21.66613951,"data":"Python: 3.13.15 (main, Aug  6 2026, 11:06:22) [GCC 13.3.0]\n"}
+,{"stream_name":"stdout","time":21.666168477,"data":"NumPy runtime: 2.1.3\n"}
+,{"stream_name":"stdout","time":21.66617397,"data":"PyTorch runtime: 2.11.0+cu128 CUDA build: 12.8\n"}
+,{"stream_name":"stdout","time":21.666178501,"data":"Runtime dependency mismatches against unchanged scientific pins: [{'package': 'numpy', 'scientific_pin': '1.26.4', 'runtime_version': '2.1.3'}, {'package': 'torch', 'scientific_pin': '2.14.0', 'runtime_version': '2.11.0+cu128'}]\n"}
+,{"stream_name":"stdout","time":21.666185019,"data":"CUDA hardware visible: True PyTorch CUDA runtime: True PyTorch CUDA build: True\n"}
+,{"stream_name":"stdout","time":21.666189117000002,"data":"CUDA device count: 2 device names: ['Tesla T4', 'Tesla T4']\n"}
+,{"stream_name":"stdout","time":21.66619315,"data":"SMOKE runtime compatibility accepted; scientific pins remain recorded separately (no pip install).\n"}
+,{"stream_name":"stdout","time":21.666197628,"data":"$ /usr/bin/python3 -m validation.train_torch_mvp1 --help\n"}
+,{"stream_name":"stdout","time":23.154124001,"data":"usage: train_torch_mvp1.py [-h] [--smoke] [--smoke-update]\n"}
+,{"stream_name":"stdout","time":23.154160431,"data":"                           [--algorithm {reinforce,a2c,both}]\n"}
+,{"stream_name":"stdout","time":23.154163791,"data":"                           [--device {auto,cpu,cuda}] [--seed SEED]\n"}
+,{"stream_name":"stdout","time":23.154166136,"data":"                           [--episodes EPISODES] [--output OUTPUT]\n"}
+,{"stream_name":"stdout","time":23.154168594,"data":"                           [--resume [RESUME]] [--metrics METRICS]\n"}
+,{"stream_name":"stdout","time":23.154170917,"data":"                           [--checkpoint-every CHECKPOINT_EVERY]\n"}
+,{"stream_name":"stdout","time":23.154173143,"data":"                           [--mode {train,eval,run}] [--eval-seeds EVAL_SEEDS]\n"}
+,{"stream_name":"stdout","time":23.154175484,"data":"                           [--max-updates MAX_UPDATES]\n"}
+,{"stream_name":"stdout","time":23.154177669,"data":"                           [--allow-execution-migration]\n"}
+,{"stream_name":"stdout","time":23.154179975,"data":"\n"}
+,{"stream_name":"stdout","time":23.154182122,"data":"Reproducible optional Torch trajectory REINFORCE/A2C CLI (synthetic task\n"}
+,{"stream_name":"stdout","time":23.154185324,"data":"only).\n"}
+,{"stream_name":"stdout","time":23.1542025,"data":"\n"}
+,{"stream_name":"stdout","time":23.154206235,"data":"options:\n"}
+,{"stream_name":"stdout","time":23.154216698,"data":"  -h, --help            show this help message and exit\n"}
+,{"stream_name":"stdout","time":23.154220426,"data":"  --smoke               two-update CPU smoke run with export/eval\n"}
+,{"stream_name":"stdout","time":23.154224583,"data":"  --smoke-update        one disposable BATCH_EPISODES update on explicit CPU\n"}
+,{"stream_name":"stdout","time":23.154228619,"data":"                        or CUDA; single algorithm only\n"}
+,{"stream_name":"stdout","time":23.154232477,"data":"  --algorithm {reinforce,a2c,both}\n"}
+,{"stream_name":"stdout","time":23.154236924,"data":"  --device {auto,cpu,cuda}\n"}
+,{"stream_name":"stdout","time":23.154240312,"data":"  --seed SEED\n"}
+,{"stream_name":"stdout","time":23.154243811,"data":"  --episodes EPISODES\n"}
+,{"stream_name":"stdout","time":23.154247594,"data":"  --output OUTPUT\n"}
+,{"stream_name":"stdout","time":23.154251483,"data":"  --resume [RESUME]\n"}
+,{"stream_name":"stdout","time":23.154265574,"data":"  --metrics METRICS\n"}
+,{"stream_name":"stdout","time":23.154269279,"data":"  --checkpoint-every CHECKPOINT_EVERY\n"}
+,{"stream_name":"stdout","time":23.154272741,"data":"  --mode {train,eval,run}\n"}
+,{"stream_name":"stdout","time":23.154277685,"data":"  --eval-seeds EVAL_SEEDS\n"}
+,{"stream_name":"stdout","time":23.154292578,"data":"  --max-updates MAX_UPDATES\n"}
+,{"stream_name":"stdout","time":23.154296056,"data":"                        stop after N committed updates (for recovery testing)\n"}
+,{"stream_name":"stdout","time":23.154311925,"data":"  --allow-execution-migration\n"}
+,{"stream_name":"stdout","time":23.154315865,"data":"                        allow resume across world_size only; all experiment\n"}
+,{"stream_name":"stdout","time":23.154319732,"data":"                        config must match\n"}
+,{"stream_name":"stdout","time":23.356481343,"data":"usage: train_torch_mvp1.py [-h] [--smoke] [--smoke-update]\n"}
+,{"stream_name":"stdout","time":23.356513262,"data":"                           [--algorithm {reinforce,a2c,both}]\n"}
+,{"stream_name":"stdout","time":23.356517398,"data":"                           [--device {auto,cpu,cuda}] [--seed SEED]\n"}
+,{"stream_name":"stdout","time":23.356524504,"data":"                           [--episodes EPISODES] [--output OUTPUT]\n"}
+,{"stream_name":"stdout","time":23.356528631,"data":"                           [--resume [RESUME]] [--metrics METRICS]\n"}
+,{"stream_name":"stdout","time":23.356532988,"data":"                           [--checkpoint-every CHECKPOINT_EVERY]\n"}
+,{"stream_name":"stdout","time":23.356537361,"data":"                           [--mode {train,eval,run}] [--eval-seeds EVAL_SEEDS]\n"}
+,{"stream_name":"stdout","time":23.356551201,"data":"                           [--max-updates MAX_UPDATES]\n"}
+,{"stream_name":"stdout","time":23.356554767,"data":"                           [--allow-execution-migration]\n"}
+,{"stream_name":"stdout","time":23.356558294,"data":"\n"}
+,{"stream_name":"stdout","time":23.356561462,"data":"Reproducible optional Torch trajectory REINFORCE/A2C CLI (synthetic task\n"}
+,{"stream_name":"stdout","time":23.356564971,"data":"only).\n"}
+,{"stream_name":"stdout","time":23.356568155,"data":"\n"}
+,{"stream_name":"stdout","time":23.356571271,"data":"options:\n"}
+,{"stream_name":"stdout","time":23.356574487,"data":"  -h, --help            show this help message and exit\n"}
+,{"stream_name":"stdout","time":23.356577875,"data":"  --smoke               two-update CPU smoke run with export/eval\n"}
+,{"stream_name":"stdout","time":23.356581254,"data":"  --smoke-update        one disposable BATCH_EPISODES update on explicit CPU\n"}
+,{"stream_name":"stdout","time":23.356584662,"data":"                        or CUDA; single algorithm only\n"}
+,{"stream_name":"stdout","time":23.356588057,"data":"  --algorithm {reinforce,a2c,both}\n"}
+,{"stream_name":"stdout","time":23.356592994,"data":"  --device {auto,cpu,cuda}\n"}
+,{"stream_name":"stdout","time":23.356600232,"data":"  --seed SEED\n"}
+,{"stream_name":"stdout","time":23.356602949,"data":"  --episodes EPISODES\n"}
+,{"stream_name":"stdout","time":23.356630399,"data":"  --output OUTPUT\n"}
+,{"stream_name":"stdout","time":23.356635166,"data":"  --resume [RESUME]\n"}
+,{"stream_name":"stdout","time":23.356639306,"data":"  --metrics METRICS\n"}
+,{"stream_name":"stdout","time":23.356643483,"data":"  --checkpoint-every CHECKPOINT_EVERY\n"}
+,{"stream_name":"stdout","time":23.356647252,"data":"  --mode {train,eval,run}\n"}
+,{"stream_name":"stdout","time":23.356650522,"data":"  --eval-seeds EVAL_SEEDS\n"}
+,{"stream_name":"stdout","time":23.356664618,"data":"  --max-updates MAX_UPDATES\n"}
+,{"stream_name":"stdout","time":23.356672964,"data":"                        stop after N committed updates (for recovery testing)\n"}
+,{"stream_name":"stdout","time":23.356676338,"data":"  --allow-execution-migration\n"}
+,{"stream_name":"stdout","time":23.356679537,"data":"                        allow resume across world_size only; all experiment\n"}
+,{"stream_name":"stdout","time":23.356682955,"data":"                        config must match\n"}
+,{"stream_name":"stdout","time":26.707325811,"data":"PyTorch: 2.11.0+cu128 built CUDA: 12.8\n"}
+,{"stream_name":"stdout","time":26.707354464,"data":"CUDA available: True\n"}
+,{"stream_name":"stdout","time":26.707358276,"data":"Visible CUDA devices: 2\n"}
+,{"stream_name":"stdout","time":26.707361581,"data":"0 Tesla T4\n"}
+,{"stream_name":"stdout","time":26.707364846,"data":"1 Tesla T4\n"}
+,{"stream_name":"stdout","time":26.707368134,"data":"$ /usr/bin/python3 validation/preregister_torch_mvp1.py --output /kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/preregistration.json\n"}
+,{"stream_name":"stdout","time":28.168916952,"data":"{\n"}
+,{"stream_name":"stdout","time":28.168946035,"data":"  \"output\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/preregistration.json\",\n"}
+,{"stream_name":"stdout","time":28.168954327,"data":"  \"manifest_sha256\": \"d0938a4f98a1161efe32df246f3e4955f91319cef52b6737763da3286e848d82\",\n"}
+,{"stream_name":"stdout","time":28.168957203,"data":"  \"seed_overlap_audit\": {\n"}
+,{"stream_name":"stdout","time":28.168959608,"data":"    \"disjoint\": true,\n"}
+,{"stream_name":"stdout","time":28.168961941,"data":"    \"historical_seed_ids_count\": 320,\n"}
+,{"stream_name":"stdout","time":28.168964402,"data":"    \"historical_values_sha256\": \"2a82bcad74241c6c8ad1de952ebe83ea2a2c638276ba60897e20c5921d4dacf6\",\n"}
+,{"stream_name":"stdout","time":28.169014969,"data":"    \"new_seed_ids_count\": 3390,\n"}
+,{"stream_name":"stdout","time":28.169020426,"data":"    \"new_values_sha256\": \"35c29827b1d5a67c930e33591c0b19ee4102b98ea273f72cf98c2a3245803c84\",\n"}
+,{"stream_name":"stdout","time":28.169025248,"data":"    \"overlap_count\": 0\n"}
+,{"stream_name":"stdout","time":28.169028962,"data":"  },\n"}
+,{"stream_name":"stdout","time":28.16904815,"data":"  \"locked_seed_counts\": {\n"}
+,{"stream_name":"stdout","time":28.169052017,"data":"    \"resource_scarce_relocated\": 30,\n"}
+,{"stream_name":"stdout","time":28.169055615,"data":"    \"starter\": 30,\n"}
+,{"stream_name":"stdout","time":28.16905926,"data":"    \"unseen_corridor\": 30,\n"}
+,{"stream_name":"stdout","time":28.169062819,"data":"    \"wide\": 30\n"}
+,{"stream_name":"stdout","time":28.169066231,"data":"  },\n"}
+,{"stream_name":"stdout","time":28.169069663,"data":"  \"delta0_status\": \"INCONCLUSIVE_PENDING_PRECISION_ONLY_PILOT\",\n"}
+,{"stream_name":"stdout","time":28.169073353,"data":"  \"locked_outcomes_read\": false\n"}
+,{"stream_name":"stdout","time":28.169076953,"data":"}\n"}
+,{"stream_name":"stdout","time":28.371251445,"data":"{\n"}
+,{"stream_name":"stdout","time":28.371284521,"data":"  \"output\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/preregistration.json\",\n"}
+,{"stream_name":"stdout","time":28.371289406,"data":"  \"manifest_sha256\": \"d0938a4f98a1161efe32df246f3e4955f91319cef52b6737763da3286e848d82\",\n"}
+,{"stream_name":"stdout","time":28.371293267,"data":"  \"seed_overlap_audit\": {\n"}
+,{"stream_name":"stdout","time":28.371296829,"data":"    \"disjoint\": true,\n"}
+,{"stream_name":"stdout","time":28.371322612,"data":"    \"historical_seed_ids_count\": 320,\n"}
+,{"stream_name":"stdout","time":28.371330347,"data":"    \"historical_values_sha256\": \"2a82bcad74241c6c8ad1de952ebe83ea2a2c638276ba60897e20c5921d4dacf6\",\n"}
+,{"stream_name":"stdout","time":28.371332922,"data":"    \"new_seed_ids_count\": 3390,\n"}
+,{"stream_name":"stdout","time":28.371335202,"data":"    \"new_values_sha256\": \"35c29827b1d5a67c930e33591c0b19ee4102b98ea273f72cf98c2a3245803c84\",\n"}
+,{"stream_name":"stdout","time":28.371337628,"data":"    \"overlap_count\": 0\n"}
+,{"stream_name":"stdout","time":28.371339806,"data":"  },\n"}
+,{"stream_name":"stdout","time":28.371342253999998,"data":"  \"locked_seed_counts\": {\n"}
+,{"stream_name":"stdout","time":28.371344503,"data":"    \"resource_scarce_relocated\": 30,\n"}
+,{"stream_name":"stdout","time":28.371346676,"data":"    \"starter\": 30,\n"}
+,{"stream_name":"stdout","time":28.371348832,"data":"    \"unseen_corridor\": 30,\n"}
+,{"stream_name":"stdout","time":28.371350974,"data":"    \"wide\": 30\n"}
+,{"stream_name":"stdout","time":28.371353108,"data":"  },\n"}
+,{"stream_name":"stdout","time":28.371355162,"data":"  \"delta0_status\": \"INCONCLUSIVE_PENDING_PRECISION_ONLY_PILOT\",\n"}
+,{"stream_name":"stdout","time":28.371357453999998,"data":"  \"locked_outcomes_read\": false\n"}
+,{"stream_name":"stdout","time":28.371359657,"data":"}\n"}
+,{"stream_name":"stdout","time":28.733730374,"data":"Mode: SMOKE preregistration SHA-256: d0938a4f98a1161efe32df246f3e4955f91319cef52b6737763da3286e848d82\n"}
+,{"stream_name":"stdout","time":28.733761391,"data":"Source-manifest notebook SHA-256: ce31416fb5c9312682fadd460fe6141bf52a6bae8ff21689401377be29fd564b\n"}
+,{"stream_name":"stdout","time":28.733780307,"data":"Executing notebook revision/hash claims (UNVERIFIED): None None\n"}
+,{"stream_name":"stdout","time":28.733784622,"data":"Experimental eligibility: False status: BLOCKED_PENDING_TRUSTED_SOURCE_BOUND_APPROVAL\n"}
+,{"stream_name":"stdout","time":29.502477684,"data":"CUDA forward/backward smoke: PASS Tesla T4\n"}
+,{"stream_name":"stdout","time":29.707246753,"data":"$ /usr/bin/python3 -m validation.train_torch_mvp1 --smoke-update --algorithm reinforce --device cpu --seed 71001 --output /kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/reinforce --metrics /kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/reinforce/metrics.jsonl\n"}
+,{"stream_name":"stdout","time":40.58475218,"data":"{\n"}
+,{"stream_name":"stdout","time":40.58478209,"data":"  \"results\": [\n"}
+,{"stream_name":"stdout","time":40.584788472,"data":"    {\n"}
+,{"stream_name":"stdout","time":40.584793534,"data":"      \"checkpoint\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/reinforce/smoke/reinforce/generation-00000001/manifest.json\",\n"}
+,{"stream_name":"stdout","time":40.584799463,"data":"      \"export\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/reinforce/smoke/reinforce/torch-reinforce-seed-71001.npz\",\n"}
+,{"stream_name":"stdout","time":40.584804608,"data":"      \"evaluation\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/reinforce/smoke/reinforce/evaluation.json\",\n"}
+,{"stream_name":"stdout","time":40.584809304,"data":"      \"updates\": 1,\n"}
+,{"stream_name":"stdout","time":40.584813519,"data":"      \"eval_only\": false,\n"}
+,{"stream_name":"stdout","time":40.584817871,"data":"      \"execution_migration\": null,\n"}
+,{"stream_name":"stdout","time":40.584822139,"data":"      \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":40.584826387,"data":"    }\n"}
+,{"stream_name":"stdout","time":40.584844834,"data":"  ],\n"}
+,{"stream_name":"stdout","time":40.584865568,"data":"  \"device_requested\": \"cpu\",\n"}
+,{"stream_name":"stdout","time":40.584870003,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":40.584873997,"data":"  \"cuda_available\": true,\n"}
+,{"stream_name":"stdout","time":40.584878155,"data":"  \"python\": \"3.13.15\"\n"}
+,{"stream_name":"stdout","time":40.584882153,"data":"}\n"}
+,{"stream_name":"stdout","time":40.788152826,"data":"{\n"}
+,{"stream_name":"stdout","time":40.788185657,"data":"  \"results\": [\n"}
+,{"stream_name":"stdout","time":40.788190566,"data":"    {\n"}
+,{"stream_name":"stdout","time":40.788194146,"data":"      \"checkpoint\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/reinforce/smoke/reinforce/generation-00000001/manifest.json\",\n"}
+,{"stream_name":"stdout","time":40.788200089,"data":"      \"export\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/reinforce/smoke/reinforce/torch-reinforce-seed-71001.npz\",\n"}
+,{"stream_name":"stdout","time":40.788207223,"data":"      \"evaluation\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/reinforce/smoke/reinforce/evaluation.json\",\n"}
+,{"stream_name":"stdout","time":40.788209815,"data":"      \"updates\": 1,\n"}
+,{"stream_name":"stdout","time":40.788212118,"data":"      \"eval_only\": false,\n"}
+,{"stream_name":"stdout","time":40.788214385,"data":"      \"execution_migration\": null,\n"}
+,{"stream_name":"stdout","time":40.788216754,"data":"      \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":40.78821907,"data":"    }\n"}
+,{"stream_name":"stdout","time":40.788221171,"data":"  ],\n"}
+,{"stream_name":"stdout","time":40.788223255,"data":"  \"device_requested\": \"cpu\",\n"}
+,{"stream_name":"stdout","time":40.788225614,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":40.788227817,"data":"  \"cuda_available\": true,\n"}
+,{"stream_name":"stdout","time":40.788230358,"data":"  \"python\": \"3.13.15\"\n"}
+,{"stream_name":"stdout","time":40.788232577,"data":"}\n"}
+,{"stream_name":"stdout","time":41.406939557,"data":"$ /usr/bin/python3 -m validation.train_torch_mvp1 --smoke-update --algorithm a2c --device cpu --seed 71001 --output /kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/a2c --metrics /kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/a2c/metrics.jsonl\n"}
+,{"stream_name":"stdout","time":47.684592947,"data":"{\n"}
+,{"stream_name":"stdout","time":47.684623064,"data":"  \"results\": [\n"}
+,{"stream_name":"stdout","time":47.684627283,"data":"    {\n"}
+,{"stream_name":"stdout","time":47.684630786,"data":"      \"checkpoint\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/a2c/smoke/a2c/generation-00000001/manifest.json\",\n"}
+,{"stream_name":"stdout","time":47.684641346,"data":"      \"export\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/a2c/smoke/a2c/torch-a2c-seed-71001.npz\",\n"}
+,{"stream_name":"stdout","time":47.684644312,"data":"      \"evaluation\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/a2c/smoke/a2c/evaluation.json\",\n"}
+,{"stream_name":"stdout","time":47.684647029,"data":"      \"updates\": 1,\n"}
+,{"stream_name":"stdout","time":47.684661939,"data":"      \"eval_only\": false,\n"}
+,{"stream_name":"stdout","time":47.684666125,"data":"      \"execution_migration\": null,\n"}
+,{"stream_name":"stdout","time":47.68467046,"data":"      \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":47.684689286,"data":"    }\n"}
+,{"stream_name":"stdout","time":47.684692856,"data":"  ],\n"}
+,{"stream_name":"stdout","time":47.68469618,"data":"  \"device_requested\": \"cpu\",\n"}
+,{"stream_name":"stdout","time":47.684699534,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":47.684702938,"data":"  \"cuda_available\": true,\n"}
+,{"stream_name":"stdout","time":47.684706299,"data":"  \"python\": \"3.13.15\"\n"}
+,{"stream_name":"stdout","time":47.684709643,"data":"}\n"}
+,{"stream_name":"stdout","time":47.88694228,"data":"{\n"}
+,{"stream_name":"stdout","time":47.886993717,"data":"  \"results\": [\n"}
+,{"stream_name":"stdout","time":47.887000972,"data":"    {\n"}
+,{"stream_name":"stdout","time":47.887004882,"data":"      \"checkpoint\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/a2c/smoke/a2c/generation-00000001/manifest.json\",\n"}
+,{"stream_name":"stdout","time":47.887009675,"data":"      \"export\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/a2c/smoke/a2c/torch-a2c-seed-71001.npz\",\n"}
+,{"stream_name":"stdout","time":47.887013689,"data":"      \"evaluation\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cpu/a2c/smoke/a2c/evaluation.json\",\n"}
+,{"stream_name":"stdout","time":47.887017956,"data":"      \"updates\": 1,\n"}
+,{"stream_name":"stdout","time":47.887021872,"data":"      \"eval_only\": false,\n"}
+,{"stream_name":"stdout","time":47.887025682,"data":"      \"execution_migration\": null,\n"}
+,{"stream_name":"stdout","time":47.887036017,"data":"      \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":47.887039648,"data":"    }\n"}
+,{"stream_name":"stdout","time":47.887043552,"data":"  ],\n"}
+,{"stream_name":"stdout","time":47.887047047,"data":"  \"device_requested\": \"cpu\",\n"}
+,{"stream_name":"stdout","time":47.887050845,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":47.887054766,"data":"  \"cuda_available\": true,\n"}
+,{"stream_name":"stdout","time":47.887063619,"data":"  \"python\": \"3.13.15\"\n"}
+,{"stream_name":"stdout","time":47.887067615,"data":"}\n"}
+,{"stream_name":"stdout","time":48.423082809,"data":"$ /usr/bin/python3 -m validation.train_torch_mvp1 --smoke-update --algorithm a2c --device cuda --seed 71001 --output /kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cuda/a2c --metrics /kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cuda/a2c/metrics.jsonl\n"}
+,{"stream_name":"stdout","time":55.428353353,"data":"{\n"}
+,{"stream_name":"stdout","time":55.428385875000004,"data":"  \"results\": [\n"}
+,{"stream_name":"stdout","time":55.428391014,"data":"    {\n"}
+,{"stream_name":"stdout","time":55.428395182,"data":"      \"checkpoint\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cuda/a2c/smoke/a2c/generation-00000001/manifest.json\",\n"}
+,{"stream_name":"stdout","time":55.428400147,"data":"      \"export\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cuda/a2c/smoke/a2c/torch-a2c-seed-71001.npz\",\n"}
+,{"stream_name":"stdout","time":55.428405144,"data":"      \"evaluation\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cuda/a2c/smoke/a2c/evaluation.json\",\n"}
+,{"stream_name":"stdout","time":55.428409701,"data":"      \"updates\": 1,\n"}
+,{"stream_name":"stdout","time":55.428414136,"data":"      \"eval_only\": false,\n"}
+,{"stream_name":"stdout","time":55.428418517,"data":"      \"execution_migration\": null,\n"}
+,{"stream_name":"stdout","time":55.428437222,"data":"      \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":55.428441457,"data":"    }\n"}
+,{"stream_name":"stdout","time":55.428445312,"data":"  ],\n"}
+,{"stream_name":"stdout","time":55.428449494,"data":"  \"device_requested\": \"cuda\",\n"}
+,{"stream_name":"stdout","time":55.428453364,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":55.428457764,"data":"  \"cuda_available\": true,\n"}
+,{"stream_name":"stdout","time":55.428461711,"data":"  \"python\": \"3.13.15\"\n"}
+,{"stream_name":"stdout","time":55.428465615,"data":"}\n"}
+,{"stream_name":"stdout","time":55.631200009,"data":"{\n"}
+,{"stream_name":"stdout","time":55.631236527,"data":"  \"results\": [\n"}
+,{"stream_name":"stdout","time":55.631242997,"data":"    {\n"}
+,{"stream_name":"stdout","time":55.631248103,"data":"      \"checkpoint\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cuda/a2c/smoke/a2c/generation-00000001/manifest.json\",\n"}
+,{"stream_name":"stdout","time":55.631253921,"data":"      \"export\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cuda/a2c/smoke/a2c/torch-a2c-seed-71001.npz\",\n"}
+,{"stream_name":"stdout","time":55.631258736,"data":"      \"evaluation\": \"/kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/smoke/cuda/a2c/smoke/a2c/evaluation.json\",\n"}
+,{"stream_name":"stdout","time":55.631263223,"data":"      \"updates\": 1,\n"}
+,{"stream_name":"stdout","time":55.631267231,"data":"      \"eval_only\": false,\n"}
+,{"stream_name":"stdout","time":55.631271229,"data":"      \"execution_migration\": null,\n"}
+,{"stream_name":"stdout","time":55.631275142,"data":"      \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":55.631279116,"data":"    }\n"}
+,{"stream_name":"stdout","time":55.631282797,"data":"  ],\n"}
+,{"stream_name":"stdout","time":55.63128689,"data":"  \"device_requested\": \"cuda\",\n"}
+,{"stream_name":"stdout","time":55.631291028,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":55.631295083,"data":"  \"cuda_available\": true,\n"}
+,{"stream_name":"stdout","time":55.631299177,"data":"  \"python\": \"3.13.15\"\n"}
+,{"stream_name":"stdout","time":55.63130766,"data":"}\n"}
+,{"stream_name":"stdout","time":56.154914472,"data":"Smoke outputs: ['cpu', 'cpu/a2c', 'cpu/a2c/metrics.jsonl', 'cpu/a2c/smoke', 'cpu/a2c/smoke/a2c', 'cpu/a2c/smoke/a2c/LATEST', 'cpu/a2c/smoke/a2c/artifact-manifest.json', 'cpu/a2c/smoke/a2c/evaluation.json', 'cpu/a2c/smoke/a2c/generation-00000001', 'cpu/a2c/smoke/a2c/generation-00000001/manifest.json', 'cpu/a2c/smoke/a2c/generation-00000001/training.pt', 'cpu/a2c/smoke/a2c/torch-a2c-seed-71001.json', 'cpu/a2c/smoke/a2c/torch-a2c-seed-71001.npz', 'cpu/reinforce', 'cpu/reinforce/metrics.jsonl', 'cpu/reinforce/smoke', 'cpu/reinforce/smoke/reinforce', 'cpu/reinforce/smoke/reinforce/LATEST', 'cpu/reinforce/smoke/reinforce/artifact-manifest.json', 'cpu/reinforce/smoke/reinforce/evaluation.json', 'cpu/reinforce/smoke/reinforce/generation-00000001', 'cpu/reinforce/smoke/reinforce/generation-00000001/manifest.json', 'cpu/reinforce/smoke/reinforce/generation-00000001/training.pt', 'cpu/reinforce/smoke/reinforce/torch-reinforce-seed-71001.json', 'cpu/reinforce/smoke/reinforce/torch-reinforce-seed-71001.npz', 'cuda', 'cuda/a2c', 'cuda/a2c/metrics.jsonl', 'cuda/a2c/smoke', 'cuda/a2c/smoke/a2c', 'cuda/a2c/smoke/a2c/LATEST', 'cuda/a2c/smoke/a2c/artifact-manifest.json', 'cuda/a2c/smoke/a2c/evaluation.json', 'cuda/a2c/smoke/a2c/generation-00000001', 'cuda/a2c/smoke/a2c/generation-00000001/manifest.json', 'cuda/a2c/smoke/a2c/generation-00000001/training.pt', 'cuda/a2c/smoke/a2c/torch-a2c-seed-71001.json', 'cuda/a2c/smoke/a2c/torch-a2c-seed-71001.npz']\n"}
+,{"stream_name":"stdout","time":56.181601277,"data":"PREFLIGHT/SMOKE mode: matched CPU experiment skipped.\n"}
+,{"stream_name":"stdout","time":56.208205847,"data":"A2C CUDA benchmark NOT RUN (disabled or no CUDA).\n"}
+,{"stream_name":"stdout","time":56.235947919,"data":"cpu eligible pristine full-run timings 0 median seconds None\n"}
+,{"stream_name":"stdout","time":56.235984708,"data":"t4x1 eligible pristine full-run timings 0 median seconds None\n"}
+,{"stream_name":"stdout","time":56.235991908,"data":"t4x2 eligible pristine full-run timings 0 median seconds None\n"}
+,{"stream_name":"stdout","time":56.235996758,"data":"t4x1 paired CPU/GPU elapsed ratios (descriptive): []\n"}
+,{"stream_name":"stdout","time":56.236000744,"data":"t4x1 dynamic end-to-end pipeline benefit verdict: UNMEASURED/INCOMPLETE — missing paired full runs\n"}
+,{"stream_name":"stdout","time":56.236005414,"data":"t4x2 paired CPU/GPU elapsed ratios (descriptive): []\n"}
+,{"stream_name":"stdout","time":56.236009086,"data":"t4x2 dynamic end-to-end pipeline benefit verdict: UNMEASURED/INCOMPLETE — missing paired full runs\n"}
+,{"stream_name":"stdout","time":56.36010272,"data":"$ /usr/bin/python3 -m validation.benchmark_torch_fixed_corpus --help\n"}
+,{"stream_name":"stdout","time":57.926316125,"data":"usage: benchmark_torch_fixed_corpus.py [-h]\n"}
+,{"stream_name":"stdout","time":57.926348167,"data":"                                       {generate-corpus,benchmark,compare} ...\n"}
+,{"stream_name":"stdout","time":57.926352995,"data":"\n"}
+,{"stream_name":"stdout","time":57.926357097,"data":"Frozen-corpus PyTorch compute benchmark (not a learning-quality experiment).\n"}
+,{"stream_name":"stdout","time":57.926361465,"data":"Full workload is the approved kaggle-a2c-fixed-corpus-v1 schedule: ten\n"}
+,{"stream_name":"stdout","time":57.926365372,"data":"training partitions, each with 278 complete episodes and 18 real optimizer\n"}
+,{"stream_name":"stdout","time":57.926369266,"data":"updates.\n"}
+,{"stream_name":"stdout","time":57.92637308,"data":"\n"}
+,{"stream_name":"stdout","time":57.926376588,"data":"positional arguments:\n"}
+,{"stream_name":"stdout","time":57.926380253,"data":"  {generate-corpus,benchmark,compare}\n"}
+,{"stream_name":"stdout","time":57.926383943,"data":"\n"}
+,{"stream_name":"stdout","time":57.926387177,"data":"options:\n"}
+,{"stream_name":"stdout","time":57.926390768,"data":"  -h, --help            show this help message and exit\n"}
+,{"stream_name":"stdout","time":58.12879856,"data":"usage: benchmark_torch_fixed_corpus.py [-h]\n"}
+,{"stream_name":"stdout","time":58.128831245,"data":"                                       {generate-corpus,benchmark,compare} ...\n"}
+,{"stream_name":"stdout","time":58.12883654,"data":"\n"}
+,{"stream_name":"stdout","time":58.128840555,"data":"Frozen-corpus PyTorch compute benchmark (not a learning-quality experiment).\n"}
+,{"stream_name":"stdout","time":58.128845521,"data":"Full workload is the approved kaggle-a2c-fixed-corpus-v1 schedule: ten\n"}
+,{"stream_name":"stdout","time":58.128850289,"data":"training partitions, each with 278 complete episodes and 18 real optimizer\n"}
+,{"stream_name":"stdout","time":58.128854373,"data":"updates.\n"}
+,{"stream_name":"stdout","time":58.1288576,"data":"\n"}
+,{"stream_name":"stdout","time":58.12886068,"data":"positional arguments:\n"}
+,{"stream_name":"stdout","time":58.128863917,"data":"  {generate-corpus,benchmark,compare}\n"}
+,{"stream_name":"stdout","time":58.128867182,"data":"\n"}
+,{"stream_name":"stdout","time":58.128870296,"data":"options:\n"}
+,{"stream_name":"stdout","time":58.128887995,"data":"  -h, --help            show this help message and exit\n"}
+,{"stream_name":"stdout","time":58.26126785,"data":"Full fixed-corpus benchmark disabled; smoke results cannot satisfy acceptance.\n"}
+,{"stream_name":"stdout","time":58.299862011,"data":"Predeclared timing checks: {'t4x1_lower_ci_ge_2': False, 't4x1_elapsed_reduction_ge_30pct': False, 't4x2_lower_ci_ge_2': False, 't4x2_elapsed_reduction_ge_30pct': False, 't4x2_lower_ci_vs_t4x1_ge_1_20': False}\n"}
+,{"stream_name":"stdout","time":58.299889973,"data":"GPU compute acceleration — T4x1 verdict: UNMEASURED\n"}
+,{"stream_name":"stdout","time":58.299896331,"data":"GPU compute acceleration — T4x2 verdict: UNMEASURED\n"}
+,{"stream_name":"stdout","time":58.299900398,"data":"This verdict is separate from dynamic end-to-end pipeline benefit and policy learning/cognition.\n"}
+,{"stream_name":"stdout","time":58.323436711,"data":"SMOKE mode: held-out evaluation skipped.\n"}
+,{"stream_name":"stdout","time":59.14215996,"data":"Paired held-out rollouts (raw per world):\n"}
+,{"stream_name":"stdout","time":59.145216644,"data":"Summary first-decision probes (descriptive only):\n"}
+,{"stream_name":"stdout","time":59.148264951,"data":"Paired world-seed cognition probe rows for trained/untrained policies:\n"}
+,{"stream_name":"stdout","time":59.177921885,"data":"Experimental resume is unavailable in this publication; await a trusted approved release.\n"}
+,{"stream_name":"stdout","time":59.266893497,"data":"metrics files: 3 rows: 3\n"}
+,{"stream_name":"stdout","time":59.353528398,"data":"Evaluation files: 3\n"}
+,{"stream_name":"stdout","time":59.359859388,"data":"smoke/cpu/a2c/smoke/a2c/evaluation.json example action frequencies / memory-perception influence\n"}
+,{"stream_name":"stdout","time":59.365096674,"data":"smoke/cpu/reinforce/smoke/reinforce/evaluation.json example action frequencies / memory-perception influence\n"}
+,{"stream_name":"stdout","time":59.370360685,"data":"smoke/cuda/a2c/smoke/a2c/evaluation.json example action frequencies / memory-perception influence\n"}
+,{"stream_name":"stdout","time":59.682127702,"data":"Manifest: /kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/export/artifact_manifest.json SHA256: 9086268fc67de9c982b2d4c0b97a69dd37f4c3befb06370508bff8138824c80f\n"}
+,{"stream_name":"stdout","time":59.682156829,"data":"Archive: /kaggle/working/pasture-training-artifacts-mvp1-run-s-9bf89d749181/export/pasture-training-artifacts.zip bytes: 142182\n"}
+,{"stream_name":"stdout","time":59.68216176,"data":"Download these files from Kaggle notebook Output files after Save \u0026 Run All.\n"}
+,{"stream_name":"stderr","time":63.004303493,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":63.00433632,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":63.181827508,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":63.18185476,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":63.906602723,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":64.005203181,"data":"[NbConvertApp] Writing 178906 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":66.402898638,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":67.121793655,"data":"[NbConvertApp] Support files will be in __results___files/\n"}
+,{"stream_name":"stderr","time":67.121848444,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":67.122239702,"data":"[NbConvertApp] Writing 522417 bytes to __results__.html\n"}
+]
