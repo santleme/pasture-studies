@@ -4,11 +4,11 @@
 
 ## Choose an execution mode
 
-The notebook defaults to `SMOKE`; it does not launch the complete experiment automatically. Set `PASTURE_MODE` before running the notebook top to bottom. In Kaggle, add a short code cell above the notebook's setup cells, set the environment variables there, and use **Run All**. This published revision supports only `PREFLIGHT` and `SMOKE`. The optional revision and content-hash environment variables accept caller-provided strings for audit display only: neither value is verified against Kaggle's active notebook bytes or treated as trusted publication provenance.
+The source notebook defaults to `SMOKE`; it does not launch the complete experiment automatically. The helper accepts only `PREFLIGHT` and `SMOKE`. Its `prepare --mode ...` command injects the selected mode as a fixed assignment into the staged notebook copy; the repository source notebook is left unchanged. That staging edit and its recorded hash are not proof of remote notebook provenance or a bypass of the notebook's source-bound experimental gates. For direct use in the Kaggle UI, configure `PASTURE_MODE` before running cells. The optional revision and content-hash environment variables accept caller-provided strings for audit display only: neither value is verified against Kaggle's active notebook bytes or treated as trusted publication provenance.
 
 ```python
 import os
-os.environ["PASTURE_MODE"] = "SMOKE"  # PREFLIGHT, SMOKE, EXPERIMENT, or FULL_VALIDATION
+os.environ["PASTURE_MODE"] = "SMOKE"  # PREFLIGHT or SMOKE only
 # Optional caller claim only; it is not verified against active Kaggle bytes:
 # os.environ["PASTURE_NOTEBOOK_REVISION"] = "<saved Kaggle notebook revision>"
 # Optional caller claim only; it is not verified against active Kaggle bytes:
@@ -42,9 +42,53 @@ The default run ID is `mvp1-run`; its output directory is `/kaggle/working/pastu
 
 After execution, download `export/pasture-training-artifacts.zip` and `export/artifact_manifest.json` from Kaggle's notebook output. The manifest records source commit, run ID, mode, dependencies/runtime, the supplied notebook revision/content hash as **unverified caller claims**, preregistration/threshold hashes, and SHA-256/size for each exported run artifact. Those claims do not validate the active Kaggle notebook bytes. Keep the manifest with the archive. Verify the hashes locally before using a checkpoint. For local cattle-simulation inference, use a checkpoint generation's NumPy `.npz` inference export with its matching JSON sidecar; optimizer/RNG state is for training resume, not inference.
 
-## Optional Kaggle CLI publication
+## Kaggle CLI preparation, publication, and explicit execution
 
-The notebook can be published without running it only when the active Kaggle CLI explicitly supports `kernels push --no-run`. The currently installed CLI 2.2.4 does not list that flag in `kaggle kernels push --help`; **do not use `kernels push` with it**, because the default push can execute the notebook. See the [Kaggle CLI deployment guide](kaggle-cli-deployment.md) for install/upgrade checks, OAuth, metadata review, no-run publication, output retrieval, and artifact verification. Publishing does not enable the disabled experimental modes or establish notebook provenance.
+The helper stages only `PREFLIGHT` or `SMOKE`, by inserting the requested fixed mode into a copy of the source notebook. Preparation is local and does not execute it:
+
+```bash
+python3 scripts/kaggle_deploy.py preflight
+# auth_status is not_verified; authenticate manually if needed, then validate separately:
+kaggle kernels list --mine --page-size 1
+python3 scripts/kaggle_deploy.py prepare --path /tmp/pasture-kaggle-upload --owner <your-kaggle-username> --mode SMOKE
+```
+
+To request Kaggle T4×2 metadata, add `--gpu` to `prepare`; this only sets `enable_gpu` and the `NvidiaTeslaT4` machine shape. It does not allocate hardware or execute. The helper's `preflight` deliberately does not authenticate or inspect credentials; use `kaggle auth login` yourself when appropriate, then the read-only `kernels list` check above.
+
+Publication is strictly no-run and fails closed unless the installed CLI advertises `--no-run`:
+
+```bash
+python3 scripts/kaggle_deploy.py publish --path /tmp/pasture-kaggle-upload
+```
+
+The installed Kaggle CLI 2.2.4 does not list `--no-run` in `kaggle kernels push --help`; **do not publish with that version** because the ordinary push may execute the notebook. Upgrade and verify the active executable's help before attempting a no-run publication. Never remove the safety flag or fall back to an ordinary push.
+
+Running a staged notebook is a separate, explicit action that requires `--confirm-execution` and a matching mode. For a deliberate CPU smoke:
+
+```bash
+python3 scripts/kaggle_deploy.py execute --path /tmp/pasture-kaggle-upload --mode SMOKE --confirm-execution
+```
+
+For a T4×2 staging folder prepared with `--gpu`, execution additionally requires `--confirm-gpu`, and the helper passes `--accelerator NvidiaTeslaT4`:
+
+```bash
+python3 scripts/kaggle_deploy.py execute --path /tmp/pasture-kaggle-upload --mode SMOKE --confirm-execution --confirm-gpu
+```
+
+After publication, create a provenance record using the exact Kaggle revision identifier (not the local CLI version):
+
+```bash
+python3 scripts/kaggle_deploy.py record ./deployment-record.json \
+  --kernel <owner>/<kernel-slug> \
+  --source-commit "$(git rev-parse HEAD)" \
+  --kernel-version <exact-kaggle-revision> \
+  --mode SMOKE \
+  --metadata /tmp/pasture-kaggle-upload/kernel-metadata.json
+```
+
+The record distinguishes `kaggle_kernel_version` and `kaggle_cli_version`, and stores SHA-256 values for the staged notebook and metadata. Use version-qualified `owner/slug/<numeric-version>` references for status/logs/output when retrieving a specific revision; see the [Kaggle CLI deployment guide](kaggle-cli-deployment.md) for detailed commands and limitations.
+
+No Kaggle authentication, publication, execution, or GPU operation was performed while updating these docs. Neither staging nor publication bypasses the source notebook's disabled `EXPERIMENT`/`FULL_VALIDATION` gates or establishes trusted provenance.
 
 ## Local notebook validation
 
