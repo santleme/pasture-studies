@@ -137,7 +137,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
     run_dir.mkdir(parents=True, exist_ok=True)
     state = {"generation": 0, "update": 0, "episode_cursor": 0,
              "baseline_return_sum": 0.0, "baseline_return_count": 0,
-             "history": [], "rng": _rng_snapshot(torch), "execution_migration": None}
+             "history": [], "rng": _rng_snapshot(torch), "execution_migration": None,
+             "smoke_run": bool(smoke)}
     source_root = Path(__file__).resolve().parents[1]
     source_paths = [Path(__file__).resolve(), source_root / "farm_sim" / "torch_training.py",
                     source_root / "farm_sim" / "torch_checkpoint.py", source_root / "requirements-training.txt",
@@ -162,6 +163,9 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                                    expected_algorithm=algorithm, expected_config=config,
                                    allow_world_size_migration=allow_execution_migration)
         state = restored["state"]
+        # Preserve diagnostic-only lineage through later train/eval invocations.
+        # A normal invocation must never promote a smoke checkpoint to a benchmark.
+        state["smoke_run"] = bool(state.get("smoke_run", False) or smoke)
         if restored.get("execution_migration") is not None:
             # Keep migration provenance durable across later same-world-size
             # resumes so metrics/evaluations cannot be mistaken for direct runs.
@@ -232,10 +236,10 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                "parameter_norm": float(torch.sqrt(sum((p.detach() ** 2).sum() for p in model.parameters())).cpu()),
                "elapsed_seconds": None, "device": device, "world_size": world_size,
                "execution_migration": state.get("execution_migration"),
-               "benchmark_eligible": not smoke and state.get("execution_migration") is None,
+               "benchmark_eligible": not state.get("smoke_run", False) and state.get("execution_migration") is None,
                "timing": {"elapsed_seconds": None,
                           "execution_migration": state.get("execution_migration"),
-                          "benchmark_eligible": not smoke and state.get("execution_migration") is None}}
+                          "benchmark_eligible": not state.get("smoke_run", False) and state.get("execution_migration") is None}}
         if rank == 0:
             _metrics_write(metrics_path, row)
             if state["update"] % checkpoint_every == 0 or state["episode_cursor"] >= episodes:
@@ -279,7 +283,7 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                 "feature_schema": "cattle-observation-v1", "actions": [x.value for x in ACTIONS],
                 "synthetic_task_only": True}
             artifact_manifest["execution_migration"] = state.get("execution_migration")
-            artifact_manifest["benchmark_eligible"] = not smoke and state.get("execution_migration") is None
+            artifact_manifest["benchmark_eligible"] = not state.get("smoke_run", False) and state.get("execution_migration") is None
             (run_dir / "artifact-manifest.json").write_text(json.dumps(artifact_manifest, sort_keys=True, indent=2) + "\n")
         eval_count = 2 if smoke else eval_count
         eval_rows = [deterministic_rollout(model, derive_seed(seed, "eval-world", i), root_seed=seed, episode_index=i)
@@ -288,7 +292,7 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                       "mean_return": float(np.mean([x["return"] for x in eval_rows])),
                       "episodes": eval_rows,
                       "execution_migration": state.get("execution_migration"),
-                      "benchmark_eligible": not smoke and state.get("execution_migration") is None,
+                      "benchmark_eligible": not state.get("smoke_run", False) and state.get("execution_migration") is None,
                       "claims_boundary": "Synthetic software-task results only; not biological validation."}
         evaluation_path = run_dir / (f"evaluation-readonly-seed-{seed}.json" if eval_only else "evaluation.json")
         evaluation_path.write_text(json.dumps(evaluation, indent=2, sort_keys=True) + "\n")
@@ -296,7 +300,7 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                   "export": str(exported) if exported is not None else None,
                   "evaluation": str(evaluation_path), "updates": state["update"], "eval_only": eval_only,
                   "execution_migration": state.get("execution_migration"),
-                  "benchmark_eligible": not smoke and state.get("execution_migration") is None}
+                  "benchmark_eligible": not state.get("smoke_run", False) and state.get("execution_migration") is None}
         if distributed: torch.distributed.destroy_process_group()
         return result
     if distributed: torch.distributed.destroy_process_group()

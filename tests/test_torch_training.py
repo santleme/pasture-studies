@@ -153,6 +153,7 @@ class TorchTrainingContractTests(unittest.TestCase):
     def test_smoke_update_runs_exactly_one_cpu_update_and_exports_checkpoint(self):
         import json
         import tempfile
+        import torch
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp) / "reinforce"
             metrics = output / "metrics.jsonl"
@@ -177,6 +178,21 @@ class TorchTrainingContractTests(unittest.TestCase):
             cli_summary = json.loads(result.stdout)
             self.assertFalse(cli_summary["results"][0]["benchmark_eligible"])
             self.assertTrue(list(artifacts.glob("torch-reinforce-seed-*.npz")))
+            generation = checkpoint.parent / checkpoint.read_text().strip()
+            saved = torch.load(generation / "training.pt", map_location="cpu", weights_only=True)
+            self.assertTrue(saved["state"]["smoke_run"])
+
+            # A normal evaluation invocation must retain the diagnostic-only
+            # lineage from the checkpoint rather than promoting it.
+            eval_out = output / "smoke"
+            eval_result = subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1",
+                "--mode", "eval", "--algorithm", "reinforce", "--device", "cpu",
+                "--seed", "810001", "--episodes", "16", "--output", str(eval_out),
+                "--resume", str(generation)], check=True, capture_output=True, text=True)
+            eval_summary = json.loads(eval_result.stdout)
+            self.assertFalse(eval_summary["results"][0]["benchmark_eligible"])
+            readonly = json.loads((eval_out / "reinforce" / "evaluation-readonly-seed-810001.json").read_text())
+            self.assertFalse(readonly["benchmark_eligible"])
 
     @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
     def test_return_to_go_and_coupled_episode_collection(self):
