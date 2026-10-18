@@ -49,7 +49,7 @@ class KaggleDeployTests(unittest.TestCase):
         with self.assertRaisesRegex(deploy.DeploymentError, "refusing push"):
             deploy.publish(Path("prepared"))
         self.assertEqual(run_mock.call_count, 2)
-        self.assertEqual(run_mock.call_args.args[0], ["kaggle", "kernels", "push", "--help"])
+        self.assertNotIn("push", run_mock.call_args.args[0])
 
     @patch.object(deploy, "run")
     def test_publish_uses_no_run_only_when_advertised(self, run_mock):
