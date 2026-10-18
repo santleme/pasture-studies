@@ -173,7 +173,7 @@ Create and retain a deployment record with distinct provenance fields:
 - artifact-manifest SHA-256, downloaded artifact paths, and per-file verification outcome if artifacts were retrieved;
 - any status/run version associated with retrieved logs or outputs.
 
-The helper can create a partial record after a no-run publication:
+After recording the published revision, write the deployment record with:
 
 ```bash
 python3 scripts/kaggle_deploy.py record ./deployment-record.json \
@@ -184,7 +184,22 @@ python3 scripts/kaggle_deploy.py record ./deployment-record.json \
   --metadata /tmp/pasture-kaggle-upload/kernel-metadata.json
 ```
 
-The helper requires the exact Kaggle revision via `--kernel-version`, distinguishes it from `kaggle_cli_version`, and derives `staged_notebook_sha256` from the metadata-selected staged notebook. It also calculates `metadata_sha256`, validates that the recorded mode matches the staged notebook, and stores `recorded_at_utc`. Compute `source_commit` from the reviewed checkout and get `kernel-version` from the published revision details; do not infer it. The staged notebook hash includes the helper’s fixed-mode injection and is not the source notebook hash or proof of remote execution. The helper does not attest that Kaggle ran those exact bytes. Review the record locally before sharing it; do not include credentials.
+The helper requires the exact Kaggle revision via `--kernel-version`, distinguishes it from `kaggle_cli_version`, and derives `staged_notebook_sha256` from the metadata-selected staged notebook. It also calculates `metadata_sha256`, validates that the recorded mode matches the staged notebook, and stores `recorded_at_utc`. The resulting record contains:
+
+```json
+{
+  "kernel": "<owner>/<slug>",
+  "kaggle_kernel_version": "<exact version>",
+  "source_commit": "<full 40-character Git SHA>",
+  "kaggle_cli_version": "<installed CLI version>",
+  "mode": "SMOKE",
+  "metadata_sha256": "<SHA-256>",
+  "staged_notebook_sha256": "<SHA-256 after fixed-mode injection>",
+  "recorded_at_utc": "<UTC timestamp>"
+}
+```
+
+Compute `source_commit` from the reviewed checkout and get `kernel-version` from the published revision details; do not infer it. The staged notebook hash includes the helper’s fixed-mode injection and is not the source notebook hash or proof of remote execution. The helper does not attest that Kaggle ran those exact bytes. Review the record locally before sharing it; do not include credentials.
 
 The record is provenance metadata, not an attestation that Kaggle executed those exact local bytes. In particular, never promote the notebook's unverified caller-provided revision or content-hash strings into trusted provenance. The notebook currently hard-disables `EXPERIMENT` and `FULL_VALIDATION`; deployment, a successful smoke, a GPU allocation, or a hash match cannot override those gates or establish benchmark/biological validity.
 
