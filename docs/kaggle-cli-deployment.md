@@ -18,7 +18,7 @@ pipx upgrade kaggle
 # or: uv tool upgrade kaggle
 
 # For an intentionally managed Python environment, instead use:
-python -m pip install --upgrade kaggle
+python3 -m pip install --upgrade kaggle
 ```
 
 Confirm which executable is on `PATH`, then inspect version and the safety-critical option. This is a local help check; it does not contact Kaggle or publish anything.
@@ -43,7 +43,14 @@ For a headless terminal, `kaggle auth login --no-launch-browser` prints a URL to
 
 ## 3. Prepare and review the upload directory
 
-Use a dedicated directory containing the exact reviewed notebook and the CLI metadata. Do not edit the repository notebook or alter its provenance/execution gates as part of deployment setup. Start metadata from Kaggle's generator, then inspect and explicitly set the intended fields:
+Use a dedicated directory containing the exact reviewed notebook and the CLI metadata. Do not edit the repository notebook or alter its provenance/execution gates as part of deployment setup. The project helper interface is:
+
+```bash
+python3 scripts/kaggle_deploy.py preflight --path /tmp/pasture-kaggle-upload --owner <your-kaggle-username> --mode SMOKE
+python3 scripts/kaggle_deploy.py prepare --path /tmp/pasture-kaggle-upload --owner <your-kaggle-username> --mode SMOKE --gpu
+```
+
+`preflight` checks local prerequisites and available auth without starting OAuth. `prepare` stages metadata for the named owner and mode; the helper accepts only `PREFLIGHT` or `SMOKE` and rejects `EXPERIMENT`/`FULL_VALIDATION`. `--gpu` requests T4×2 metadata but does not itself allocate or execute a GPU workload. Inspect the resulting files and metadata before any publication. You can also use Kaggle's metadata initializer directly, then review/edit its generated template:
 
 ```bash
 mkdir -p /tmp/pasture-kaggle-upload
@@ -60,9 +67,9 @@ The generated `kernel-metadata.json` is a template: review it and set its code f
   "code_file": "pasture_studies_kaggle.ipynb",
   "language": "python",
   "kernel_type": "notebook",
-  "is_private": true,
-  "enable_gpu": true,
-  "enable_internet": true,
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_internet": "true",
   "machine_shape": "NvidiaTeslaT4",
   "dataset_sources": [],
   "competition_sources": [],
@@ -80,6 +87,12 @@ Before any remote action, inspect the upload directory and metadata locally, ver
 After confirming `--no-run` in the active CLI's help and reviewing the directory, the safe publication form is:
 
 ```bash
+python3 scripts/kaggle_deploy.py publish --path /tmp/pasture-kaggle-upload
+```
+
+The helper probes `kaggle kernels push --help` and fails closed if `--no-run` is absent. Its only permitted push form is `kaggle kernels push -p <path> --no-run`; it must not drop the flag or fall back to ordinary push. If invoking the official CLI manually instead, the equivalent safe command (only after the same help check) is:
+
+```bash
 kaggle kernels push -p /tmp/pasture-kaggle-upload --no-run
 ```
 
@@ -88,6 +101,14 @@ kaggle kernels push -p /tmp/pasture-kaggle-upload --no-run
 ## 5. Inspect status, logs, and outputs
 
 These official commands inspect a kernel/version after it exists. A no-run publication does not create new execution output; status/logs/output may refer to a prior run, so identify the exact kernel/version and do not interpret old artifacts as belonging to the new no-run publication.
+
+```bash
+python3 scripts/kaggle_deploy.py status <owner>/<kernel-slug>
+python3 scripts/kaggle_deploy.py logs <owner>/<kernel-slug>
+python3 scripts/kaggle_deploy.py output <owner>/<kernel-slug> --path ./kaggle-output
+```
+
+Equivalent official CLI commands are:
 
 ```bash
 kaggle kernels status <owner>/<kernel-slug>
@@ -106,9 +127,15 @@ Keep `artifact_manifest.json` beside the downloaded archive. The manifest's per-
 sha256sum ./kaggle-output/<artifact-file>
 ```
 
-Compare the printed digest and `stat -c '%s' ./kaggle-output/<artifact-file>` byte count with that file's manifest entry. For all artifacts, use a small local verifier that reads the manifest's file entries, rejects missing/duplicate/unexpected paths, and checks both size and SHA-256 before extracting or consuming files. Do not treat a valid artifact hash as evidence of notebook provenance or a successful scientific validation.
+Compare the printed digest and `stat -c '%s' ./kaggle-output/<artifact-file>` byte count with that file's manifest entry. The project verifier reads the manifest's `files[]` entries, rejects missing/duplicate/unexpected paths, and checks both size and SHA-256 before artifacts are consumed:
 
-Retain a deployment record with at least:
+```bash
+python3 scripts/kaggle_deploy.py verify ./kaggle-output/artifact_manifest.json --artifacts ./kaggle-output
+```
+
+Do not treat a valid artifact hash as evidence of notebook provenance or a successful scientific validation.
+
+Create and retain a deployment record with at least:
 
 - local source commit SHA and the reviewed upload/notebook filename;
 - Kaggle CLI version and the help-based `--no-run` capability check result;
@@ -116,6 +143,14 @@ Retain a deployment record with at least:
 - metadata settings (private, internet, requested T4×2) and whether this was a no-run save;
 - artifact-manifest SHA-256, downloaded artifact paths, and per-file verification outcome if artifacts were retrieved;
 - any status/run version associated with retrieved logs or outputs.
+
+The helper can write the record after a no-run publication:
+
+```bash
+python3 scripts/kaggle_deploy.py record ./deployment-record.json --kernel <owner>/<kernel-slug> --source-commit "$(git rev-parse HEAD)" --mode SMOKE --metadata /tmp/pasture-kaggle-upload/kernel-metadata.json
+```
+
+Review the record locally before sharing it; do not include credentials.
 
 The record is provenance metadata, not an attestation that Kaggle executed those exact local bytes. In particular, never promote the notebook's unverified caller-provided revision or content-hash strings into trusted provenance. The notebook currently hard-disables `EXPERIMENT` and `FULL_VALIDATION`; deployment, a successful smoke, a GPU allocation, or a hash match cannot override those gates or establish benchmark/biological validity.
 
