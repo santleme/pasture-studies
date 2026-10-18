@@ -149,7 +149,7 @@ class KaggleDeployTests(unittest.TestCase):
             root = Path(tmp)
             metadata = root / "kernel-metadata.json"
             notebook = root / deploy.NOTEBOOK.name
-            notebook.write_bytes(b"staged notebook")
+            notebook.write_text(json.dumps({"cells": [{"source": ['os.environ["PASTURE_MODE"] = "SMOKE"']}]}))
             metadata.write_text(json.dumps({"id": "sample_user/pasture-studies", "code_file": notebook.name}))
             record = root / "deployment.json"
             commit = "a" * 40
@@ -165,23 +165,19 @@ class KaggleDeployTests(unittest.TestCase):
                 deploy.write_deployment_record(record, kernel="k", version="x", source_commit="short",
                     kernel_version="7", mode="SMOKE", metadata_path=metadata)
 
+    @patch.object(deploy, "subprocess")
+    def test_cli_failures_suppress_server_error_details(self, subprocess_mock):
+        subprocess_mock.run.return_value = type("Result", (), {
+            "returncode": 1, "stderr": "Authorization: Bearer secret-token", "stdout": ""})()
+        with self.assertRaises(deploy.DeploymentError) as error:
+            deploy.run(["kaggle", "kernels", "status", "owner/kernel"])
+        self.assertNotIn("secret-token", str(error.exception))
+
     def test_auth_preflight_explicitly_reports_unverified_without_oauth(self):
         result = deploy.auth_preflight()
         self.assertEqual(result["auth_status"], "not_verified")
         self.assertEqual(result["auth_check"], "not_performed")
         self.assertNotIn("credentials_available", result)
-
-    def test_auth_preflight_detects_access_token_file_without_exposing_it(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            config = Path(tmp) / "kaggle.json"
-            token_file = Path(tmp) / "access_token"
-            token_file.write_text("private-test-token\n")
-            token_file.chmod(0o600)
-            with patch.object(deploy, "KAGGLE_CONFIG", config), patch.dict("os.environ", {}, clear=True):
-                result = deploy.auth_preflight()
-            self.assertEqual(result, {"credentials_available": True, "credentials_source": "access_token_file"})
-            self.assertNotIn("private-test-token", repr(result))
-
 
 if __name__ == "__main__":
     unittest.main()
