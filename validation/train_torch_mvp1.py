@@ -306,6 +306,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--smoke", action="store_true", help="two-update CPU smoke run with export/eval")
+    p.add_argument("--smoke-update", action="store_true",
+                   help="one disposable BATCH_EPISODES update on explicit CPU or CUDA; single algorithm only")
     p.add_argument("--algorithm", choices=("reinforce", "a2c", "both"), default="both")
     p.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     p.add_argument("--seed", type=int, default=810001)
@@ -322,11 +324,26 @@ def main(argv=None):
     args = p.parse_args(argv)
     if args.episodes <= 0 or args.checkpoint_every <= 0:
         p.error("--episodes and --checkpoint-every must be positive")
+    if args.smoke and args.smoke_update:
+        p.error("--smoke and --smoke-update are mutually exclusive")
     if args.smoke:
         args.algorithm = "both"
         args.device = "cpu"
         args.episodes = 2 * BATCH_EPISODES
         args.checkpoint_every = 1
+        args.output = args.output / "smoke"
+    if args.smoke_update:
+        if args.algorithm == "both":
+            p.error("--smoke-update requires exactly one --algorithm (reinforce or a2c)")
+        if args.device not in {"cpu", "cuda"}:
+            p.error("--smoke-update requires an explicit --device cpu or --device cuda")
+        if args.mode != "train" or args.resume is not None:
+            p.error("--smoke-update supports only a fresh --mode train run; resume/eval are not permitted")
+        if int(os.environ.get("WORLD_SIZE", "1")) != 1:
+            p.error("--smoke-update does not support distributed execution")
+        args.episodes = BATCH_EPISODES
+        args.checkpoint_every = 1
+        args.max_updates = 1
         args.output = args.output / "smoke"
     if args.mode == "eval" and args.resume is None:
         p.error("--mode eval requires --resume pointing at a committed checkpoint")
@@ -339,7 +356,7 @@ def main(argv=None):
         result = train_algorithm(algo, seed=args.seed, episodes=args.episodes,
                                  output=args.output, device=args.device, resume=resume,
                                  metrics_path=metrics, checkpoint_every=args.checkpoint_every,
-                                 smoke=args.smoke, max_updates=args.max_updates,
+                                 smoke=(args.smoke or args.smoke_update), max_updates=args.max_updates,
                                  eval_count=args.eval_seeds, eval_only=args.mode == "eval",
                                  allow_execution_migration=args.allow_execution_migration)
         results.append(result)

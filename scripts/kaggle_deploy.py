@@ -114,6 +114,12 @@ def prepare(folder: Path, owner: str, *, mode: str = "SMOKE", gpu: bool = False)
     cell = matching_cells[0]
     source = "".join(cell["source"])
     source = source.replace(marker, f'os.environ["PASTURE_MODE"] = "{mode}"\n{marker}', 1)
+    if gpu:
+        cuda_marker = 'MODE = os.environ.get("PASTURE_MODE", "SMOKE").strip().upper()'
+        if source.count(cuda_marker) != 1:
+            raise DeploymentError("Could not safely identify the notebook CUDA-required guard")
+        source = source.replace(cuda_marker,
+            'os.environ["PASTURE_REQUIRE_CUDA"] = "1"\n' + cuda_marker, 1)
     cell["source"] = source.splitlines(keepends=True)
     (folder / NOTEBOOK.name).write_text(json.dumps(notebook, indent=1) + "\n")
     target = folder / "kernel-metadata.json"
@@ -167,6 +173,11 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
     elif metadata.get("machine_shape") not in {"", None}:
         raise DeploymentError("CPU metadata must not select an accelerator machine shape")
     staged_mode(notebook_path)
+    notebook_doc = json.loads(notebook_path.read_text())
+    notebook_source = "\n".join("".join(cell.get("source", [])) for cell in notebook_doc.get("cells", []))
+    if metadata.get("enable_gpu") == "true" and notebook_source.count(
+            'os.environ["PASTURE_REQUIRE_CUDA"] = "1"') != 1:
+        raise DeploymentError("GPU staging must contain exactly one fail-closed PASTURE_REQUIRE_CUDA=1 assertion")
     return metadata, notebook_path
 
 

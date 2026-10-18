@@ -46,6 +46,23 @@ class KaggleDeployTests(unittest.TestCase):
             with self.assertRaises(deploy.DeploymentError):
                 deploy.prepare(output, "sample_user", mode="EXPERIMENT")
 
+    def test_gpu_staging_injects_fail_closed_cuda_requirement(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp) / "kernel"
+            deploy.prepare(stage, "sample_user", mode="SMOKE", gpu=True)
+            staged = json.loads((stage / deploy.NOTEBOOK.name).read_text())
+            code = "\n".join("".join(cell["source"]) for cell in staged["cells"])
+            self.assertIn('os.environ["PASTURE_REQUIRE_CUDA"] = "1"', code)
+            metadata, _ = deploy.validate_staging_folder(stage)
+            self.assertEqual(metadata["machine_shape"], "NvidiaTeslaT4")
+            notebook_path = stage / deploy.NOTEBOOK.name
+            for cell in staged["cells"]:
+                cell["source"] = [line.replace('os.environ["PASTURE_REQUIRE_CUDA"] = "1"\n', "")
+                                   for line in cell.get("source", [])]
+            notebook_path.write_text(json.dumps(staged))
+            with self.assertRaisesRegex(deploy.DeploymentError, "fail-closed"):
+                deploy.validate_staging_folder(stage)
+
     def test_prepare_refuses_stale_files_in_staging_directory(self):
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp) / "kernel"

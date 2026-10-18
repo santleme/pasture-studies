@@ -16,6 +16,7 @@ import json
 import contextlib
 import io
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -32,7 +33,13 @@ from nbclient import NotebookClient
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK_PATH = REPO_ROOT / "notebooks" / "pasture_studies_kaggle.ipynb"
-EXPECTED_SOURCE_COMMIT = "74f5ccd5b6dd785b2e424d29302c15bcec73bbc1"
+_pipeline_cell = "\n".join("".join(cell.get("source", []))
+                            for cell in json.loads(NOTEBOOK_PATH.read_text())["cells"])
+_pipeline_match = re.search(r'^PASTURE_PIPELINE_COMMIT\s*=\s*"([0-9a-f]{40})"$',
+                            _pipeline_cell, re.MULTILINE)
+if not _pipeline_match:
+    raise RuntimeError("Notebook must declare one immutable 40-character pipeline commit")
+EXPECTED_SOURCE_COMMIT = _pipeline_match.group(1)
 
 
 class FreshKernelNotebookSmokeTests(unittest.TestCase):
@@ -154,7 +161,6 @@ class FreshKernelNotebookSmokeTests(unittest.TestCase):
             work_root = temp_root / "work"
             work_root.mkdir()
             run_id = f"ci-smoke-{os.getpid()}"
-            artifact_root = work_root / f"pasture-training-artifacts-{run_id}"
 
             notebook = nbformat.read(NOTEBOOK_PATH, as_version=4)
             nbformat.validate(notebook)
@@ -199,6 +205,10 @@ class FreshKernelNotebookSmokeTests(unittest.TestCase):
                     allow_errors=False,
                 )
                 executed = client.execute()
+
+            artifact_roots = list(work_root.glob(f"pasture-training-artifacts-{run_id[:39]}-s-*"))
+            self.assertEqual(len(artifact_roots), 1, "SMOKE must create a fresh isolated output namespace")
+            artifact_root = artifact_roots[0]
 
             errors = [
                 output.get("evalue", "")
@@ -267,6 +277,10 @@ class FreshKernelNotebookSmokeTests(unittest.TestCase):
             self.assertEqual(manifest["acceptance_thresholds_sha256"], binding["acceptance_thresholds_sha256"])
             self.assertEqual(manifest["cuda_forward_backward_smoke"], "UNAVAILABLE")
             self.assertFalse(manifest["cuda_available"], "CPU-only test must not claim CUDA availability")
+            self.assertEqual(manifest["cuda_device_count"], 0)
+            self.assertEqual(manifest["cuda_device_names"], [])
+            self.assertEqual(manifest["scientific_dependency_pins"], {"numpy": "1.26.4", "torch": "2.14.0"})
+            self.assertIsInstance(manifest["runtime_dependency_mismatches"], list)
             self.assertFalse((artifact_root / "fixed_corpus_benchmark" / "kaggle-a2c-fixed-corpus-v1.npz").exists())
             self.assertFalse(any((artifact_root / "matched_cpu").rglob("metrics.jsonl")))
 

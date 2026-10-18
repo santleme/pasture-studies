@@ -134,8 +134,42 @@ class TorchTrainingContractTests(unittest.TestCase):
         result = subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1", "--help"],
                                 check=True, capture_output=True, text=True)
         for flag in ("--smoke", "--algorithm", "--device", "--seed", "--episodes",
-                     "--output", "--resume", "--metrics", "--checkpoint-every", "--mode"):
+                     "--smoke-update", "--output", "--resume", "--metrics", "--checkpoint-every", "--mode"):
             self.assertIn(flag, result.stdout)
+
+    def test_smoke_update_requires_one_algorithm_and_explicit_device(self):
+        for args, expected in (
+            (["--smoke-update", "--algorithm", "both", "--device", "cpu"], "exactly one"),
+            (["--smoke-update", "--algorithm", "a2c", "--device", "auto"], "explicit"),
+            (["--smoke-update", "--algorithm", "a2c", "--device", "cpu", "--resume"], "fresh"),
+        ):
+            with self.subTest(args=args):
+                result = subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1", *args],
+                                        capture_output=True, text=True)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(expected, result.stderr)
+
+    @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
+    def test_smoke_update_runs_exactly_one_cpu_update_and_exports_checkpoint(self):
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "reinforce"
+            metrics = output / "metrics.jsonl"
+            subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1",
+                "--smoke-update", "--algorithm", "reinforce", "--device", "cpu",
+                "--seed", "810001", "--output", str(output), "--metrics", str(metrics)],
+                check=True, capture_output=True, text=True)
+            checkpoint = output / "smoke" / "reinforce" / "LATEST"
+            self.assertTrue(checkpoint.is_file())
+            self.assertTrue(metrics.is_file())
+            rows = [json.loads(line) for line in metrics.read_text().splitlines() if line]
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0]["update"], 1)
+            self.assertEqual(rows[0]["episodes_in_batch"], 16)
+            artifacts = output / "smoke" / "reinforce"
+            self.assertTrue((artifacts / "artifact-manifest.json").is_file())
+            self.assertTrue(list(artifacts.glob("torch-reinforce-seed-*.npz")))
 
     @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
     def test_return_to_go_and_coupled_episode_collection(self):

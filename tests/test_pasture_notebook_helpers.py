@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -31,6 +32,74 @@ def notebook_helper(name: str, cell_index: int, namespace: dict) -> object:
 
 
 class PastureNotebookHelperTests(unittest.TestCase):
+    def test_smoke_runtime_mismatches_use_installed_stack_without_installing_pins(self):
+        helper = notebook_helper("should_use_installed_smoke_runtime", 5,
+                                 {"print": lambda *_args, **_kwargs: None,
+                                  "RuntimeError": RuntimeError})
+        mismatch = [{"package": "torch", "scientific_pin": "2.14.0",
+                     "runtime_version": "2.11.0+cu128"}]
+        self.assertTrue(helper("SMOKE", mismatch, True, True))
+        self.assertFalse(helper("PREFLIGHT", mismatch, True, True))
+        with self.assertRaisesRegex(RuntimeError, "refusing CPU fallback"):
+            helper("SMOKE", mismatch, True, False)
+
+    def test_smoke_job_refuses_stale_checkpoint_instead_of_skipping(self):
+        run_mock = Mock()
+        namespace = {"Path": Path, "json": json, "sys": sys, "RuntimeError": RuntimeError,
+                     "run": run_mock}
+        run_smoke_job = notebook_helper("run_smoke_job", 9, namespace)
+        with tempfile.TemporaryDirectory() as temp:
+            smoke_dir = Path(temp) / "smoke"
+            out = smoke_dir / "cpu" / "a2c"
+            stale = out / "smoke" / "a2c" / "LATEST"
+            stale.parent.mkdir(parents=True)
+            stale.write_text("stale-generation")
+            with self.assertRaisesRegex(RuntimeError, "pre-existing SMOKE outputs"):
+                run_smoke_job("cpu", "a2c", "cpu", smoke_dir=smoke_dir,
+                              seed=10, repo_dir=Path(temp))
+        run_mock.assert_not_called()
+
+    def test_smoke_job_requires_latest_generation_and_hashed_exports(self):
+        def exercise(*, latest="gen-000001", tamper_hash=False):
+            with tempfile.TemporaryDirectory() as temp:
+                smoke_dir = Path(temp) / "smoke"
+                out = smoke_dir / "cuda" / "a2c"
+                generation_root = out / "smoke" / "a2c"
+                generation = generation_root / "generations" / "gen-000001"
+                checkpoint = generation_root / "LATEST"
+                npz = generation_root / "policy.npz"
+                sidecar = generation_root / "policy.json"
+
+                def fake_run(_argv, *, cwd):
+                    del cwd
+                    generation.mkdir(parents=True)
+                    (generation / "manifest.json").write_text("{}\n")
+                    checkpoint.write_text(latest + "\n")
+                    (out / "metrics.jsonl").write_text('{"update":1}\n')
+                    npz.write_bytes(b"inference-model")
+                    sidecar.write_text('{"schema":"test"}\n')
+                    manifest = {"training_generation": "gen-000001",
+                        "policy_npz": "policy.npz", "policy_json": "policy.json",
+                        "policy_npz_sha256": hashlib.sha256(npz.read_bytes()).hexdigest(),
+                        "policy_json_sha256": hashlib.sha256(sidecar.read_bytes()).hexdigest()}
+                    if tamper_hash:
+                        manifest["policy_json_sha256"] = "0" * 64
+                    (generation_root / "artifact-manifest.json").write_text(json.dumps(manifest))
+
+                namespace = {"Path": Path, "json": json, "hashlib": hashlib, "sys": sys,
+                             "RuntimeError": RuntimeError, "run": fake_run}
+                helper = notebook_helper("run_smoke_job", 9, namespace)
+                result = helper("cuda", "a2c", "cuda", smoke_dir=smoke_dir,
+                                seed=11, repo_dir=Path(temp))
+                self.assertEqual(result, out)
+                return True
+
+        self.assertTrue(exercise())
+        with self.assertRaisesRegex(RuntimeError, "sole fresh smoke generation"):
+            exercise(latest="missing-generation")
+        with self.assertRaisesRegex(RuntimeError, "hash mismatch"):
+            exercise(tamper_hash=True)
+
     def test_fixed_corpus_comparison_schema_and_pairing(self):
         left = {"device": "cpu", "workload": "fixed", "corpus_config": {"corpus_sha256": "same"},
                 "runs": [{"repeat_index": 1, "duration_seconds": 6.0},
