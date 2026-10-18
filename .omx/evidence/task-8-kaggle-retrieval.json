@@ -1,0 +1,24 @@
+{
+  "teamName": "implement-official-ka-330f9c32",
+  "taskId": "8",
+  "claimTokenSha256": "14300df3674bb7dd690f64cfc1c9ddfe0ee706ddb03866aabb23b0b73215a6e7",
+  "summary": "Allow version-pinned Kaggle kernel identifiers for status/logs/output retrieval while preserving unversioned identifiers and redaction.",
+  "verification": [
+    {
+      "command": "python3 -m unittest tests.test_kaggle_deploy -q",
+      "result": "passed",
+      "output": "Ran 13 tests; OK."
+    },
+    {
+      "command": "python3 -m py_compile scripts/kaggle_deploy.py tests/test_kaggle_deploy.py",
+      "result": "passed",
+      "output": "No syntax errors."
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed",
+      "output": "No whitespace errors."
+    }
+  ],
+  "unverified": []
+}
