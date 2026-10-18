@@ -43,7 +43,7 @@ For a headless terminal, `kaggle auth login --no-launch-browser` prints a URL to
 
 ## 3. Prepare and review the upload directory
 
-Use a dedicated directory containing the exact reviewed notebook and the CLI metadata. Do not edit the repository notebook or alter its provenance/execution gates as part of deployment setup. The project helper interface is:
+Use a dedicated, empty directory for the upload. Do not edit the repository notebook or alter its provenance/execution gates as part of deployment setup. The project `prepare` helper copies the repository notebook into that directory and writes CLI metadata; it rejects symlinked, non-directory, or non-empty staging paths to avoid stale/unreviewed files. The project helper interface is:
 
 Run preflight with no arguments, then prepare the upload directory:
 
@@ -63,6 +63,7 @@ A successful response verifies the CLI can access your kernels; it does not publ
 ```bash
 mkdir -p /tmp/pasture-kaggle-upload
 # Copy the already-reviewed notebook into this directory before initializing metadata.
+cp notebooks/pasture_studies_kaggle.ipynb /tmp/pasture-kaggle-upload/
 kaggle kernels init -p /tmp/pasture-kaggle-upload
 ```
 
