@@ -40,6 +40,16 @@ class KaggleDeployTests(unittest.TestCase):
             with self.assertRaises(deploy.DeploymentError):
                 deploy.prepare(output, "sample_user", mode="EXPERIMENT")
 
+    def test_prepare_refuses_stale_files_in_staging_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "kernel"
+            output.mkdir()
+            secret = output / "kaggle.json"
+            secret.write_text('{"key":"must not upload"}')
+            with self.assertRaisesRegex(deploy.DeploymentError, "must be empty"):
+                deploy.prepare(output, "sample_user")
+            self.assertEqual(list(output.iterdir()), [secret])
+
     @patch.object(deploy, "run")
     def test_publish_fails_closed_without_no_run_and_never_calls_push(self, run_mock):
         run_mock.side_effect = [
@@ -81,6 +91,9 @@ class KaggleDeployTests(unittest.TestCase):
             manifest.write_text(json.dumps({"files": [{"path": "model.bin",
                 "sha256": hashlib.sha256(b"artifact").hexdigest(), "size_bytes": 8}]}))
             self.assertEqual(deploy.verify_manifest(manifest, root), ["model.bin"])
+            manifest.write_text(json.dumps({"files": []}))
+            with self.assertRaisesRegex(deploy.DeploymentError, "no files to verify"):
+                deploy.verify_manifest(manifest, root)
             manifest.write_text(json.dumps({"files": [{"path": "../outside",
                 "sha256": hashlib.sha256(b"artifact").hexdigest()}]}))
             with self.assertRaisesRegex(deploy.DeploymentError, "Unsafe artifact path"):
