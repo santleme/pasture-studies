@@ -60,12 +60,12 @@ class PastureNotebookHelperTests(unittest.TestCase):
         run_mock.assert_not_called()
 
     def test_smoke_job_requires_latest_generation_and_hashed_exports(self):
-        def exercise(*, latest="gen-000001", tamper_hash=False):
+        def exercise(*, latest="generation-00000001", tamper_hash=False):
             with tempfile.TemporaryDirectory() as temp:
                 smoke_dir = Path(temp) / "smoke"
                 out = smoke_dir / "cuda" / "a2c"
                 generation_root = out / "smoke" / "a2c"
-                generation = generation_root / "generations" / "gen-000001"
+                generation = generation_root / "generation-00000001"
                 checkpoint = generation_root / "LATEST"
                 npz = generation_root / "policy.npz"
                 sidecar = generation_root / "policy.json"
@@ -78,7 +78,7 @@ class PastureNotebookHelperTests(unittest.TestCase):
                     (out / "metrics.jsonl").write_text('{"update":1}\n')
                     npz.write_bytes(b"inference-model")
                     sidecar.write_text('{"schema":"test"}\n')
-                    manifest = {"training_generation": "gen-000001",
+                    manifest = {"training_generation": "generation-00000001",
                         "policy_npz": "policy.npz", "policy_json": "policy.json",
                         "policy_npz_sha256": hashlib.sha256(npz.read_bytes()).hexdigest(),
                         "policy_json_sha256": hashlib.sha256(sidecar.read_bytes()).hexdigest()}
