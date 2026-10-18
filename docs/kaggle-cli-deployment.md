@@ -52,7 +52,7 @@ python3 scripts/kaggle_deploy.py preflight
 python3 scripts/kaggle_deploy.py prepare --path /tmp/pasture-kaggle-upload --owner <your-kaggle-username> --mode SMOKE --gpu
 ```
 
-`preflight` reports the CLI version and no-run capability, and checks some existing authentication material without starting OAuth. **It is not OAuth-aware:** the helper currently recognizes environment token/legacy username-key variables and the legacy `~/.kaggle/kaggle.json` file, but does not detect OAuth credentials in Kaggle's OAuth credential store. An OAuth-only user can be logged in to the CLI yet have helper preflight report no credentials. Do not treat that result as proof OAuth is absent, and do not put OAuth credentials into the legacy file. After completing OAuth yourself, validate it with a read-only authenticated request:
+`preflight` reports the CLI version and no-run capability, and checks some existing authentication material without starting OAuth. **It is not OAuth-aware:** the helper currently recognizes `KAGGLE_API_TOKEN` or legacy username/key environment variables, the legacy `~/.kaggle/kaggle.json` file, and a `~/.kaggle/access_token` file (or the corresponding directory under `KAGGLE_CONFIG_DIR`), but does not detect OAuth credentials in Kaggle's separate OAuth credential store. An OAuth-only user can be logged in to the CLI yet have helper preflight report no credentials. Do not treat that result as proof OAuth is absent, and do not put OAuth credentials into the legacy file. After completing OAuth yourself, validate it with a read-only authenticated request:
 
 ```bash
 kaggle kernels list --mine --page-size 1
