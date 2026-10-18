@@ -7,6 +7,7 @@ installed CLI advertises an explicit no-run flag.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
@@ -14,11 +15,28 @@ import re
 import subprocess
 import sys
 from datetime import datetime, timezone
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK = ROOT / "notebooks" / "pasture_studies_kaggle.ipynb"
-MODES = {"PREFLIGHT", "SMOKE"}
+MODES = {"PREFLIGHT", "SMOKE", "READINESS"}
 T4X2_SHAPE = "NvidiaTeslaT4"
+RELEASE_MANIFEST = "release-manifest.json"
+DEPLOYMENT_CONFIG = "pasture-deployment.json"
+READINESS_CONFIG = "readiness-config.json"
+READINESS_CONFIG_VALUE = {
+    "task": "checkpoint_recovery", "max_updates": 2, "max_episodes": 32,
+    "max_devices": 2, "locked_test_access": False, "outcome_analysis": False,
+    "benchmark_eligible": False, "checkpoint_promotion": False,
+}
+
+
+def deployment_record_path(folder: Path) -> Path:
+    return folder.parent / f"{folder.name}-deployment.json"
+
+
+def readiness_config_path(folder: Path) -> Path:
+    return folder.parent / f"{folder.name}-readiness-config.json"
 
 
 class DeploymentError(RuntimeError):
@@ -63,7 +81,7 @@ def check_cli(*, require_no_run: bool = False) -> tuple[str, str]:
 def validate_mode(mode: str) -> str:
     normalized = mode.strip().upper()
     if normalized not in MODES:
-        raise DeploymentError("Only PREFLIGHT and SMOKE are permitted; experimental modes are disabled")
+        raise DeploymentError("Only PREFLIGHT, SMOKE, and READINESS are permitted; experimental modes are disabled")
     return normalized
 
 
@@ -92,46 +110,269 @@ def metadata_for(owner: str, *, title: str = "Pasture Studies", mode: str = "SMO
     return metadata
 
 
+def _source_commit() -> str:
+    status = run(["git", "-C", str(ROOT), "status", "--porcelain", "--untracked-files=all"])
+    if status.stdout.strip():
+        raise DeploymentError("Source checkout must be clean and committed before staging")
+    return _head_commit()
+
+
+def _head_commit() -> str:
+    result = run(["git", "-C", str(ROOT), "rev-parse", "HEAD"])
+    commit = result.stdout.strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise DeploymentError("Could not establish the exact source commit SHA")
+    return commit
+
+
+def _committed_notebook_bytes(commit: str) -> bytes:
+    result = run(["git", "-C", str(ROOT), "show", f"{commit}:notebooks/pasture_studies_kaggle.ipynb"])
+    return result.stdout.encode("utf-8")
+
+
+def _stage_notebook_bytes(source_bytes: bytes, deployment: dict) -> bytes:
+    def canonical(value):
+        if isinstance(value, dict):
+            return {key: canonical(value[key]) for key in sorted(value)}
+        if isinstance(value, list):
+            return [canonical(item) for item in value]
+        return value
+
+    deployment = canonical(deployment)
+    try:
+        notebook = json.loads(source_bytes)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise DeploymentError("Committed source notebook is unreadable or invalid JSON") from exc
+    marker = "PASTURE_DEPLOYMENT = None  # KAGGLE_DEPLOYMENT_CONFIG_MARKER"
+    matching = [cell for cell in notebook.get("cells", []) if marker in "".join(cell.get("source", []))]
+    if len(matching) != 1:
+        raise DeploymentError("Committed notebook must contain exactly one safe deployment-config injection marker")
+    cell = matching[0]
+    source = "".join(cell.get("source", []))
+    source = source.replace(marker, "PASTURE_DEPLOYMENT = " + repr(deployment), 1)
+    cell["source"] = source.splitlines(keepends=True)
+    return (json.dumps(notebook, indent=1, ensure_ascii=False) + "\n").encode("utf-8")
+
+
+def _manifest_digest(path: Path, *, staged_notebook: Path | None = None) -> str:
+    try:
+        manifest = json.loads(path.read_text())
+        from scripts.kaggle_release import verify_release_manifest
+        verify_release_manifest(manifest, root=ROOT, staged_notebook=staged_notebook)
+    except Exception as exc:
+        raise DeploymentError("Release manifest failed source/protocol verification") from exc
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def prepare(folder: Path, owner: str, *, mode: str = "SMOKE", gpu: bool = False) -> Path:
     mode = validate_mode(mode)
-    if not NOTEBOOK.is_file():
-        raise DeploymentError(f"Notebook not found: {NOTEBOOK}")
     if folder.is_symlink():
         raise DeploymentError(f"Staging path must not be a symlink: {folder}")
+    source_commit = _source_commit()
     if folder.exists():
         if not folder.is_dir() or any(folder.iterdir()):
             raise DeploymentError(f"Staging directory must be empty to prevent uploading stale files: {folder}")
     else:
         folder.mkdir(parents=True)
-    try:
-        notebook = json.loads(NOTEBOOK.read_text())
-    except (OSError, json.JSONDecodeError) as exc:
-        raise DeploymentError("Source notebook is unreadable or invalid JSON") from exc
-    marker = 'MODE = os.environ.get("PASTURE_MODE", "SMOKE")'
-    matching_cells = [cell for cell in notebook.get("cells", []) if marker in "".join(cell.get("source", []))]
-    if len(matching_cells) != 1:
-        raise DeploymentError("Could not safely identify the notebook execution-mode cell")
-    cell = matching_cells[0]
-    source = "".join(cell["source"])
-    source = source.replace(marker, f'os.environ["PASTURE_MODE"] = "{mode}"\n{marker}', 1)
-    if gpu:
-        cuda_marker = 'MODE = os.environ.get("PASTURE_MODE", "SMOKE").strip().upper()'
-        if source.count(cuda_marker) != 1:
-            raise DeploymentError("Could not safely identify the notebook CUDA-required guard")
-        source = source.replace(cuda_marker,
-            'os.environ["PASTURE_REQUIRE_CUDA"] = "1"\n' + cuda_marker, 1)
-    cell["source"] = source.splitlines(keepends=True)
-    (folder / NOTEBOOK.name).write_text(json.dumps(notebook, indent=1) + "\n")
+    _ensure_detached_paths_available(folder)
+    if mode == "READINESS":
+        raise DeploymentError("READINESS staging requires --runtime-profile; use prepare-release")
+    source_bytes = _committed_notebook_bytes(source_commit)
+    source_sha = hashlib.sha256(source_bytes).hexdigest()
+    deployment = {"schema_version": 1, "mode": mode, "source_commit": source_commit,
+                  "source_notebook_sha256": source_sha,
+                  "readiness_config": None, "runtime_profile": None,
+                  "release_manifest_sha256": None, "gpu_required": bool(gpu)}
+    return _write_staging(folder, owner, deployment)
+
+
+def _write_staging(folder: Path, owner: str, deployment: dict) -> Path:
+    gpu = deployment["gpu_required"]
+    staged_bytes = _stage_notebook_bytes(_committed_notebook_bytes(deployment["source_commit"]), deployment)
+    (folder / NOTEBOOK.name).write_bytes(staged_bytes)
+    staged_hash = hashlib.sha256(staged_bytes).hexdigest()
+    deployment_record_path(folder).write_text(json.dumps({**deployment, "notebook_sha256": staged_hash}, sort_keys=True, indent=2) + "\n")
     target = folder / "kernel-metadata.json"
-    target.write_text(json.dumps(metadata_for(owner, mode=mode, gpu=gpu), indent=2) + "\n")
+    target.write_text(json.dumps(metadata_for(owner, mode=deployment["mode"], gpu=gpu), indent=2) + "\n")
+    if deployment["mode"] == "READINESS":
+        readiness_config_path(folder).write_text(json.dumps(READINESS_CONFIG_VALUE, sort_keys=True, indent=2) + "\n")
     return target
+
+
+def prepare_release(folder: Path, owner: str, *, runtime_profile_path: Path,
+                    gpu: bool = True) -> Path:
+    """Prepare READINESS with a fixed workload and pinned target runtime profile."""
+    try:
+        runtime_profile = json.loads(runtime_profile_path.read_text())
+        from scripts.kaggle_release import _validate_runtime
+        runtime_profile = _validate_runtime(runtime_profile)
+    except Exception as exc:
+        raise DeploymentError("READINESS runtime profile is invalid") from exc
+    if (not gpu or not runtime_profile["cuda_available"] or runtime_profile["gpu_count"] != 2
+            or any("T4" not in name for name in runtime_profile["gpu_names"])):
+        raise DeploymentError("READINESS requires a CUDA-enabled two-T4 runtime profile")
+    if folder.is_symlink():
+        raise DeploymentError(f"Staging path must not be a symlink: {folder}")
+    source_commit = _source_commit()
+    if folder.exists():
+        if not folder.is_dir() or any(folder.iterdir()):
+            raise DeploymentError(f"Staging directory must be empty to prevent uploading stale files: {folder}")
+    else:
+        folder.mkdir(parents=True)
+    _ensure_detached_paths_available(folder)
+    source_bytes = _committed_notebook_bytes(source_commit)
+    deployment = {"schema_version": 1, "mode": "READINESS", "source_commit": source_commit,
+                  "source_notebook_sha256": hashlib.sha256(source_bytes).hexdigest(),
+                  "readiness_config": READINESS_CONFIG_VALUE, "runtime_profile": runtime_profile,
+                  "release_manifest_sha256": None, "gpu_required": True}
+    return _write_staging(folder, owner, deployment)
+
+
+def _ensure_detached_paths_available(folder: Path) -> None:
+    for detached in (deployment_record_path(folder), readiness_config_path(folder),
+                     detached_manifest_path(folder), folder.parent / f"{folder.name}-publication-attestation.json"):
+        if detached.is_symlink():
+            raise DeploymentError("Detached deployment evidence path must not be a symlink")
+        if detached.exists():
+            raise DeploymentError("Detached deployment evidence already exists; use a fresh staging path")
+
+
+def bind_release(folder: Path, release_manifest: Path) -> str:
+    """Verify exact staged bytes; retain the manifest as detached host evidence."""
+    if not release_manifest.is_file():
+        raise DeploymentError("Release manifest file is missing")
+    if folder.is_symlink() or not folder.is_dir():
+        raise DeploymentError("Staging folder must be a real directory")
+    metadata_path = folder / "kernel-metadata.json"
+    config_path = deployment_record_path(folder)
+    try:
+        metadata = json.loads(metadata_path.read_text())
+        config = json.loads(config_path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DeploymentError("Readiness staging metadata/config is missing or malformed") from exc
+    notebook = folder / metadata.get("code_file", "")
+    if (config.get("mode") != "READINESS" or metadata.get("enable_gpu") != "true"
+            or not notebook.is_file() or notebook.is_symlink()):
+        raise DeploymentError("Release manifests may only bind a GPU READINESS staging folder")
+    manifest_sha = _manifest_digest(release_manifest, staged_notebook=notebook)
+    manifest = json.loads(release_manifest.read_text())
+    staged = manifest.get("notebook", {})
+    if (manifest.get("source", {}).get("commit_sha") != config.get("source_commit")
+            or staged.get("staged_sha256") != hashlib.sha256(notebook.read_bytes()).hexdigest()
+            or staged.get("source_sha256") != config.get("source_notebook_sha256")):
+        raise DeploymentError("Release manifest does not bind the exact source and staged notebook")
+    config["release_manifest_sha256"] = manifest_sha
+    config_path.write_text(json.dumps(config, sort_keys=True, indent=2) + "\n")
+    detached_manifest_path(folder).write_bytes(release_manifest.read_bytes())
+    validate_staging_folder(folder)
+    return manifest_sha
+
+
+def detached_manifest_path(folder: Path) -> Path:
+    return folder.parent / f"{folder.name}-{RELEASE_MANIFEST}"
 
 
 def publish(folder: Path) -> None:
     """Publish only when `--no-run` is supported; never silently execute push."""
     validate_staging_folder(folder)
-    check_cli(require_no_run=True)
-    run(["kaggle", "kernels", "push", "--path", str(folder), "--no-run"])
+    version, _ = check_cli(require_no_run=True)
+    result = run(["kaggle", "kernels", "push", "--path", str(folder), "--no-run"])
+    metadata, _ = validate_staging_folder(folder)
+    revision = revision_from_push_output(result.stdout)
+    evidence = pull_and_compare(folder, metadata["id"], revision)
+    evidence["attestation_path"] = str(write_publication_attestation(folder, evidence, cli_version=version))
+    return evidence
+
+
+def revision_from_push_output(output: str) -> int:
+    """Extract the server-assigned revision printed by Kaggle CLI after push."""
+    matches = re.findall(r"Kernel version\s+([1-9][0-9]*)\s+successfully pushed", output, flags=re.IGNORECASE)
+    if len(matches) != 1:
+        raise DeploymentError("Kaggle push output did not confirm exactly one numeric kernel version")
+    return int(matches[0])
+
+
+def _notebook_source_digest(path: Path) -> str:
+    try:
+        notebook = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DeploymentError("Pulled Kaggle notebook is unreadable") from exc
+    sources = []
+    for cell in notebook.get("cells", []):
+        source = cell.get("source", "")
+        sources.append({"cell_type": cell.get("cell_type"), "source": "".join(source) if isinstance(source, list) else source})
+    return hashlib.sha256(json.dumps(sources, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def embedded_deployment_config(notebook_path: Path) -> dict:
+    notebook = json.loads(notebook_path.read_text())
+    for cell in notebook.get("cells", []):
+        source = cell.get("source", "")
+        source = "".join(source) if isinstance(source, list) else source
+        try:
+            tree = ast.parse(source)
+        except SyntaxError:
+            continue
+        for node in tree.body:
+            if isinstance(node, ast.Assign) and any(isinstance(target, ast.Name) and target.id == "PASTURE_DEPLOYMENT" for target in node.targets):
+                try:
+                    value = ast.literal_eval(node.value)
+                except (ValueError, TypeError):
+                    continue
+                if isinstance(value, dict):
+                    return value
+    raise DeploymentError("Notebook has no literal embedded deployment configuration")
+
+
+def pull_and_compare(folder: Path, kernel: str, revision: int) -> dict:
+    """Pull a numeric Kaggle revision and compare exact bytes and source cells."""
+    metadata, staged = validate_staging_folder(folder)
+    if not isinstance(revision, int) or revision <= 0:
+        raise DeploymentError("Remote revision must be a positive numeric version")
+    with tempfile.TemporaryDirectory(prefix="pasture-kaggle-pull-") as tmp:
+        run(["kaggle", "kernels", "pull", f"{kernel}/{revision}", "--path", tmp])
+        candidates = list(Path(tmp).glob("*.ipynb"))
+        if len(candidates) != 1:
+            raise DeploymentError("Exact Kaggle pull must return exactly one notebook")
+        remote = candidates[0]
+        staged_hash = hashlib.sha256(staged.read_bytes()).hexdigest()
+        remote_hash = hashlib.sha256(remote.read_bytes()).hexdigest()
+        staged_cells = _notebook_source_digest(staged)
+        remote_cells = _notebook_source_digest(remote)
+        if staged_hash != remote_hash or staged_cells != remote_cells:
+            raise DeploymentError("Pulled numeric Kaggle revision differs from the staged notebook bytes/content")
+    config = json.loads(deployment_record_path(folder).read_text())
+    return {"kernel": kernel, "revision": revision, "source_commit": config["source_commit"],
+            "notebook_sha256": staged_hash, "source_cells_sha256": staged_cells,
+            "remote_notebook_sha256": remote_hash, "exact_match": True}
+
+
+def write_publication_attestation(folder: Path, evidence: dict, *, cli_version: str) -> Path:
+    """Persist detached, credential-free evidence after exact-version pull comparison."""
+    config = json.loads(deployment_record_path(folder).read_text())
+    metadata = json.loads((folder / "kernel-metadata.json").read_text())
+    if (evidence.get("exact_match") is not True
+            or evidence.get("source_commit") != config.get("source_commit")
+            or evidence.get("notebook_sha256") != config.get("notebook_sha256")
+            or evidence.get("remote_notebook_sha256") != evidence.get("notebook_sha256")
+            or not isinstance(evidence.get("revision"), int) or evidence["revision"] <= 0
+            or not re.fullmatch(r"[0-9a-f]{64}", str(evidence.get("source_cells_sha256", "")))):
+        raise DeploymentError("Cannot attest publication without exact source-bound notebook bytes")
+    record = {
+        "schema_version": 1, "kernel": metadata["id"],
+        "kernel_version": int(evidence["revision"]),
+        "source_commit": config["source_commit"], "mode": config["mode"],
+        "release_manifest_sha256": config.get("release_manifest_sha256"),
+        "staged_notebook_sha256": evidence["notebook_sha256"],
+        "remote_notebook_sha256": evidence["remote_notebook_sha256"],
+        "notebook_source_cells_sha256": evidence["source_cells_sha256"],
+        "exact_content_match": True, "kaggle_cli_version": cli_version,
+        "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    output = folder.parent / f"{folder.name}-publication-attestation.json"
+    output.write_text(json.dumps(record, sort_keys=True, indent=2) + "\n")
+    return output
+
 
 
 def staged_mode(notebook_path: Path) -> str:
@@ -140,10 +381,9 @@ def staged_mode(notebook_path: Path) -> str:
     except (OSError, json.JSONDecodeError) as exc:
         raise DeploymentError("Staged notebook is unreadable or invalid JSON") from exc
     content = "\n".join("".join(cell.get("source", [])) for cell in notebook.get("cells", []))
-    matches = [mode for mode in MODES if f'os.environ["PASTURE_MODE"] = "{mode}"' in content]
-    if len(matches) != 1:
-        raise DeploymentError("Staged notebook must contain exactly one fixed PREFLIGHT/SMOKE mode")
-    return matches[0]
+    if "PASTURE_DEPLOYMENT = " not in content or "KAGGLE_DEPLOYMENT_CONFIG_MARKER" in content:
+        raise DeploymentError("Notebook must embed the explicit immutable deployment config")
+    return "SOURCE_BOUND"
 
 
 def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
@@ -165,19 +405,79 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
         raise DeploymentError("Refusing to publish a kernel that is not explicitly private")
     if not notebook_path.is_file() or notebook_path.is_symlink() or metadata_path.is_symlink():
         raise DeploymentError("Staging notebook and metadata must be regular local files")
-    if {item.name for item in folder.iterdir()} != {"kernel-metadata.json", code_file}:
-        raise DeploymentError("Staging folder may contain only kernel-metadata.json and its code_file")
+    allowed = {"kernel-metadata.json", code_file}
+    if {item.name for item in folder.iterdir()} != allowed:
+        raise DeploymentError("Staging folder contains unexpected/unbound files")
     if metadata.get("enable_gpu") == "true":
         if metadata.get("machine_shape") != T4X2_SHAPE:
             raise DeploymentError("GPU metadata must select the supported T4 x2 machine shape")
     elif metadata.get("machine_shape") not in {"", None}:
         raise DeploymentError("CPU metadata must not select an accelerator machine shape")
-    staged_mode(notebook_path)
+    config_path = deployment_record_path(folder)
+    try:
+        config = json.loads(config_path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DeploymentError("Deployment configuration is missing or malformed") from exc
+    mode = validate_mode(config.get("mode", ""))
+    if hashlib.sha256(notebook_path.read_bytes()).hexdigest() != config.get("notebook_sha256"):
+        raise DeploymentError("Deployment config does not bind the exact staged notebook bytes")
+    required_config_keys = {"schema_version", "mode", "source_commit", "source_notebook_sha256",
+                            "readiness_config", "runtime_profile", "release_manifest_sha256",
+                            "gpu_required", "notebook_sha256"}
+    if set(config) != required_config_keys or config.get("schema_version") != 1:
+        raise DeploymentError("Deployment record has an unsupported or incomplete schema")
+    if config.get("source_commit") != _head_commit():
+        raise DeploymentError("Deployment record source commit is not the current immutable checkout")
+    try:
+        committed_source = _committed_notebook_bytes(config["source_commit"])
+    except DeploymentError:
+        raise
+    if hashlib.sha256(committed_source).hexdigest() != config.get("source_notebook_sha256"):
+        raise DeploymentError("Deployment record source notebook SHA differs from immutable source commit")
+    expected_embedded = {key: value for key, value in config.items() if key != "notebook_sha256"}
+    if config.get("release_manifest_sha256"):
+        expected_embedded["release_manifest_sha256"] = None
+    if embedded_deployment_config(notebook_path) != expected_embedded:
+        raise DeploymentError("Embedded deployment config differs from detached source-bound record")
+    expected_staged = _stage_notebook_bytes(committed_source, expected_embedded)
+    if notebook_path.read_bytes() != expected_staged:
+        raise DeploymentError("Staged notebook differs from the exact committed source plus approved config injection")
+    if mode == "READINESS":
+        if (metadata.get("enable_gpu") != "true" or config.get("readiness_config") != READINESS_CONFIG_VALUE
+                or not isinstance(config.get("runtime_profile"), dict)):
+            raise DeploymentError("READINESS staging requires GPU, release manifest, and bounded readiness config")
+        try:
+            from scripts.kaggle_release import _validate_runtime
+            profile = _validate_runtime(config["runtime_profile"])
+        except Exception as exc:
+            raise DeploymentError("READINESS runtime profile failed validation") from exc
+        if not profile["cuda_available"] or profile["gpu_count"] != 2 or any("T4" not in n for n in profile["gpu_names"]):
+            raise DeploymentError("READINESS deployment is not bound to two T4 CUDA devices")
+        manifest_path = detached_manifest_path(folder)
+        if not manifest_path.is_file() or hashlib.sha256(manifest_path.read_bytes()).hexdigest() != config.get("release_manifest_sha256"):
+            raise DeploymentError("Release manifest digest differs from deployment config")
+        manifest_digest = _manifest_digest(manifest_path, staged_notebook=notebook_path)
+        manifest = json.loads(manifest_path.read_text())
+        if manifest_digest != config.get("release_manifest_sha256") or manifest.get("source", {}).get("commit_sha") != config.get("source_commit"):
+            raise DeploymentError("Staged release manifest is not bound to deployment source commit")
+        if manifest.get("notebook", {}).get("staged_sha256") != config.get("notebook_sha256"):
+            raise DeploymentError("Staged release manifest does not bind the exact notebook bytes")
+        if config.get("readiness_config") != READINESS_CONFIG_VALUE:
+            raise DeploymentError("Readiness config differs from the fixed allowlisted diagnostic bounds")
+    elif config.get("release_manifest_sha256"):
+        raise DeploymentError("Non-readiness deployment must not carry a release manifest claim")
+    elif config.get("readiness_config") is not None or config.get("runtime_profile") is not None:
+        raise DeploymentError("Non-readiness deployment must not carry readiness-only configuration")
+    if type(config.get("gpu_required")) is not bool:
+        raise DeploymentError("Deployment GPU requirement must be boolean")
+    if bool(config.get("gpu_required")) != (metadata.get("enable_gpu") == "true"):
+        raise DeploymentError("Deployment config GPU requirement does not match Kaggle metadata")
     notebook_doc = json.loads(notebook_path.read_text())
     notebook_source = "\n".join("".join(cell.get("source", [])) for cell in notebook_doc.get("cells", []))
-    if metadata.get("enable_gpu") == "true" and notebook_source.count(
-            'os.environ["PASTURE_REQUIRE_CUDA"] = "1"') != 1:
-        raise DeploymentError("GPU staging must contain exactly one fail-closed PASTURE_REQUIRE_CUDA=1 assertion")
+    if "EXPERIMENT" not in notebook_source or "FULL_VALIDATION" not in notebook_source:
+        raise DeploymentError("Notebook must explicitly hard-block experimental modes")
+    if "PASTURE_DEPLOYMENT = " not in notebook_source or "KAGGLE_DEPLOYMENT_CONFIG_MARKER" in notebook_source:
+        raise DeploymentError("Notebook is missing the deployment provenance contract")
     return metadata, notebook_path
 
 
@@ -187,8 +487,11 @@ def execute(folder: Path, *, mode: str, confirm_execution: bool, confirm_gpu: bo
     if not confirm_execution:
         raise DeploymentError("Execution requires explicit --confirm-execution")
     metadata, notebook = validate_staging_folder(folder)
-    if staged_mode(notebook) != mode:
-        raise DeploymentError("Requested execution mode does not match the staged notebook mode")
+    if staged_mode(notebook) != "SOURCE_BOUND":
+        raise DeploymentError("Notebook does not implement the source-bound deployment contract")
+    config = json.loads(deployment_record_path(folder).read_text())
+    if config.get("mode") != mode:
+        raise DeploymentError("Requested execution mode does not match the staged deployment config")
     gpu = metadata.get("enable_gpu") == "true"
     if gpu and not confirm_gpu:
         raise DeploymentError("T4 x2 execution requires separate explicit --confirm-gpu")
@@ -197,7 +500,12 @@ def execute(folder: Path, *, mode: str, confirm_execution: bool, confirm_gpu: bo
     args = ["kaggle", "kernels", "push", "--path", str(folder)]
     if gpu:
         args += ["--accelerator", T4X2_SHAPE]
-    run(args)
+    result = run(args)
+    revision = revision_from_push_output(result.stdout)
+    version, _ = check_cli()
+    evidence = pull_and_compare(folder, metadata["id"], revision)
+    evidence["attestation_path"] = str(write_publication_attestation(folder, evidence, cli_version=version))
+    return evidence
 
 
 def retrieve(kind: str, kernel: str, destination: Path | None = None) -> str:
@@ -262,8 +570,8 @@ def write_deployment_record(path: Path, *, kernel: str, version: str, source_com
     validate_mode(mode)
     if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
         raise DeploymentError("source_commit must be a full 40-character Git SHA-1")
-    if not kernel_version.strip():
-        raise DeploymentError("kernel_version is required and must be captured from Kaggle, not inferred")
+    if not re.fullmatch(r"[1-9][0-9]*", kernel_version.strip()):
+        raise DeploymentError("kernel_version must be an exact numeric Kaggle revision")
     try:
         metadata = json.loads(metadata_path.read_text())
     except (OSError, json.JSONDecodeError) as exc:
@@ -275,14 +583,22 @@ def write_deployment_record(path: Path, *, kernel: str, version: str, source_com
     if not notebook_path.is_file() or notebook_path.is_symlink():
         raise DeploymentError("Staged notebook for provenance record is missing")
     mode = validate_mode(mode)
-    if staged_mode(notebook_path) != mode:
-        raise DeploymentError("Deployment record mode does not match the staged notebook")
+    if staged_mode(notebook_path) != "SOURCE_BOUND":
+        raise DeploymentError("Deployment record notebook is not source-bound")
+    folder = metadata_path.parent
+    config = json.loads(deployment_record_path(folder).read_text())
+    if config.get("mode") != mode or config.get("source_commit") != source_commit:
+        raise DeploymentError("Deployment config mode/source SHA does not match the record")
+    remote = pull_and_compare(folder, kernel, int(kernel_version))
     record = {
         "kernel": kernel, "kaggle_kernel_version": kernel_version.strip(),
         "source_commit": source_commit,
         "kaggle_cli_version": version, "mode": mode,
         "metadata_sha256": hashlib.sha256(metadata_path.read_bytes()).hexdigest(),
         "staged_notebook_sha256": hashlib.sha256(notebook_path.read_bytes()).hexdigest(),
+        "staged_source_cells_sha256": remote["source_cells_sha256"],
+        "remote_notebook_sha256": remote["remote_notebook_sha256"],
+        "remote_exact_content_match": remote["exact_match"],
         "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
     }
     path.write_text(json.dumps(record, indent=2) + "\n")
@@ -304,6 +620,13 @@ def main(argv: list[str] | None = None) -> int:
     prep.add_argument("--owner", required=True)
     prep.add_argument("--mode", default="SMOKE")
     prep.add_argument("--gpu", action="store_true", help="Select Kaggle T4 x2 machine shape")
+    prep_release = sub.add_parser("prepare-release", help="Stage fixed READINESS notebook for a verified T4x2 runtime")
+    prep_release.add_argument("--path", type=Path, required=True)
+    prep_release.add_argument("--owner", required=True)
+    prep_release.add_argument("--runtime-profile", type=Path, required=True)
+    bind = sub.add_parser("bind-release")
+    bind.add_argument("--path", type=Path, required=True)
+    bind.add_argument("--manifest", type=Path, required=True)
     pub = sub.add_parser("publish")
     pub.add_argument("--path", type=Path, required=True)
     run_cmd = sub.add_parser("execute")
@@ -316,6 +639,10 @@ def main(argv: list[str] | None = None) -> int:
         item.add_argument("kernel")
         if command == "output":
             item.add_argument("--path", type=Path)
+    compare = sub.add_parser("compare")
+    compare.add_argument("--path", type=Path, required=True)
+    compare.add_argument("--kernel", required=True)
+    compare.add_argument("--version", type=int, required=True, help="Exact numeric Kaggle version reported by kernels push")
     verify = sub.add_parser("verify")
     verify.add_argument("manifest", type=Path)
     verify.add_argument("--artifacts", type=Path, required=True)
@@ -333,13 +660,19 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(preflight(), indent=2))
         elif args.command == "prepare":
             print(prepare(args.path, args.owner, mode=args.mode, gpu=args.gpu))
+        elif args.command == "prepare-release":
+            print(prepare_release(args.path, args.owner, runtime_profile_path=args.runtime_profile))
+        elif args.command == "bind-release":
+            print(json.dumps({"release_manifest_sha256": bind_release(args.path, args.manifest)}, indent=2))
         elif args.command == "publish":
-            publish(args.path)
+            print(json.dumps(publish(args.path), indent=2))
         elif args.command == "execute":
-            execute(args.path, mode=args.mode, confirm_execution=args.confirm_execution,
-                    confirm_gpu=args.confirm_gpu)
+            print(json.dumps(execute(args.path, mode=args.mode, confirm_execution=args.confirm_execution,
+                    confirm_gpu=args.confirm_gpu), indent=2))
         elif args.command in {"status", "logs", "output"}:
             print(retrieve(args.command, args.kernel, getattr(args, "path", None)))
+        elif args.command == "compare":
+            print(json.dumps(pull_and_compare(args.path, args.kernel, args.version), indent=2))
         elif args.command == "verify":
             print(json.dumps({"verified": verify_manifest(args.manifest, args.artifacts)}, indent=2))
         elif args.command == "record":

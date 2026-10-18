@@ -27,6 +27,9 @@ BATCH_EPISODES = 16
 GRAD_CLIP_NORM = 2.0
 LEARNING_RATE = 1e-3
 CONFIG_VERSION = "trajectory-v1"
+READINESS_EPISODES = 32
+READINESS_UPDATES = 2
+READINESS_BATCH_EPISODES = 16
 
 
 def _sha(path: Path) -> str:
@@ -41,6 +44,203 @@ def _metrics_write(path: Path, row: dict) -> None:
     with path.open("a", encoding="utf8") as f:
         f.write(json.dumps(row, sort_keys=True) + "\n")
         f.flush(); os.fsync(f.fileno())
+
+
+def _model_digest(model) -> str:
+    """Hash model tensors in a stable name/order representation."""
+    digest = hashlib.sha256()
+    target = model.module if hasattr(model, "module") else model
+    for name, value in sorted(target.state_dict().items()):
+        tensor = value.detach().contiguous().cpu().numpy()
+        digest.update(name.encode("utf8"))
+        digest.update(str(tensor.dtype).encode("ascii"))
+        digest.update(np.asarray(tensor.shape, dtype=np.int64).tobytes())
+        digest.update(tensor.tobytes())
+    return digest.hexdigest()
+
+
+def run_readiness_ddp(algorithm: str, *, seed: int, output: Path, device: str,
+                      resume: str | None = None, max_updates: int | None = None) -> dict:
+    """Bounded diagnostic DDP exercise; deliberately emits no experiment metrics/eval.
+
+    The command-line entry point requires CUDA/NCCL. CPU/Gloo is supported here only
+    so CI can execute the same collect/gradient/checkpoint/recovery path without GPUs.
+    """
+    torch = require_torch()
+    if algorithm not in {"reinforce", "a2c"}:
+        raise ValueError("readiness DDP requires one algorithm: reinforce or a2c")
+    if max_updates not in {None, 1}:
+        raise ValueError("readiness DDP allows at most one update per invocation")
+    if not torch.distributed.is_available() or not torch.distributed.is_initialized():
+        raise RuntimeError("readiness DDP requires an initialized process group")
+    rank = torch.distributed.get_rank()
+    world_size = torch.distributed.get_world_size()
+    if world_size != 2:
+        raise ValueError("readiness DDP requires exactly two ranks")
+    device = str(device)
+    if device.startswith("cuda"):
+        if not torch.cuda.is_available():
+            raise RuntimeError("CUDA requested for readiness DDP but unavailable")
+        local_rank = int(os.environ.get("LOCAL_RANK", rank))
+        torch.cuda.set_device(local_rank)
+        device = f"cuda:{local_rank}"
+    elif device != "cpu":
+        raise ValueError("readiness DDP device must be CPU (test only) or CUDA")
+
+    set_deterministic(seed, device)
+    run_dir = output / "readiness-only" / algorithm
+    config = {"protocol": "readiness-ddp-v1", "algorithm": algorithm, "seed": int(seed),
+              "episodes": READINESS_EPISODES, "batch_episodes": READINESS_BATCH_EPISODES,
+              "updates": READINESS_UPDATES, "world_size": 2, "device_class": "cuda",
+              "evaluation": False, "locked_split_access": False, "metrics_promotion": False}
+    base_model = ActorCritic(value_head=algorithm == "a2c", seed=seed, dtype=torch.float32).to(device)
+    model = torch.nn.parallel.DistributedDataParallel(
+        base_model, device_ids=[torch.cuda.current_device()] if device.startswith("cuda") else None)
+    optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
+    state = {"generation": 0, "update": 0, "episode_cursor": 0,
+             "baseline_return_sum": 0.0, "baseline_return_count": 0,
+             "readiness_only": True, "benchmark_eligible": False}
+    if resume:
+        restored = load_generation(resume if resume != "latest" else run_dir,
+                                   model=model, optimizer=optimizer, map_location=device,
+                                   expected_algorithm=algorithm, expected_config=config)
+        state = restored["state"]
+        if state.get("readiness_only") is not True or state.get("benchmark_eligible") is not False:
+            raise ValueError("checkpoint is not readiness-only")
+    start_update = int(state["update"])
+    if start_update not in {0, 1} or int(state["episode_cursor"]) != start_update * READINESS_BATCH_EPISODES:
+        raise ValueError("readiness checkpoint cursor must be at update 0 or 1 boundary")
+    stop_update = READINESS_UPDATES if max_updates is None else min(READINESS_UPDATES, start_update + max_updates)
+    run_dir.mkdir(parents=True, exist_ok=True)
+    evidence_path = run_dir / "readiness-evidence.json"
+    if rank == 0:
+        if start_update == 0 and evidence_path.exists():
+            evidence = {"error": f"readiness output already exists: {evidence_path}"}
+        else:
+            evidence = {"protocol": "readiness-ddp-v1", "algorithm": algorithm, "seed": int(seed),
+                        "episodes": READINESS_EPISODES, "world_size": 2,
+                        "episode_seed_derivation": "sha256(root,train-world,episode-index)",
+                        "benchmark_eligible": False, "evaluation_performed": False,
+                        "locked_split_accessed": False, "updates": []}
+    else:
+        evidence = None
+    if rank == 0 and resume:
+        # Keep recovery evidence in a separate readiness-only document; it is not
+        # produced by experimental evaluation and contains no outcome metrics.
+        previous_evidence = run_dir / "readiness-evidence.json"
+        if not previous_evidence.is_file():
+            evidence = {"error": "readiness evidence missing; refusing an unverifiable resume"}
+        else:
+            evidence = json.loads(previous_evidence.read_text())
+            updates = evidence.get("updates", []) if isinstance(evidence, dict) else None
+            if (evidence.get("protocol") != "readiness-ddp-v1" or
+                    evidence.get("algorithm") != algorithm or evidence.get("seed") != int(seed) or
+                    not isinstance(updates, list) or len(updates) not in {int(state["update"]), int(state["update"]) + 1}):
+                evidence = {"error": "readiness evidence does not match checkpoint resume state"}
+            elif len(updates) == int(state["update"]) + 1:
+                pending = updates[-1]
+                if (not isinstance(pending, dict) or pending.get("update") != int(state["update"]) + 1 or
+                        pending.get("checkpoint_manifest_sha256") is not None):
+                    evidence = {"error": "readiness evidence has an inconsistent uncommitted update"}
+                else:
+                    # The evidence prepare record is durable before the checkpoint
+                    # commit. Drop it when the optimizer/checkpoint update did not commit.
+                    updates.pop()
+                    previous_evidence.write_text(json.dumps(evidence, sort_keys=True, indent=2) + "\n")
+            if not evidence.get("error") and int(state["update"]) > 0:
+                committed = evidence["updates"][-1]
+                if not isinstance(committed, dict):
+                    evidence = {"error": "readiness evidence update record is invalid"}
+                elif committed.get("checkpoint_manifest_sha256") is None:
+                    generation_path = run_dir / f"generation-{int(state['generation']):08d}"
+                    manifest_path = generation_path / "manifest.json"
+                    if not manifest_path.is_file():
+                        evidence = {"error": "committed readiness checkpoint is missing its manifest"}
+                    else:
+                        checkpoint_manifest = json.loads(manifest_path.read_text())
+                        committed["checkpoint_generation"] = generation_path.name
+                        committed["checkpoint_manifest_sha256"] = _sha(manifest_path)
+                        committed["training_state_sha256"] = checkpoint_manifest["state_sha256"]
+                        previous_evidence.write_text(json.dumps(evidence, sort_keys=True, indent=2) + "\n")
+    evidence_holder = [evidence]
+    torch.distributed.broadcast_object_list(evidence_holder, src=0)
+    evidence = evidence_holder[0]
+    if isinstance(evidence, dict) and evidence.get("error"):
+        raise ValueError(evidence["error"])
+
+    while int(state["update"]) < stop_update:
+        update_index = int(state["update"])
+        episode_ids = shard_episode_indices(update_index * READINESS_BATCH_EPISODES,
+                                             READINESS_BATCH_EPISODES, world_size, rank)
+        episode_specs = [(derive_seed(seed, "train-world", ep), ep) for ep in episode_ids]
+        trajectories = collect_episodes_batch(model, episode_specs, root_seed=seed)
+        optimizer.zero_grad(set_to_none=True)
+        loss, _ = calculate_loss(model, trajectories, algorithm,
+            previous_return_sum=state["baseline_return_sum"],
+            previous_return_count=state["baseline_return_count"])
+        assert_finite_training_state(loss, base_model)
+        loss.backward()
+        assert_finite_training_state(loss, base_model, gradients=True)
+        grad_norm_tensor = torch.nn.utils.clip_grad_norm_(base_model.parameters(), GRAD_CLIP_NORM)
+        grad_norm = float(grad_norm_tensor.detach().cpu())
+        if not np.isfinite(grad_norm) or grad_norm <= 0:
+            raise FloatingPointError("readiness update requires a finite nonzero gradient norm")
+        digest_before = _model_digest(base_model)
+        optimizer.step()
+        assert_finite_training_state(loss.detach(), base_model)
+        digest_after = _model_digest(base_model)
+        if digest_before == digest_after:
+            raise RuntimeError("readiness optimizer step did not change model parameters")
+        local_record = {"rank": rank, "episode_ids": episode_ids, "device": device,
+                        "cuda_device_index": int(os.environ.get("LOCAL_RANK", rank)) if device.startswith("cuda") else None,
+                        "cuda_device_name": torch.cuda.get_device_name(torch.cuda.current_device()) if device.startswith("cuda") else None,
+                        "gradient_norm": grad_norm, "gradient_finite": True,
+                        "optimizer_step_changed_model": True, "model_digest": digest_after}
+        records = [None, None]
+        torch.distributed.all_gather_object(records, local_record)
+        # DDP must leave each rank with the same synchronized parameters.
+        if len({record["model_digest"] for record in records}) != 1:
+            raise RuntimeError("DDP model digests diverged after optimizer step")
+        state["update"] += 1
+        state["episode_cursor"] += READINESS_BATCH_EPISODES
+        state["generation"] += 1
+        return_arrays = [x.returns_to_go().reshape(-1) for x in trajectories]
+        reward_sum = float(sum(float(x.rewards.sum()) for x in trajectories))
+        return_sum = float(sum(float(values.sum()) for values in return_arrays))
+        return_count = int(sum(values.size for values in return_arrays))
+        local_totals = torch.tensor([reward_sum, return_sum, return_count], dtype=torch.float64, device=device)
+        torch.distributed.all_reduce(local_totals)
+        global_reward_sum = float(local_totals[0].item())
+        state["baseline_return_sum"] += float(local_totals[1].item())
+        state["baseline_return_count"] += int(local_totals[2].item())
+        update_evidence = {"update": state["update"], "episode_ids_by_rank": records,
+                           "global_episode_count": READINESS_BATCH_EPISODES,
+                           "diagnostic_reward_sum_not_evaluation": global_reward_sum,
+                           "model_digest": digest_after, "benchmark_eligible": False,
+                           "checkpoint_generation": f"generation-{int(state['generation']):08d}",
+                           "checkpoint_manifest_sha256": None, "training_state_sha256": None}
+        if rank == 0:
+            evidence["updates"].append(update_evidence)
+            # Persist the exact rank/device work record before the checkpoint
+            # commit. On restart, an uncommitted prepare row is safely discarded.
+            evidence_path.write_text(json.dumps(evidence, sort_keys=True, indent=2) + "\n")
+            save_generation(run_dir, model=model, optimizer=optimizer, state=state,
+                            config=config, algorithm=algorithm, rank=rank)
+            generation_path = run_dir / f"generation-{int(state['generation']):08d}"
+            checkpoint_manifest = json.loads((generation_path / "manifest.json").read_text())
+            update_evidence["checkpoint_manifest_sha256"] = _sha(generation_path / "manifest.json")
+            update_evidence["training_state_sha256"] = checkpoint_manifest["state_sha256"]
+            evidence_path.write_text(json.dumps(evidence, sort_keys=True, indent=2) + "\n")
+        torch.distributed.barrier()
+    if rank == 0:
+        result = {"readiness_only": True, "algorithm": algorithm,
+                  "checkpoint": str(run_dir / "LATEST"), "evidence": str(evidence_path),
+                  "updates": int(state["update"]), "episode_cursor": int(state["episode_cursor"]),
+                  "benchmark_eligible": False}
+    else:
+        result = {"rank": rank, "updates": int(state["update"]), "readiness_only": True}
+    torch.distributed.barrier()
+    return result
 
 
 def deterministic_rollout(model, seed: int, *, root_seed: int, episode_index: int):
@@ -312,6 +512,8 @@ def main(argv=None):
     p.add_argument("--smoke", action="store_true", help="two-update CPU smoke run with export/eval")
     p.add_argument("--smoke-update", action="store_true",
                    help="one disposable BATCH_EPISODES update on explicit CPU or CUDA; single algorithm only")
+    p.add_argument("--readiness-ddp", action="store_true",
+                   help="bounded 2-rank CUDA readiness test (32 episodes, 2 updates), no evaluation/promotion")
     p.add_argument("--algorithm", choices=("reinforce", "a2c", "both"), default="both")
     p.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     p.add_argument("--seed", type=int, default=810001)
@@ -330,6 +532,46 @@ def main(argv=None):
         p.error("--episodes and --checkpoint-every must be positive")
     if args.smoke and args.smoke_update:
         p.error("--smoke and --smoke-update are mutually exclusive")
+    if args.readiness_ddp:
+        if args.smoke or args.smoke_update or args.algorithm == "both":
+            p.error("--readiness-ddp requires one algorithm and cannot combine with smoke modes")
+        if args.device != "cuda":
+            p.error("--readiness-ddp requires --device cuda")
+        if args.mode != "train" or args.eval_seeds != 10 or args.allow_execution_migration:
+            p.error("--readiness-ddp is training-only and does not support evaluation or migration")
+        if args.metrics is not None:
+            p.error("--readiness-ddp writes readiness evidence only; --metrics is not supported")
+        if int(os.environ.get("WORLD_SIZE", "1")) != 2:
+            p.error("--readiness-ddp requires torchrun with exactly two ranks")
+        if args.max_updates not in {None, 1}:
+            p.error("--readiness-ddp permits at most one update per invocation")
+        if args.episodes not in {278, READINESS_EPISODES}:
+            p.error("--readiness-ddp has a fixed 32-episode budget")
+        if args.checkpoint_every != 1:
+            p.error("--readiness-ddp checkpoints every update")
+        torch = require_torch()
+        if not torch.cuda.is_available():
+            p.error("--readiness-ddp requires CUDA availability")
+        try:
+            if torch.cuda.device_count() < 2:
+                p.error("--readiness-ddp requires two visible CUDA devices")
+        except RuntimeError as exc:
+            p.error(f"CUDA device query failed: {exc}")
+        local_rank = int(os.environ.get("LOCAL_RANK", "-1"))
+        if local_rank not in {0, 1}:
+            p.error("--readiness-ddp requires LOCAL_RANK 0 or 1")
+        torch.cuda.set_device(local_rank)
+        torch.distributed.init_process_group(backend="nccl", init_method="env://")
+        try:
+            result = run_readiness_ddp(args.algorithm, seed=args.seed, output=args.output,
+                                       device="cuda", resume=args.resume, max_updates=args.max_updates)
+            if int(os.environ.get("RANK", "0")) == 0:
+                print(json.dumps(result, indent=2))
+        finally:
+            torch.distributed.destroy_process_group()
+        return
+    if not args.smoke and not args.smoke_update and args.mode != "eval":
+        p.error("ordinary CLI training is disabled: no independently trusted experimental authorization verifier is configured; use the reviewed release workflow after authorization is established")
     if args.smoke:
         args.algorithm = "both"
         args.device = "cpu"

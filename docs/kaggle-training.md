@@ -1,111 +1,111 @@
-# Pasture Studies Kaggle training guide
+# Pasture Studies Kaggle release workflow
 
-`notebooks/pasture_studies_kaggle.ipynb` provides a Kaggle entry point for the local PyTorch trainer. The NumPy trainer remains the baseline. Keep the historical MVP1 failure evidence and preregistered acceptance thresholds unchanged. This synthetic experiment does not establish biological validity or production-husbandry guidance.
+The Kaggle entry point is a source-bound launcher, not the training engine. Training and checkpoint semantics live in `validation/train_torch_mvp1.py` and `farm_sim/`; scientific protocol lives in the preserved preregistration and historical reports. `notebooks/pasture_studies_kaggle.ipynb` offers only `PREFLIGHT`, disposable `SMOKE`, and bounded `READINESS` paths. `EXPERIMENT` and `FULL_VALIDATION` are fail-closed unless a future independently trusted release approval exists. The current release API has no trust root; caller-supplied environment variables, JSON, notebook revision strings, or files cannot authorize these modes.
 
-## Choose an execution mode
+No new scientific outcome is collected by release preparation or publishing. READINESS is a non-scientific T4x2 pipeline diagnostic only: two DDP updates, 32 diagnostic episodes, checkpoint recovery between process invocations, both GPUs participating, no evaluation, no preregistration seed splits, no pilot/locked outcome access, and no eligibility for speed, learning, or policy-promotion claims. Historical MVP1 failure evidence, reward definitions, acceptance criteria, thresholds, and dependency pins are unchanged. The Kaggle runtime is recorded separately; it is not silently converted into the formal scientific dependency environment.
 
-The source notebook defaults to `SMOKE`; it does not launch the complete experiment automatically. The helper accepts only `PREFLIGHT` and `SMOKE`. Its `prepare --mode ...` command injects the selected mode as a fixed assignment into the staged notebook copy; the repository source notebook is left unchanged. That staging edit and its recorded hash are not proof of remote notebook provenance or a bypass of the notebook's source-bound experimental gates. For direct use in the Kaggle UI, configure `PASTURE_MODE` before running cells. The optional revision and content-hash environment variables accept caller-provided strings for audit display only: neither value is verified against Kaggle's active notebook bytes or treated as trusted publication provenance.
+## Release manifest and staging
 
-```python
-import os
-os.environ["PASTURE_MODE"] = "SMOKE"  # PREFLIGHT or SMOKE only
-# Optional caller claim only; it is not verified against active Kaggle bytes:
-# os.environ["PASTURE_NOTEBOOK_REVISION"] = "<saved Kaggle notebook revision>"
-# Optional caller claim only; it is not verified against active Kaggle bytes:
-# os.environ["PASTURE_NOTEBOOK_CONTENT_SHA256"] = "<sha256 claim>"
+Create an exact runtime profile from the target Kaggle runtime you intend to release against. Example based on the observed Kaggle v5 runtime; if Kaggle's image changes, stop and produce a separately reviewed/versioned runtime profile rather than modifying pins or claiming equivalence:
+
+```json
+{
+  "python": "3.13.15",
+  "numpy": "2.1.3",
+  "pytorch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "cuda_available": true,
+  "gpu_count": 2,
+  "gpu_names": ["Tesla T4", "Tesla T4"]
+}
 ```
 
-| Mode | Behavior |
-| --- | --- |
-| `PREFLIGHT` | Verifies Python/dependencies, CUDA visibility and runtime, immutable source checkout, and preregistration provenance. Does not train. |
-| `SMOKE` (default) | Uses the Kaggle image's already-installed libraries without package installation. Runs one disposable CPU update each for REINFORCE/A2C and, when CUDA works, one CUDA A2C update; exports checkpoints and artifacts. This is not a training arm or learning result. |
-| `EXPERIMENT` | **Hard-disabled in this publication.** Do not use for training. |
-| `FULL_VALIDATION` | **Hard-disabled in this publication.** Do not use for training or benchmarking. |
+The profile is an expected runtime binding. The notebook verifies it against actual Python, NumPy, PyTorch, CUDA, and GPU names before READINESS. It does not install dependencies. Do not use this Kaggle profile as a substitute for the original preregistered scientific environment.
 
-Do not infer GPU acceleration from a visible device, CUDA smoke test, or successful training run. Report measured benchmark results and their limitations; an unavailable CUDA run is **not measured**, not a CPU-result substitute.
+Run from a clean source checkout. The release manifest is intentionally external to the repository because it binds the source commit; committing it into that same source would make the commit hash self-referential. It binds source SHA, exact engine file hashes, exact notebook byte/content hashes, preregistration and threshold hashes, seed/config declarations, and runtime profile. Its status is pending approval and it does **not** authorize EXPERIMENT/FULL_VALIDATION.
 
-## Kaggle setup and dependency preflight
+```bash
+# Existing Kaggle authentication, read-only check; no credentials are printed.
+# Use the isolated official CLI snapshot that contains version-aware pull (not a
+# globally installed 2.2.4 package lacking the merged PR #1201 fix).
+export PATH="$HOME/.cache/pasture-kaggle-cli/venv-6894864ff4095cf98e9e36d3a694ff5fc9ba3818/bin:$PATH"
+kaggle --version
+kaggle kernels list --mine --page-size 1
 
-1. Open the notebook from the public [`santleme/pasture-studies`](https://github.com/santleme/pasture-studies) repository. In Kaggle settings choose Python and enable Internet for the pinned GitHub source fetch. Choose GPU/T4x2 only when available and needed. Kaggle allocation and quota can vary.
-2. The notebook fetches and checks out the full SHA in `PASTURE_PIPELINE_COMMIT` in detached HEAD and aborts on a mismatch. For a reviewed implementation update, publish the source commit first, then update this pin to that exact commit and regenerate the source-bound preregistration/manifests; never mutate the historical acceptance thresholds or reuse an attestation bound to different source bytes.
-3. SMOKE records Python/NumPy/PyTorch versions and comparison with the unchanged historical `requirements-training.txt` pins, but deliberately does not install or replace libraries. This allows it to use a compatible preinstalled CUDA-enabled PyTorch wheel (for example, a Kaggle `+cu128` build) without forcing old pins onto a newer Python image. Runtime mismatches are included in the export separately from the scientific pins. `PREFLIGHT` keeps the strict exact-pin check; it does not redefine the scientific environment.
-4. If CUDA is requested or detected for SMOKE, PyTorch must import and report a usable CUDA runtime; otherwise the run fails closed. A GPU-staged notebook sets `PASTURE_REQUIRE_CUDA=1`, so it cannot silently continue on CPU. The smoke path never runs pip install. A T4x2 request can still expose a different device count depending on Kaggle allocation; device names/count are recorded.
-5. CUDA validation performs a real model forward, loss, backward pass, and finite-gradient check. When usable CUDA is available, the smoke then runs one explicit single-algorithm/single-update A2C CUDA job. CPU REINFORCE and A2C jobs each use the same bounded one-update command. These operations are diagnostic pipeline checks only, not hardware benchmarks or learning claims.
+cat >/tmp/pasture-kaggle-runtime.json <<'JSON'
+{"python":"3.13.15","numpy":"2.1.3","pytorch":"2.11.0+cu128","cuda_runtime":"12.8","cuda_available":true,"gpu_count":2,"gpu_names":["Tesla T4","Tesla T4"]}
+JSON
 
-The notebook creates an outcome-blind preregistration from the pinned checkout and records its manifest and threshold hashes. Its notebook hash refers to the older notebook in the pinned source commit; it is **not** an attestation or approval for the revised executing Kaggle notebook. The export labels `PASTURE_NOTEBOOK_REVISION` and `PASTURE_NOTEBOOK_CONTENT_SHA256` values as unverified caller claims. The notebook cannot inspect or validate the active Kaggle notebook bytes from those strings, and they do not establish publication provenance, approval, or experiment eligibility. `EXPERIMENT` and `FULL_VALIDATION` are hard-disabled in this publication regardless of user-supplied environment variables or JSON/configuration data; caller-provided data is not authorization. Use only `PREFLIGHT` or `SMOKE`. Those experimental modes require a future trusted, source-bound release that independently verifies and approves the exact executing notebook bytes and their source-bound provenance. Until that release exists, do not treat this notebook as eligible for experimental execution; do not reuse an existing run ID or claim an experiment is eligible.
+python3 scripts/kaggle_deploy.py prepare-release \
+  --path /tmp/pasture-kaggle-readiness \
+  --owner <kaggle-username> \
+  --runtime-profile /tmp/pasture-kaggle-runtime.json
 
-## Run and retrieve smoke artifacts
+# Manifest generation is after staging so it binds the exact upload bytes.
+python3 scripts/kaggle_release.py generate \
+  --runtime-profile /tmp/pasture-kaggle-runtime.json \
+  --staged-notebook /tmp/pasture-kaggle-readiness/pasture_studies_kaggle.ipynb \
+  --output /tmp/pasture-release-manifest.json
+python3 scripts/kaggle_deploy.py bind-release \
+  --path /tmp/pasture-kaggle-readiness \
+  --manifest /tmp/pasture-release-manifest.json
+python3 scripts/kaggle_release.py verify /tmp/pasture-release-manifest.json \
+  --staged-notebook /tmp/pasture-kaggle-readiness/pasture_studies_kaggle.ipynb
+python3 scripts/kaggle_release.py gate READINESS /tmp/pasture-release-manifest.json \
+  --config /tmp/pasture-kaggle-readiness-readiness-config.json \
+  --staged-notebook /tmp/pasture-kaggle-readiness/pasture_studies_kaggle.ipynb
+```
 
-`PASTURE_RUN_ID` is an optional safe prefix; each SMOKE kernel execution appends a fresh random suffix and creates a new output directory, so it cannot accept prior checkpoints or metrics. The smoke runner also fails if any target output already exists and requires exactly one newly created checkpoint generation plus both inference exports. SMOKE checkpoints are disposable pipeline-test artifacts, not experimental training checkpoints. `--smoke-update` requires exactly one algorithm and explicit CPU/CUDA, performs only one complete batch/update, disallows resume and distributed runs, and writes a checkpoint plus NumPy inference export. Experimental Kaggle resume is unavailable while `EXPERIMENT` and `FULL_VALIDATION` remain hard-disabled.
+`prepare-release` checks the target profile is CUDA-enabled T4x2, then stages an injected notebook copy and private `kernel-metadata.json` with Internet + `NvidiaTeslaT4`. Kaggle CLI uploads only the `code_file` notebook; it does not upload sidecar JSON files. Therefore the immutable safe deployment config is embedded as a literal in the staged notebook, while the deployment record and release manifest remain detached host-side evidence. The manifest is generated after staging and binds both committed source notebook bytes and exact staged notebook bytes/content. `bind-release` verifies that exact staged notebook and stores the manifest detached; it does not edit notebook bytes. Staging contains exactly the notebook and metadata and rejects extras. No self-hash is placed in the notebook.
 
-`/kaggle/working` may not survive a Kaggle session reset. Before stopping or resetting a session, download the exported SMOKE `pasture-training-artifacts.zip` and `artifact_manifest.json` from notebook output if you need those diagnostic artifacts. Restoring an archive to resume experimental training is a future workflow only; it is not available in this publication. A future trusted, approved source-bound release must verify that resume behavior and document its exact recovery procedure before users rely on it.
+## Publish and verify exact Kaggle revision
 
-After execution, download `export/pasture-training-artifacts.zip` and `export/artifact_manifest.json` from Kaggle's notebook output. The manifest records source commit, run ID, mode, dependencies/runtime, the supplied notebook revision/content hash as **unverified caller claims**, preregistration/threshold hashes, and SHA-256/size for each exported run artifact. Those claims do not validate the active Kaggle notebook bytes. Keep the manifest with the archive. Verify the hashes locally before using a checkpoint. For local cattle-simulation inference, use a checkpoint generation's NumPy `.npz` inference export with its matching JSON sidecar; optimizer/RNG state is for training resume, not inference.
-
-## Kaggle CLI preparation, publication, and explicit execution
-
-The helper stages only `PREFLIGHT` or `SMOKE`, by inserting the requested fixed mode into a copy of the source notebook. Preparation is local and does not execute it:
+The publish helper requires `kaggle kernels push --no-run` to appear in the active CLI's help. It parses the server-assigned numeric revision from the official push result (`Kernel version N successfully pushed`), requests that exact numeric version using `kernels pull owner/slug/N`, and compares full notebook SHA-256 and cell source. Do not use the original 2.2.4 code that treated the suffix as part of the slug; use the isolated official Kaggle CLI source snapshot that includes merged PR #1201 (commit `6894864ff4095cf98e9e36d3a694ff5fc9ba3818` in this environment), where pull sends `version_label=vN`. The merged upstream change reports live API validation for version-specific pull. The helper never infers a revision from a latest listing or ambiguous `latest` selector. It writes a detached, credential-free `*-publication-attestation.json` only after version-specific content comparison passes.
 
 ```bash
 python3 scripts/kaggle_deploy.py preflight
-# auth_status is not_verified; authenticate manually if needed, then validate separately:
-kaggle kernels list --mine --page-size 1
-python3 scripts/kaggle_deploy.py prepare --path /tmp/pasture-kaggle-upload --owner <your-kaggle-username> --mode SMOKE
+python3 scripts/kaggle_deploy.py publish --path /tmp/pasture-kaggle-readiness
+# Output identifies the numeric revision printed by Kaggle and the detached attestation path.
+python3 scripts/kaggle_deploy.py compare \
+  --path /tmp/pasture-kaggle-readiness \
+  --kernel <kaggle-username>/pasture-studies --version <numeric-revision>
 ```
 
-To request Kaggle T4×2 metadata, add `--gpu` to `prepare`; this only sets `enable_gpu` and the `NvidiaTeslaT4` machine shape. It does not allocate hardware or execute. The helper's `preflight` deliberately does not authenticate or inspect credentials; use `kaggle auth login` yourself when appropriate, then the read-only `kernels list` check above.
+If your CLI does not advertise `--no-run`, do not publish with ordinary push as a workaround. Upgrade/configure the official CLI and recheck help. Keep the release manifest and deployment files private.
 
-Publication is strictly no-run and fails closed unless the installed CLI advertises `--no-run`:
+## Explicit bounded READINESS run
+
+Execution uses the existing deployment helper. This command consumes Kaggle GPU quota and should only be used after the READINESS release has completed independent code/architecture/adversarial reviews. It cannot run EXPERIMENT or FULL_VALIDATION:
 
 ```bash
-python3 scripts/kaggle_deploy.py publish --path /tmp/pasture-kaggle-upload
+python3 scripts/kaggle_deploy.py execute \
+  --path /tmp/pasture-kaggle-readiness --mode READINESS \
+  --confirm-execution --confirm-gpu
 ```
 
-The installed Kaggle CLI 2.2.4 does not list `--no-run` in `kaggle kernels push --help`; **do not publish with that version** because the ordinary push may execute the notebook. Upgrade and verify the active executable's help before attempting a no-run publication. Never remove the safety flag or fall back to an ordinary push.
+The notebook checks the exact pinned source checkout and embedded runtime/config bindings, fails unless two T4 CUDA devices are visible, performs a real forward/backward gradient check, then runs bounded A2C DDP update 1 followed by a fresh torchrun invocation resuming from `LATEST` for update 2. It validates rank/device participation, finite gradients, synchronized parameter digests, checkpoint generations, and readiness-only flags. It performs no policy evaluation. Wall-clock output is diagnostic only and is not a hardware-performance benchmark.
 
-Running a staged notebook is a separate, explicit action that requires `--confirm-execution` and a matching mode. For a deliberate CPU smoke:
+Monitor and retrieve using the exact numeric version printed by `execute` or `publish`:
 
 ```bash
-python3 scripts/kaggle_deploy.py execute --path /tmp/pasture-kaggle-upload --mode SMOKE --confirm-execution
+python3 scripts/kaggle_deploy.py status <kaggle-username>/pasture-studies/<numeric-revision>
+python3 scripts/kaggle_deploy.py logs <kaggle-username>/pasture-studies/<numeric-revision>
+python3 scripts/kaggle_deploy.py output <kaggle-username>/pasture-studies/<numeric-revision> \
+  --path /tmp/pasture-kaggle-output
+python3 scripts/kaggle_deploy.py verify \
+  /tmp/pasture-kaggle-output/pasture-release-<run-id>/artifact-manifest.json \
+  --artifacts /tmp/pasture-kaggle-output/pasture-release-<run-id>
+sha256sum /tmp/pasture-kaggle-output/pasture-release-<run-id>/pasture-readiness.zip
 ```
 
-For a T4×2 staging folder prepared with `--gpu`, execution additionally requires `--confirm-gpu`, and the helper passes `--accelerator NvidiaTeslaT4`:
+The notebook writes checkpoint generations, readiness evidence, observed runtime, ZIP, and SHA-256 manifest under its fresh `/kaggle/working/pasture-release-readiness-<random-id>/` directory. Keep all files together. A readiness checkpoint cannot be promoted or treated as a scientific training checkpoint. For interruption recovery testing, the notebook intentionally stops after its first committed update and starts a new torchrun invocation with `--resume latest`; this tests actual checkpoint deserialization/restoration in the same Kaggle kernel session. It does not claim survival after Kaggle destroys `/kaggle/working`.
 
-```bash
-python3 scripts/kaggle_deploy.py execute --path /tmp/pasture-kaggle-upload --mode SMOKE --confirm-execution --confirm-gpu
-```
+## Historical gates and limitations
 
-After publication, create a provenance record using the exact Kaggle revision identifier (not the local CLI version):
+- Historical requirements remain in `requirements-training.txt`. Kaggle's Python 3.13/NumPy 2/PyTorch CUDA stack is a separately bound readiness runtime, not a rewritten protocol.
+- No LoRA/QLoRA, external LLM, hosted inference, or model weights were added.
+- A visible GPU or successful readiness step is not GPU acceleration evidence. No throughput comparison is executed in READINESS.
+- Pending release status is not approval. Do not access pilot or locked-test outcomes or launch full-scale training without a separate authorized, independently verifiable release.
+- No claim of biological validation, cognition acceptance, or production husbandry suitability.
 
-```bash
-python3 scripts/kaggle_deploy.py record ./deployment-record.json \
-  --kernel <owner>/<kernel-slug> \
-  --source-commit "$(git rev-parse HEAD)" \
-  --kernel-version <exact-kaggle-revision> \
-  --mode SMOKE \
-  --metadata /tmp/pasture-kaggle-upload/kernel-metadata.json
-```
-
-The record distinguishes `kaggle_kernel_version` and `kaggle_cli_version`, and stores SHA-256 values for the staged notebook and metadata. Use version-qualified `owner/slug/<numeric-version>` references for status/logs/output when retrieving a specific revision; see the [Kaggle CLI deployment guide](kaggle-cli-deployment.md) for detailed commands and limitations.
-
-No Kaggle authentication, publication, execution, or GPU operation was performed while updating these docs. Neither staging nor publication bypasses the source notebook's disabled `EXPERIMENT`/`FULL_VALIDATION` gates or establishes trusted provenance.
-
-## Local notebook validation
-
-Run the fresh-kernel test from the repository root after installing the optional test requirements. It clones the immutable source pin and executes the notebook top to bottom in `SMOKE` mode with a temporary work directory and CUDA disabled; it verifies checkpoint/export contents and archive integrity. It does not run experimental arms or measure GPU performance.
-
-```bash
-python -m pip install -r requirements-notebook-test.txt
-PASTURE_RUN_NOTEBOOK_SMOKE=1 python -m unittest discover -s tests \
-  -p test_pasture_notebook_smoke.py -v
-```
-
-The test requires network access to clone the pinned public source. A CPU-only pass validates notebook setup, smoke training, resume selection, and artifact export—not CUDA execution, learning acceptance, or acceleration. Kaggle CUDA/T4 and performance benchmarks remain unverified until run on the specified Kaggle hardware.
-
-## Frozen interpretation boundaries
-
-Preserve the approved acceptance thresholds and the failed MVP1 evidence in `validation/MVP1_REMEDIATION_REPORT.md`. The fixed-corpus gate remains: GPU-vs-best-CPU throughput 95% CI lower bound **≥2.0×** and elapsed-time reduction **≥30%**; T4x2 must additionally reach **≥1.20×** vs. T4x1. The dynamic end-to-end gate remains at least five paired complete runs, 95% CI lower speedup **≥2×**, elapsed reduction **≥30%** vs. CPU (T4x2 also **≥1.20×** vs. T4x1), exact update/transition counts, action disagreement **≤0.5%**, and each named simulator-work counter within **1.0%**. Apply the source-bound preregistration for all other criteria; do not change thresholds after observing outcomes.
-
-The preregistration remains `PRE_OUTCOME_PREREGISTRATION_PENDING_PILOT_DELTA0`; the precision-only pilot and locked-test binding have not been established. Validation diagnostics do not constitute a locked-test result or prove cognition. A GPU smoke or device visibility does not constitute a benchmark. No result from this notebook alone establishes biological validity.
-
-References: [Kaggle Notebooks](https://www.kaggle.com/docs/notebooks), [Kaggle Efficient GPU Usage](https://www.kaggle.com/docs/efficient-gpu-usage), [PyTorch reproducibility](https://docs.pytorch.org/docs/2.14/notes/randomness.html), and [PyTorch CUDA semantics](https://docs.pytorch.org/docs/2.14/notes/cuda.html).
+The previous successful Kaggle SMOKE v5 record remains in `validation/KAGGLE_SMOKE_V5_REPORT.md`; it is historical evidence and is not overwritten by this launcher release.

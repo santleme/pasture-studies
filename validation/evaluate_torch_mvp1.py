@@ -12,8 +12,16 @@ from dataclasses import replace
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
+import base64
+import binascii
+import datetime
+import fcntl
+import stat
+import subprocess
 import sys
+import uuid
 from typing import Any
 
 import numpy as np
@@ -37,6 +45,11 @@ FAMILIES = ("starter", "resource_scarce_relocated", "wide", "unseen_corridor")
 REWARD_COMPONENTS = ("forage_success", "forage_depleted", "water_success", "water_blocked",
                      "rested", "ruminated", "herd_contact", "herd_alone", "walked",
                      "grazing_en_route", "drinking_en_route")
+# Deliberately empty until an independent governance process pins an approved
+# Ed25519 trust root. A caller-supplied PEM is only a candidate, never trust by
+# itself. Do not populate this from a CLI flag, environment variable, or the
+# authorization artifact.
+TRUSTED_AUTHORIZATION_ROOT_SHA256: frozenset[str] = frozenset()
 
 
 def _sha_bytes(data: bytes) -> str:
@@ -346,9 +359,148 @@ def verify_locked_checkpoint_binding(seed_manifest: dict[str, Any], *, generatio
             "analysis_sha256": actual_analysis, "source_sha256": actual_sources}
 
 
+def verify_locked_authorization(seed_manifest: dict[str, Any], *, authorization_path: str | Path | None,
+                                trusted_root_path: str | Path | None) -> dict[str, Any]:
+    """Verify separately signed permission to access locked outcomes.
+
+    The authorization is intentionally detached from the preregistration. The
+    public key must be explicitly supplied and its SHA-256 fingerprint must
+    match the code-pinned allowlist. The allowlist is intentionally empty until
+    an independent governance process configures it. This function reads only
+    authorization and preregistration metadata, never locked outcome data.
+    """
+    if authorization_path is None or trusted_root_path is None:
+        raise ValueError("locked evaluation denied: explicit signed authorization and trusted root are required")
+    from validation.preregister_torch_mvp1 import verify_manifest
+    verify_manifest(seed_manifest, verify_current_sources=True)
+    if seed_manifest.get("status") != "LOCKED_PRE_OUTCOME":
+        raise ValueError("locked evaluation denied: preregistration is not LOCKED_PRE_OUTCOME")
+    root = Path(trusted_root_path)
+    if not root.is_file():
+        raise ValueError("locked evaluation denied: candidate authorization root is missing")
+    root_fingerprint = sha_file(root)
+    if root_fingerprint not in TRUSTED_AUTHORIZATION_ROOT_SHA256:
+        raise ValueError("locked evaluation denied: candidate authorization root fingerprint is not allowlisted")
+    try:
+        doc = json.loads(Path(authorization_path).read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError("locked evaluation denied: authorization artifact cannot be read") from exc
+    required = {"schema_version", "authorization_id", "action", "preregistration_manifest_sha256",
+                "selected_checkpoint_sha256", "analysis_sha256", "signature_ed25519_base64"}
+    if not isinstance(doc, dict) or set(doc) != required:
+        raise ValueError("locked evaluation denied: authorization artifact has an invalid schema")
+    if doc["schema_version"] != 1 or not isinstance(doc["authorization_id"], str) or not doc["authorization_id"].strip():
+        raise ValueError("locked evaluation denied: authorization identity/schema is invalid")
+    if doc["action"] != "evaluate_locked_test":
+        raise ValueError("locked evaluation denied: authorization scope is not evaluate_locked_test")
+    freeze = seed_manifest["pre_outcome_freeze"]
+    if doc["preregistration_manifest_sha256"] != seed_manifest["manifest_sha256"]:
+        raise ValueError("locked evaluation denied: authorization is bound to a different preregistration")
+    if doc["selected_checkpoint_sha256"] != freeze["checkpoint_sha256"]:
+        raise ValueError("locked evaluation denied: authorization selected-checkpoint hashes do not match freeze")
+    if doc["analysis_sha256"] != freeze["analysis_sha256"]:
+        raise ValueError("locked evaluation denied: authorization analysis hashes do not match freeze")
+    try:
+        signature = base64.b64decode(doc["signature_ed25519_base64"], validate=True)
+    except (TypeError, binascii.Error) as exc:
+        raise ValueError("locked evaluation denied: authorization signature encoding is invalid") from exc
+    body = {key: value for key, value in doc.items() if key != "signature_ed25519_base64"}
+    signed_bytes = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    # OpenSSL's Ed25519 verifier is used as a system primitive, avoiding a
+    # silently selected/bundled trust key or an additional Python crypto API.
+    # pkeyutl accepts separate input and signature files, so use a private
+    # temporary directory rather than shell paths or a combined stdin stream.
+    import tempfile
+    with tempfile.TemporaryDirectory(prefix="pasture-auth-") as temporary:
+        message_path = Path(temporary) / "authorization.json"
+        signature_path = Path(temporary) / "authorization.sig"
+        message_path.write_bytes(signed_bytes)
+        signature_path.write_bytes(signature)
+        try:
+            verified = subprocess.run(
+                ["openssl", "pkeyutl", "-verify", "-pubin", "-inkey", str(root), "-rawin",
+                 "-in", str(message_path), "-sigfile", str(signature_path)],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+            )
+        except OSError as exc:
+            raise ValueError("locked evaluation denied: OpenSSL Ed25519 verifier is unavailable") from exc
+    if verified.returncode != 0:
+        raise ValueError("locked evaluation denied: authorization signature is invalid for configured trusted root")
+    return {"authorization_id": doc["authorization_id"], "action": doc["action"],
+            "trusted_root_sha256": root_fingerprint, "authorization_sha256": sha_file(Path(authorization_path)),
+            "preregistration_manifest_sha256": seed_manifest["manifest_sha256"]}
+
+
+def _canonical_json_sha256(value: dict[str, Any]) -> str:
+    encoded = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return _sha_bytes(encoded)
+
+
+def append_locked_access_audit(path: str | Path, entry: dict[str, Any]) -> str:
+    """Append and fsync one hash-chained locked-access audit record.
+
+    A corrupted or non-regular existing log blocks evaluation. This is an
+    append-only application protocol; operational storage must additionally
+    protect the log from truncation/replacement.
+    """
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    flags = os.O_RDWR | os.O_CREAT | os.O_APPEND
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    fd = os.open(target, flags, 0o600)
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode):
+            raise ValueError("locked evaluation denied: audit log is not a regular file")
+        if info.st_mode & 0o077:
+            raise ValueError("locked evaluation denied: audit log permissions must be owner-only")
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        os.lseek(fd, 0, os.SEEK_SET)
+        existing = bytearray()
+        while True:
+            chunk = os.read(fd, 65536)
+            if not chunk:
+                break
+            existing.extend(chunk)
+        previous = "0" * 64
+        if existing:
+            if not existing.endswith(b"\n"):
+                raise ValueError("locked evaluation denied: audit log has an incomplete trailing record")
+            for line_number, raw_line in enumerate(existing.splitlines(), start=1):
+                try:
+                    prior = json.loads(raw_line)
+                except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                    raise ValueError(f"locked evaluation denied: audit log record {line_number} is invalid") from exc
+                if not isinstance(prior, dict) or prior.get("previous_record_sha256") != previous:
+                    raise ValueError(f"locked evaluation denied: audit log hash chain is broken at record {line_number}")
+                claimed = prior.get("record_sha256")
+                body = {key: value for key, value in prior.items() if key != "record_sha256"}
+                if claimed != _canonical_json_sha256(body):
+                    raise ValueError(f"locked evaluation denied: audit log record {line_number} hash mismatch")
+                previous = claimed
+        body = {**entry, "previous_record_sha256": previous}
+        record = {**body, "record_sha256": _canonical_json_sha256(body)}
+        line = (json.dumps(record, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8")
+        os.lseek(fd, 0, os.SEEK_END)
+        written = os.write(fd, line)
+        if written != len(line):
+            raise OSError("short write while appending locked access audit record")
+        os.fsync(fd)
+        return record["record_sha256"]
+    finally:
+        os.close(fd)
+
+
 def evaluate(generation: str | Path, *, algorithm: str, seed: int, eval_seed: int | None,
              output: str | Path, episodes_per_family: int = 3, device: str = "cpu",
-             seed_manifest_path: str | Path | None = None, split_name: str = "validation") -> dict[str, Any]:
+             seed_manifest_path: str | Path | None = None, split_name: str = "validation",
+             locked_authorization_path: str | Path | None = None,
+             authorization_root_path: str | Path | None = None,
+             access_audit_path: str | Path | None = None,
+             request_identity: str | None = None) -> dict[str, Any]:
+    if split_name == "locked_test" and access_audit_path is None:
+        raise ValueError("locked evaluation denied: durable access audit path is required")
     torch = require_torch()
     device = "cuda" if device == "cuda" and torch.cuda.is_available() else device
     model, manifest, generation_path = load_checkpoint_actor(generation, algorithm, seed, device)
@@ -360,9 +512,41 @@ def evaluate(generation: str | Path, *, algorithm: str, seed: int, eval_seed: in
         if int(seed) not in set(manifest_doc["seed_splits"]["training_root_seeds"]):
             raise ValueError("checkpoint seed is not in the preregistered training split")
         if split_name == "locked_test":
+            # Authorization must pass before checkpoint loading can lead to
+            # any schedule construction or outcome/world access.
+            locked_binding = verify_locked_authorization(
+                manifest_doc, authorization_path=locked_authorization_path,
+                trusted_root_path=authorization_root_path)
             generation_manifest = json.loads((generation_path / "manifest.json").read_text())
-            locked_binding = verify_locked_checkpoint_binding(manifest_doc, generation_path=generation_path,
+            checkpoint_binding = verify_locked_checkpoint_binding(manifest_doc, generation_path=generation_path,
                 generation_manifest=generation_manifest, algorithm=algorithm, seed=seed)
+            locked_binding["checkpoint_binding"] = checkpoint_binding
+            authorization_info = locked_binding
+            prereg_freeze = manifest_doc["pre_outcome_freeze"]
+            release_binding = {
+                "source_sha256": prereg_freeze["source_sha256"],
+                "analysis_sha256": prereg_freeze["analysis_sha256"],
+                "checkpoint_sha256": prereg_freeze["checkpoint_sha256"],
+                "checkpoint_manifest_sha256": prereg_freeze["checkpoint_manifest_sha256"],
+                "preregistration_manifest_sha256": manifest_doc["manifest_sha256"],
+            }
+            audit_hash = append_locked_access_audit(access_audit_path, {
+                "schema_version": 1,
+                "request_identity": request_identity or uuid.uuid4().hex,
+                "recorded_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                "action": "locked_test_evaluation_access",
+                "authorization_id": authorization_info["authorization_id"],
+                "authorization_sha256": authorization_info["authorization_sha256"],
+                "trusted_root_sha256": authorization_info["trusted_root_sha256"],
+                "preregistration_manifest_sha256": manifest_doc["manifest_sha256"],
+                "release_binding_sha256": _canonical_json_sha256(release_binding),
+                "release_binding": release_binding,
+                "selected_checkpoint_key": f"{algorithm}:{seed}",
+                "selected_checkpoint_sha256": checkpoint_binding["checkpoint_sha256"],
+                "selected_checkpoint_manifest_sha256": checkpoint_binding["checkpoint_manifest_sha256"],
+                "analysis_sha256": checkpoint_binding["analysis_sha256"],
+            })
+            locked_binding["access_audit_record_sha256"] = audit_hash
     families = evaluation_world_schedule(eval_seed=eval_seed, episodes_per_family=episodes_per_family,
                                          seed_manifest=manifest_doc, split_name=split_name)
     train_worlds = {derive_seed(seed, "train-world", i) for i in range(int(manifest.get("config", {}).get("episodes", 0)))}
@@ -432,7 +616,15 @@ def main(argv=None):
     parser.add_argument("--seed-manifest", type=Path, default=None,
                         help="pre-outcome preregistration JSON; uses its locked test seeds and verifies all bound hashes")
     parser.add_argument("--split", choices=("validation", "locked_test"), default="validation",
-                        help="validation is for selection; locked_test is blocked until pilot delta0 and lock attestation exist")
+                        help="validation is for selection; locked_test additionally requires a separately signed authorization")
+    parser.add_argument("--locked-authorization", type=Path, default=None,
+                        help="separate signed authorization JSON required for locked_test")
+    parser.add_argument("--authorization-root", type=Path, default=None,
+                        help="candidate Ed25519 public-key PEM; accepted only when its SHA-256 fingerprint is code-allowlisted (currently none)")
+    parser.add_argument("--access-audit", type=Path, default=None,
+                        help="append-only, owner-only hash-chained audit JSONL path; required for locked_test")
+    parser.add_argument("--request-identity", default=None,
+                        help="optional caller correlation ID; generated if omitted")
     parser.add_argument("--episodes-per-family", type=int, default=3)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     parser.add_argument("--output", type=Path, required=True)
@@ -442,7 +634,11 @@ def main(argv=None):
     print(json.dumps(evaluate(args.generation, algorithm=args.algorithm, seed=args.seed,
                               eval_seed=args.eval_seed, output=args.output,
                               episodes_per_family=args.episodes_per_family, device=args.device,
-                              seed_manifest_path=args.seed_manifest, split_name=args.split), indent=2))
+                              seed_manifest_path=args.seed_manifest, split_name=args.split,
+                              locked_authorization_path=args.locked_authorization,
+                              authorization_root_path=args.authorization_root,
+                              access_audit_path=args.access_audit,
+                              request_identity=args.request_identity), indent=2))
 
 
 if __name__ == "__main__":

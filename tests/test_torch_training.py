@@ -1,5 +1,6 @@
 from __future__ import annotations
 import importlib.util
+import hashlib
 import subprocess
 import sys
 import unittest
@@ -37,6 +38,17 @@ def _ddp_gradient_parity_worker(rank, world_size, init_method, output_dir, featu
         np.savez(Path(output_dir) / f"ddp-{len(features)}.npz", *gradients, **{f"param_{i}": p for i, p in enumerate(params)})
     dist.barrier()
     dist.destroy_process_group()
+
+
+def _readiness_ddp_worker(rank, init_method, output_dir, resume, max_updates):
+    import torch.distributed as dist
+    from validation.train_torch_mvp1 import run_readiness_ddp
+    dist.init_process_group("gloo", init_method=init_method, rank=rank, world_size=2)
+    try:
+        run_readiness_ddp("a2c", seed=8821, output=Path(output_dir), device="cpu",
+                          resume=resume, max_updates=max_updates)
+    finally:
+        dist.destroy_process_group()
 
 class TorchTrainingContractTests(unittest.TestCase):
     def test_seed_derivation_is_stable_and_order_sensitive(self):
@@ -87,6 +99,75 @@ class TorchTrainingContractTests(unittest.TestCase):
                 for index, parameter in enumerate(model.parameters()):
                     np.testing.assert_allclose(result[f"param_{index}"], parameter.detach().numpy(), rtol=2e-5, atol=2e-6)
 
+    @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
+    def test_readiness_ddp_gloo_is_bounded_resumable_and_not_experiment_eligible(self):
+        import tempfile
+        import torch
+        import torch.multiprocessing as mp
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            mp.spawn(_readiness_ddp_worker,
+                     args=(f"file://{root / 'gloo-ready-1'}", str(root), None, 1),
+                     nprocs=2, join=True)
+            run_dir = root / "readiness-only" / "a2c"
+            pointer = run_dir / "LATEST"
+            self.assertTrue(pointer.is_file())
+            checkpoint = run_dir / pointer.read_text().strip()
+            payload = torch.load(checkpoint / "training.pt", map_location="cpu", weights_only=True)
+            self.assertEqual(payload["state"]["update"], 1)
+            self.assertEqual(payload["state"]["episode_cursor"], 16)
+            self.assertTrue(payload["state"]["readiness_only"])
+            self.assertFalse(payload["state"]["benchmark_eligible"])
+
+            mp.spawn(_readiness_ddp_worker,
+                     args=(f"file://{root / 'gloo-ready-2'}", str(root), "latest", None),
+                     nprocs=2, join=True)
+            evidence = json.loads((run_dir / "readiness-evidence.json").read_text())
+            self.assertFalse(evidence["benchmark_eligible"])
+            self.assertFalse(evidence["evaluation_performed"])
+            self.assertFalse(evidence["locked_split_accessed"])
+            self.assertEqual(len(evidence["updates"]), 2)
+            for update_number, update in enumerate(evidence["updates"], start=1):
+                self.assertEqual(update["update"], update_number)
+                ranks = update["episode_ids_by_rank"]
+                self.assertEqual([rank["rank"] for rank in ranks], [0, 1])
+                self.assertEqual([rank["device"] for rank in ranks], ["cpu", "cpu"])
+                self.assertEqual(sorted(ep for rank in ranks for ep in rank["episode_ids"]),
+                                 list(range((update_number - 1) * 16, update_number * 16)))
+                for rank in ranks:
+                    self.assertTrue(rank["gradient_finite"])
+                    self.assertGreater(rank["gradient_norm"], 0)
+                    self.assertTrue(rank["optimizer_step_changed_model"])
+                    self.assertRegex(rank["model_digest"], r"^[0-9a-f]{64}$")
+                self.assertEqual(len({rank["model_digest"] for rank in ranks}), 1)
+                self.assertRegex(update["checkpoint_manifest_sha256"], r"^[0-9a-f]{64}$")
+                self.assertRegex(update["training_state_sha256"], r"^[0-9a-f]{64}$")
+                generation_path = run_dir / update["checkpoint_generation"]
+                self.assertEqual(hashlib.sha256((generation_path / "manifest.json").read_bytes()).hexdigest(),
+                                 update["checkpoint_manifest_sha256"])
+                manifest = json.loads((generation_path / "manifest.json").read_text())
+                self.assertEqual(manifest["state_sha256"], update["training_state_sha256"])
+            latest = torch.load(run_dir / "generation-00000002" / "training.pt",
+                                map_location="cpu", weights_only=True)
+            self.assertEqual(latest["state"]["episode_cursor"], 32)
+
+            from farm_sim.torch_checkpoint import load_generation
+            from farm_sim.torch_training import ActorCritic
+            model = ActorCritic(value_head=True, seed=8821)
+            optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+            expected = json.loads((run_dir / "generation-00000002" / "manifest.json").read_text())["config"]
+            incompatible = dict(expected, protocol="different-readiness-protocol")
+            with self.assertRaisesRegex(ValueError, "configuration"):
+                load_generation(run_dir, model=model, optimizer=optimizer, expected_algorithm="a2c",
+                                expected_config=incompatible)
+
+            state_file = run_dir / "generation-00000002" / "training.pt"
+            original = state_file.read_bytes()
+            state_file.write_bytes(original + b"tamper")
+            with self.assertRaisesRegex(ValueError, "checksum|valid committed"):
+                load_generation(run_dir, model=model, optimizer=optimizer, expected_algorithm="a2c",
+                                expected_config=expected)
+
     def test_probability_validation_rejects_malformed_vectors(self):
         valid = validate_probabilities([0.1, 0.2, 0.3, 0.1, 0.2, 0.1])
         self.assertEqual(valid.shape, (6,))
@@ -134,7 +215,7 @@ class TorchTrainingContractTests(unittest.TestCase):
         result = subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1", "--help"],
                                 check=True, capture_output=True, text=True)
         for flag in ("--smoke", "--algorithm", "--device", "--seed", "--episodes",
-                     "--smoke-update", "--output", "--resume", "--metrics", "--checkpoint-every", "--mode"):
+                     "--smoke-update", "--readiness-ddp", "--output", "--resume", "--metrics", "--checkpoint-every", "--mode"):
             self.assertIn(flag, result.stdout)
 
     def test_smoke_update_requires_one_algorithm_and_explicit_device(self):
@@ -148,6 +229,20 @@ class TorchTrainingContractTests(unittest.TestCase):
                                         capture_output=True, text=True)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn(expected, result.stderr)
+
+    def test_cli_denies_ordinary_training_without_independent_authorization(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "must-not-be-created"
+            for args in ([], ["--episodes", "278", "--algorithm", "reinforce", "--device", "cpu"],
+                         ["--mode", "run", "--episodes", "32"]):
+                with self.subTest(args=args):
+                    result = subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1",
+                                             *args, "--output", str(output)],
+                                            capture_output=True, text=True)
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("no independently trusted experimental authorization verifier", result.stderr)
+                    self.assertFalse(output.exists())
 
     @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
     def test_smoke_update_runs_exactly_one_cpu_update_and_exports_checkpoint(self):

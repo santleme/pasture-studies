@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import base64
+import subprocess
 from pathlib import Path
 import tempfile
 import unittest
@@ -17,7 +19,9 @@ from farm_sim.model import Action, PolicyDecision
 from farm_sim.navigation import NavigationResult
 from validation.evaluate_torch_mvp1 import (FAMILIES, cognition_probe,
                                              evaluate_episode, evaluate,
-                                             make_scenario, verify_locked_checkpoint_binding)
+                                             make_scenario, verify_locked_authorization,
+                                             verify_locked_checkpoint_binding,
+                                             append_locked_access_audit)
 
 
 @unittest.skipIf(torch is None, "optional PyTorch dependency is not installed")
@@ -90,6 +94,35 @@ class TorchEvaluationTests(unittest.TestCase):
         state = {"generation": 1, "update": 1, "episode_cursor": 2}
         return save_generation(tmp_path / algorithm, model=model, optimizer=opt,
                                state=state, config=config, algorithm=algorithm)
+
+    @staticmethod
+    def signed_authorization(tmp_path: Path, locked: dict):
+        """Use a test-only ephemeral Ed25519 key; never persist private keys."""
+        private = tmp_path / "test-only-private.pem"
+        public = tmp_path / "test-only-public.pem"
+        subprocess.run(["openssl", "genpkey", "-algorithm", "Ed25519", "-out", str(private)],
+                       check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run(["openssl", "pkey", "-in", str(private), "-pubout", "-out", str(public)],
+                       check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        body = {"schema_version": 1, "authorization_id": "test-only-authorization",
+                "action": "evaluate_locked_test",
+                "preregistration_manifest_sha256": locked["manifest_sha256"],
+                "selected_checkpoint_sha256": locked["pre_outcome_freeze"]["checkpoint_sha256"],
+                "analysis_sha256": locked["pre_outcome_freeze"]["analysis_sha256"]}
+        message = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+        message_path = tmp_path / "authorization-message.json"
+        signature_path = tmp_path / "authorization.sig"
+        message_path.write_bytes(message)
+        subprocess.run(["openssl", "pkeyutl", "-sign", "-inkey", str(private), "-rawin",
+                        "-in", str(message_path), "-out", str(signature_path)], check=True,
+                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        body["signature_ed25519_base64"] = base64.b64encode(signature_path.read_bytes()).decode()
+        auth_path = tmp_path / "authorization.json"
+        auth_path.write_text(json.dumps(body, sort_keys=True) + "\n")
+        private.unlink()
+        signature_path.unlink()
+        message_path.unlink()
+        return auth_path, public
 
     def test_evaluator_pairs_three_policies_and_hashes_sources(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -202,12 +235,41 @@ class TorchEvaluationTests(unittest.TestCase):
             # The public locked evaluator must reject before the first world rollout.
             manifest_path = root / "locked.json"
             manifest_path.write_text(json.dumps(locked))
-            with patch("validation.evaluate_torch_mvp1.evaluate_episode") as rollout:
+            auth_path, public_key = self.signed_authorization(root, locked)
+            from validation.evaluate_torch_mvp1 import sha_file
+            with self.assertRaisesRegex(ValueError, "fingerprint is not allowlisted"):
+                verify_locked_authorization(locked, authorization_path=auth_path,
+                                            trusted_root_path=public_key)
+            # Signature mechanics can be tested with an ephemeral key only by
+            # privately mocking the code-pinned allowlist; the public CLI has
+            # no option to install or override a trust root.
+            with patch("validation.evaluate_torch_mvp1.TRUSTED_AUTHORIZATION_ROOT_SHA256",
+                       frozenset({sha_file(public_key)})):
+                verified_authorization = verify_locked_authorization(
+                    locked, authorization_path=auth_path, trusted_root_path=public_key)
+            self.assertEqual(verified_authorization["preregistration_manifest_sha256"], locked["manifest_sha256"])
+            with patch("validation.evaluate_torch_mvp1.evaluate_episode") as rollout, \
+                 patch("validation.evaluate_torch_mvp1.make_scenario") as world_factory:
+                with self.assertRaisesRegex(ValueError, "explicit signed authorization and trusted root"):
+                    evaluate(selected, algorithm="a2c", seed=seed, eval_seed=None,
+                             output=root / "no-auth.json", seed_manifest_path=manifest_path,
+                             split_name="locked_test", access_audit_path=root / "denied-audit.jsonl")
+                rollout.assert_not_called()
+                world_factory.assert_not_called()
+            self.assertFalse((root / "denied-audit.jsonl").exists(),
+                             "denied requests must not enter the outcome-access log")
+            with patch("validation.evaluate_torch_mvp1.TRUSTED_AUTHORIZATION_ROOT_SHA256",
+                       frozenset({sha_file(public_key)})), \
+                 patch("validation.evaluate_torch_mvp1.evaluate_episode") as rollout:
                 with self.assertRaisesRegex(ValueError, "does not match the frozen selected artifact"):
                     evaluate(substituted, algorithm="a2c", seed=seed, eval_seed=None,
                              output=root / "should-not-exist.json", seed_manifest_path=manifest_path,
-                             split_name="locked_test", episodes_per_family=1)
+                             split_name="locked_test", episodes_per_family=1,
+                             locked_authorization_path=auth_path,
+                             authorization_root_path=public_key,
+                             access_audit_path=root / "substituted-audit.jsonl")
                 rollout.assert_not_called()
+            self.assertFalse((root / "substituted-audit.jsonl").exists())
 
             # A syntactically re-sealed manifest with a substituted analysis
             # digest must fail before the evaluator creates or runs any world.
@@ -222,9 +284,119 @@ class TorchEvaluationTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "analysis-code hash does not match|analysis hashes"):
                     evaluate(selected, algorithm="a2c", seed=seed, eval_seed=None,
                              output=root / "should-not-exist-analysis.json", seed_manifest_path=bad_analysis_path,
-                             split_name="locked_test", episodes_per_family=1)
+                             split_name="locked_test", episodes_per_family=1,
+                             locked_authorization_path=auth_path,
+                             authorization_root_path=public_key,
+                             access_audit_path=root / "bad-analysis-audit.jsonl")
                 rollout.assert_not_called()
                 world_factory.assert_not_called()
+            self.assertFalse((root / "bad-analysis-audit.jsonl").exists())
+
+            # Authorization body tampering and signatures from an untrusted
+            # ephemeral root both fail closed without constructing a world.
+            wrong_auth = json.loads(auth_path.read_text())
+            wrong_auth["action"] = "evaluate_experiment"
+            wrong_auth_path = root / "wrong-action.json"
+            wrong_auth_path.write_text(json.dumps(wrong_auth))
+            with patch("validation.evaluate_torch_mvp1.TRUSTED_AUTHORIZATION_ROOT_SHA256",
+                       frozenset({sha_file(public_key)})):
+                with self.assertRaisesRegex(ValueError, "authorization scope"):
+                    verify_locked_authorization(locked, authorization_path=wrong_auth_path,
+                                                trusted_root_path=public_key)
+            other_root = root / "other-root.pem"
+            other_private = root / "other-private.pem"
+            subprocess.run(["openssl", "genpkey", "-algorithm", "Ed25519", "-out", str(other_private)],
+                           check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            subprocess.run(["openssl", "pkey", "-in", str(other_private), "-pubout", "-out", str(other_root)],
+                           check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            other_private.unlink()
+            with self.assertRaisesRegex(ValueError, "fingerprint is not allowlisted"):
+                verify_locked_authorization(locked, authorization_path=auth_path,
+                                            trusted_root_path=other_root)
+            tampered_signature = json.loads(auth_path.read_text())
+            tampered_signature["signature_ed25519_base64"] = base64.b64encode(b"bad signature").decode()
+            tampered_signature_path = root / "tampered-signature.json"
+            tampered_signature_path.write_text(json.dumps(tampered_signature))
+            with patch("validation.evaluate_torch_mvp1.TRUSTED_AUTHORIZATION_ROOT_SHA256",
+                       frozenset({sha_file(public_key)})):
+                with self.assertRaisesRegex(ValueError, "signature is invalid"):
+                    verify_locked_authorization(locked, authorization_path=tampered_signature_path,
+                                                trusted_root_path=public_key)
+
+            # A successful authorization must append and fsync an audit entry
+            # before the first world factory can be reached. This abbreviated
+            # evaluator test substitutes one schedule row and cheap policies.
+            audit_path = root / "locked-access.jsonl"
+
+            def checked_rollout(policy, family, world_seed):
+                records = [json.loads(line) for line in audit_path.read_text().splitlines()]
+                self.assertEqual(len(records), 1)
+                self.assertEqual(records[0]["request_identity"], "request-123")
+                self.assertEqual(records[0]["preregistration_manifest_sha256"], locked["manifest_sha256"])
+                self.assertEqual(records[0]["selected_checkpoint_key"], f"a2c:{seed}")
+                self.assertEqual(records[0]["analysis_sha256"], locked["pre_outcome_freeze"]["analysis_sha256"])
+                # Constructing the locked scenario is the first permitted
+                # world/outcome operation and is reached only after audit.
+                constructed = make_scenario(family, world_seed)
+                self.assertEqual(len(constructed.animals), 5)
+                return {"scenario": family, "world_seed": world_seed, "ticks": 1,
+                        "total_reward": 0.0, "action_counts": {}, "reward_components": {}}
+
+            # Hash-chain independently re-verifies that the record was durable
+            # and correctly sealed before simulate-world code is reachable.
+            with patch("validation.evaluate_torch_mvp1.TRUSTED_AUTHORIZATION_ROOT_SHA256",
+                       frozenset({sha_file(public_key)})), \
+                 patch("validation.evaluate_torch_mvp1.evaluation_world_schedule",
+                       return_value=[("starter", 4242)]), \
+                 patch("validation.evaluate_torch_mvp1.evaluate_episode", side_effect=checked_rollout), \
+                 patch("validation.evaluate_torch_mvp1.cognition_probe", return_value={"contrasts": {}}):
+                evaluate(selected, algorithm="a2c", seed=seed, eval_seed=None,
+                         output=root / "authorized-eval.json", seed_manifest_path=manifest_path,
+                         split_name="locked_test", locked_authorization_path=auth_path,
+                         authorization_root_path=public_key, access_audit_path=audit_path,
+                         request_identity="request-123")
+            audit_rows = [json.loads(line) for line in audit_path.read_text().splitlines()]
+            self.assertEqual(len(audit_rows), 1)
+            record = audit_rows[0]
+            self.assertEqual(record["previous_record_sha256"], "0" * 64)
+            body = {key: value for key, value in record.items() if key != "record_sha256"}
+            self.assertEqual(record["record_sha256"], hashlib.sha256(
+                json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest())
+            self.assertEqual(record["authorization_sha256"], sha_file(auth_path))
+            self.assertEqual(record["trusted_root_sha256"], sha_file(public_key))
+
+            with patch("validation.evaluate_torch_mvp1.TRUSTED_AUTHORIZATION_ROOT_SHA256",
+                       frozenset({sha_file(public_key)})), \
+                 patch("validation.evaluate_torch_mvp1.evaluation_world_schedule",
+                       return_value=[("starter", 4242)]), \
+                 patch("validation.evaluate_torch_mvp1.append_locked_access_audit",
+                       side_effect=OSError("simulated audit storage failure")), \
+                 patch("validation.evaluate_torch_mvp1.evaluate_episode") as rollout, \
+                 patch("validation.evaluate_torch_mvp1.make_scenario") as world_factory:
+                with self.assertRaisesRegex(OSError, "audit storage failure"):
+                    evaluate(selected, algorithm="a2c", seed=seed, eval_seed=None,
+                             output=root / "audit-failure-eval.json", seed_manifest_path=manifest_path,
+                             split_name="locked_test", locked_authorization_path=auth_path,
+                             authorization_root_path=public_key,
+                             access_audit_path=root / "unavailable-audit.jsonl")
+                rollout.assert_not_called()
+                world_factory.assert_not_called()
+            self.assertFalse((root / "audit-failure-eval.json").exists())
+
+    def test_locked_access_audit_is_append_only_hash_chained_and_corruption_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "access.jsonl"
+            first = append_locked_access_audit(path, {"request_identity": "a", "action": "test"})
+            second = append_locked_access_audit(path, {"request_identity": "b", "action": "test"})
+            rows = [json.loads(line) for line in path.read_text().splitlines()]
+            self.assertEqual(len(rows), 2)
+            self.assertEqual(rows[0]["record_sha256"], first)
+            self.assertEqual(rows[1]["previous_record_sha256"], first)
+            self.assertEqual(rows[1]["record_sha256"], second)
+            rows[0]["request_identity"] = "tampered"
+            path.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
+            with self.assertRaisesRegex(ValueError, "hash mismatch"):
+                append_locked_access_audit(path, {"request_identity": "c", "action": "test"})
 
     def test_validation_split_accepts_pending_manifest_after_analysis_edits(self):
         from validation.preregister_torch_mvp1 import build_manifest
