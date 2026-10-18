@@ -171,6 +171,17 @@ class KaggleDeployTests(unittest.TestCase):
         self.assertEqual(result["auth_check"], "not_performed")
         self.assertNotIn("credentials_available", result)
 
+    def test_auth_preflight_detects_access_token_file_without_exposing_it(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = Path(tmp) / "kaggle.json"
+            token_file = Path(tmp) / "access_token"
+            token_file.write_text("private-test-token\n")
+            token_file.chmod(0o600)
+            with patch.object(deploy, "KAGGLE_CONFIG", config), patch.dict("os.environ", {}, clear=True):
+                result = deploy.auth_preflight()
+            self.assertEqual(result, {"credentials_available": True, "credentials_source": "access_token_file"})
+            self.assertNotIn("private-test-token", repr(result))
+
 
 if __name__ == "__main__":
     unittest.main()
