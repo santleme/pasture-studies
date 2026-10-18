@@ -52,7 +52,13 @@ python3 scripts/kaggle_deploy.py preflight
 python3 scripts/kaggle_deploy.py prepare --path /tmp/pasture-kaggle-upload --owner <your-kaggle-username> --mode SMOKE --gpu
 ```
 
-`preflight` reports the CLI version and no-run capability, and checks existing authentication material without starting OAuth. **The helper's current auth check recognizes environment token/legacy username-key variables and the legacy `~/.kaggle/kaggle.json` file; it does not currently detect OAuth credentials in Kaggle's OAuth credential store.** An OAuth-only user can be logged in successfully to the CLI yet have this helper preflight report no credentials. Treat this as a helper limitation; do not re-run OAuth automatically or put OAuth credentials into the legacy file. `prepare` stages metadata for the named owner and mode; the helper accepts only `PREFLIGHT` or `SMOKE` and rejects `EXPERIMENT`/`FULL_VALIDATION`. `--gpu` requests T4×2 metadata but does not itself allocate or execute a GPU workload. Inspect the resulting files and metadata before any publication. You can also use Kaggle's metadata initializer directly, then review/edit its generated template:
+`preflight` reports the CLI version and no-run capability, and checks some existing authentication material without starting OAuth. **It is not OAuth-aware:** the helper currently recognizes environment token/legacy username-key variables and the legacy `~/.kaggle/kaggle.json` file, but does not detect OAuth credentials in Kaggle's OAuth credential store. An OAuth-only user can be logged in to the CLI yet have helper preflight report no credentials. Do not treat that result as proof OAuth is absent, and do not put OAuth credentials into the legacy file. After completing OAuth yourself, validate it with a read-only authenticated request:
+
+```bash
+kaggle kernels list --mine --page-size 1
+```
+
+A successful response verifies the CLI can access your kernels; it does not publish or execute anything. `prepare` stages metadata for the named owner and mode; the helper accepts only `PREFLIGHT` or `SMOKE` and rejects `EXPERIMENT`/`FULL_VALIDATION`. `--gpu` requests T4×2 metadata but does not itself allocate or execute a GPU workload. Inspect the resulting files and metadata before any publication. You can also use Kaggle's metadata initializer directly, then review/edit its generated template:
 
 ```bash
 mkdir -p /tmp/pasture-kaggle-upload
