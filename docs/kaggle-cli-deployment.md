@@ -153,7 +153,28 @@ The helper can create a partial record after a no-run publication:
 python3 scripts/kaggle_deploy.py record ./deployment-record.json --kernel <owner>/<kernel-slug> --source-commit "$(git rev-parse HEAD)" --mode SMOKE --metadata /tmp/pasture-kaggle-upload/kernel-metadata.json
 ```
 
-Its current record command writes `source_commit`, `kaggle_cli_version`, mode, metadata SHA-256, and record timestamp, but does **not** populate the exact Kaggle kernel version or uploaded notebook SHA-256. Capture the exact version from the Kaggle publish response/revision details, compute the notebook hash from the exact staged upload file, and add them explicitly to the record as e.g. `kernel_version` and `notebook_sha256`. Do not substitute `kaggle_cli_version` for `kernel_version`. The command also does not record the no-run capability result or verify server-side notebook bytes; record the help-check result and provenance limitations separately. Review the record locally before sharing it; do not include credentials.
+Its current record command writes `source_commit`, `kaggle_cli_version`, mode, metadata SHA-256, and record timestamp, but does **not** populate the exact Kaggle kernel version or uploaded notebook SHA-256. Capture the exact version from Kaggle's published revision details (the current helper does not expose the push response), compute the notebook hash from the exact staged upload file, and add them explicitly to the record as `kernel_version` and `notebook_sha256`. For example, record these distinct values:
+
+```json
+{
+  "kernel": "<owner>/<slug>",
+  "kernel_version": "<exact Kaggle revision/version>",
+  "source_commit": "<full local Git SHA>",
+  "kaggle_cli_version": "<local CLI package version>",
+  "notebook_sha256": "<SHA-256 of the staged .ipynb>",
+  "metadata_sha256": "<SHA-256 of kernel-metadata.json>"
+}
+```
+
+Compute the source and local file hashes from the reviewed checkout/upload directory, and then manually update the generated record with the exact kernel revision and notebook hash:
+
+```bash
+git rev-parse HEAD
+sha256sum /tmp/pasture-kaggle-upload/pasture_studies_kaggle.ipynb
+sha256sum /tmp/pasture-kaggle-upload/kernel-metadata.json
+```
+
+Do not substitute `kaggle_cli_version` for `kernel_version`. The helper command also does not record the no-run capability result or verify server-side notebook bytes; record the help-check result and provenance limitations separately. Review the record locally before sharing it; do not include credentials.
 
 The record is provenance metadata, not an attestation that Kaggle executed those exact local bytes. In particular, never promote the notebook's unverified caller-provided revision or content-hash strings into trusted provenance. The notebook currently hard-disables `EXPERIMENT` and `FULL_VALIDATION`; deployment, a successful smoke, a GPU allocation, or a hash match cannot override those gates or establish benchmark/biological validity.
 
