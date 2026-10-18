@@ -156,7 +156,7 @@ class TorchTrainingContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp) / "reinforce"
             metrics = output / "metrics.jsonl"
-            subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1",
+            result = subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1",
                 "--smoke-update", "--algorithm", "reinforce", "--device", "cpu",
                 "--seed", "810001", "--output", str(output), "--metrics", str(metrics)],
                 check=True, capture_output=True, text=True)
@@ -167,8 +167,15 @@ class TorchTrainingContractTests(unittest.TestCase):
             self.assertEqual(len(rows), 1)
             self.assertEqual(rows[0]["update"], 1)
             self.assertEqual(rows[0]["episodes_in_batch"], 16)
+            self.assertFalse(rows[0]["benchmark_eligible"])
+            self.assertFalse(rows[0]["timing"]["benchmark_eligible"])
             artifacts = output / "smoke" / "reinforce"
-            self.assertTrue((artifacts / "artifact-manifest.json").is_file())
+            artifact_manifest = json.loads((artifacts / "artifact-manifest.json").read_text())
+            self.assertFalse(artifact_manifest["benchmark_eligible"])
+            evaluation = json.loads((artifacts / "evaluation.json").read_text())
+            self.assertFalse(evaluation["benchmark_eligible"])
+            cli_summary = json.loads(result.stdout)
+            self.assertFalse(cli_summary["results"][0]["benchmark_eligible"])
             self.assertTrue(list(artifacts.glob("torch-reinforce-seed-*.npz")))
 
     @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
