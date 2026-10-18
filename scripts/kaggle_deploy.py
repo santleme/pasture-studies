@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK = ROOT / "notebooks" / "pasture_studies_kaggle.ipynb"
-KAGGLE_CONFIG = Path(os.environ.get("KAGGLE_CONFIG_DIR", Path.home() / ".kaggle")) / "kaggle.json"
+KAGGLE_CONFIG = Path(os.environ.get("KAGGLE_CONFIG_DIR", str(Path.home() / ".kaggle"))).expanduser() / "kaggle.json"
 MODES = {"PREFLIGHT", "SMOKE"}
 
 
@@ -57,6 +57,8 @@ def auth_preflight() -> dict:
             data = json.loads(config.read_text())
         except (OSError, json.JSONDecodeError) as exc:
             raise DeploymentError(f"Credentials file is unreadable or invalid JSON: {config}") from exc
+        if not isinstance(data, dict):
+            raise DeploymentError("Credentials file must contain a JSON object")
         if not ((data.get("username") and data.get("key")) or data.get("key")):
             raise DeploymentError("Credentials file has no recognized Kaggle credential fields")
     if not config_present and not env_present:
