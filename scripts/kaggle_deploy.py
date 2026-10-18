@@ -9,7 +9,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
@@ -129,6 +128,18 @@ def publish(folder: Path) -> None:
     run(["kaggle", "kernels", "push", "--path", str(folder), "--no-run"])
 
 
+def staged_mode(notebook_path: Path) -> str:
+    try:
+        notebook = json.loads(notebook_path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DeploymentError("Staged notebook is unreadable or invalid JSON") from exc
+    content = "\n".join("".join(cell.get("source", [])) for cell in notebook.get("cells", []))
+    matches = [mode for mode in MODES if f'os.environ["PASTURE_MODE"] = "{mode}"' in content]
+    if len(matches) != 1:
+        raise DeploymentError("Staged notebook must contain exactly one fixed PREFLIGHT/SMOKE mode")
+    return matches[0]
+
+
 def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
     """Require a private, generated staging folder containing only its notebook and metadata."""
     if folder.is_symlink() or not folder.is_dir():
@@ -138,7 +149,9 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
         metadata = json.loads(metadata_path.read_text())
     except (OSError, json.JSONDecodeError) as exc:
         raise DeploymentError("Staging metadata is missing or malformed") from exc
-    code_file = metadata.get("code_file") if isinstance(metadata, dict) else None
+    if not isinstance(metadata, dict):
+        raise DeploymentError("Staging metadata must be a JSON object")
+    code_file = metadata.get("code_file")
     if not isinstance(code_file, str) or not code_file or Path(code_file).name != code_file:
         raise DeploymentError("Metadata code_file must be a local filename")
     notebook_path = folder / code_file
@@ -153,6 +166,7 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
             raise DeploymentError("GPU metadata must select the supported T4 x2 machine shape")
     elif metadata.get("machine_shape") not in {"", None}:
         raise DeploymentError("CPU metadata must not select an accelerator machine shape")
+    staged_mode(notebook_path)
     return metadata, notebook_path
 
 
@@ -162,9 +176,7 @@ def execute(folder: Path, *, mode: str, confirm_execution: bool, confirm_gpu: bo
     if not confirm_execution:
         raise DeploymentError("Execution requires explicit --confirm-execution")
     metadata, notebook = validate_staging_folder(folder)
-    notebook_data = json.loads(notebook.read_text())
-    marker = f'os.environ["PASTURE_MODE"] = "{mode}"'
-    if not any(marker in "".join(cell.get("source", [])) for cell in notebook_data.get("cells", [])):
+    if staged_mode(notebook) != mode:
         raise DeploymentError("Requested execution mode does not match the staged notebook mode")
     gpu = metadata.get("enable_gpu") == "true"
     if gpu and not confirm_gpu:
@@ -241,17 +253,23 @@ def write_deployment_record(path: Path, *, kernel: str, version: str, source_com
         raise DeploymentError("source_commit must be a full 40-character Git SHA-1")
     if not kernel_version.strip():
         raise DeploymentError("kernel_version is required and must be captured from Kaggle, not inferred")
-    metadata = json.loads(metadata_path.read_text())
+    try:
+        metadata = json.loads(metadata_path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DeploymentError("Staging metadata is unreadable or invalid JSON") from exc
     code_file = metadata.get("code_file")
     if not isinstance(code_file, str) or Path(code_file).name != code_file:
         raise DeploymentError("Metadata must identify a staged notebook filename")
     notebook_path = metadata_path.parent / code_file
-    if not notebook_path.is_file():
+    if not notebook_path.is_file() or notebook_path.is_symlink():
         raise DeploymentError("Staged notebook for provenance record is missing")
+    mode = validate_mode(mode)
+    if staged_mode(notebook_path) != mode:
+        raise DeploymentError("Deployment record mode does not match the staged notebook")
     record = {
         "kernel": kernel, "kaggle_kernel_version": kernel_version.strip(),
         "source_commit": source_commit,
-        "kaggle_cli_version": version, "mode": validate_mode(mode),
+        "kaggle_cli_version": version, "mode": mode,
         "metadata_sha256": hashlib.sha256(metadata_path.read_bytes()).hexdigest(),
         "staged_notebook_sha256": hashlib.sha256(notebook_path.read_bytes()).hexdigest(),
         "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -260,10 +278,10 @@ def write_deployment_record(path: Path, *, kernel: str, version: str, source_com
 
 
 def preflight() -> dict:
-    version, _ = check_cli()
+    version, help_text = check_cli()
     auth = auth_preflight()
     return {"kaggle_cli_version": version, **auth,
-            "no_run_supported": "--no-run" in run(["kaggle", "kernels", "push", "--help"]).stdout}
+            "no_run_supported": bool(re.search(r"(?<!\w)--no-run(?:\b|[= ])", help_text))}
 
 
 def main(argv: list[str] | None = None) -> int:
