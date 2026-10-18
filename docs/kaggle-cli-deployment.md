@@ -39,7 +39,7 @@ The official CLI supports OAuth login. Run it yourself in a trusted terminal and
 kaggle auth login
 ```
 
-For a headless terminal, `kaggle auth login --no-launch-browser` prints a URL to open manually. Do not paste access tokens, API keys, browser callback URLs, or credential files into this repository, notebook, shell history, issue, or deployment record. Do not commit credentials. This guide does not initiate authentication.
+For a headless terminal, `kaggle auth login --no-launch-browser` prints a URL to open manually. The CLI keeps OAuth credentials in its OAuth credential store; do not assume they are stored in the legacy `~/.kaggle/kaggle.json` file. The CLI may also accept token sources or legacy username/key credentials, but those are distinct authentication paths. Do not paste access tokens, API keys, browser callback URLs, or credential files into this repository, notebook, shell history, issue, or deployment record. Do not commit credentials. This guide does not initiate authentication.
 
 ## 3. Prepare and review the upload directory
 
@@ -50,7 +50,7 @@ python3 scripts/kaggle_deploy.py preflight --path /tmp/pasture-kaggle-upload --o
 python3 scripts/kaggle_deploy.py prepare --path /tmp/pasture-kaggle-upload --owner <your-kaggle-username> --mode SMOKE --gpu
 ```
 
-`preflight` checks local prerequisites and available auth without starting OAuth. `prepare` stages metadata for the named owner and mode; the helper accepts only `PREFLIGHT` or `SMOKE` and rejects `EXPERIMENT`/`FULL_VALIDATION`. `--gpu` requests T4×2 metadata but does not itself allocate or execute a GPU workload. Inspect the resulting files and metadata before any publication. You can also use Kaggle's metadata initializer directly, then review/edit its generated template:
+`preflight` checks local prerequisites and validates authentication through the installed Kaggle CLI without starting OAuth. It must not decide OAuth is unavailable solely because `~/.kaggle/kaggle.json` is absent; OAuth credentials use the CLI credential store rather than that legacy file. `prepare` stages metadata for the named owner and mode; the helper accepts only `PREFLIGHT` or `SMOKE` and rejects `EXPERIMENT`/`FULL_VALIDATION`. `--gpu` requests T4×2 metadata but does not itself allocate or execute a GPU workload. Inspect the resulting files and metadata before any publication. You can also use Kaggle's metadata initializer directly, then review/edit its generated template:
 
 ```bash
 mkdir -p /tmp/pasture-kaggle-upload
