@@ -1,0 +1,10 @@
+{
+  "manifest_sha256": "b489f0d2bb0bd8796f5e9e0013c8c4a5c8558bd5d926a1b82a72a9379f400d1b",
+  "precision_pilot_sha256": "1c52a5461ec3a6fc721db078c7ce7cfe3e214193457f273ad53d0cc79bd0f5f6",
+  "protocol_path": "artifacts/validation/mvp1-remediation/training-eval/frozen-analysis-protocol.json",
+  "protocol_sha256": "5131e4f34337f81276a7d6337056b71aa817d57d973ba8b9392046e1bfe405cb",
+  "status": "attested_before_locked_test_outcomes",
+  "test_source_sha256": "fe5b7e8ddd779942029da7592f06d998cf1909c258946b531203f77114639f18",
+  "training_eval_source_sha256": "b51225b491e8cfec816f4a422e1dc048432565cf428f5238b2a913c4e4dbe335",
+  "training_summary_sha256": "68eadb2dd17f5e46b6887076f5c2dc428edb8ed76079afaa97514519cad132c9"
+}

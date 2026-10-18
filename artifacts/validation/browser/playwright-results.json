@@ -1,0 +1,197 @@
+{
+  "base_url": "http://127.0.0.1:8000/",
+  "started_server": false,
+  "ticks_per_virtual_day": null,
+  "virtual_day_semantics": "Not defined by MVP source; 300 logical ticks recorded without labeling them as days.",
+  "console_errors": [],
+  "page_errors": [],
+  "failed_requests": [],
+  "checks": {
+    "http_status": 200,
+    "page_title": "Pasture Studies \u2014 Local Cattle Simulation",
+    "canvas": {
+      "width": 860,
+      "height": 615,
+      "rect": {
+        "x": 59,
+        "y": 391.8125,
+        "width": 860.4375,
+        "height": 614.59375
+      },
+      "dataUrlLength": 64446
+    },
+    "animal_ids": [
+      "cow-1",
+      "cow-2",
+      "cow-3",
+      "cow-4",
+      "cow-5"
+    ],
+    "animal_count_api": 5,
+    "selector_count": 5,
+    "map_bbox": {
+      "x": 59,
+      "y": 391.8125,
+      "width": 860.4375,
+      "height": 614.59375
+    },
+    "inspector_bbox": {
+      "x": 953.4375,
+      "y": 331.03125,
+      "width": 438.5625,
+      "height": 548.3125
+    },
+    "selection_checks": [
+      {
+        "animal_id": "cow-1",
+        "panel_name": "Cow 01",
+        "aria_pressed": "true"
+      },
+      {
+        "animal_id": "cow-2",
+        "panel_name": "Cow 02",
+        "aria_pressed": "true"
+      },
+      {
+        "animal_id": "cow-3",
+        "panel_name": "Cow 03",
+        "aria_pressed": "true"
+      },
+      {
+        "animal_id": "cow-4",
+        "panel_name": "Cow 04",
+        "aria_pressed": "true"
+      },
+      {
+        "animal_id": "cow-5",
+        "panel_name": "Cow 05",
+        "aria_pressed": "true"
+      }
+    ],
+    "post_step_inspector": {
+      "name": "Cow 01",
+      "action": "Walking",
+      "decision_context": "Decision at tick 0 \u00b7 current observation tick 1. Distribution uses the recorded decision features below.",
+      "feature_label": "Decision features \u00b7 tick 0\n\uff0b",
+      "probability_rows": 6,
+      "chosen_rows": 1,
+      "displayed_probabilities": {
+        "graze": 0.7,
+        "drink": 0.1,
+        "walk": 99.1,
+        "rest": 0.0,
+        "ruminate": 0.0,
+        "herd_interact": 0.0
+      },
+      "chosen_action_label": "walk",
+      "state": {
+        "tick": 0,
+        "action": "walk",
+        "decision_probabilities": [
+          0.006993461336411908,
+          0.0006792431529234726,
+          0.9913229278703198,
+          0.00040303665709342254,
+          0.00034747198305513146,
+          0.00025385900019635855
+        ],
+        "decision_features": [
+          0.5471849385525092,
+          0.5479371225694953,
+          0.32810266565070656,
+          0.6199838902562707,
+          1.0,
+          0.0,
+          0.07142857142857142,
+          0.35714285714285715,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "observation_tick": 1
+      },
+      "movement_events": [
+        {
+          "id": 1,
+          "tick": 1,
+          "animal_id": "cow-1",
+          "kind": "movement",
+          "detail": "3,8->3,7",
+          "reward": 0.0
+        },
+        {
+          "id": 4,
+          "tick": 1,
+          "animal_id": "cow-2",
+          "kind": "movement",
+          "detail": "8,7->8,6",
+          "reward": 0.0
+        },
+        {
+          "id": 7,
+          "tick": 1,
+          "animal_id": "cow-3",
+          "kind": "movement",
+          "detail": "10,2->11,2",
+          "reward": 0.0
+        },
+        {
+          "id": 10,
+          "tick": 1,
+          "animal_id": "cow-4",
+          "kind": "movement",
+          "detail": "9,4->9,3",
+          "reward": 0.0
+        },
+        {
+          "id": 13,
+          "tick": 1,
+          "animal_id": "cow-5",
+          "kind": "movement",
+          "detail": "4,5->4,4",
+          "reward": 0.0
+        }
+      ],
+      "moved_animals": 5
+    },
+    "event_rows_after_step": 15,
+    "inspector_matches_api": {
+      "action_matches": true,
+      "displayed_probabilities_match_api_rounded_0_1_percent": true,
+      "chosen_probability_row_matches_api_action": true,
+      "chosen_action_is_probability_argmax": true
+    },
+    "pause_resume": "PAUSED",
+    "reset_seed": 19,
+    "same_seed_trajectory_replay_equal": true,
+    "sustained_run": {
+      "start_tick": 0,
+      "steps": 300,
+      "final_tick": 300,
+      "elapsed_seconds": 0.884,
+      "events_retained": 3040,
+      "all_animals_have_decisions": true,
+      "all_probabilities_length_6": true
+    },
+    "final_panel_tick": "TICK 300",
+    "final_event_rows": 80
+  },
+  "screenshots": [
+    "initial.png",
+    "after-first-step.png",
+    "after-300-ticks.png"
+  ],
+  "playwright_version": "1.64.0",
+  "python_version": "3.12.3",
+  "chromium_version": "156.0.8078.4",
+  "verdict": "PASS"
+}

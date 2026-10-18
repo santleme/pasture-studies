@@ -1,0 +1,700 @@
+{
+  "checkpoint_seeds": [
+    11001,
+    11002,
+    11003,
+    11004,
+    11005,
+    11006,
+    11007,
+    11008,
+    11009,
+    11010
+  ],
+  "downstream": {
+    "memory": {
+      "all_animal_action_count_delta_treatment_minus_control": {
+        "herd_interact": 0
+      },
+      "arm_absolute_descriptives": {
+        "control": {
+          "all_animal_action_counts": {
+            "herd_interact": 108000
+          },
+          "all_animal_action_fractions": {
+            "herd_interact": 1.0
+          },
+          "final_target_drive_means": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "first_target_action_counts": {
+            "herd_interact": 300
+          },
+          "invalid_actions": 0,
+          "mean_episode_cumulative_toy_reward": 16.23515798877735,
+          "navigation_subreason_counts": {
+            "at_target": 108000
+          },
+          "resource_interaction_totals": {
+            "forage": 0,
+            "water": 0
+          }
+        },
+        "control_feature_off": {
+          "all_animal_action_counts": {
+            "herd_interact": 108000
+          },
+          "all_animal_action_fractions": {
+            "herd_interact": 1.0
+          },
+          "final_target_drive_means": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "first_target_action_counts": {
+            "herd_interact": 300
+          },
+          "invalid_actions": 0,
+          "mean_episode_cumulative_toy_reward": 16.23515798877735,
+          "navigation_subreason_counts": {
+            "at_target": 108000
+          },
+          "resource_interaction_totals": {
+            "forage": 0,
+            "water": 0
+          }
+        },
+        "treatment": {
+          "all_animal_action_counts": {
+            "herd_interact": 108000
+          },
+          "all_animal_action_fractions": {
+            "herd_interact": 1.0
+          },
+          "final_target_drive_means": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "first_target_action_counts": {
+            "herd_interact": 300
+          },
+          "invalid_actions": 0,
+          "mean_episode_cumulative_toy_reward": 16.23515798877735,
+          "navigation_subreason_counts": {
+            "at_target": 108000
+          },
+          "resource_interaction_totals": {
+            "forage": 0,
+            "water": 0
+          }
+        },
+        "treatment_feature_off": {
+          "all_animal_action_counts": {
+            "herd_interact": 108000
+          },
+          "all_animal_action_fractions": {
+            "herd_interact": 1.0
+          },
+          "final_target_drive_means": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "first_target_action_counts": {
+            "herd_interact": 300
+          },
+          "invalid_actions": 0,
+          "mean_episode_cumulative_toy_reward": 16.23515798877735,
+          "navigation_subreason_counts": {
+            "at_target": 108000
+          },
+          "resource_interaction_totals": {
+            "forage": 0,
+            "water": 0
+          }
+        }
+      },
+      "first_decision_p_drink_delta_treatment_minus_control": {
+        "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+        "bootstrap_two_sided_p": 0.7015,
+        "ci95": [
+          -0.0001229558230019676,
+          5.869001651568661e-05
+        ],
+        "ci97_5": [
+          -0.00014176747003801982,
+          6.819409217920076e-05
+        ],
+        "mean": -2.051962282606172e-05,
+        "paired_cells": 300,
+        "training_seed_clusters": 10,
+        "world_seed_clusters": 30
+      },
+      "matched_ablation_target_action_flips_total": 0,
+      "matched_ablation_toy_return_delta_mean": 0.0,
+      "mean_all_animal_reward_delta_by_tick": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_tickwise_target_manhattan_divergence": {
+        "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+        "bootstrap_two_sided_p": 1.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci97_5": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0,
+        "paired_cells": 300,
+        "training_seed_clusters": 10,
+        "world_seed_clusters": 30
+      },
+      "navigation_subreason_count_delta_treatment_minus_control": {
+        "at_target": 0
+      },
+      "resource_use_delta_treatment_minus_control": {
+        "forage": 0,
+        "water": 0
+      },
+      "target_action_flips_over_72_ticks": {
+        "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+        "bootstrap_two_sided_p": 1.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci97_5": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0,
+        "paired_cells": 300,
+        "training_seed_clusters": 10,
+        "world_seed_clusters": 30
+      },
+      "target_final_physiology_delta": {
+        "fatigue": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 1.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci97_5": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "hunger": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 1.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci97_5": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "social_need": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 1.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci97_5": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "thirst": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 1.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci97_5": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        }
+      },
+      "toy_return_delta": {
+        "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+        "bootstrap_two_sided_p": 1.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci97_5": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0,
+        "paired_cells": 300,
+        "training_seed_clusters": 10,
+        "world_seed_clusters": 30
+      }
+    },
+    "perception": {
+      "all_animal_action_count_delta_treatment_minus_control": {
+        "herd_interact": 0
+      },
+      "arm_absolute_descriptives": {
+        "control": {
+          "all_animal_action_counts": {
+            "herd_interact": 108000
+          },
+          "all_animal_action_fractions": {
+            "herd_interact": 1.0
+          },
+          "final_target_drive_means": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "first_target_action_counts": {
+            "herd_interact": 300
+          },
+          "invalid_actions": 0,
+          "mean_episode_cumulative_toy_reward": 16.23515798877735,
+          "navigation_subreason_counts": {
+            "at_target": 108000
+          },
+          "resource_interaction_totals": {
+            "forage": 0,
+            "water": 0
+          }
+        },
+        "control_feature_off": {
+          "all_animal_action_counts": {
+            "herd_interact": 108000
+          },
+          "all_animal_action_fractions": {
+            "herd_interact": 1.0
+          },
+          "final_target_drive_means": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "first_target_action_counts": {
+            "herd_interact": 300
+          },
+          "invalid_actions": 0,
+          "mean_episode_cumulative_toy_reward": 16.23515798877735,
+          "navigation_subreason_counts": {
+            "at_target": 108000
+          },
+          "resource_interaction_totals": {
+            "forage": 0,
+            "water": 0
+          }
+        },
+        "treatment": {
+          "all_animal_action_counts": {
+            "herd_interact": 108000
+          },
+          "all_animal_action_fractions": {
+            "herd_interact": 1.0
+          },
+          "final_target_drive_means": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "first_target_action_counts": {
+            "herd_interact": 300
+          },
+          "invalid_actions": 0,
+          "mean_episode_cumulative_toy_reward": 16.23515798877735,
+          "navigation_subreason_counts": {
+            "at_target": 108000
+          },
+          "resource_interaction_totals": {
+            "forage": 0,
+            "water": 0
+          }
+        },
+        "treatment_feature_off": {
+          "all_animal_action_counts": {
+            "herd_interact": 108000
+          },
+          "all_animal_action_fractions": {
+            "herd_interact": 1.0
+          },
+          "final_target_drive_means": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "first_target_action_counts": {
+            "herd_interact": 300
+          },
+          "invalid_actions": 0,
+          "mean_episode_cumulative_toy_reward": 16.23515798877735,
+          "navigation_subreason_counts": {
+            "at_target": 108000
+          },
+          "resource_interaction_totals": {
+            "forage": 0,
+            "water": 0
+          }
+        }
+      },
+      "first_decision_p_drink_delta_treatment_minus_control": {
+        "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+        "bootstrap_two_sided_p": 0.946,
+        "ci95": [
+          -0.00015693949441525774,
+          0.00010138771864381026
+        ],
+        "ci97_5": [
+          -0.00018095584841568482,
+          0.0001102874284750219
+        ],
+        "mean": -1.5204273807027022e-06,
+        "paired_cells": 300,
+        "training_seed_clusters": 10,
+        "world_seed_clusters": 30
+      },
+      "matched_ablation_target_action_flips_total": 0,
+      "matched_ablation_toy_return_delta_mean": 0.0,
+      "mean_all_animal_reward_delta_by_tick": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_tickwise_target_manhattan_divergence": {
+        "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+        "bootstrap_two_sided_p": 1.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci97_5": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0,
+        "paired_cells": 300,
+        "training_seed_clusters": 10,
+        "world_seed_clusters": 30
+      },
+      "navigation_subreason_count_delta_treatment_minus_control": {
+        "at_target": 0
+      },
+      "resource_use_delta_treatment_minus_control": {
+        "forage": 0,
+        "water": 0
+      },
+      "target_action_flips_over_72_ticks": {
+        "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+        "bootstrap_two_sided_p": 1.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci97_5": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0,
+        "paired_cells": 300,
+        "training_seed_clusters": 10,
+        "world_seed_clusters": 30
+      },
+      "target_final_physiology_delta": {
+        "fatigue": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 1.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci97_5": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "hunger": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 1.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci97_5": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "social_need": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 1.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci97_5": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "thirst": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 1.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci97_5": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        }
+      },
+      "toy_return_delta": {
+        "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+        "bootstrap_two_sided_p": 1.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci97_5": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0,
+        "paired_cells": 300,
+        "training_seed_clusters": 10,
+        "world_seed_clusters": 30
+      }
+    }
+  },
+  "families": [
+    "starter_seed"
+  ],
+  "paired_cells": 300,
+  "world_seeds": [
+    41001,
+    41002,
+    41003,
+    41004,
+    41005,
+    41006,
+    41007,
+    41008,
+    41009,
+    41010,
+    41011,
+    41012,
+    41013,
+    41014,
+    41015,
+    41016,
+    41017,
+    41018,
+    41019,
+    41020,
+    41021,
+    41022,
+    41023,
+    41024,
+    41025,
+    41026,
+    41027,
+    41028,
+    41029,
+    41030
+  ]
+}

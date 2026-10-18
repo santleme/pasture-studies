@@ -1,0 +1,328 @@
+{
+  "checkpoint_hashes": {
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11001.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 10.490689369984057,
+        "1500": 10.490689369984057,
+        "2000": 10.490689369984057,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "dd32a0fe00878fc9643e216ddedffae9259540123ecee5737005e9526de637af",
+      "training_seed": 11001,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "5084358bac18438e4ad6308c5baefaf54f0b34cf8ad07bf215c0fd8697d10aed"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11002.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.328914038587412,
+        "1500": 10.490689369984057,
+        "2000": 10.490689369984057,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "aee9b251ea10f92aec451f8525cbd3a4712e6c33e0325827b1928f2fe11c7a58",
+      "training_seed": 11002,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "d5eb0f2cde6d238bd64abb29043c0ab79151adde844d8a068a9ee809172e1b5f"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11003.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "0b78d5a1d1f7d70c0bbc5f66af0fe496bab29794aff1a16a694e7bb0cb3a9ec6",
+      "training_seed": 11003,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "332dc0aadd65aac2dc4ce62035375c86ca8124425d48bd3c5906d55e88269e4e"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11004.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "a23917a0d754dc888ee89797317442dad8df7bf63dec85123de144d07c4e4bed",
+      "training_seed": 11004,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "cd546329f973bdb28b8e2b4076bd02689e9aaec5e87c437c229be5bbf503687d"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11005.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "ae92ba8db3746298ebd9333c736533071424c676ef889e398dfe862e294ac176",
+      "training_seed": 11005,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "7f947b3bd910176f82addf9070db78e726bb09d82f193fc6732867c2435575e9"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11006.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.732614045186976,
+        "2000": 11.061735120481568,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "eae5abbc758876d1c1ea9afb42140c0f9c2303711a0d554f681791f89e31f8b3",
+      "training_seed": 11006,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "2ff0eb96a1bb781709eb578d386630f66eb0ad37b915d02fd03a38b7f2cfc2bd"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11007.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "5ffc52457a4fd4189caf0686e7a81f2b573f48c06062dc0bda1a08aeccd9944f",
+      "training_seed": 11007,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "ba3f17e75d92707a9afa4d51693bc4b5aa337f3378f51b35fa1def7fb1266942"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11008.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "dd2d8ae71dd7efb6b9d234c9f46cf693418aec1a10cca2dedb79072dacde5f11",
+      "training_seed": 11008,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "85c5daf0bba1ca5dfc5c52638ca06abde09a5c33d816afe386b2d2291a152788"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11009.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "e9b526549b2b9d33faff262250a89559931a4796e2231719fc3c61245b170054",
+      "training_seed": 11009,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "37ad501f1a71ef543f115a2d162d81504e58bd4a264ba4c9c869e26debb88253"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11010.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 10.490689369984057,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "6657d4d6f0a8e9518d861ffb5f8f7068cb4de2bc9777d6cd7f54f67f50fd4102",
+      "training_seed": 11010,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "ee0e2cc31c4b2bebb7651a9631d57fd03b49baac4a2235ce0d2744c2dd1f492a"
+    }
+  },
+  "decision_type": "pre-locked causal precision/sample-count decision; excluded-seed variance pilot only",
+  "harness_sha256": "fe9f0c2cc58091ec1fd7b8f3033c8b12f20017b61bc52c391e434aab03ea2451",
+  "manifest_sha256": "b489f0d2bb0bd8796f5e9e0013c8c4a5c8558bd5d926a1b82a72a9379f400d1b",
+  "minimum_checkpoints": 10,
+  "no_locked_test_outcomes_accessed": true,
+  "pilot_data_used_for": "episode-level paired endpoint variance and checkpoint/world-seed correlation only; no policy/intervention mean, sign, ranking, or favorable-contrast report",
+  "pilot_interventions_100pct_faithful": true,
+  "pilot_invalid_actions": 0,
+  "pilot_seed_count": 60,
+  "pilot_seed_first_last": [
+    31001,
+    31060
+  ],
+  "pilot_seed_ids": [
+    31001,
+    31002,
+    31003,
+    31004,
+    31005,
+    31006,
+    31007,
+    31008,
+    31009,
+    31010,
+    31011,
+    31012,
+    31013,
+    31014,
+    31015,
+    31016,
+    31017,
+    31018,
+    31019,
+    31020,
+    31021,
+    31022,
+    31023,
+    31024,
+    31025,
+    31026,
+    31027,
+    31028,
+    31029,
+    31030,
+    31031,
+    31032,
+    31033,
+    31034,
+    31035,
+    31036,
+    31037,
+    31038,
+    31039,
+    31040,
+    31041,
+    31042,
+    31043,
+    31044,
+    31045,
+    31046,
+    31047,
+    31048,
+    31049,
+    31050,
+    31051,
+    31052,
+    31053,
+    31054,
+    31055,
+    31056,
+    31057,
+    31058,
+    31059,
+    31060
+  ],
+  "pilot_seed_sha256": "48f554c6acacddfb7cd3a3fcf024ced9e9f66b829f66fded220004269e56db3f",
+  "pilot_shams_bit_identical": true,
+  "planned_precision": {
+    "memory_attenuation": {
+      "planned_half_width_at_required_n": 0.00012911044663376013,
+      "precision_attainable_with_approved_reserves": true,
+      "required_world_seeds": 30,
+      "target_half_width": 0.025
+    },
+    "memory_primary": {
+      "planned_half_width_at_required_n": 0.00012911044663376013,
+      "precision_attainable_with_approved_reserves": true,
+      "required_world_seeds": 30,
+      "target_half_width": 0.025
+    },
+    "perception_attenuation": {
+      "planned_half_width_at_required_n": 0.00016627991178356022,
+      "precision_attainable_with_approved_reserves": true,
+      "required_world_seeds": 30,
+      "target_half_width": 0.025
+    },
+    "perception_primary": {
+      "planned_half_width_at_required_n": 0.00016627991178356022,
+      "precision_attainable_with_approved_reserves": true,
+      "required_world_seeds": 30,
+      "target_half_width": 0.025
+    }
+  },
+  "precision_decision": "PLANNED_N_MET_TARGET",
+  "required_world_seed_count_per_factor": 30,
+  "reserve_seed_count_activated": 0,
+  "selected_locked_world_seeds": {
+    "starter_seed": [
+      41001,
+      41002,
+      41003,
+      41004,
+      41005,
+      41006,
+      41007,
+      41008,
+      41009,
+      41010,
+      41011,
+      41012,
+      41013,
+      41014,
+      41015,
+      41016,
+      41017,
+      41018,
+      41019,
+      41020,
+      41021,
+      41022,
+      41023,
+      41024,
+      41025,
+      41026,
+      41027,
+      41028,
+      41029,
+      41030
+    ]
+  },
+  "target_95_ci_half_width": 0.025,
+  "test_sha256": "f92184912001e5010f40c221dd5f19371c0d190b422c2481f22913bc593ec126",
+  "training_condition": "encoder_generated_wider_support_current_objective",
+  "training_summaries": {
+    "artifacts/validation/mvp1-remediation/training-eval/training-summary.json": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6"
+  },
+  "variance_components_and_iccs": {
+    "memory_attenuation": {
+      "checkpoint_icc": 0.7693058035635922,
+      "pilot_checkpoint_clusters": 10,
+      "pilot_world_clusters": 60,
+      "variance_checkpoint": 4.2962650635288336e-08,
+      "variance_checkpoint_by_world_residual": 1.2883347713191516e-08,
+      "variance_world": 0.0,
+      "world_icc": 0.0
+    },
+    "memory_primary": {
+      "checkpoint_icc": 0.7693058035635922,
+      "pilot_checkpoint_clusters": 10,
+      "pilot_world_clusters": 60,
+      "variance_checkpoint": 4.2962650635288336e-08,
+      "variance_checkpoint_by_world_residual": 1.2883347713191516e-08,
+      "variance_world": 0.0,
+      "world_icc": 0.0
+    },
+    "perception_attenuation": {
+      "checkpoint_icc": 0.7713113024187488,
+      "pilot_checkpoint_clusters": 10,
+      "pilot_world_clusters": 60,
+      "variance_checkpoint": 7.126828337242954e-08,
+      "variance_checkpoint_by_world_residual": 2.1130563408824415e-08,
+      "variance_world": 1.1045592241761078e-14,
+      "world_icc": 1.195425192642567e-07
+    },
+    "perception_primary": {
+      "checkpoint_icc": 0.7713113024187488,
+      "pilot_checkpoint_clusters": 10,
+      "pilot_world_clusters": 60,
+      "variance_checkpoint": 7.126828337242954e-08,
+      "variance_checkpoint_by_world_residual": 2.1130563408824415e-08,
+      "variance_world": 1.1045592241761078e-14,
+      "world_icc": 1.195425192642567e-07
+    }
+  }
+}

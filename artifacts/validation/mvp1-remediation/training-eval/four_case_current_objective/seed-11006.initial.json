@@ -1,0 +1,62 @@
+{
+  "actions": [
+    "graze",
+    "drink",
+    "walk",
+    "rest",
+    "ruminate",
+    "herd_interact"
+  ],
+  "checkpoint_version": 1,
+  "dimensions": {
+    "hidden": 32,
+    "input": 20,
+    "output": 6
+  },
+  "episodes": 0,
+  "feature_names": [
+    "hunger",
+    "thirst",
+    "fatigue",
+    "social_need",
+    "forage_visible",
+    "water_visible",
+    "forage_distance_norm",
+    "water_distance_norm",
+    "forage_available",
+    "water_available",
+    "local_blocked_fraction",
+    "herd_count_norm",
+    "mem_water_success",
+    "mem_forage_success",
+    "mem_water_blocked",
+    "mem_forage_depleted",
+    "mem_event_recency",
+    "tick_phase_sin",
+    "tick_phase_cos",
+    "self_in_herd"
+  ],
+  "feature_schema_version": "cattle-observation-v1",
+  "metadata": {
+    "algorithm": "seeded NumPy tanh MLP REINFORCE; exact expected-reward state baseline",
+    "candidate_validation_means": {
+      "500": -34.369500172318986,
+      "1000": -34.369500172318986,
+      "1500": -34.369500172318986,
+      "2000": -34.369500172318986
+    },
+    "condition": "four_case_current_objective",
+    "correct_action": "action attaining maximal unchanged one-step step_physiology toy reward; ties all correct",
+    "frozen_manifest": ".omx/research/mvp1-remediation-baseline/experiment-manifest.json",
+    "reward_schedule": {
+      "correct": 1.0,
+      "incorrect": -0.25
+    },
+    "role": "same-seed initialization comparator",
+    "selected_episode": 500,
+    "training_condition": "four_case_current_objective",
+    "training_seed": 11006
+  },
+  "policy_id": "numpy-mlp-seed-11006",
+  "seed": 11006
+}

@@ -1,0 +1,499 @@
+{
+  "aggregate": {
+    "accuracy_threshold": 0.85,
+    "all_counterfactuals_pass": true,
+    "cases": 100,
+    "improvement_pp": 83.0,
+    "improvement_threshold_pp": 25,
+    "initial_accuracy": 0.14,
+    "learning_thresholds_pass": true,
+    "trained_accuracy": 0.97
+  },
+  "algorithm": "episodic REINFORCE with an action-independent exact expected-reward state baseline",
+  "claims_boundary": "Synthetic task performance only; no claim of biological validity or real-cattle cognition.",
+  "default_checkpoint": "artifacts/policies/default-policy.npz",
+  "episodes_per_run": 2000,
+  "feature_names": [
+    "hunger",
+    "thirst",
+    "fatigue",
+    "social_need",
+    "forage_visible",
+    "water_visible",
+    "forage_distance_norm",
+    "water_distance_norm",
+    "forage_available",
+    "water_available",
+    "local_blocked_fraction",
+    "herd_count_norm",
+    "mem_water_success",
+    "mem_forage_success",
+    "mem_water_blocked",
+    "mem_forage_depleted",
+    "mem_event_recency",
+    "tick_phase_sin",
+    "tick_phase_cos",
+    "self_in_herd"
+  ],
+  "feature_schema_version": "cattle-observation-v1",
+  "policy": "NumPy tanh MLP",
+  "runs": [
+    {
+      "checkpoint": "artifacts/policies/cattle-policy-seed-11.npz",
+      "counterfactuals": {
+        "forage_memory": {
+          "negative_argmax": "walk",
+          "negative_case": "forage-memory-negative",
+          "negative_contrast": 0.9788057845341208,
+          "negative_probabilities": {
+            "drink": 0.0004075118919247068,
+            "graze": 0.013813269626159993,
+            "herd_interact": 0.0008704463016062701,
+            "rest": 0.0005472341765430254,
+            "ruminate": 0.0011212523512155513,
+            "walk": 0.9832402856525505
+          },
+          "passes": true,
+          "positive_argmax": "graze",
+          "positive_case": "forage-memory-positive",
+          "positive_contrast": 0.9743896921186959,
+          "positive_probabilities": {
+            "drink": 0.002062923365043126,
+            "graze": 0.9882029617448559,
+            "herd_interact": 0.0015700845892700267,
+            "rest": 0.000870454795712886,
+            "ruminate": 0.0028590743866884925,
+            "walk": 0.004434501118429655
+          }
+        },
+        "water_memory": {
+          "negative_argmax": "walk",
+          "negative_case": "water-memory-negative",
+          "negative_contrast": 0.9617867628620147,
+          "negative_probabilities": {
+            "drink": 0.03363867107281885,
+            "graze": 0.0006463021065126394,
+            "herd_interact": 0.0006137437801430608,
+            "rest": 0.0012986631117463826,
+            "ruminate": 0.0006334751193232365,
+            "walk": 0.9631691448094557
+          },
+          "passes": true,
+          "positive_argmax": "drink",
+          "positive_case": "water-memory-positive",
+          "positive_contrast": 0.9619230113270038,
+          "positive_probabilities": {
+            "drink": 0.9955616823998226,
+            "graze": 0.0011447230193487017,
+            "herd_interact": 0.0002618602067433569,
+            "rest": 0.0012110795347428668,
+            "ruminate": 0.0004382728919017074,
+            "walk": 0.001382381947440982
+          }
+        }
+      },
+      "episodes": 2000,
+      "evaluation": {
+        "cases": 20,
+        "eval_seed": 100011,
+        "improvement_pp": 80.0,
+        "initial_accuracy": 0.15,
+        "per_case": {
+          "forage-memory-negative": {
+            "count": 5,
+            "initial_correct": 1,
+            "trained_correct": 5
+          },
+          "forage-memory-positive": {
+            "count": 5,
+            "initial_correct": 1,
+            "trained_correct": 4
+          },
+          "water-memory-negative": {
+            "count": 5,
+            "initial_correct": 0,
+            "trained_correct": 5
+          },
+          "water-memory-positive": {
+            "count": 5,
+            "initial_correct": 1,
+            "trained_correct": 5
+          }
+        },
+        "trained_accuracy": 0.95
+      },
+      "initial_checkpoint": "artifacts/policies/cattle-policy-seed-11.initial.npz",
+      "mean_batch_reward_first_100": 0.246875,
+      "mean_batch_reward_last_100": 0.978125,
+      "parameter_delta_l2": 4.606991903075595,
+      "seed": 11
+    },
+    {
+      "checkpoint": "artifacts/policies/cattle-policy-seed-29.npz",
+      "counterfactuals": {
+        "forage_memory": {
+          "negative_argmax": "walk",
+          "negative_case": "forage-memory-negative",
+          "negative_contrast": 0.5775753079790532,
+          "negative_probabilities": {
+            "drink": 0.005631758903484717,
+            "graze": 0.2230857711647919,
+            "herd_interact": 0.008329268819534816,
+            "rest": 0.00870606491247091,
+            "ruminate": 0.008356475805820772,
+            "walk": 0.745890660393897
+          },
+          "passes": true,
+          "positive_argmax": "graze",
+          "positive_case": "forage-memory-positive",
+          "positive_contrast": 0.5567047460256624,
+          "positive_probabilities": {
+            "drink": 0.006788169940254864,
+            "graze": 0.7797905171904543,
+            "herd_interact": 0.013970577650409731,
+            "rest": 0.019387171994478924,
+            "ruminate": 0.011748210809558396,
+            "walk": 0.16831535241484372
+          }
+        },
+        "water_memory": {
+          "negative_argmax": "walk",
+          "negative_case": "water-memory-negative",
+          "negative_contrast": 0.9559986269963071,
+          "negative_probabilities": {
+            "drink": 0.02219239081273816,
+            "graze": 0.00812156610439791,
+            "herd_interact": 0.003155662141374188,
+            "rest": 0.0027262694888312055,
+            "ruminate": 0.003310654948809977,
+            "walk": 0.9604934565038485
+          },
+          "passes": true,
+          "positive_argmax": "drink",
+          "positive_case": "water-memory-positive",
+          "positive_contrast": 0.9679502417774114,
+          "positive_probabilities": {
+            "drink": 0.9901426325901496,
+            "graze": 0.001902831918126764,
+            "herd_interact": 0.0006175496296717361,
+            "rest": 0.0015564789547508216,
+            "ruminate": 0.0012856773997597132,
+            "walk": 0.004494829507541469
+          }
+        }
+      },
+      "episodes": 2000,
+      "evaluation": {
+        "cases": 20,
+        "eval_seed": 100029,
+        "improvement_pp": 85.0,
+        "initial_accuracy": 0.1,
+        "per_case": {
+          "forage-memory-negative": {
+            "count": 5,
+            "initial_correct": 0,
+            "trained_correct": 4
+          },
+          "forage-memory-positive": {
+            "count": 5,
+            "initial_correct": 1,
+            "trained_correct": 5
+          },
+          "water-memory-negative": {
+            "count": 5,
+            "initial_correct": 1,
+            "trained_correct": 5
+          },
+          "water-memory-positive": {
+            "count": 5,
+            "initial_correct": 0,
+            "trained_correct": 5
+          }
+        },
+        "trained_accuracy": 0.95
+      },
+      "initial_checkpoint": "artifacts/policies/cattle-policy-seed-29.initial.npz",
+      "mean_batch_reward_first_100": 0.24375,
+      "mean_batch_reward_last_100": 0.74375,
+      "parameter_delta_l2": 3.611052233693084,
+      "seed": 29
+    },
+    {
+      "checkpoint": "artifacts/policies/cattle-policy-seed-47.npz",
+      "counterfactuals": {
+        "forage_memory": {
+          "negative_argmax": "walk",
+          "negative_case": "forage-memory-negative",
+          "negative_contrast": 0.9710401581444966,
+          "negative_probabilities": {
+            "drink": 0.00068087499725028,
+            "graze": 0.02172473427023936,
+            "herd_interact": 0.0010440728827334008,
+            "rest": 0.0008576293658520232,
+            "ruminate": 0.0009046748395973683,
+            "walk": 0.9747880136443275
+          },
+          "passes": true,
+          "positive_argmax": "graze",
+          "positive_case": "forage-memory-positive",
+          "positive_contrast": 0.9734287897801572,
+          "positive_probabilities": {
+            "drink": 5.941304583083845e-05,
+            "graze": 0.9951535240503966,
+            "herd_interact": 0.0003014130703727311,
+            "rest": 0.00030135612175766636,
+            "ruminate": 0.0004364382118113428,
+            "walk": 0.0037478554998309345
+          }
+        },
+        "water_memory": {
+          "negative_argmax": "walk",
+          "negative_case": "water-memory-negative",
+          "negative_contrast": 0.9667968483685263,
+          "negative_probabilities": {
+            "drink": 0.0055572370328401816,
+            "graze": 0.000530375624525413,
+            "herd_interact": 0.0008068955259654714,
+            "rest": 0.0003796069280755469,
+            "ruminate": 0.00040719194226828325,
+            "walk": 0.9923186929463251
+          },
+          "passes": true,
+          "positive_argmax": "drink",
+          "positive_case": "water-memory-positive",
+          "positive_contrast": 0.9651696827442947,
+          "positive_probabilities": {
+            "drink": 0.9707269197771349,
+            "graze": 8.408501178286873e-05,
+            "herd_interact": 0.0013589899845318357,
+            "rest": 0.0009177860443234088,
+            "ruminate": 0.0013903746044282533,
+            "walk": 0.025521844577798825
+          }
+        }
+      },
+      "episodes": 2000,
+      "evaluation": {
+        "cases": 20,
+        "eval_seed": 100047,
+        "improvement_pp": 75.0,
+        "initial_accuracy": 0.25,
+        "per_case": {
+          "forage-memory-negative": {
+            "count": 5,
+            "initial_correct": 2,
+            "trained_correct": 5
+          },
+          "forage-memory-positive": {
+            "count": 5,
+            "initial_correct": 3,
+            "trained_correct": 5
+          },
+          "water-memory-negative": {
+            "count": 5,
+            "initial_correct": 0,
+            "trained_correct": 5
+          },
+          "water-memory-positive": {
+            "count": 5,
+            "initial_correct": 0,
+            "trained_correct": 5
+          }
+        },
+        "trained_accuracy": 1.0
+      },
+      "initial_checkpoint": "artifacts/policies/cattle-policy-seed-47.initial.npz",
+      "mean_batch_reward_first_100": 0.3375,
+      "mean_batch_reward_last_100": 0.975,
+      "parameter_delta_l2": 4.7002796877172495,
+      "seed": 47
+    },
+    {
+      "checkpoint": "artifacts/policies/cattle-policy-seed-83.npz",
+      "counterfactuals": {
+        "forage_memory": {
+          "negative_argmax": "walk",
+          "negative_case": "forage-memory-negative",
+          "negative_contrast": 0.9690326428343352,
+          "negative_probabilities": {
+            "drink": 0.0005142171925038232,
+            "graze": 0.016279014249282794,
+            "herd_interact": 0.0008546088359022179,
+            "rest": 0.0008724771223279873,
+            "ruminate": 0.0013677836755187078,
+            "walk": 0.9801118989244644
+          },
+          "passes": true,
+          "positive_argmax": "graze",
+          "positive_case": "forage-memory-positive",
+          "positive_contrast": 0.9706922115285965,
+          "positive_probabilities": {
+            "drink": 0.00012164966623563911,
+            "graze": 0.9869712257778793,
+            "herd_interact": 0.0004672691095953573,
+            "rest": 0.0005403530761459013,
+            "ruminate": 0.0008202462800148562,
+            "walk": 0.011079256090129138
+          }
+        },
+        "water_memory": {
+          "negative_argmax": "walk",
+          "negative_case": "water-memory-negative",
+          "negative_contrast": 0.970714081328754,
+          "negative_probabilities": {
+            "drink": 0.005702499262414104,
+            "graze": 0.0004300215035483201,
+            "herd_interact": 0.0006045925686388724,
+            "rest": 0.0007144015675171754,
+            "ruminate": 0.0009079235499290253,
+            "walk": 0.9916405615479524
+          },
+          "passes": true,
+          "positive_argmax": "drink",
+          "positive_case": "water-memory-positive",
+          "positive_contrast": 0.9700883068831814,
+          "positive_probabilities": {
+            "drink": 0.9757908061455954,
+            "graze": 0.0003973188199225156,
+            "herd_interact": 0.0007061156466474733,
+            "rest": 0.0011182002447707447,
+            "ruminate": 0.0010610789238654785,
+            "walk": 0.020926480219198372
+          }
+        }
+      },
+      "episodes": 2000,
+      "evaluation": {
+        "cases": 20,
+        "eval_seed": 100083,
+        "improvement_pp": 90.0,
+        "initial_accuracy": 0.05,
+        "per_case": {
+          "forage-memory-negative": {
+            "count": 5,
+            "initial_correct": 0,
+            "trained_correct": 4
+          },
+          "forage-memory-positive": {
+            "count": 5,
+            "initial_correct": 0,
+            "trained_correct": 5
+          },
+          "water-memory-negative": {
+            "count": 5,
+            "initial_correct": 0,
+            "trained_correct": 5
+          },
+          "water-memory-positive": {
+            "count": 5,
+            "initial_correct": 1,
+            "trained_correct": 5
+          }
+        },
+        "trained_accuracy": 0.95
+      },
+      "initial_checkpoint": "artifacts/policies/cattle-policy-seed-83.initial.npz",
+      "mean_batch_reward_first_100": 0.328125,
+      "mean_batch_reward_last_100": 0.975,
+      "parameter_delta_l2": 4.4323374568039435,
+      "seed": 83
+    },
+    {
+      "checkpoint": "artifacts/policies/cattle-policy-seed-101.npz",
+      "counterfactuals": {
+        "forage_memory": {
+          "negative_argmax": "walk",
+          "negative_case": "forage-memory-negative",
+          "negative_contrast": 0.9713830412572552,
+          "negative_probabilities": {
+            "drink": 0.0007036437311210461,
+            "graze": 0.01252500628394562,
+            "herd_interact": 0.0012289339850700264,
+            "rest": 0.0008531713162946415,
+            "ruminate": 0.0011152103360538169,
+            "walk": 0.9835740343475149
+          },
+          "passes": true,
+          "positive_argmax": "graze",
+          "positive_case": "forage-memory-positive",
+          "positive_contrast": 0.9716168306335398,
+          "positive_probabilities": {
+            "drink": 0.00046690732480378377,
+            "graze": 0.9841418369174854,
+            "herd_interact": 0.0013985310745703462,
+            "rest": 0.0013982028031958378,
+            "ruminate": 0.00040352878968508756,
+            "walk": 0.012190993090259701
+          }
+        },
+        "water_memory": {
+          "negative_argmax": "walk",
+          "negative_case": "water-memory-negative",
+          "negative_contrast": 0.9604829430124209,
+          "negative_probabilities": {
+            "drink": 0.003660465642170407,
+            "graze": 0.00040405979311892054,
+            "herd_interact": 0.0002631435249662563,
+            "rest": 0.0005119703775662055,
+            "ruminate": 0.0004959812565865149,
+            "walk": 0.9946643794055916
+          },
+          "passes": true,
+          "positive_argmax": "drink",
+          "positive_case": "water-memory-positive",
+          "positive_contrast": 0.9598075100385625,
+          "positive_probabilities": {
+            "drink": 0.9634679756807328,
+            "graze": 0.0006735919799522363,
+            "herd_interact": 0.0007138417591967639,
+            "rest": 0.00042870412012791886,
+            "ruminate": 0.0005344500668197073,
+            "walk": 0.034181436393170735
+          }
+        }
+      },
+      "episodes": 2000,
+      "evaluation": {
+        "cases": 20,
+        "eval_seed": 100101,
+        "improvement_pp": 85.0,
+        "initial_accuracy": 0.15,
+        "per_case": {
+          "forage-memory-negative": {
+            "count": 5,
+            "initial_correct": 1,
+            "trained_correct": 5
+          },
+          "forage-memory-positive": {
+            "count": 5,
+            "initial_correct": 1,
+            "trained_correct": 5
+          },
+          "water-memory-negative": {
+            "count": 5,
+            "initial_correct": 1,
+            "trained_correct": 5
+          },
+          "water-memory-positive": {
+            "count": 5,
+            "initial_correct": 0,
+            "trained_correct": 5
+          }
+        },
+        "trained_accuracy": 1.0
+      },
+      "initial_checkpoint": "artifacts/policies/cattle-policy-seed-101.initial.npz",
+      "mean_batch_reward_first_100": 0.19375,
+      "mean_batch_reward_last_100": 0.971875,
+      "parameter_delta_l2": 4.466709980811305,
+      "seed": 101
+    }
+  ],
+  "training_seeds": [
+    11,
+    29,
+    47,
+    83,
+    101
+  ]
+}

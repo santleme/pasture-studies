@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f0e7">
+  <title>Pasture Studies — Local Cattle Simulation</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#main" aria-label="Pasture Studies home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M5 29c7-3 10-11 16-11s9 8 14 9M7 34c6-2 10-7 15-7s8 4 12 5M20 8v10m-4-5h8"/><circle cx="20" cy="8" r="3"/></svg></span>
+        <span><strong>Fieldnotes</strong><small>PASTURE STUDIES / 01</small></span>
+      </a>
+      <div class="top-status"><span class="live-dot" id="connection-dot"></span><span id="connection-label">Connecting to local simulation</span><span class="divider"></span><span class="policy-tag">LOCAL POLICY <b id="policy-short">—</b></span></div>
+      <span class="training-link" title="Training runs locally through the project training command">TRAINING PIPELINE <span aria-hidden="true">· LOCAL</span></span>
+    </header>
+
+    <main id="main">
+      <section class="intro-row" aria-labelledby="page-title">
+        <div><p class="eyebrow">OBSERVATION WINDOW <span>·</span> SEEDED FIELD STUDY</p><h1 id="page-title">A synthetic pasture day<span class="period">.</span></h1><p class="intro-copy">Five autonomous agents, one shared landscape. The clock advances in 24 abstract simulation ticks per synthetic day; ticks do not map to real hours or validated biological time.</p></div>
+        <div class="clock-card" aria-live="polite" title="Synthetic time only: 24 abstract simulation ticks per virtual day; not real hours or biological time."><span class="clock-icon" aria-hidden="true">◷</span><div><small>SYNTHETIC TIME</small><strong id="clock-time">DAY 0 · TICK 000/024</strong></div><span class="clock-state" id="clock-state">PAUSED</span></div>
+      </section>
+
+      <section class="toolbar" aria-label="Simulation controls">
+        <div class="run-controls">
+          <button class="button button-primary" id="toggle-run" type="button"><span class="button-icon" aria-hidden="true">▶</span><span>Resume</span></button>
+          <button class="button button-quiet" id="step-once" type="button"><span class="step-icon" aria-hidden="true">▸|</span>Step once</button>
+          <span class="toolbar-separator" aria-hidden="true"></span>
+          <label for="speed-select" class="control-label">PACE</label>
+          <select id="speed-select" aria-label="Simulation speed"><option value="0.5">½×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select>
+        </div>
+        <div class="scenario-controls"><span class="seed-label">SEED <b id="seed-value">—</b></span><label class="sr-only" for="seed-input">New scenario seed</label><input id="seed-input" type="number" value="7" step="1" aria-label="Scenario seed"><button class="button button-outline" id="reset-world" type="button">↻ <span>Reset scenario</span></button></div>
+      </section>
+
+      <div class="workspace">
+        <section class="map-column" aria-labelledby="map-heading">
+          <div class="section-heading"><div><p class="eyebrow">THE FIELD</p><h2 id="map-heading">Pasture map</h2></div><span class="map-meta" id="map-meta">14 × 10 GRID</span></div>
+          <div class="map-card">
+            <div class="map-wrap"><canvas id="pasture-map" role="img" aria-label="Pasture map with five selectable cattle, forage patches, a water trough, and fencing. Use the animal list below to select an animal."></canvas><div class="map-loading" id="map-loading">Preparing the field…</div></div>
+            <div class="map-legend" aria-label="Map legend"><span><i class="legend-cow" aria-hidden="true"></i>Cattle</span><span><i class="legend-forage" aria-hidden="true"></i>Forage</span><span><i class="legend-water" aria-hidden="true"></i>Water</span><span><i class="legend-fence" aria-hidden="true"></i>Fence</span><span class="legend-note">Select an animal to inspect</span></div>
+          </div>
+          <div class="herd-strip" aria-label="Select an animal" id="animal-selector"></div>
+          <div class="research-note"><span class="note-mark" aria-hidden="true">i</span><p><strong>Research prototype</strong> — physiology and rewards are toy variables for software experiments, not validated cattle science or husbandry guidance.</p></div>
+        </section>
+
+        <aside class="inspector" aria-labelledby="inspector-heading">
+          <div class="section-heading inspector-title"><div><p class="eyebrow">INDIVIDUAL RECORD</p><h2 id="inspector-heading">Agent inspection</h2></div><span class="record-index" id="record-index">01 / 05</span></div>
+          <div class="agent-card">
+            <div class="agent-card-head"><div class="animal-avatar" id="animal-avatar" aria-hidden="true">01</div><div class="agent-identity"><h3 id="animal-name">Cow 01</h3><p><span class="action-dot"></span><span id="animal-action">Waiting for state</span></p></div><span class="reward" id="animal-reward">REWARD <b>—</b></span></div>
+            <div class="state-block"><div class="block-heading"><span>TOY PHYSIOLOGY</span><small>NORMALIZED 0–1</small></div><div class="drive-list" id="drive-list"></div></div>
+            <div class="state-block decision-block"><div class="block-heading"><span>POLICY DISTRIBUTION</span><small>LOCAL NEURAL CHECKPOINT</small></div><p id="decision-context" aria-live="polite">Waiting for a policy decision.</p><div class="probability-list" id="probability-list"></div><p class="policy-id">Checkpoint <code id="policy-id">—</code></p></div>
+            <div class="state-block perception-block"><div class="block-heading"><span>PERCEPTION & MEMORY</span><small>20 INPUT FEATURES</small></div><div class="feature-summary" id="feature-summary"></div><details class="feature-details"><summary id="feature-vector-label">Inspect encoded feature vector <span aria-hidden="true">＋</span></summary><ol id="feature-list"></ol></details><div class="retrieved"><h4>Retrieved events</h4><div id="memory-events" class="memory-events"></div></div></div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="event-section" aria-labelledby="events-heading"><div class="section-heading"><div><p class="eyebrow">TRACE</p><h2 id="events-heading">Decision log</h2></div><span class="event-count" id="event-count">0 ENTRIES</span></div><p id="event-gap-notice" role="status" aria-live="polite" hidden></p><div class="event-panel"><div class="event-header"><span>TICK</span><span>ANIMAL</span><span>OBSERVATION</span><span>REWARD</span></div><ol id="event-list" aria-live="polite" aria-relevant="additions"></ol><p class="empty-events" id="empty-events">No decisions yet. Resume the clock or step once to observe the first turn.</p></div></section>
+      <footer class="footer"><span>FIELDNOTES <b>·</b> LOCAL RESEARCH TOOL</span><span>No hosted inference <b>·</b> No external assets</span></footer>
+    </main>
+  </div>
+</body>
+</html>

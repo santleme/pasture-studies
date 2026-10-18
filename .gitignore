@@ -1,0 +1,21 @@
+# Local agent configuration and runtime state
+.codex/
+.omx/
+.omx-state-locks/
+.omx-state-locks.identity.json
+
+# Local Python environments and generated caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+
+# Raw evaluation JSONL files exceed GitHub's 100 MB single-file limit.
+# Public archive carries verified xz-compressed copies alongside these originals.
+artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/locked-test-episodes.jsonl
+artifacts/validation/mvp1-remediation/training-eval/four_case_current_objective/locked-test-episodes.jsonl
+artifacts/validation/mvp1-remediation/causal/causal-confirmatory-primary.jsonl
+
+# Local workspace instructions are not project documentation
+/AGENTS.md

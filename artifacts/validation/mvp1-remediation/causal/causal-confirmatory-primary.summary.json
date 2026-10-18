@@ -1,0 +1,289 @@
+{
+  "adequate_minimum_sample": true,
+  "all_interventions_faithful": true,
+  "all_shams_bit_identical": true,
+  "causal_estimates_by_family": {
+    "starter_seed": {
+      "memory": {
+        "ablation_effect": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 1.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci97_5": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "attenuation_interaction": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 0.7025,
+          "ci95": [
+            -6.024043720411806e-05,
+            0.00012081554071875448
+          ],
+          "ci97_5": [
+            -6.769013399562322e-05,
+            0.00013764478985238784
+          ],
+          "mean": 2.051962282606172e-05,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "causal_gate": "FAIL_NO_DETECTED_PREDECLARED_INFLUENCE",
+        "holm_adjusted_factor_p": 1.0,
+        "holm_conservative_simultaneous_ci": "Bonferroni 97.5% intervals (conservative alongside Holm-adjusted factor p)",
+        "precision_gate": "HALF_WIDTH_MET",
+        "preregistered_influence_margin": 0.05,
+        "primary_effect": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 0.7215,
+          "ci95": [
+            -6.012844421053021e-05,
+            0.00012117224919853548
+          ],
+          "ci97_5": [
+            -6.697202077946174e-05,
+            0.0001376881708825281
+          ],
+          "mean": 2.051962282606172e-05,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "required_precision_half_width": 0.025,
+        "sample_gate": "SAMPLE_COUNT_MET"
+      },
+      "perception": {
+        "ablation_effect": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 1.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci97_5": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "attenuation_interaction": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 0.946,
+          "ci95": [
+            -9.93135218168322e-05,
+            0.00015481007037110002
+          ],
+          "ci97_5": [
+            -0.00010941230356143834,
+            0.0001765861208248643
+          ],
+          "mean": 1.5204273807027022e-06,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "causal_gate": "FAIL_NO_DETECTED_PREDECLARED_INFLUENCE",
+        "holm_adjusted_factor_p": 1.0,
+        "holm_conservative_simultaneous_ci": "Bonferroni 97.5% intervals (conservative alongside Holm-adjusted factor p)",
+        "precision_gate": "HALF_WIDTH_MET",
+        "preregistered_influence_margin": 0.05,
+        "primary_effect": {
+          "bootstrap": "crossed training-seed x world-seed percentile; paired arms retained",
+          "bootstrap_two_sided_p": 0.908,
+          "ci95": [
+            -0.00010300134929453644,
+            0.0001506038311600145
+          ],
+          "ci97_5": [
+            -0.0001090541245385046,
+            0.00017211180378528195
+          ],
+          "mean": 1.5204273807027022e-06,
+          "paired_cells": 300,
+          "training_seed_clusters": 10,
+          "world_seed_clusters": 30
+        },
+        "required_precision_half_width": 0.025,
+        "sample_gate": "SAMPLE_COUNT_MET"
+      }
+    }
+  },
+  "checkpoint_count": 10,
+  "checkpoint_hashes": {
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11001.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 10.490689369984057,
+        "1500": 10.490689369984057,
+        "2000": 10.490689369984057,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "dd32a0fe00878fc9643e216ddedffae9259540123ecee5737005e9526de637af",
+      "training_seed": 11001,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "5084358bac18438e4ad6308c5baefaf54f0b34cf8ad07bf215c0fd8697d10aed"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11002.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.328914038587412,
+        "1500": 10.490689369984057,
+        "2000": 10.490689369984057,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "aee9b251ea10f92aec451f8525cbd3a4712e6c33e0325827b1928f2fe11c7a58",
+      "training_seed": 11002,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "d5eb0f2cde6d238bd64abb29043c0ab79151adde844d8a068a9ee809172e1b5f"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11003.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "0b78d5a1d1f7d70c0bbc5f66af0fe496bab29794aff1a16a694e7bb0cb3a9ec6",
+      "training_seed": 11003,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "332dc0aadd65aac2dc4ce62035375c86ca8124425d48bd3c5906d55e88269e4e"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11004.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "a23917a0d754dc888ee89797317442dad8df7bf63dec85123de144d07c4e4bed",
+      "training_seed": 11004,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "cd546329f973bdb28b8e2b4076bd02689e9aaec5e87c437c229be5bbf503687d"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11005.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "ae92ba8db3746298ebd9333c736533071424c676ef889e398dfe862e294ac176",
+      "training_seed": 11005,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "7f947b3bd910176f82addf9070db78e726bb09d82f193fc6732867c2435575e9"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11006.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.732614045186976,
+        "2000": 11.061735120481568,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "eae5abbc758876d1c1ea9afb42140c0f9c2303711a0d554f681791f89e31f8b3",
+      "training_seed": 11006,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "2ff0eb96a1bb781709eb578d386630f66eb0ad37b915d02fd03a38b7f2cfc2bd"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11007.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "5ffc52457a4fd4189caf0686e7a81f2b573f48c06062dc0bda1a08aeccd9944f",
+      "training_seed": 11007,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "ba3f17e75d92707a9afa4d51693bc4b5aa337f3378f51b35fa1def7fb1266942"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11008.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "dd2d8ae71dd7efb6b9d234c9f46cf693418aec1a10cca2dedb79072dacde5f11",
+      "training_seed": 11008,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "85c5daf0bba1ca5dfc5c52638ca06abde09a5c33d816afe386b2d2291a152788"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11009.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 15.744138368684112,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "e9b526549b2b9d33faff262250a89559931a4796e2231719fc3c61245b170054",
+      "training_seed": 11009,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "37ad501f1a71ef543f115a2d162d81504e58bd4a264ba4c9c869e26debb88253"
+    },
+    "/home/lucas_coimbra/projects/experiments/riose-tech/artifacts/validation/mvp1-remediation/training-eval/encoder_generated_wider_support_current_objective/seed-11010.trained.npz": {
+      "candidate_validation_means": {
+        "1000": 15.744138368684112,
+        "1500": 15.744138368684112,
+        "2000": 10.490689369984057,
+        "500": 15.744138368684112
+      },
+      "selected_episode": 500,
+      "sidecar_sha256": "6657d4d6f0a8e9518d861ffb5f8f7068cb4de2bc9777d6cd7f54f67f50fd4102",
+      "training_seed": 11010,
+      "training_summary_path": "artifacts/validation/mvp1-remediation/training-eval/training-summary.json",
+      "training_summary_sha256": "dcef875baea22dda2e81f4559577d7d2fb9e19274d3782baa9791236d233fff6",
+      "weights_sha256": "ee0e2cc31c4b2bebb7651a9631d57fd03b49baac4a2235ce0d2744c2dd1f492a"
+    }
+  },
+  "confirmatory_checkpoint_cohort_verified": true,
+  "decision_tick": 12,
+  "family_count": 1,
+  "fixture_memory_event_age": 12,
+  "frozen_precision_decision_sha256": "51219f0c7b58c9ca838122f8a1ea8d7d23d4c744c6ededb4a14b63182432e64a",
+  "frozen_precision_decision_verified": true,
+  "harness_sha256": "fe9f0c2cc58091ec1fd7b8f3033c8b12f20017b61bc52c391e434aab03ea2451",
+  "horizon_ticks_after_intervention": 72,
+  "invalid_actions": 0,
+  "locked_seed_sets_verified": true,
+  "manifest_sha256": "b489f0d2bb0bd8796f5e9e0013c8c4a5c8558bd5d926a1b82a72a9379f400d1b",
+  "paired_cells": 300,
+  "paired_rows": "causal-confirmatory-primary.jsonl",
+  "precision_plan_authorizes_gate": true,
+  "protocol": "approved MVP1 P4 confirmatory memory and perception interventions with matched feature-off ablations",
+  "required_confirmatory_cells": 300,
+  "run_classification": "confirmatory_locked_primary",
+  "scope": "synthetic software cognition only; not biological validation",
+  "synthetic_days_after_intervention": 3,
+  "training_condition_required": "encoder_generated_wider_support_current_objective",
+  "world_seed_count_per_family": {
+    "starter_seed": 30
+  }
+}

@@ -1,0 +1,578 @@
+{
+  "base_url": "http://127.0.0.1:8000",
+  "local_only": true,
+  "started_server": false,
+  "server_management": "Use an existing local server if available; otherwise start and stop one for this run.",
+  "ticks_per_virtual_day": 24,
+  "time_unit": "abstract_simulation_tick (synthetic virtual days; not biological time)",
+  "seed": 4107,
+  "console_errors": [],
+  "page_errors": [],
+  "failed_requests": [],
+  "checks": {
+    "seed_input": {
+      "api_seed_on_load": 4107,
+      "input_seed_on_load": "4107",
+      "load_input_matches_api": true,
+      "edited_seed": 4108,
+      "retained_after_poll": true,
+      "api_unchanged_until_reset": true,
+      "reset_input_matches_api": true
+    },
+    "initial": {
+      "http_status": 200,
+      "title": "Pasture Studies \u2014 Local Cattle Simulation",
+      "headline": "A synthetic pasture day.",
+      "headline_identifies_synthetic": true,
+      "animal_ids": [
+        "cow-1",
+        "cow-2",
+        "cow-3",
+        "cow-4",
+        "cow-5"
+      ],
+      "api_animal_count": 5,
+      "selector_count": 5,
+      "canvas": {
+        "width": 860,
+        "height": 615,
+        "dataUrlLength": 64014
+      },
+      "clock": {
+        "requested_absolute_tick": 0,
+        "api_tick": 0,
+        "clock": {
+          "absolute_tick": 0,
+          "synthetic_day_index": 0,
+          "tick_within_day": 0,
+          "ticks_per_virtual_day": 24,
+          "tick": 0,
+          "paused": true,
+          "speed": 1.0,
+          "logical_dt": 1,
+          "action_duration_ticks": 1,
+          "time_unit": "abstract_simulation_tick",
+          "calendar": "synthetic_virtual_day"
+        },
+        "ui_label": "DAY 0 \u00b7 TICK 000/024",
+        "expected_ui_label": "DAY 0 \u00b7 TICK 000/024",
+        "matches": true
+      }
+    },
+    "inspection_panels": [
+      {
+        "id": "cow-1",
+        "selected": true,
+        "name_matches": true,
+        "action_matches": true,
+        "decision_probability_rows": 6,
+        "drives": {
+          "hunger": {
+            "shown": 0.7,
+            "api": 0.7
+          },
+          "thirst": {
+            "shown": 0.61,
+            "api": 0.61
+          },
+          "fatigue": {
+            "shown": 0.19,
+            "api": 0.19
+          },
+          "social_need": {
+            "shown": 0.62,
+            "api": 0.62
+          }
+        },
+        "drives_match": true
+      },
+      {
+        "id": "cow-2",
+        "selected": true,
+        "name_matches": true,
+        "action_matches": true,
+        "decision_probability_rows": 6,
+        "drives": {
+          "hunger": {
+            "shown": 0.6,
+            "api": 0.6
+          },
+          "thirst": {
+            "shown": 0.65,
+            "api": 0.65
+          },
+          "fatigue": {
+            "shown": 0.37,
+            "api": 0.37
+          },
+          "social_need": {
+            "shown": 0.23,
+            "api": 0.23
+          }
+        },
+        "drives_match": true
+      },
+      {
+        "id": "cow-3",
+        "selected": true,
+        "name_matches": true,
+        "action_matches": true,
+        "decision_probability_rows": 6,
+        "drives": {
+          "hunger": {
+            "shown": 0.64,
+            "api": 0.64
+          },
+          "thirst": {
+            "shown": 0.52,
+            "api": 0.52
+          },
+          "fatigue": {
+            "shown": 0.57,
+            "api": 0.57
+          },
+          "social_need": {
+            "shown": 0.52,
+            "api": 0.52
+          }
+        },
+        "drives_match": true
+      },
+      {
+        "id": "cow-4",
+        "selected": true,
+        "name_matches": true,
+        "action_matches": true,
+        "decision_probability_rows": 6,
+        "drives": {
+          "hunger": {
+            "shown": 0.74,
+            "api": 0.74
+          },
+          "thirst": {
+            "shown": 0.78,
+            "api": 0.78
+          },
+          "fatigue": {
+            "shown": 0.31,
+            "api": 0.31
+          },
+          "social_need": {
+            "shown": 0.55,
+            "api": 0.55
+          }
+        },
+        "drives_match": true
+      },
+      {
+        "id": "cow-5",
+        "selected": true,
+        "name_matches": true,
+        "action_matches": true,
+        "decision_probability_rows": 6,
+        "drives": {
+          "hunger": {
+            "shown": 0.48,
+            "api": 0.48
+          },
+          "thirst": {
+            "shown": 0.34,
+            "api": 0.34
+          },
+          "fatigue": {
+            "shown": 0.29,
+            "api": 0.29
+          },
+          "social_need": {
+            "shown": 0.51,
+            "api": 0.51
+          }
+        },
+        "drives_match": true
+      }
+    ],
+    "controls": {
+      "step_once": {
+        "requested_absolute_tick": 1,
+        "api_tick": 1,
+        "clock": {
+          "absolute_tick": 1,
+          "synthetic_day_index": 0,
+          "tick_within_day": 1,
+          "ticks_per_virtual_day": 24,
+          "tick": 1,
+          "paused": true,
+          "speed": 1.0,
+          "logical_dt": 1,
+          "action_duration_ticks": 1,
+          "time_unit": "abstract_simulation_tick",
+          "calendar": "synthetic_virtual_day"
+        },
+        "ui_label": "DAY 0 \u00b7 TICK 001/024",
+        "expected_ui_label": "DAY 0 \u00b7 TICK 001/024",
+        "matches": true
+      },
+      "resume": {
+        "ui_state": "RUNNING",
+        "api_paused": false
+      },
+      "pause": {
+        "ui_state": "PAUSED",
+        "api_paused": true
+      },
+      "speed": {
+        "ui_value": "2",
+        "api_speed": 2.0
+      }
+    },
+    "clock_boundaries": [
+      {
+        "requested_absolute_tick": 1,
+        "api_tick": 1,
+        "clock": {
+          "absolute_tick": 1,
+          "synthetic_day_index": 0,
+          "tick_within_day": 1,
+          "ticks_per_virtual_day": 24,
+          "tick": 1,
+          "paused": true,
+          "speed": 1.0,
+          "logical_dt": 1,
+          "action_duration_ticks": 1,
+          "time_unit": "abstract_simulation_tick",
+          "calendar": "synthetic_virtual_day"
+        },
+        "ui_label": "DAY 0 \u00b7 TICK 001/024",
+        "expected_ui_label": "DAY 0 \u00b7 TICK 001/024",
+        "matches": true
+      },
+      {
+        "requested_absolute_tick": 23,
+        "api_tick": 23,
+        "clock": {
+          "absolute_tick": 23,
+          "synthetic_day_index": 0,
+          "tick_within_day": 23,
+          "ticks_per_virtual_day": 24,
+          "tick": 23,
+          "paused": true,
+          "speed": 1.0,
+          "logical_dt": 1,
+          "action_duration_ticks": 1,
+          "time_unit": "abstract_simulation_tick",
+          "calendar": "synthetic_virtual_day"
+        },
+        "ui_label": "DAY 0 \u00b7 TICK 023/024",
+        "expected_ui_label": "DAY 0 \u00b7 TICK 023/024",
+        "matches": true
+      },
+      {
+        "requested_absolute_tick": 24,
+        "api_tick": 24,
+        "clock": {
+          "absolute_tick": 24,
+          "synthetic_day_index": 1,
+          "tick_within_day": 0,
+          "ticks_per_virtual_day": 24,
+          "tick": 24,
+          "paused": true,
+          "speed": 1.0,
+          "logical_dt": 1,
+          "action_duration_ticks": 1,
+          "time_unit": "abstract_simulation_tick",
+          "calendar": "synthetic_virtual_day"
+        },
+        "ui_label": "DAY 1 \u00b7 TICK 000/024",
+        "expected_ui_label": "DAY 1 \u00b7 TICK 000/024",
+        "matches": true
+      },
+      {
+        "requested_absolute_tick": 47,
+        "api_tick": 47,
+        "clock": {
+          "absolute_tick": 47,
+          "synthetic_day_index": 1,
+          "tick_within_day": 23,
+          "ticks_per_virtual_day": 24,
+          "tick": 47,
+          "paused": true,
+          "speed": 1.0,
+          "logical_dt": 1,
+          "action_duration_ticks": 1,
+          "time_unit": "abstract_simulation_tick",
+          "calendar": "synthetic_virtual_day"
+        },
+        "ui_label": "DAY 1 \u00b7 TICK 023/024",
+        "expected_ui_label": "DAY 1 \u00b7 TICK 023/024",
+        "matches": true
+      },
+      {
+        "requested_absolute_tick": 48,
+        "api_tick": 48,
+        "clock": {
+          "absolute_tick": 48,
+          "synthetic_day_index": 2,
+          "tick_within_day": 0,
+          "ticks_per_virtual_day": 24,
+          "tick": 48,
+          "paused": true,
+          "speed": 1.0,
+          "logical_dt": 1,
+          "action_duration_ticks": 1,
+          "time_unit": "abstract_simulation_tick",
+          "calendar": "synthetic_virtual_day"
+        },
+        "ui_label": "DAY 2 \u00b7 TICK 000/024",
+        "expected_ui_label": "DAY 2 \u00b7 TICK 000/024",
+        "matches": true
+      },
+      {
+        "requested_absolute_tick": 72,
+        "api_tick": 72,
+        "clock": {
+          "absolute_tick": 72,
+          "synthetic_day_index": 3,
+          "tick_within_day": 0,
+          "ticks_per_virtual_day": 24,
+          "tick": 72,
+          "paused": true,
+          "speed": 1.0,
+          "logical_dt": 1,
+          "action_duration_ticks": 1,
+          "time_unit": "abstract_simulation_tick",
+          "calendar": "synthetic_virtual_day"
+        },
+        "ui_label": "DAY 3 \u00b7 TICK 000/024",
+        "expected_ui_label": "DAY 3 \u00b7 TICK 000/024",
+        "matches": true
+      }
+    ],
+    "three_day_run": {
+      "final_tick": 72,
+      "abstract_days_completed": 3,
+      "api_clock": {
+        "absolute_tick": 72,
+        "synthetic_day_index": 3,
+        "tick_within_day": 0,
+        "ticks_per_virtual_day": 24,
+        "tick": 72,
+        "paused": true,
+        "speed": 1.0,
+        "logical_dt": 1,
+        "action_duration_ticks": 1,
+        "time_unit": "abstract_simulation_tick",
+        "calendar": "synthetic_virtual_day"
+      }
+    },
+    "same_seed_replay": {
+      "equal_animals": true,
+      "equal_resources": true,
+      "equal_events": true,
+      "tick_a": 72,
+      "tick_b": 72
+    },
+    "mobile": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "selector_count": 5,
+      "map_bbox": {
+        "x": 23,
+        "y": 497.046875,
+        "width": 344,
+        "height": 245.703125
+      },
+      "inspector_visible": true,
+      "horizontal_overflow": false,
+      "clock_label": "DAY 0 \u00b7 TICK 000/024",
+      "layout_audit": {
+        "viewport": {
+          "width": 390,
+          "height": 844,
+          "documentWidth": 390
+        },
+        "elements": [
+          {
+            "selector": ".brand",
+            "rect": {
+              "x": 14,
+              "y": 9,
+              "right": 204.859375,
+              "bottom": 50.140625,
+              "width": 190.859375,
+              "height": 41.140625
+            },
+            "clippedX": false,
+            "clippedY": false
+          },
+          {
+            "selector": ".top-status",
+            "rect": {
+              "x": 14,
+              "y": 57.140625,
+              "right": 376,
+              "bottom": 71.640625,
+              "width": 362,
+              "height": 14.5
+            },
+            "clippedX": false,
+            "clippedY": false
+          },
+          {
+            "selector": "#page-title",
+            "rect": {
+              "x": 14,
+              "y": 129.6875,
+              "right": 376,
+              "bottom": 163.28125,
+              "width": 362,
+              "height": 33.59375
+            },
+            "clippedX": false,
+            "clippedY": false
+          },
+          {
+            "selector": ".intro-copy",
+            "rect": {
+              "x": 14,
+              "y": 173.28125,
+              "right": 376,
+              "bottom": 225.453125,
+              "width": 362,
+              "height": 52.171875
+            },
+            "clippedX": false,
+            "clippedY": false
+          },
+          {
+            "selector": ".clock-card",
+            "rect": {
+              "x": 14,
+              "y": 242.453125,
+              "right": 376,
+              "bottom": 299.453125,
+              "width": 362,
+              "height": 57
+            },
+            "clippedX": false,
+            "clippedY": false
+          },
+          {
+            "selector": ".toolbar",
+            "rect": {
+              "x": 14,
+              "y": 318.453125,
+              "right": 376,
+              "bottom": 416.453125,
+              "width": 362,
+              "height": 98
+            },
+            "clippedX": false,
+            "clippedY": false
+          },
+          {
+            "selector": "#seed-input",
+            "rect": {
+              "x": 161.390625,
+              "y": 373.953125,
+              "right": 233.390625,
+              "bottom": 404.953125,
+              "width": 72,
+              "height": 31
+            },
+            "clippedX": false,
+            "clippedY": false,
+            "value": "4107",
+            "clientWidth": 70,
+            "scrollWidth": 70
+          },
+          {
+            "selector": ".map-card",
+            "rect": {
+              "x": 14,
+              "y": 488.046875,
+              "right": 376,
+              "bottom": 793.75,
+              "width": 362,
+              "height": 305.703125
+            },
+            "clippedX": false,
+            "clippedY": false
+          },
+          {
+            "selector": "#animal-selector",
+            "rect": {
+              "x": 14,
+              "y": 805.75,
+              "right": 376,
+              "bottom": 858.796875,
+              "width": 362,
+              "height": 53.046875
+            },
+            "clippedX": false,
+            "clippedY": false
+          },
+          {
+            "selector": ".inspector",
+            "rect": {
+              "x": 14,
+              "y": 947.796875,
+              "right": 376,
+              "bottom": 1519.515625,
+              "width": 362,
+              "height": 571.71875
+            },
+            "clippedX": false,
+            "clippedY": false
+          },
+          {
+            "selector": ".event-section",
+            "rect": {
+              "x": 14,
+              "y": 1548.515625,
+              "right": 376,
+              "bottom": 1702.109375,
+              "width": 362,
+              "height": 153.59375
+            },
+            "clippedX": false,
+            "clippedY": false
+          }
+        ],
+        "intersections": [],
+        "outOfBounds": [],
+        "noClippedText": true,
+        "noComponentOverlap": true,
+        "allWithinViewport": true
+      }
+    }
+  },
+  "screenshots": [
+    "desktop-initial.png",
+    "desktop-after-72-ticks.png",
+    "mobile-initial.png"
+  ],
+  "playwright_version": "1.64.0",
+  "python_version": "3.12.3",
+  "chromium_version": "156.0.8078.4",
+  "verdict": "PASS",
+  "verdict_checks": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ]
+}

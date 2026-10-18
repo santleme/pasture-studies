@@ -1,0 +1,53 @@
+{
+  "actions": [
+    "graze",
+    "drink",
+    "walk",
+    "rest",
+    "ruminate",
+    "herd_interact"
+  ],
+  "checkpoint_version": 1,
+  "dimensions": {
+    "hidden": 32,
+    "input": 20,
+    "output": 6
+  },
+  "episodes": 2000,
+  "feature_names": [
+    "hunger",
+    "thirst",
+    "fatigue",
+    "social_need",
+    "forage_visible",
+    "water_visible",
+    "forage_distance_norm",
+    "water_distance_norm",
+    "forage_available",
+    "water_available",
+    "local_blocked_fraction",
+    "herd_count_norm",
+    "mem_water_success",
+    "mem_forage_success",
+    "mem_water_blocked",
+    "mem_forage_depleted",
+    "mem_event_recency",
+    "tick_phase_sin",
+    "tick_phase_cos",
+    "self_in_herd"
+  ],
+  "feature_schema_version": "cattle-observation-v1",
+  "metadata": {
+    "algorithm": "episodic REINFORCE",
+    "balanced_episodes": 2000,
+    "feature_schema_version": "cattle-observation-v1",
+    "learning_rate": 0.07,
+    "reward": {
+      "correct": 1.0,
+      "incorrect": -0.25
+    },
+    "task": "four-case one-step paired memory task"
+  },
+  "policy_id": "reinforce-seed-29",
+  "seed": 29
+}
