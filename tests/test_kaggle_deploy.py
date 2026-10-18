@@ -25,6 +25,7 @@ class KaggleDeployTests(unittest.TestCase):
         self.assertEqual(metadata["language"], "python")
         self.assertEqual(metadata["kernel_type"], "notebook")
         self.assertEqual(metadata["enable_gpu"], "true")
+        self.assertEqual(metadata["enable_tpu"], "false")
         self.assertEqual(metadata["machine_shape"], "NvidiaTeslaT4")
         self.assertEqual(metadata["is_private"], "true")
         self.assertEqual(metadata["dataset_sources"], [])
@@ -34,9 +35,14 @@ class KaggleDeployTests(unittest.TestCase):
     def test_prepare_copies_notebook_and_writes_metadata(self):
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp) / "kernel"
+            source_hash = hashlib.sha256(deploy.NOTEBOOK.read_bytes()).hexdigest()
             metadata_path = deploy.prepare(output, "sample_user", mode="PREFLIGHT")
             self.assertTrue((output / deploy.NOTEBOOK.name).is_file())
             self.assertEqual(json.loads(metadata_path.read_text())["id"], "sample_user/pasture-studies")
+            staged = json.loads((output / deploy.NOTEBOOK.name).read_text())
+            self.assertTrue(any('os.environ["PASTURE_MODE"] = "PREFLIGHT"' in "".join(cell["source"])
+                                for cell in staged["cells"]))
+            self.assertEqual(hashlib.sha256(deploy.NOTEBOOK.read_bytes()).hexdigest(), source_hash)
             with self.assertRaises(deploy.DeploymentError):
                 deploy.prepare(output, "sample_user", mode="EXPERIMENT")
 
@@ -56,10 +62,14 @@ class KaggleDeployTests(unittest.TestCase):
             type("Result", (), {"stdout": "Kaggle CLI 2.2.4", "stderr": ""})(),
             type("Result", (), {"stdout": "usage: kaggle kernels push [-h] [-p PATH]", "stderr": ""})(),
         ]
-        with self.assertRaisesRegex(deploy.DeploymentError, "refusing push"):
-            deploy.publish(Path("prepared"))
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp) / "kernel"
+            deploy.prepare(stage, "sample_user")
+            with self.assertRaisesRegex(deploy.DeploymentError, "refusing push"):
+                deploy.publish(stage)
         self.assertEqual(run_mock.call_count, 2)
-        self.assertNotIn("push", run_mock.call_args.args[0])
+        self.assertEqual([call.args[0] for call in run_mock.call_args_list][-1],
+                         ["kaggle", "kernels", "push", "--help"])
 
     @patch.object(deploy, "run")
     def test_publish_uses_no_run_only_when_advertised(self, run_mock):
@@ -68,16 +78,48 @@ class KaggleDeployTests(unittest.TestCase):
             type("Result", (), {"stdout": "--no-run Do not execute", "stderr": ""})(),
             type("Result", (), {"stdout": "submitted", "stderr": ""})(),
         ]
-        deploy.publish(Path("prepared"))
-        self.assertEqual(run_mock.call_args.args[0],
-                         ["kaggle", "kernels", "push", "--path", "prepared", "--no-run"])
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp) / "kernel"
+            deploy.prepare(stage, "sample_user")
+            deploy.publish(stage)
+            self.assertEqual(run_mock.call_args.args[0],
+                             ["kaggle", "kernels", "push", "--path", str(stage), "--no-run"])
+
+    @patch.object(deploy, "run")
+    def test_execute_requires_consent_and_uses_t4x2_accelerator(self, run_mock):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp) / "kernel"
+            deploy.prepare(stage, "sample_user", mode="SMOKE", gpu=True)
+            with self.assertRaisesRegex(deploy.DeploymentError, "confirm-execution"):
+                deploy.execute(stage, mode="SMOKE", confirm_execution=False)
+            with self.assertRaisesRegex(deploy.DeploymentError, "confirm-gpu"):
+                deploy.execute(stage, mode="SMOKE", confirm_execution=True)
+            with self.assertRaises(deploy.DeploymentError):
+                deploy.execute(stage, mode="EXPERIMENT", confirm_execution=True, confirm_gpu=True)
+            deploy.execute(stage, mode="SMOKE", confirm_execution=True, confirm_gpu=True)
+            run_mock.assert_called_once_with(["kaggle", "kernels", "push", "--path", str(stage),
+                                              "--accelerator", "NvidiaTeslaT4"])
+
+    @patch.object(deploy, "run")
+    def test_publish_requires_private_exact_staging_contents(self, run_mock):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp) / "kernel"
+            metadata_path = deploy.prepare(stage, "sample_user")
+            metadata = json.loads(metadata_path.read_text())
+            metadata["is_private"] = "false"
+            metadata_path.write_text(json.dumps(metadata))
+            with self.assertRaisesRegex(deploy.DeploymentError, "not explicitly private"):
+                deploy.publish(stage)
+            self.assertEqual(run_mock.call_count, 0)
 
     @patch.object(deploy, "run")
     def test_status_logs_and_outputs_use_official_cli_commands(self, run_mock):
-        run_mock.return_value = type("Result", (), {"stdout": "ok", "stderr": ""})()
+        run_mock.return_value = type("Result", (), {"stdout": "Authorization: Bearer topsecret\nkey=abc123secret", "stderr": ""})()
         for kind, expected in (("status", "status"), ("logs", "logs"), ("output", "output")):
             with self.subTest(kind=kind):
-                self.assertEqual(deploy.retrieve(kind, "sample_user/pasture-studies"), "ok")
+                result = deploy.retrieve(kind, "sample_user/pasture-studies")
+                self.assertNotIn("topsecret", result)
+                self.assertNotIn("abc123secret", result)
                 self.assertEqual(run_mock.call_args.args[0][:3], ["kaggle", "kernels", expected])
         with self.assertRaises(deploy.DeploymentError):
             deploy.retrieve("status", "bad kernel")
@@ -106,36 +148,28 @@ class KaggleDeployTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             metadata = root / "kernel-metadata.json"
-            metadata.write_text('{"id":"sample_user/pasture-studies"}')
+            notebook = root / deploy.NOTEBOOK.name
+            notebook.write_bytes(b"staged notebook")
+            metadata.write_text(json.dumps({"id": "sample_user/pasture-studies", "code_file": notebook.name}))
             record = root / "deployment.json"
             commit = "a" * 40
             deploy.write_deployment_record(record, kernel="sample_user/pasture-studies",
-                version="2.2.4", source_commit=commit, mode="SMOKE", metadata_path=metadata)
+                version="2.2.4", kernel_version="7", source_commit=commit, mode="SMOKE", metadata_path=metadata)
             result = json.loads(record.read_text())
             self.assertEqual(result["source_commit"], commit)
             self.assertEqual(result["kaggle_cli_version"], "2.2.4")
+            self.assertEqual(result["kaggle_kernel_version"], "7")
+            self.assertEqual(result["staged_notebook_sha256"], hashlib.sha256(notebook.read_bytes()).hexdigest())
             self.assertEqual(result["metadata_sha256"], hashlib.sha256(metadata.read_bytes()).hexdigest())
             with self.assertRaises(deploy.DeploymentError):
                 deploy.write_deployment_record(record, kernel="k", version="x", source_commit="short",
-                    mode="SMOKE", metadata_path=metadata)
+                    kernel_version="7", mode="SMOKE", metadata_path=metadata)
 
-    @patch.object(deploy, "KAGGLE_CONFIG", Path("/does/not/exist"))
-    def test_auth_preflight_does_not_start_oauth_and_detects_missing_credentials(self):
-        with patch.dict("os.environ", {}, clear=True), self.assertRaisesRegex(deploy.DeploymentError, "never starts OAuth"):
-            deploy.auth_preflight()
-        with patch.dict("os.environ", {"KAGGLE_API_TOKEN": "test-token"}, clear=True):
-            self.assertEqual(deploy.auth_preflight()["credentials_source"], "environment")
-
-    def test_auth_preflight_detects_access_token_file_without_exposing_it(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            config = Path(tmp) / "kaggle.json"
-            token_file = Path(tmp) / "access_token"
-            token_file.write_text("private-test-token\n")
-            token_file.chmod(0o600)
-            with patch.object(deploy, "KAGGLE_CONFIG", config), patch.dict("os.environ", {}, clear=True):
-                result = deploy.auth_preflight()
-            self.assertEqual(result, {"credentials_available": True, "credentials_source": "access_token_file"})
-            self.assertNotIn("private-test-token", repr(result))
+    def test_auth_preflight_explicitly_reports_unverified_without_oauth(self):
+        result = deploy.auth_preflight()
+        self.assertEqual(result["auth_status"], "not_verified")
+        self.assertEqual(result["auth_check"], "not_performed")
+        self.assertNotIn("credentials_available", result)
 
 
 if __name__ == "__main__":

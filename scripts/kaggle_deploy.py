@@ -12,15 +12,14 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 import re
-import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK = ROOT / "notebooks" / "pasture_studies_kaggle.ipynb"
-KAGGLE_CONFIG = Path(os.environ.get("KAGGLE_CONFIG_DIR", Path.home() / ".kaggle")) / "kaggle.json"
 MODES = {"PREFLIGHT", "SMOKE"}
+T4X2_SHAPE = "NvidiaTeslaT4"
 
 
 class DeploymentError(RuntimeError):
@@ -28,11 +27,10 @@ class DeploymentError(RuntimeError):
 
 
 def run(args: list[str], *, check: bool = True, capture_output: bool = True) -> subprocess.CompletedProcess:
-    """Run a CLI command without passing secrets via argv or printing its env."""
+    """Run a CLI command without exposing captured errors or the process environment."""
     result = subprocess.run(args, check=False, text=True, capture_output=capture_output)
     if check and result.returncode:
-        message = result.stderr.strip() or f"command exited {result.returncode}"
-        raise DeploymentError(f"{Path(args[0]).name} command failed: {message}")
+        raise DeploymentError(f"{Path(args[0]).name} command failed (exit {result.returncode}); details suppressed to avoid leaking credentials")
     return result
 
 
@@ -45,31 +43,12 @@ def kaggle_version() -> str:
 
 
 def auth_preflight() -> dict:
-    """Check for existing local auth material without displaying or requesting it."""
-    config = KAGGLE_CONFIG
-    token_file = config.parent / "access_token"
-    env_present = bool(os.environ.get("KAGGLE_API_TOKEN") or
-                       (os.environ.get("KAGGLE_USERNAME") and os.environ.get("KAGGLE_KEY")))
-    config_present = config.is_file()
-    token_file_present = token_file.is_file()
-    if token_file_present:
-        if os.name != "nt" and token_file.stat().st_mode & 0o077:
-            raise DeploymentError(f"Credentials file permissions are too broad: {token_file} (expected 0600)")
-        if not token_file.read_text().strip():
-            raise DeploymentError(f"Credentials file is empty: {token_file}")
-    if config_present:
-        if os.name != "nt" and config.stat().st_mode & 0o077:
-            raise DeploymentError(f"Credentials file permissions are too broad: {config} (expected 0600)")
-        try:
-            data = json.loads(config.read_text())
-        except (OSError, json.JSONDecodeError) as exc:
-            raise DeploymentError(f"Credentials file is unreadable or invalid JSON: {config}") from exc
-        if not ((data.get("username") and data.get("key")) or data.get("key")):
-            raise DeploymentError("Credentials file has no recognized Kaggle credential fields")
-    if not config_present and not token_file_present and not env_present:
-        raise DeploymentError("No existing Kaggle credentials found. Authenticate interactively with `kaggle auth login`; this helper never starts OAuth.")
-    source = "legacy_file" if config_present else "access_token_file" if token_file_present else "environment"
-    return {"credentials_available": True, "credentials_source": source}
+    """Report auth as unverified; do not inspect credentials or start OAuth."""
+    return {
+        "auth_status": "not_verified",
+        "auth_check": "not_performed",
+        "auth_hint": "Verify existing login separately with `kaggle kernels list --mine --page-size 1`; this helper does not initiate OAuth.",
+    }
 
 
 def check_cli(*, require_no_run: bool = False) -> tuple[str, str]:
@@ -105,8 +84,9 @@ def metadata_for(owner: str, *, title: str = "Pasture Studies", mode: str = "SMO
         "kernel_type": "notebook",
         "is_private": "true",
         "enable_gpu": "true" if gpu else "false",
+        "enable_tpu": "false",
         "enable_internet": "true",
-        "machine_shape": "NvidiaTeslaT4" if gpu else "",
+        "machine_shape": T4X2_SHAPE if gpu else "",
         "dataset_sources": [], "competition_sources": [],
         "kernel_sources": [], "model_sources": [],
     }
@@ -114,7 +94,7 @@ def metadata_for(owner: str, *, title: str = "Pasture Studies", mode: str = "SMO
 
 
 def prepare(folder: Path, owner: str, *, mode: str = "SMOKE", gpu: bool = False) -> Path:
-    validate_mode(mode)
+    mode = validate_mode(mode)
     if not NOTEBOOK.is_file():
         raise DeploymentError(f"Notebook not found: {NOTEBOOK}")
     if folder.is_symlink():
@@ -124,7 +104,19 @@ def prepare(folder: Path, owner: str, *, mode: str = "SMOKE", gpu: bool = False)
             raise DeploymentError(f"Staging directory must be empty to prevent uploading stale files: {folder}")
     else:
         folder.mkdir(parents=True)
-    shutil.copy2(NOTEBOOK, folder / NOTEBOOK.name)
+    try:
+        notebook = json.loads(NOTEBOOK.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DeploymentError("Source notebook is unreadable or invalid JSON") from exc
+    marker = 'MODE = os.environ.get("PASTURE_MODE", "SMOKE")'
+    matching_cells = [cell for cell in notebook.get("cells", []) if marker in "".join(cell.get("source", []))]
+    if len(matching_cells) != 1:
+        raise DeploymentError("Could not safely identify the notebook execution-mode cell")
+    cell = matching_cells[0]
+    source = "".join(cell["source"])
+    source = source.replace(marker, f'os.environ["PASTURE_MODE"] = "{mode}"\n{marker}', 1)
+    cell["source"] = source.splitlines(keepends=True)
+    (folder / NOTEBOOK.name).write_text(json.dumps(notebook, indent=1) + "\n")
     target = folder / "kernel-metadata.json"
     target.write_text(json.dumps(metadata_for(owner, mode=mode, gpu=gpu), indent=2) + "\n")
     return target
@@ -132,8 +124,57 @@ def prepare(folder: Path, owner: str, *, mode: str = "SMOKE", gpu: bool = False)
 
 def publish(folder: Path) -> None:
     """Publish only when `--no-run` is supported; never silently execute push."""
+    validate_staging_folder(folder)
     check_cli(require_no_run=True)
     run(["kaggle", "kernels", "push", "--path", str(folder), "--no-run"])
+
+
+def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
+    """Require a private, generated staging folder containing only its notebook and metadata."""
+    if folder.is_symlink() or not folder.is_dir():
+        raise DeploymentError("Staging path must be a real directory")
+    metadata_path = folder / "kernel-metadata.json"
+    try:
+        metadata = json.loads(metadata_path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DeploymentError("Staging metadata is missing or malformed") from exc
+    code_file = metadata.get("code_file") if isinstance(metadata, dict) else None
+    if not isinstance(code_file, str) or not code_file or Path(code_file).name != code_file:
+        raise DeploymentError("Metadata code_file must be a local filename")
+    notebook_path = folder / code_file
+    if metadata.get("is_private") != "true":
+        raise DeploymentError("Refusing to publish a kernel that is not explicitly private")
+    if not notebook_path.is_file() or notebook_path.is_symlink() or metadata_path.is_symlink():
+        raise DeploymentError("Staging notebook and metadata must be regular local files")
+    if {item.name for item in folder.iterdir()} != {"kernel-metadata.json", code_file}:
+        raise DeploymentError("Staging folder may contain only kernel-metadata.json and its code_file")
+    if metadata.get("enable_gpu") == "true":
+        if metadata.get("machine_shape") != T4X2_SHAPE:
+            raise DeploymentError("GPU metadata must select the supported T4 x2 machine shape")
+    elif metadata.get("machine_shape") not in {"", None}:
+        raise DeploymentError("CPU metadata must not select an accelerator machine shape")
+    return metadata, notebook_path
+
+
+def execute(folder: Path, *, mode: str, confirm_execution: bool, confirm_gpu: bool = False) -> None:
+    """Run a staged notebook only after explicit execution and optional GPU consent."""
+    mode = validate_mode(mode)
+    if not confirm_execution:
+        raise DeploymentError("Execution requires explicit --confirm-execution")
+    metadata, notebook = validate_staging_folder(folder)
+    notebook_data = json.loads(notebook.read_text())
+    marker = f'os.environ["PASTURE_MODE"] = "{mode}"'
+    if not any(marker in "".join(cell.get("source", [])) for cell in notebook_data.get("cells", [])):
+        raise DeploymentError("Requested execution mode does not match the staged notebook mode")
+    gpu = metadata.get("enable_gpu") == "true"
+    if gpu and not confirm_gpu:
+        raise DeploymentError("T4 x2 execution requires separate explicit --confirm-gpu")
+    if not gpu and confirm_gpu:
+        raise DeploymentError("--confirm-gpu was supplied for a CPU staging folder")
+    args = ["kaggle", "kernels", "push", "--path", str(folder)]
+    if gpu:
+        args += ["--accelerator", T4X2_SHAPE]
+    run(args)
 
 
 def retrieve(kind: str, kernel: str, destination: Path | None = None) -> str:
@@ -149,7 +190,16 @@ def retrieve(kind: str, kernel: str, destination: Path | None = None) -> str:
         destination.mkdir(parents=True, exist_ok=True)
         args += ["--path", str(destination)]
     result = run(args)
-    return result.stdout
+    return redact(result.stdout)
+
+
+def redact(value: str) -> str:
+    """Redact common bearer/token/credential assignments from CLI output."""
+    value = re.sub(r"(?i)(authorization\s*:\s*bearer\s+)[^\s\"']+", r"\1[REDACTED]", value)
+    return re.sub(
+        r"(?i)((?:api[_-]?token|access[_-]?token|refresh[_-]?token|kaggle[_-]?key|password|secret|key)\s*[:=]\s*[\"']?)[^\s\"',}]+",
+        r"\1[REDACTED]", value,
+    )
 
 
 def verify_manifest(manifest_path: Path, artifact_root: Path) -> list[str]:
@@ -185,14 +235,25 @@ def verify_manifest(manifest_path: Path, artifact_root: Path) -> list[str]:
 
 
 def write_deployment_record(path: Path, *, kernel: str, version: str, source_commit: str,
-                            mode: str, metadata_path: Path) -> None:
+                            kernel_version: str, mode: str, metadata_path: Path) -> None:
     validate_mode(mode)
     if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
         raise DeploymentError("source_commit must be a full 40-character Git SHA-1")
+    if not kernel_version.strip():
+        raise DeploymentError("kernel_version is required and must be captured from Kaggle, not inferred")
+    metadata = json.loads(metadata_path.read_text())
+    code_file = metadata.get("code_file")
+    if not isinstance(code_file, str) or Path(code_file).name != code_file:
+        raise DeploymentError("Metadata must identify a staged notebook filename")
+    notebook_path = metadata_path.parent / code_file
+    if not notebook_path.is_file():
+        raise DeploymentError("Staged notebook for provenance record is missing")
     record = {
-        "kernel": kernel, "source_commit": source_commit,
-        "kaggle_cli_version": version, "mode": mode,
+        "kernel": kernel, "kaggle_kernel_version": kernel_version.strip(),
+        "source_commit": source_commit,
+        "kaggle_cli_version": version, "mode": validate_mode(mode),
         "metadata_sha256": hashlib.sha256(metadata_path.read_bytes()).hexdigest(),
+        "staged_notebook_sha256": hashlib.sha256(notebook_path.read_bytes()).hexdigest(),
         "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
     }
     path.write_text(json.dumps(record, indent=2) + "\n")
@@ -216,6 +277,11 @@ def main(argv: list[str] | None = None) -> int:
     prep.add_argument("--gpu", action="store_true", help="Select Kaggle T4 x2 machine shape")
     pub = sub.add_parser("publish")
     pub.add_argument("--path", type=Path, required=True)
+    run_cmd = sub.add_parser("execute")
+    run_cmd.add_argument("--path", type=Path, required=True)
+    run_cmd.add_argument("--mode", choices=sorted(MODES), required=True)
+    run_cmd.add_argument("--confirm-execution", action="store_true")
+    run_cmd.add_argument("--confirm-gpu", action="store_true")
     for command in ("status", "logs", "output"):
         item = sub.add_parser(command)
         item.add_argument("kernel")
@@ -228,6 +294,8 @@ def main(argv: list[str] | None = None) -> int:
     record.add_argument("path", type=Path)
     record.add_argument("--kernel", required=True)
     record.add_argument("--source-commit", required=True)
+    record.add_argument("--kernel-version", required=True,
+                        help="Exact Kaggle kernel version/revision captured from Kaggle")
     record.add_argument("--mode", default="SMOKE")
     record.add_argument("--metadata", type=Path, required=True)
     args = parser.parse_args(argv)
@@ -238,6 +306,9 @@ def main(argv: list[str] | None = None) -> int:
             print(prepare(args.path, args.owner, mode=args.mode, gpu=args.gpu))
         elif args.command == "publish":
             publish(args.path)
+        elif args.command == "execute":
+            execute(args.path, mode=args.mode, confirm_execution=args.confirm_execution,
+                    confirm_gpu=args.confirm_gpu)
         elif args.command in {"status", "logs", "output"}:
             print(retrieve(args.command, args.kernel, getattr(args, "path", None)))
         elif args.command == "verify":
@@ -245,7 +316,8 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "record":
             version, _ = check_cli()
             write_deployment_record(args.path, kernel=args.kernel, version=version,
-                                    source_commit=args.source_commit, mode=args.mode,
+                                    source_commit=args.source_commit, kernel_version=args.kernel_version,
+                                    mode=args.mode,
                                     metadata_path=args.metadata)
     except (DeploymentError, OSError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
