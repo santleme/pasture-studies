@@ -42,6 +42,10 @@ The default run ID is `mvp1-run`; its output directory is `/kaggle/working/pastu
 
 After execution, download `export/pasture-training-artifacts.zip` and `export/artifact_manifest.json` from Kaggle's notebook output. The manifest records source commit, run ID, mode, dependencies/runtime, the supplied notebook revision/content hash as **unverified caller claims**, preregistration/threshold hashes, and SHA-256/size for each exported run artifact. Those claims do not validate the active Kaggle notebook bytes. Keep the manifest with the archive. Verify the hashes locally before using a checkpoint. For local cattle-simulation inference, use a checkpoint generation's NumPy `.npz` inference export with its matching JSON sidecar; optimizer/RNG state is for training resume, not inference.
 
+## Optional Kaggle CLI publication
+
+The notebook can be published without running it only when the active Kaggle CLI explicitly supports `kernels push --no-run`. The currently installed CLI 2.2.4 does not list that flag in `kaggle kernels push --help`; **do not use `kernels push` with it**, because the default push can execute the notebook. See the [Kaggle CLI deployment guide](kaggle-cli-deployment.md) for install/upgrade checks, OAuth, metadata review, no-run publication, output retrieval, and artifact verification. Publishing does not enable the disabled experimental modes or establish notebook provenance.
+
 ## Local notebook validation
 
 Run the fresh-kernel test from the repository root after installing the optional test requirements. It clones the immutable source pin and executes the notebook top to bottom in `SMOKE` mode with a temporary work directory and CUDA disabled; it verifies checkpoint/export contents and archive integrity. It does not run experimental arms or measure GPU performance.
