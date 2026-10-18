@@ -1,6 +1,6 @@
 # Kaggle CLI deployment for Pasture Studies
 
-This is a **publish-without-execution** procedure for the reviewed Kaggle notebook. It is deliberately separate from running its notebook cells. It does not authorize a training run or change the notebook's execution gates. Use only `PREFLIGHT` or `SMOKE` if you later run the notebook deliberately; `EXPERIMENT` and `FULL_VALIDATION` remain disabled.
+This guide separates **no-run publication** from explicitly executing a staged notebook. The helper allows only `PREFLIGHT` or `SMOKE`; `EXPERIMENT` and `FULL_VALIDATION` remain disabled. Preparing a staged copy does not authorize execution or alter the source notebook’s experimental gates.
 
 > **Fail closed on the installed CLI.** This environment has Kaggle CLI 2.2.4, whose `kaggle kernels push --help` does not list `--no-run`. Do not run `kaggle kernels push` with that CLI: without the flag, push may execute the notebook. Upgrade through the package manager that installed Kaggle CLI, then check the actual help output. Continue only when the installed `kernels push --help` explicitly shows `--no-run`. Never fall back to an ordinary push.
 
@@ -52,7 +52,7 @@ python3 scripts/kaggle_deploy.py preflight
 python3 scripts/kaggle_deploy.py prepare --path /tmp/pasture-kaggle-upload --owner <your-kaggle-username> --mode SMOKE --gpu
 ```
 
-`preflight` reports the CLI version and no-run capability, and checks some existing authentication material without starting OAuth. **It is not OAuth-aware:** the helper currently recognizes `KAGGLE_API_TOKEN` or legacy username/key environment variables, the legacy `~/.kaggle/kaggle.json` file, and a `~/.kaggle/access_token` file (or the corresponding directory under `KAGGLE_CONFIG_DIR`), but does not detect OAuth credentials in Kaggle's separate OAuth credential store. An OAuth-only user can be logged in to the CLI yet have helper preflight report no credentials. Do not treat that result as proof OAuth is absent, and do not put OAuth credentials into the legacy file. After completing OAuth yourself, validate it with a read-only authenticated request:
+`preflight` reports the CLI version, whether the local CLI advertises `--no-run`, and `auth_status: not_verified`; it does not authenticate, inspect credential files, or start OAuth. To authenticate, run `kaggle auth login` yourself as described above. Afterward, validate login with a user-run, read-only authenticated request:
 
 ```bash
 kaggle kernels list --mine --page-size 1
@@ -67,7 +67,7 @@ cp notebooks/pasture_studies_kaggle.ipynb /tmp/pasture-kaggle-upload/
 kaggle kernels init -p /tmp/pasture-kaggle-upload
 ```
 
-The generated `kernel-metadata.json` is a template: review it and set its code file to the notebook filename in that directory. For this private, internet-enabled, T4×2 configuration, verify the metadata has the intended equivalent of:
+The generated `kernel-metadata.json` is a template: review it and set its code file to the notebook filename in that directory. The project `prepare` helper instead copies the source notebook into an empty staging directory and injects the selected mode as a fixed assignment in that staged copy; the source notebook is not modified. For the helper’s private, internet-enabled, T4×2 configuration (`prepare ... --gpu`), the metadata includes the following fields:
 
 ```json
 {
@@ -78,6 +78,7 @@ The generated `kernel-metadata.json` is a template: review it and set its code f
   "kernel_type": "notebook",
   "is_private": "true",
   "enable_gpu": "true",
+  "enable_tpu": "false",
   "enable_internet": "true",
   "machine_shape": "NvidiaTeslaT4",
   "dataset_sources": [],
@@ -89,7 +90,7 @@ The generated `kernel-metadata.json` is a template: review it and set its code f
 
 Keep the generated file's schema consistent with the installed CLI's official metadata reference; do not replace `kaggle kernels init` with assumptions about undocumented fields. `NvidiaTeslaT4` is Kaggle's metadata identifier for the T4×2 GPU shape. Availability depends on Kaggle account/quota and platform allocation; metadata is a request, not proof that hardware was granted. Internet access is enabled because this notebook fetches its pinned public GitHub source. Confirm the immutable source pin and all review checks before publishing.
 
-Before any remote action, inspect the upload directory and metadata locally, verify the notebook content is the reviewed one, verify no credentials or unrelated files are present, and record the repository source commit (`git rev-parse HEAD`). The notebook's caller-supplied revision/content hash values remain unverified claims; they do not attest to the active Kaggle notebook bytes or grant experiment eligibility.
+Before any remote action, inspect the upload directory and metadata locally, verify the source notebook is the reviewed one and the staging copy contains the intended fixed mode, verify no credentials or unrelated files are present, and record the repository source commit (`git rev-parse HEAD`). `prepare` changes only the staged notebook copy to fix its selected mode. This staging transformation and its hash do not attest to or bypass the notebook’s trusted source provenance gates. The notebook's caller-supplied revision/content hash values remain unverified claims; they do not attest to the active Kaggle notebook bytes or grant experiment eligibility.
 
 ## 4. Publish without running (only after the capability check)
 
@@ -107,14 +108,32 @@ kaggle kernels push -p /tmp/pasture-kaggle-upload --no-run
 
 `--no-run` saves a notebook version without executing its cells. Do not remove the flag, substitute `kaggle kernels update`, or run a push from a CLI that lacks this option. If the flag is missing or the command's behavior is uncertain, stop and use Kaggle's web UI Quick Save only after separately confirming that it will save without running; do not attempt to make progress by issuing an ordinary CLI push. Publishing is a remote side effect and is not performed by this guide.
 
-## 5. Inspect status, logs, and outputs
+## 5. Execute only after explicit confirmation
+
+`prepare` fixes the staged notebook to `PREFLIGHT` or `SMOKE`; `execute` refuses an absent `--confirm-execution`, a mode outside those two, or a mode that disagrees with the staged notebook. Execution sends an ordinary `kaggle kernels push` and runs the notebook; it is not a publication-only action. Do not run this command during documentation checks. Example syntax for a deliberate CPU execution is:
+
+```bash
+python3 scripts/kaggle_deploy.py execute --path /tmp/pasture-kaggle-upload --mode SMOKE --confirm-execution
+```
+
+For staging prepared with `--gpu`, Kaggle T4×2 execution requires the separate explicit `--confirm-gpu` confirmation; the helper requests `--accelerator NvidiaTeslaT4`:
+
+```bash
+python3 scripts/kaggle_deploy.py execute --path /tmp/pasture-kaggle-upload --mode SMOKE --confirm-execution --confirm-gpu
+```
+
+`--gpu` on `prepare` only sets T4×2 metadata; it does not execute or reserve a GPU. Conversely, `--confirm-gpu` is not valid for a CPU staging folder. No execution or GPU command was invoked while completing this documentation task.
+
+## 6. Inspect status, logs, and outputs
 
 These official commands inspect a kernel/version after it exists. A no-run publication does not create new execution output; status/logs/output may refer to a prior run, so identify the exact kernel/version and do not interpret old artifacts as belonging to the new no-run publication.
 
+The helper accepts an optional numeric version suffix for all retrieval commands. Pin the exact revision when inspecting a published version:
+
 ```bash
-python3 scripts/kaggle_deploy.py status <owner>/<kernel-slug>
-python3 scripts/kaggle_deploy.py logs <owner>/<kernel-slug>
-python3 scripts/kaggle_deploy.py output <owner>/<kernel-slug> --path ./kaggle-output
+python3 scripts/kaggle_deploy.py status <owner>/<kernel-slug>/<version>
+python3 scripts/kaggle_deploy.py logs <owner>/<kernel-slug>/<version>
+python3 scripts/kaggle_deploy.py output <owner>/<kernel-slug>/<version> --path ./kaggle-output
 ```
 
 Equivalent official CLI commands are:
@@ -126,9 +145,9 @@ kaggle kernels files <owner>/<kernel-slug>
 kaggle kernels output <owner>/<kernel-slug> -p ./kaggle-output
 ```
 
-Use a version-qualified reference (`<owner>/<kernel-slug>/<version>`) where supported and retain the returned version/URL with the deployment record. `output` downloads output from a run; it does not establish which notebook bytes were executed. Do not run or start a notebook as part of this retrieval step.
+Use a version-qualified reference with a numeric version (`<owner>/<kernel-slug>/<version>`) to bind retrieval to the published revision, and retain that exact version with the deployment record. The helper rejects nonnumeric version suffixes. `output` downloads output from a run; it does not establish which notebook bytes were executed. Do not run or start a notebook as part of this retrieval step.
 
-## 6. Verify downloaded artifacts and retain provenance
+## 7. Verify downloaded artifacts and retain provenance
 
 Keep `artifact_manifest.json` beside the downloaded archive. The manifest's per-file `sha256` values and byte sizes are integrity checks: compare each downloaded artifact to the corresponding manifest entry before using it. For a single file:
 
@@ -146,10 +165,10 @@ Do not treat a valid artifact hash as evidence of notebook provenance or a succe
 
 Create and retain a deployment record with distinct provenance fields:
 
-- local source commit SHA and the reviewed upload/notebook filename;
-- `kaggle_cli_version` (the local CLI package version; **not** the Kaggle notebook/kernel version);
-- exact Kaggle kernel version/reference returned by the publish response or shown for the published revision;
-- SHA-256 of the exact uploaded notebook file and of `kernel-metadata.json`;
+- `source_commit`: full local source commit SHA;
+- `kaggle_cli_version`: local CLI package version; distinct from `kaggle_kernel_version`, the exact Kaggle revision/version;
+- `kernel`: Kaggle owner/slug and `kaggle_kernel_version` captured from the exact published revision (never infer it from the CLI version);
+- `staged_notebook_sha256`: SHA-256 of the staged notebook after mode injection, and `metadata_sha256`: SHA-256 of the staged `kernel-metadata.json`;
 - metadata settings (private, internet, requested T4×2) and confirmation that this was a no-run save;
 - artifact-manifest SHA-256, downloaded artifact paths, and per-file verification outcome if artifacts were retrieved;
 - any status/run version associated with retrieved logs or outputs.
@@ -157,31 +176,15 @@ Create and retain a deployment record with distinct provenance fields:
 The helper can create a partial record after a no-run publication:
 
 ```bash
-python3 scripts/kaggle_deploy.py record ./deployment-record.json --kernel <owner>/<kernel-slug> --source-commit "$(git rev-parse HEAD)" --mode SMOKE --metadata /tmp/pasture-kaggle-upload/kernel-metadata.json
+python3 scripts/kaggle_deploy.py record ./deployment-record.json \
+  --kernel <owner>/<kernel-slug> \
+  --source-commit "$(git rev-parse HEAD)" \
+  --kernel-version <exact-kaggle-revision> \
+  --mode SMOKE \
+  --metadata /tmp/pasture-kaggle-upload/kernel-metadata.json
 ```
 
-Its current record command writes `source_commit`, `kaggle_cli_version`, mode, metadata SHA-256, and record timestamp, but does **not** populate the exact Kaggle kernel version or uploaded notebook SHA-256. Capture the exact version from Kaggle's published revision details (the current helper does not expose the push response), compute the notebook hash from the exact staged upload file, and add them explicitly to the record as `kernel_version` and `notebook_sha256`. For example, record these distinct values:
-
-```json
-{
-  "kernel": "<owner>/<slug>",
-  "kernel_version": "<exact Kaggle revision/version>",
-  "source_commit": "<full local Git SHA>",
-  "kaggle_cli_version": "<local CLI package version>",
-  "notebook_sha256": "<SHA-256 of the staged .ipynb>",
-  "metadata_sha256": "<SHA-256 of kernel-metadata.json>"
-}
-```
-
-Compute the source and local file hashes from the reviewed checkout/upload directory, and then manually update the generated record with the exact kernel revision and notebook hash:
-
-```bash
-git rev-parse HEAD
-sha256sum /tmp/pasture-kaggle-upload/pasture_studies_kaggle.ipynb
-sha256sum /tmp/pasture-kaggle-upload/kernel-metadata.json
-```
-
-Do not substitute `kaggle_cli_version` for `kernel_version`. The helper command also does not record the no-run capability result or verify server-side notebook bytes; record the help-check result and provenance limitations separately. Review the record locally before sharing it; do not include credentials.
+The helper requires the exact Kaggle revision via `--kernel-version`, distinguishes it from `kaggle_cli_version`, and derives `staged_notebook_sha256` from the metadata-selected staged notebook. It also calculates `metadata_sha256`, validates that the recorded mode matches the staged notebook, and stores `recorded_at_utc`. Compute `source_commit` from the reviewed checkout and get `kernel-version` from the published revision details; do not infer it. The staged notebook hash includes the helper’s fixed-mode injection and is not the source notebook hash or proof of remote execution. The helper does not attest that Kaggle ran those exact bytes. Review the record locally before sharing it; do not include credentials.
 
 The record is provenance metadata, not an attestation that Kaggle executed those exact local bytes. In particular, never promote the notebook's unverified caller-provided revision or content-hash strings into trusted provenance. The notebook currently hard-disables `EXPERIMENT` and `FULL_VALIDATION`; deployment, a successful smoke, a GPU allocation, or a hash match cannot override those gates or establish benchmark/biological validity.
 
