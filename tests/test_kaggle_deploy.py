@@ -166,7 +166,7 @@ class KaggleDeployTests(unittest.TestCase):
     @patch.object(deploy, "pull_and_compare", return_value={"exact_match": True, "revision": 5})
     @patch.object(deploy, "run")
     def test_publish_no_run_then_numeric_remote_revision_compare(self, run_mock, compare_mock, cli_mock, attest_mock):
-        run_mock.return_value = result("Kernel version 5 successfully pushed")
+        run_mock.return_value = result("Kernel version 5 successfully saved without running. See https://www.kaggle.com/code/sample_user/pasture-studies")
         with tempfile.TemporaryDirectory() as tmp, patch.object(deploy, "_source_commit", return_value="a" * 40):
             stage = Path(tmp) / "stage"
             deploy.prepare(stage, "sample_user")
@@ -195,6 +195,7 @@ class KaggleDeployTests(unittest.TestCase):
 
     def test_revision_is_taken_from_exact_numeric_kaggle_push_output(self):
         self.assertEqual(deploy.revision_from_push_output("Kernel version 7 successfully pushed. Please check progress"), 7)
+        self.assertEqual(deploy.revision_from_push_output("Kernel version 8 successfully saved without running. See https://kaggle.com/code/x/y"), 8)
         for output in ("", "Kernel version successfully pushed", "Kernel version 7 successfully pushed\nKernel version 8 successfully pushed"):
             with self.subTest(output=output), self.assertRaisesRegex(deploy.DeploymentError, "numeric kernel version"):
                 deploy.revision_from_push_output(output)
@@ -212,8 +213,29 @@ class KaggleDeployTests(unittest.TestCase):
                 evidence = deploy.pull_and_compare(stage, "sample_user/pasture-studies", 13)
             self.assertTrue(evidence["exact_match"])
             self.assertEqual(evidence["revision"], 13)
+            self.assertEqual(evidence["notebook_content_sha256"], evidence["remote_notebook_content_sha256"])
             with self.assertRaises(deploy.DeploymentError):
                 deploy.pull_and_compare(stage, "sample_user/pasture-studies", 0)
+
+    def test_remote_pull_accepts_api_source_serialization_but_checks_full_content(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp) / "stage"
+            deploy.prepare(stage, "sample_user", mode="PREFLIGHT")
+
+            def fake_run(args):
+                target = Path(args[args.index("--path") + 1]) / "pulled.ipynb"
+                remote_doc = json.loads((stage / deploy.NOTEBOOK.name).read_text())
+                for cell in remote_doc["cells"]:
+                    if isinstance(cell.get("source"), list):
+                        cell["source"] = "".join(cell["source"])
+                target.write_text(json.dumps(remote_doc, indent=1) + "\n")
+                return result("pulled")
+
+            with patch.object(deploy, "run", side_effect=fake_run):
+                evidence = deploy.pull_and_compare(stage, "sample_user/pasture-studies", 15)
+            self.assertTrue(evidence["exact_match"])
+            self.assertFalse(evidence["raw_bytes_identical"])
+            self.assertEqual(evidence["notebook_content_sha256"], evidence["remote_notebook_content_sha256"])
 
     def test_remote_numeric_pull_content_mismatch_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -236,8 +258,9 @@ class KaggleDeployTests(unittest.TestCase):
             deploy.prepare(stage, "sample_user", mode="PREFLIGHT")
             config = json.loads(deploy.deployment_record_path(stage).read_text())
             evidence = {"exact_match": True, "revision": 12, "source_commit": "a" * 40,
-                "notebook_sha256": config["notebook_sha256"], "remote_notebook_sha256": config["notebook_sha256"],
-                "source_cells_sha256": "b" * 64}
+                "notebook_sha256": config["notebook_sha256"], "remote_notebook_sha256": "c" * 64,
+                "notebook_content_sha256": "d" * 64, "remote_notebook_content_sha256": "d" * 64,
+                "raw_bytes_identical": False, "source_cells_sha256": "b" * 64}
             attestation = deploy.write_publication_attestation(stage, evidence, cli_version="2.2.4")
             self.assertEqual(attestation, parent / "staging-publication-attestation.json")
             self.assertFalse(attestation.parent == stage)
@@ -245,10 +268,12 @@ class KaggleDeployTests(unittest.TestCase):
             self.assertEqual(record["kernel_version"], 12)
             self.assertEqual(record["source_commit"], "a" * 40)
             self.assertEqual(record["staged_notebook_sha256"], config["notebook_sha256"])
-            self.assertEqual(record["remote_notebook_sha256"], config["notebook_sha256"])
-            self.assertTrue(record["exact_content_match"])
+            self.assertEqual(record["remote_notebook_sha256"], "c" * 64)
+            self.assertEqual(record["canonical_notebook_content_sha256"], "d" * 64)
+            self.assertFalse(record["raw_notebook_bytes_identical"])
+            self.assertTrue(record["canonical_content_match"])
             self.assertNotIn("key", record)
-            evidence["remote_notebook_sha256"] = "c" * 64
+            evidence["remote_notebook_content_sha256"] = "e" * 64
             with self.assertRaisesRegex(deploy.DeploymentError, "exact source-bound"):
                 deploy.write_publication_attestation(stage, evidence, cli_version="2.2.4")
 

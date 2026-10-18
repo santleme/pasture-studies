@@ -286,7 +286,14 @@ def publish(folder: Path) -> None:
 
 def revision_from_push_output(output: str) -> int:
     """Extract the server-assigned revision printed by Kaggle CLI after push."""
-    matches = re.findall(r"Kernel version\s+([1-9][0-9]*)\s+successfully pushed", output, flags=re.IGNORECASE)
+    # Official --no-run says "successfully saved without running", whereas an
+    # executing push says "successfully pushed". Both include the same
+    # server-assigned version number; accepting only the latter made a
+    # successful no-run save look like a failed publish after it had happened.
+    matches = re.findall(
+        r"Kernel version\s+([1-9][0-9]*)\s+successfully\s+(?:pushed|saved without running)",
+        output, flags=re.IGNORECASE,
+    )
     if len(matches) != 1:
         raise DeploymentError("Kaggle push output did not confirm exactly one numeric kernel version")
     return int(matches[0])
@@ -302,6 +309,26 @@ def _notebook_source_digest(path: Path) -> str:
         source = cell.get("source", "")
         sources.append({"cell_type": cell.get("cell_type"), "source": "".join(source) if isinstance(source, list) else source})
     return hashlib.sha256(json.dumps(sources, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def _notebook_content_digest(path: Path) -> str:
+    """Hash all notebook content after normalizing API source list/string encoding."""
+    try:
+        notebook = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise DeploymentError("Kaggle notebook content is unreadable") from exc
+    if not isinstance(notebook, dict) or not isinstance(notebook.get("cells"), list):
+        raise DeploymentError("Kaggle notebook has no valid cell collection")
+    for cell in notebook["cells"]:
+        if not isinstance(cell, dict):
+            raise DeploymentError("Kaggle notebook contains a malformed cell")
+        source = cell.get("source", "")
+        if isinstance(source, list) and all(isinstance(line, str) for line in source):
+            cell["source"] = "".join(source)
+        elif not isinstance(source, str):
+            raise DeploymentError("Kaggle notebook contains an invalid cell source")
+    canonical = json.dumps(notebook, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+    return hashlib.sha256(canonical).hexdigest()
 
 
 def embedded_deployment_config(notebook_path: Path) -> dict:
@@ -339,25 +366,33 @@ def pull_and_compare(folder: Path, kernel: str, revision: int) -> dict:
         remote_hash = hashlib.sha256(remote.read_bytes()).hexdigest()
         staged_cells = _notebook_source_digest(staged)
         remote_cells = _notebook_source_digest(remote)
-        if staged_hash != remote_hash or staged_cells != remote_cells:
-            raise DeploymentError("Pulled numeric Kaggle revision differs from the staged notebook bytes/content")
+        staged_content = _notebook_content_digest(staged)
+        remote_content = _notebook_content_digest(remote)
+        if staged_content != remote_content or staged_cells != remote_cells:
+            raise DeploymentError("Pulled numeric Kaggle revision differs from the staged notebook content")
     config = json.loads(deployment_record_path(folder).read_text())
     return {"kernel": kernel, "revision": revision, "source_commit": config["source_commit"],
             "notebook_sha256": staged_hash, "source_cells_sha256": staged_cells,
-            "remote_notebook_sha256": remote_hash, "exact_match": True}
+            "remote_notebook_sha256": remote_hash, "notebook_content_sha256": staged_content,
+            "remote_notebook_content_sha256": remote_content, "raw_bytes_identical": staged_hash == remote_hash,
+            "exact_match": True}
 
 
 def write_publication_attestation(folder: Path, evidence: dict, *, cli_version: str) -> Path:
     """Persist detached, credential-free evidence after exact-version pull comparison."""
     config = json.loads(deployment_record_path(folder).read_text())
     metadata = json.loads((folder / "kernel-metadata.json").read_text())
+    raw_hashes_match = evidence.get("remote_notebook_sha256") == evidence.get("notebook_sha256")
     if (evidence.get("exact_match") is not True
             or evidence.get("source_commit") != config.get("source_commit")
             or evidence.get("notebook_sha256") != config.get("notebook_sha256")
-            or evidence.get("remote_notebook_sha256") != evidence.get("notebook_sha256")
+            or evidence.get("notebook_content_sha256") != evidence.get("remote_notebook_content_sha256")
+            or evidence.get("raw_bytes_identical") is not raw_hashes_match
             or not isinstance(evidence.get("revision"), int) or evidence["revision"] <= 0
+            or not re.fullmatch(r"[0-9a-f]{64}", str(evidence.get("remote_notebook_sha256", "")))
+            or not re.fullmatch(r"[0-9a-f]{64}", str(evidence.get("notebook_content_sha256", "")))
             or not re.fullmatch(r"[0-9a-f]{64}", str(evidence.get("source_cells_sha256", "")))):
-        raise DeploymentError("Cannot attest publication without exact source-bound notebook bytes")
+        raise DeploymentError("Cannot attest publication without exact source-bound notebook content")
     record = {
         "schema_version": 1, "kernel": metadata["id"],
         "kernel_version": int(evidence["revision"]),
@@ -365,8 +400,10 @@ def write_publication_attestation(folder: Path, evidence: dict, *, cli_version: 
         "release_manifest_sha256": config.get("release_manifest_sha256"),
         "staged_notebook_sha256": evidence["notebook_sha256"],
         "remote_notebook_sha256": evidence["remote_notebook_sha256"],
+        "canonical_notebook_content_sha256": evidence["notebook_content_sha256"],
+        "raw_notebook_bytes_identical": bool(evidence.get("raw_bytes_identical")),
         "notebook_source_cells_sha256": evidence["source_cells_sha256"],
-        "exact_content_match": True, "kaggle_cli_version": cli_version,
+        "canonical_content_match": True, "kaggle_cli_version": cli_version,
         "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
     }
     output = folder.parent / f"{folder.name}-publication-attestation.json"
