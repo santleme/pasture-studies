@@ -47,9 +47,16 @@ def kaggle_version() -> str:
 def auth_preflight() -> dict:
     """Check for existing local auth material without displaying or requesting it."""
     config = KAGGLE_CONFIG
+    token_file = config.parent / "access_token"
     env_present = bool(os.environ.get("KAGGLE_API_TOKEN") or
                        (os.environ.get("KAGGLE_USERNAME") and os.environ.get("KAGGLE_KEY")))
     config_present = config.is_file()
+    token_file_present = token_file.is_file()
+    if token_file_present:
+        if os.name != "nt" and token_file.stat().st_mode & 0o077:
+            raise DeploymentError(f"Credentials file permissions are too broad: {token_file} (expected 0600)")
+        if not token_file.read_text().strip():
+            raise DeploymentError(f"Credentials file is empty: {token_file}")
     if config_present:
         if os.name != "nt" and config.stat().st_mode & 0o077:
             raise DeploymentError(f"Credentials file permissions are too broad: {config} (expected 0600)")
@@ -59,9 +66,10 @@ def auth_preflight() -> dict:
             raise DeploymentError(f"Credentials file is unreadable or invalid JSON: {config}") from exc
         if not ((data.get("username") and data.get("key")) or data.get("key")):
             raise DeploymentError("Credentials file has no recognized Kaggle credential fields")
-    if not config_present and not env_present:
+    if not config_present and not token_file_present and not env_present:
         raise DeploymentError("No existing Kaggle credentials found. Authenticate interactively with `kaggle auth login`; this helper never starts OAuth.")
-    return {"credentials_available": True, "credentials_source": "file" if config_present else "environment"}
+    source = "legacy_file" if config_present else "access_token_file" if token_file_present else "environment"
+    return {"credentials_available": True, "credentials_source": source}
 
 
 def check_cli(*, require_no_run: bool = False) -> tuple[str, str]:
