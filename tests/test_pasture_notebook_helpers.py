@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from unittest.mock import Mock
 
-from validation.benchmark_torch_fixed_corpus import summarize
+from validation.benchmark_torch_fixed_corpus import compare_reports, summarize
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,6 +30,30 @@ def notebook_helper(name: str, cell_index: int, namespace: dict) -> object:
 
 
 class PastureNotebookHelperTests(unittest.TestCase):
+    def test_fixed_corpus_comparison_schema_and_pairing(self):
+        left = {"device": "cpu", "workload": "fixed", "corpus_config": {"corpus_sha256": "same"},
+                "runs": [{"repeat_index": 1, "duration_seconds": 6.0},
+                         {"repeat_index": 0, "duration_seconds": 8.0}]}
+        right = {"device": "cuda", "workload": "fixed", "corpus_config": {"corpus_sha256": "same"},
+                 "runs": [{"repeat_index": 0, "duration_seconds": 4.0},
+                          {"repeat_index": 1, "duration_seconds": 2.0}]}
+
+        result = compare_reports(left, right)
+        self.assertEqual(set(result), {"numerator_device", "denominator_device", "paired_elapsed_speedup"})
+        self.assertEqual(result["numerator_device"], "cpu")
+        self.assertEqual(result["denominator_device"], "cuda")
+        speedup = result["paired_elapsed_speedup"]
+        self.assertEqual(set(speedup), {"raw", "median", "bootstrap_ci95_mean"})
+        self.assertEqual(speedup["raw"], [2.0, 3.0])
+        self.assertEqual(speedup["median"], 2.5)
+        self.assertEqual(set(speedup["bootstrap_ci95_mean"]), {"lower_95", "upper_95"})
+        self.assertTrue(all(isinstance(value, float) for value in speedup["raw"]))
+        self.assertIsInstance(speedup["median"], float)
+        self.assertTrue(all(isinstance(value, float)
+                            for value in speedup["bootstrap_ci95_mean"].values()))
+        self.assertLessEqual(speedup["bootstrap_ci95_mean"]["lower_95"],
+                             speedup["bootstrap_ci95_mean"]["upper_95"])
+
     def test_benchmark_summary_has_stable_empty_and_populated_schema(self):
         expected_metrics = {"raw", "median", "p95", "bootstrap_ci95_mean"}
         empty = summarize([])
