@@ -117,12 +117,18 @@ class KaggleDeployTests(unittest.TestCase):
         run_mock.return_value = type("Result", (), {"stdout": "Authorization: Bearer topsecret\nkey=abc123secret", "stderr": ""})()
         for kind, expected in (("status", "status"), ("logs", "logs"), ("output", "output")):
             with self.subTest(kind=kind):
-                result = deploy.retrieve(kind, "sample_user/pasture-studies")
+                result = deploy.retrieve(kind, "sample_user/pasture-studies/42")
                 self.assertNotIn("topsecret", result)
                 self.assertNotIn("abc123secret", result)
-                self.assertEqual(run_mock.call_args.args[0][:3], ["kaggle", "kernels", expected])
+                self.assertEqual(run_mock.call_args.args[0][:4],
+                                 ["kaggle", "kernels", expected, "sample_user/pasture-studies/42"])
         with self.assertRaises(deploy.DeploymentError):
             deploy.retrieve("status", "bad kernel")
+        with self.assertRaises(deploy.DeploymentError):
+            deploy.retrieve("status", "sample_user/pasture-studies/latest")
+        deploy.retrieve("status", "sample_user/pasture-studies")
+        self.assertEqual(run_mock.call_args.args[0],
+                         ["kaggle", "kernels", "status", "sample_user/pasture-studies"])
 
     def test_manifest_verifies_hash_size_and_rejects_path_escape(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -190,8 +190,8 @@ def execute(folder: Path, *, mode: str, confirm_execution: bool, confirm_gpu: bo
 
 
 def retrieve(kind: str, kernel: str, destination: Path | None = None) -> str:
-    if not re.fullmatch(r"[A-Za-z0-9_-]+/[A-Za-z0-9_-]+", kernel):
-        raise DeploymentError("Kernel must be an owner/slug identifier")
+    if not re.fullmatch(r"[A-Za-z0-9_-]+/[A-Za-z0-9_-]+(?:/[0-9]+)?", kernel):
+        raise DeploymentError("Kernel must be an owner/slug identifier with an optional numeric version")
     commands = {
         "status": ["kaggle", "kernels", "status", kernel],
         "logs": ["kaggle", "kernels", "logs", kernel],
