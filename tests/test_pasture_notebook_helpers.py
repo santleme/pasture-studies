@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import json
+import math
 from pathlib import Path
 import sys
 import tempfile
@@ -144,6 +145,62 @@ class PastureNotebookHelperTests(unittest.TestCase):
         self.assertTrue(same_corpus("cpu", "t4x1"))
         self.assertFalse(same_corpus("cpu", "t4x2"))
         self.assertFalse(same_corpus("cpu", "missing"))
+
+    def test_speed_helpers_read_the_validated_paired_comparison_schema(self):
+        left = {"device": "cpu", "workload": "fixed", "corpus_config": {"corpus_sha256": "same"},
+                "runs": [{"repeat_index": i, "duration_seconds": 4.0} for i in range(4)]}
+        right = {"device": "cuda", "workload": "fixed", "corpus_config": {"corpus_sha256": "same"},
+                 "runs": [{"repeat_index": i, "duration_seconds": 1.0} for i in range(4)]}
+        comparison = compare_reports(left, right)
+        namespace = {}
+        notebook_helper("_comparison_number", 19, namespace)
+        paired_speed = notebook_helper("paired_speed", 19, namespace)
+        ci_lower = notebook_helper("ci_lower", 19, namespace)
+        self.assertEqual(paired_speed(comparison), 4.0)
+        self.assertEqual(ci_lower(comparison),
+                         comparison["paired_elapsed_speedup"]["bootstrap_ci95_mean"]["lower_95"])
+        self.assertTrue(math.isfinite(ci_lower(comparison)))
+
+    def test_speed_helpers_fail_closed_for_missing_null_and_malformed_schema(self):
+        namespace = {}
+        notebook_helper("_comparison_number", 19, namespace)
+        paired_speed = notebook_helper("paired_speed", 19, namespace)
+        ci_lower = notebook_helper("ci_lower", 19, namespace)
+        malformed_reports = [
+            (None, None, None),
+            ({}, None, None),
+            ({"paired_elapsed_speedup": None}, None, None),
+            ({"paired_elapsed_speedup": []}, None, None),
+            ({"paired_elapsed_speedup": {"median": 1.5}}, 1.5, None),
+            ({"paired_elapsed_speedup": {"bootstrap_ci95_mean": None}}, None, None),
+            ({"paired_elapsed_speedup": {"bootstrap_ci95_mean": {"lower_95": None}}}, None, None),
+            ({"paired_elapsed_speedup": {"median": "1.5",
+                                          "bootstrap_ci95_mean": {"lower_95": "1.2"}}}, None, None),
+            ({"paired_elapsed_speedup": {"median": True,
+                                          "bootstrap_ci95_mean": {"lower_95": False}}}, None, None),
+            ({"paired_elapsed_speedup": {"median": float("nan"),
+                                          "bootstrap_ci95_mean": {"lower_95": float("inf")}}}, None, None),
+        ]
+        for report, expected_median, expected_lower in malformed_reports:
+            with self.subTest(report=report):
+                self.assertEqual(paired_speed(report), expected_median)
+                self.assertEqual(ci_lower(report), expected_lower)
+
+    def test_notebook_keeps_preregistered_timing_thresholds_unchanged(self):
+        notebook = json.loads(NOTEBOOK.read_text())
+        source = "".join(notebook["cells"][19]["source"])
+        tree = ast.parse(source)
+        threshold_assignment = next(
+            node for node in tree.body
+            if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "compute_thresholds"
+                    for target in node.targets)
+        )
+        threshold_source = ast.get_source_segment(source, threshold_assignment)
+        self.assertIn('meets_speedup(comparisons["cpu_vs_t4x1"], 2.0)', threshold_source)
+        self.assertIn('>= 1 / 0.70', threshold_source)
+        self.assertIn('meets_speedup(comparisons["cpu_vs_t4x2"], 2.0)', threshold_source)
+        self.assertIn('meets_speedup(comparisons["t4x1_vs_t4x2"], 1.20)', threshold_source)
 
 
 if __name__ == "__main__":
