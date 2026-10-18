@@ -117,7 +117,13 @@ def prepare(folder: Path, owner: str, *, mode: str = "SMOKE", gpu: bool = False)
     validate_mode(mode)
     if not NOTEBOOK.is_file():
         raise DeploymentError(f"Notebook not found: {NOTEBOOK}")
-    folder.mkdir(parents=True, exist_ok=True)
+    if folder.is_symlink():
+        raise DeploymentError(f"Staging path must not be a symlink: {folder}")
+    if folder.exists():
+        if not folder.is_dir() or any(folder.iterdir()):
+            raise DeploymentError(f"Staging directory must be empty to prevent uploading stale files: {folder}")
+    else:
+        folder.mkdir(parents=True)
     shutil.copy2(NOTEBOOK, folder / NOTEBOOK.name)
     target = folder / "kernel-metadata.json"
     target.write_text(json.dumps(metadata_for(owner, mode=mode, gpu=gpu), indent=2) + "\n")
@@ -154,6 +160,8 @@ def verify_manifest(manifest_path: Path, artifact_root: Path) -> list[str]:
         raise DeploymentError("Artifact manifest is missing or malformed") from exc
     if not isinstance(entries, list):
         raise DeploymentError("Artifact manifest files must be an array")
+    if not entries:
+        raise DeploymentError("Artifact manifest contains no files to verify")
     verified = []
     root = artifact_root.resolve()
     for entry in entries:
