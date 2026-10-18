@@ -4,6 +4,7 @@ from __future__ import annotations
 import random
 from collections import deque
 from dataclasses import replace
+from typing import Mapping, Sequence
 
 from .memory import remember, retrieve
 from .model import (
@@ -106,6 +107,39 @@ class Simulation:
 
     def step(self) -> TickResult:
         """Advance exactly one logical tick; use stable ID ordering for arbitration."""
+        return self._step_with_provider(None)
+
+    def decision_features(self) -> tuple[tuple[str, tuple[float, ...]], ...]:
+        """Gather all decisions' features from this world's pre-transition snapshot."""
+        starting = self.world
+        rows = []
+        for animal in sorted(starting.animals, key=lambda a: a.animal_id):
+            observation = perceive(starting, animal)
+            memories = retrieve(animal.memory, starting.tick)
+            features = encode_features(observation, memories, animal, starting.width, starting.height)
+            rows.append((animal.animal_id, tuple(features)))
+        return tuple(rows)
+
+    def step_with_decisions(self, decisions: Mapping[str, tuple[PolicyDecision, Sequence[float]]]) -> TickResult:
+        """Commit precomputed decisions through normal sequential arbitration.
+
+        This is the vectorized-inference boundary. Features must be those returned
+        by ``decision_features`` for the current world tick; all physical updates,
+        resource conflicts, event order, and commit semantics remain scalar.
+        """
+        expected = {animal.animal_id for animal in self.world.animals}
+        if set(decisions) != expected:
+            raise ValueError("decisions must contain exactly one entry per animal")
+        current_features = dict(self.decision_features())
+        for animal_id, (_, features) in decisions.items():
+            # Validate the caller's snapshot before any sequential arbitration
+            # mutates resources or animals. This rejects stale-tick batches as
+            # well as accidentally cross-world feature rows.
+            if tuple(features) != current_features[animal_id]:
+                raise ValueError("decision features do not match the current world snapshot")
+        return self._step_with_provider(decisions)
+
+    def _step_with_provider(self, decisions: Mapping[str, tuple[PolicyDecision, Sequence[float]]] | None) -> TickResult:
         starting = self.world
         working_animals = {a.animal_id: a for a in starting.animals}
         events: list[SimEvent] = []
@@ -117,11 +151,14 @@ class Simulation:
             # Each agent perceives the same pre-transition snapshot; only navigation
             # arbitration is sequential, so another cow's new position cannot leak
             # into this tick's observation.
-            decision_observation = perceive(starting, current)
-            memories = retrieve(current.memory, starting.tick)
-            features = encode_features(decision_observation, memories, current, starting.width, starting.height)
-            # Policy contract is pure: only an action and probability vector come back.
-            decision: PolicyDecision = self.policy.decide(features)
+            if decisions is None:
+                decision_observation = perceive(starting, current)
+                memories = retrieve(current.memory, starting.tick)
+                features = encode_features(decision_observation, memories, current, starting.width, starting.height)
+                # Policy contract is pure: only an action and probability vector come back.
+                decision: PolicyDecision = self.policy.decide(features)
+            else:
+                decision, features = decisions[current.animal_id]
             if len(decision.probabilities) != len(Action):
                 raise ValueError("policy probability vector must align with Action enum")
             if decision.action not in Action:

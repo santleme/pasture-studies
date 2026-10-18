@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "approved_artifacts": {
+    "plan": "5797d6274217be1c2861ffdcac2491c54de07df8eeb401f5a6171ade48100ffa",
+    "architect_review": "e54e696a5ade0b811043dcb3b5e9302ab1c4c1114408dba20797cf1d58f63cbd",
+    "critic_review": "00786900b9ecf1e970b7732a0c9b207add903954956cf71a9eddcac06d9f1fda"
+  }
+}

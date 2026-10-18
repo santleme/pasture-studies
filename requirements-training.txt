@@ -1,0 +1,3 @@
+# Optional training stack; never install this into the web/runtime requirements.
+numpy==1.26.4
+torch==2.14.0
