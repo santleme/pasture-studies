@@ -14,7 +14,7 @@ This guide and `notebooks/pasture_studies_kaggle.ipynb` provide a reproducible K
 
 1. Open `notebooks/pasture_studies_kaggle.ipynb` in Kaggle (or create a notebook and import this file from the public `santleme/pasture-studies` GitHub repository).
 2. In notebook settings choose Python, enable Internet only for GitHub/pip installation, and select **GPU: T4 x2** if it is offered. Availability/quota can depend on account and demand. Kaggle's documented T4x2 profile is two T4 devices, 4 CPU cores, 29 GB RAM and up to 12 hours; actual allocation and quota should be checked in the current session. Saved notebook outputs are limited; keep artifacts comfortably below the documented 20 GB output allowance.
-3. Use the notebook's `PASTURE_PIPELINE_COMMIT`, which is pinned to the published immutable pipeline SHA. The setup fetches that exact commit, checks out detached HEAD, and aborts on any mismatch. Do not replace it with a moving branch for confirmatory work. Optionally set `PASTURE_NOTEBOOK_REVISION` to the imported Kaggle notebook revision and record it in run provenance.
+3. Use the notebook's `PASTURE_PIPELINE_COMMIT`, pinned to `74f5ccd5b6dd785b2e424d29302c15bcec73bbc1`. The setup fetches that exact commit, checks out detached HEAD, and aborts on any mismatch. Do not replace it with a moving branch for confirmatory work. The final notebook-pin commit is separate because a commit cannot contain its own SHA. Optionally set `PASTURE_NOTEBOOK_REVISION` to the imported Kaggle notebook revision and record it in run provenance.
 4. Run all setup cells. The optional training dependencies are installed from `requirements-training.txt`; the notebook runs `pip check` and prints the trainer's `--help` output. Inspect the resolved PyTorch version, visible CUDA count and device names.
 5. Generate the outcome-blind preregistration from the pinned checkout before training. The notebook records its SHA-256 and reads `training_root_seeds` and episode count directly from it. Then run the disposable `--smoke` cell; its checkpoint is not a formal training/evaluation arm.
 6. The notebook's matched comparison runs CPU REINFORCE and CPU A2C with identical seed IDs and episode counts. The CUDA arm is A2C only. When two GPUs are visible, it runs T4x1 (single visible device) and T4x2 (two-rank DDP) dynamic conditions, then the separate fixed-corpus compute benchmark. If CUDA/T4x2 is unavailable, CPU comparison remains possible; the unavailable GPU results stay **not measured**.
@@ -26,13 +26,13 @@ Kaggle documentation: [Notebooks](https://www.kaggle.com/docs/notebooks), [Effic
 
 ## Direct command-line workflow
 
-These commands can run in a Kaggle notebook cell (prefix shell commands with `!`) or a Linux shell. Replace `<FULL_COMMIT_SHA>` with the reviewed immutable commit containing the final notebook/docs/source. No GitHub write token is needed; the pipeline must not push artifacts back to the public repository. Generate the preregistration only after all source-bound files are final; it reads no outcomes, verifies hashes, and records the manifest SHA-256. Use that generated file for training and validation evaluation.
+These commands can run in a Kaggle notebook cell (prefix shell commands with `!`) or a Linux shell. The pipeline source commit is `74f5ccd5b6dd785b2e424d29302c15bcec73bbc1`; the published notebook pin commit adds the strict SHA and this final publication documentation. The notebook itself fetches the source commit above. No GitHub write token is needed; the pipeline must not push artifacts back to the public repository. Generate the preregistration only after all source-bound files are final; it reads no outcomes, verifies hashes, and records the manifest SHA-256. Use that generated file for training and validation evaluation.
 
 ```bash
 # Source checkout and provenance
 git clone https://github.com/santleme/pasture-studies.git
 cd pasture-studies
-git checkout --detach <FULL_COMMIT_SHA>
+git checkout --detach 74f5ccd5b6dd785b2e424d29302c15bcec73bbc1
 git rev-parse HEAD | tee source_commit.txt
 
 # Optional local venv; Kaggle's notebook kernel can use pip directly
@@ -41,11 +41,11 @@ python -m pip check
 python -m validation.train_torch_mvp1 --help
 
 # Freeze and bind the outcome-blind protocol BEFORE outcome collection
-PREREG=/kaggle/working/pasture-training-artifacts/preregistration.json
+export PREREG=/kaggle/working/pasture-training-artifacts-mvp1-run/preregistration.json
 python validation/preregister_torch_mvp1.py --output "$PREREG"
 python - <<'PY'
 import hashlib, json, os
-p=os.environ.get("PREREG", "/kaggle/working/pasture-training-artifacts/preregistration.json")
+p=os.environ["PREREG"]
 m=json.load(open(p))
 assert m["status"] == "PRE_OUTCOME_PREREGISTRATION_PENDING_PILOT_DELTA0"
 print("manifest_sha256:", m["manifest_sha256"])
@@ -57,8 +57,8 @@ PY
 # Required short pipeline check before a long run
 python -m validation.train_torch_mvp1 \
   --smoke --algorithm both --device cpu --seed 71001 \
-  --output /kaggle/working/pasture-training-artifacts/smoke \
-  --metrics /kaggle/working/pasture-training-artifacts/smoke/metrics.jsonl \
+  --output /kaggle/working/pasture-training-artifacts-mvp1-run/smoke \
+  --metrics /kaggle/working/pasture-training-artifacts-mvp1-run/smoke/metrics.jsonl \
   --checkpoint-every 1
 ```
 
@@ -67,7 +67,7 @@ Matched CPU algorithm comparison (repeat for each `training_root_seeds` entry fr
 ```bash
 SEED=71001 # example only; iterate exact seed_splits.training_root_seeds from preregistration
 EPISODES=278 # read training_config.episodes_per_train_seed from preregistration
-ROOT=/kaggle/working/pasture-training-artifacts/matched_cpu
+ROOT=/kaggle/working/pasture-training-artifacts-mvp1-run/matched_cpu
 for ALG in reinforce a2c; do
   python -m validation.train_torch_mvp1 \
     --mode train --algorithm "$ALG" --device cpu \
@@ -91,8 +91,8 @@ SEED=71001 # example only; use preregistration training_root_seeds
 CUDA_VISIBLE_DEVICES=0 python -m validation.train_torch_mvp1 \
   --mode train --algorithm a2c --device cuda \
   --seed "$SEED" --episodes 278 \
-  --output "/kaggle/working/pasture-training-artifacts/a2c_accelerator/t4x1/seed-$SEED" \
-  --metrics "/kaggle/working/pasture-training-artifacts/a2c_accelerator/t4x1/seed-$SEED/metrics.jsonl" \
+  --output "/kaggle/working/pasture-training-artifacts-mvp1-run/a2c_accelerator/t4x1/seed-$SEED" \
+  --metrics "/kaggle/working/pasture-training-artifacts-mvp1-run/a2c_accelerator/t4x1/seed-$SEED/metrics.jsonl" \
   --checkpoint-every 16
 ```
 
@@ -101,8 +101,8 @@ Resume a run with the exact same arguments/config except add `--resume latest` (
 ```bash
 python -m validation.train_torch_mvp1 \
   --mode train --algorithm a2c --device cpu --seed 71001 --episodes 278 \
-  --output /kaggle/working/pasture-training-artifacts/matched_cpu/a2c/seed-71001 \
-  --metrics /kaggle/working/pasture-training-artifacts/matched_cpu/a2c/seed-71001/metrics.jsonl \
+  --output /kaggle/working/pasture-training-artifacts-mvp1-run/matched_cpu/a2c/seed-71001 \
+  --metrics /kaggle/working/pasture-training-artifacts-mvp1-run/matched_cpu/a2c/seed-71001/metrics.jsonl \
   --checkpoint-every 16 --resume latest
 ```
 
@@ -163,7 +163,7 @@ For a T4x2 run on Kaggle (two visible T4 GPUs), use the supported DDP launcher. 
 
 ```bash
 SEED=71001
-OUT="/kaggle/working/pasture-training-artifacts/a2c_accelerator/t4x2/seed-$SEED"
+OUT="/kaggle/working/pasture-training-artifacts-mvp1-run/a2c_accelerator/t4x2/seed-$SEED"
 mkdir -p "$OUT"
 torchrun --standalone --nproc_per_node=2 -m validation.train_torch_mvp1 \
   --mode train --algorithm a2c --device cuda \
@@ -177,8 +177,8 @@ For the paired single-T4 condition when Kaggle exposes T4x2, hide GPU 1 so this 
 CUDA_VISIBLE_DEVICES=0 python -m validation.train_torch_mvp1 \
   --mode train --algorithm a2c --device cuda \
   --seed 71001 --episodes 278 \
-  --output /kaggle/working/pasture-training-artifacts/a2c_accelerator/t4x1/seed-71001 \
-  --metrics /kaggle/working/pasture-training-artifacts/a2c_accelerator/t4x1/seed-71001/metrics.jsonl \
+  --output /kaggle/working/pasture-training-artifacts-mvp1-run/a2c_accelerator/t4x1/seed-71001 \
+  --metrics /kaggle/working/pasture-training-artifacts-mvp1-run/a2c_accelerator/t4x1/seed-71001/metrics.jsonl \
   --checkpoint-every 16
 ```
 
@@ -189,7 +189,7 @@ The notebook runs the full `kaggle-a2c-fixed-corpus-v1` protocol separately from
 Exact CLI commands (run from the repository root after installation):
 
 ```bash
-FIXED=/kaggle/working/pasture-training-artifacts/fixed_corpus_benchmark
+FIXED=/kaggle/working/pasture-training-artifacts-mvp1-run/fixed_corpus_benchmark
 mkdir -p "$FIXED"
 python -m validation.benchmark_torch_fixed_corpus generate-corpus \
   --seed 51337 --output "$FIXED/kaggle-a2c-fixed-corpus-v1.npz"
@@ -228,11 +228,11 @@ Example for a trained A2C checkpoint, using a training root read from the manife
 
 ```bash
 TRAIN_SEED=71001 # example only: iterate seed_splits.training_root_seeds from $PREREG
-GEN=/kaggle/working/pasture-training-artifacts/matched_cpu/a2c/seed-${TRAIN_SEED}/a2c
+GEN=/kaggle/working/pasture-training-artifacts-mvp1-run/matched_cpu/a2c/seed-${TRAIN_SEED}/a2c
 python -m validation.evaluate_torch_mvp1 \
   --generation "$GEN" --algorithm a2c --seed "$TRAIN_SEED" \
   --seed-manifest "$PREREG" --split validation --device cpu \
-  --output "/kaggle/working/pasture-training-artifacts/heldout_evaluation/a2c/train-seed-${TRAIN_SEED}.json"
+  --output "/kaggle/working/pasture-training-artifacts-mvp1-run/heldout_evaluation/a2c/train-seed-${TRAIN_SEED}.json"
 ```
 
 This is **validation/diagnostic evidence**, not a locked-test acceptance result. The current preregistration status is `PRE_OUTCOME_PREREGISTRATION_PENDING_PILOT_DELTA0`; `delta0` has not yet been established by the precision-only pilot. `--split locked_test` is intentionally not runnable from this manifest. A separate pre-outcome lock artifact must first bind the pilot-derived `delta0`, source hashes, selected checkpoint hashes, and analysis/split status; only then can any locked outcomes be accessed. Further, current evaluator output does not itself implement the complete multi-checkpoint clustered bootstrap/Holm cognition analysis. Keep the historical failure report and thresholds unchanged; no validation report can establish biological validity.
