@@ -18,10 +18,10 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from farm_sim.execution_policy import require_kaggle_for_full_workload
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from farm_sim.execution_policy import require_kaggle_for_full_workload
 from farm_sim.model import Action, FEATURE_NAMES, ToyPhysiology, Position, ResourcePatch
 from farm_sim.policy import CategoricalPolicy, HeuristicBaseline, save_checkpoint, load_checkpoint
 from farm_sim.simulation import Simulation, make_world
