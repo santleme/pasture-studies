@@ -2,17 +2,20 @@
 """Build and verify reproducible training-only Pasture Studies dataset bundles.
 
 The bundle includes procedural world snapshots, BFS navigation-oracle route
-records, and one-pass DAgger-style queried labels from the existing heuristic
+records, and iteratively aggregated DAgger labels from the existing heuristic
 teacher. It makes no biological-validity or optimal-expert claim.
 """
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
 import re
 from typing import Any
+
+import numpy as np
 
 from farm_sim.model import Action, FEATURE_NAMES
 from farm_sim.policy import CategoricalPolicy, HeuristicBaseline
@@ -29,6 +32,8 @@ SOURCE_FILES = ("farm_sim/model.py", "farm_sim/policy.py", "farm_sim/simulation.
                 "validation/pasture_studies_dataset.py")
 DATASET_SCHEMA_VERSION = 1
 TICKS_PER_EPISODE = 72
+DAGGER_AGGREGATION_ROUNDS = 2
+DAGGER_SUPERVISED_EPOCHS = 4
 
 
 def _sha_bytes(value: bytes) -> str:
@@ -70,6 +75,42 @@ def _world_families(world_seed: int):
     # These are controlled shape variants of the existing deterministic API.
     yield "starter", make_world(world_seed)
     yield "wide", make_world(derive_seed(world_seed, "dataset-world-wide"), width=20, height=14)
+
+
+def _fit_teacher_labels(policy: CategoricalPolicy, feature_rows: list[list[float]],
+                        action_labels: list[int], *, seed: int) -> None:
+    """Update the learner with deterministic supervised cross-entropy steps."""
+    features = np.asarray(feature_rows, dtype=np.float64)
+    labels = np.asarray(action_labels, dtype=np.int64)
+    if features.ndim != 2 or features.shape[1] != len(FEATURE_NAMES) or labels.shape != (len(features),):
+        raise ValueError("DAgger training data has invalid feature or action shapes")
+    if not len(features) or not np.isfinite(features).all():
+        raise ValueError("DAgger training data must be non-empty and finite")
+    rng = np.random.default_rng(seed)
+    learning_rate = 0.03
+    batch_size = 128
+    for _ in range(DAGGER_SUPERVISED_EPOCHS):
+        order = rng.permutation(len(labels))
+        for start in range(0, len(labels), batch_size):
+            indices = order[start:start + batch_size]
+            x, y = features[indices], labels[indices]
+            hidden = np.tanh(x @ policy.w1 + policy.b1)
+            logits = hidden @ policy.w2 + policy.b2
+            logits -= logits.max(axis=1, keepdims=True)
+            probabilities = np.exp(logits)
+            probabilities /= probabilities.sum(axis=1, keepdims=True)
+            probabilities[np.arange(len(y)), y] -= 1.0
+            probabilities /= len(y)
+            grad_w2 = hidden.T @ probabilities
+            grad_b2 = probabilities.sum(axis=0)
+            grad_hidden = probabilities @ policy.w2.T
+            grad_pre = grad_hidden * (1.0 - hidden * hidden)
+            grad_w1 = x.T @ grad_pre
+            grad_b1 = grad_pre.sum(axis=0)
+            policy.w1 -= learning_rate * grad_w1
+            policy.b1 -= learning_rate * grad_b1
+            policy.w2 -= learning_rate * grad_w2
+            policy.b2 -= learning_rate * grad_b2
 
 
 def generate_bundle(output_dir: str | Path, *, root_seeds: list[int] | None = None,
@@ -130,24 +171,38 @@ def generate_bundle(output_dir: str | Path, *, root_seeds: list[int] | None = No
                             "path": [[p.x, p.y] for p in path] if path is not None else None,
                             "reachable": path is not None})
 
-            # One aggregation pass: a deterministic initialized policy visits
-            # states; the existing heuristic supplies labels at those states.
+            # Alternate learner rollouts, teacher labels, and supervised updates
+            # over all aggregated examples while keeping the world seed fixed.
             learner_seed = derive_seed(world_seed, "dagger-rollout-learner")
             learner = CategoricalPolicy.initialize(learner_seed)
-            simulation = Simulation(world, learner)
-            for _tick in range(TICKS_PER_EPISODE):
-                for animal_id, features in simulation.decision_features():
-                    feature_row = list(features)
-                    teacher_decision = teacher.decide(feature_row)
-                    learner_decision = learner.decide(feature_row)
-                    dagger.append({**common, "artifact_type": "dagger_trajectory",
-                        "aggregation_iteration": 1, "teacher_policy": teacher.policy_id,
-                        "rollout_policy": learner.policy_id, "tick": simulation.world.tick,
-                        "animal_id": animal_id, "feature_schema": list(FEATURE_NAMES),
-                        "features": feature_row, "teacher_action": teacher_decision.action.value,
-                        "learner_action": learner_decision.action.value,
-                        "action_labels": [action.value for action in Action]})
-                simulation.step()
+            aggregated_features: list[list[float]] = []
+            aggregated_labels: list[int] = []
+            for iteration in range(1, DAGGER_AGGREGATION_ROUNDS + 1):
+                # Each learner rollout must start from the identical frozen
+                # scenario, not continue from the previous round's mutated world.
+                simulation = Simulation(deepcopy(world), learner)
+                round_features: list[list[float]] = []
+                round_labels: list[int] = []
+                for _tick in range(TICKS_PER_EPISODE):
+                    for animal_id, features in simulation.decision_features():
+                        feature_row = list(features)
+                        teacher_decision = teacher.decide(feature_row)
+                        learner_decision = learner.decide(feature_row)
+                        label = tuple(Action).index(teacher_decision.action)
+                        round_features.append(feature_row)
+                        round_labels.append(label)
+                        dagger.append({**common, "artifact_type": "dagger_trajectory",
+                            "aggregation_iteration": iteration, "teacher_policy": teacher.policy_id,
+                            "rollout_policy": learner.policy_id, "tick": simulation.world.tick,
+                            "animal_id": animal_id, "feature_schema": list(FEATURE_NAMES),
+                            "features": feature_row, "teacher_action": teacher_decision.action.value,
+                            "learner_action": learner_decision.action.value,
+                            "action_labels": [action.value for action in Action]})
+                    simulation.step()
+                aggregated_features.extend(round_features)
+                aggregated_labels.extend(round_labels)
+                _fit_teacher_labels(learner, aggregated_features, aggregated_labels,
+                                    seed=derive_seed(learner_seed, "dagger-fit", iteration))
 
     if len(world_ids) != 2 * len(world_rows):
         raise ValueError("procedural scenario world IDs are not unique")
@@ -163,7 +218,7 @@ def generate_bundle(output_dir: str | Path, *, root_seeds: list[int] | None = No
         (output / name).write_bytes(_line_bytes(rows))
     kaggle_metadata = {"id": dataset_id, "title": title.strip(),
         "licenses": [{"name": license_name.strip()}],
-        "description": "Synthetic simulator worlds, navigation routes, and one-pass heuristic-teacher DAgger-style trajectories. Not biological evidence.",
+        "description": "Synthetic simulator worlds, navigation routes, and two-round heuristic-teacher DAgger trajectories. Not biological evidence.",
         "keywords": ["synthetic", "simulation", "pasture-studies"],
         "resources": [{"path": name, "description": name.removesuffix(".jsonl").replace("-", " ")}
                       for name in DATA_FILES]}
@@ -176,8 +231,10 @@ def generate_bundle(output_dir: str | Path, *, root_seeds: list[int] | None = No
         "preregistration_manifest_sha256": manifest["manifest_sha256"],
         "source_sha256": source_hashes,
         "family_counts": {name: len(rows) for name, rows in rows_by_file.items()},
+        "dagger_aggregation_rounds": DAGGER_AGGREGATION_ROUNDS,
+        "dagger_supervised_epochs_per_round": DAGGER_SUPERVISED_EPOCHS,
         "limitations": ["BFS paths are navigation oracles only, not reward-optimal behavior experts",
-                        "DAgger-style trajectories are one-pass heuristic-teacher labels, not iterative DAgger",
+                        "DAgger uses a heuristic teacher and a small fixed supervised learner, not a policy-quality claim",
                         "all worlds and rewards are synthetic and do not validate livestock or husbandry"],
         "files": {name: {"sha256": sha_file(output / name), "size_bytes": (output / name).stat().st_size}
                   for name in (*DATA_FILES, "dataset-metadata.json")}}
