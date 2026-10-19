@@ -87,7 +87,7 @@ def load_checkpoint_manifest(path: str | Path) -> tuple[dict[str, list[dict[str,
             state = loaded["state"]
             if (state.get("episode_cursor") != 512 or state.get("exploratory_only") is not True
                     or state.get("formal_eligible") is not False
-                    or state.get("locked_outcomes_accessed") is not False):
+                    or state.get("locked_outcomes_accessed", False) is not False):
                 raise ValueError(f"condition {condition} checkpoint state is not complete/nonformal: {target}")
             if entry["seed"] in seeds:
                 raise ValueError(f"condition {condition} has duplicate training seeds")
@@ -244,6 +244,7 @@ def compare( manifest_path: str | Path, *, eval_seed: int, output: str | Path,
         "conditions": conditions_doc,
         "checkpoint_reports": per_checkpoint,
         "checkpoint_manifest_sha256": sha_file(source_manifest),
+        "runner_source_sha256": sha_file(Path(__file__)),
         "limitations": ["synthetic software-task outcomes only; not biological or husbandry evidence",
                         "exploratory comparison is not formal validation, hypothesis testing, selection, or promotion",
                         "memory/perception probes are paired first-decision input interventions, not full-trajectory causal effects"],
@@ -251,7 +252,8 @@ def compare( manifest_path: str | Path, *, eval_seed: int, output: str | Path,
     summary_path.write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n")
     plot_path.write_text(_svg_plot(ranking), encoding="utf-8")
     return {"output": str(summary_path), "plot": str(plot_path), "conditions": len(conditions),
-            "checkpoints": len(per_checkpoint), "episodes_per_policy": len(schedule) * 3,
+            "checkpoints": len(per_checkpoint), "episodes_per_checkpoint_policy": len(schedule),
+            "episode_policy_rows_total": len(per_checkpoint) * len(schedule) * len(POLICIES),
             "report_sha256": sha_file(summary_path)}
 
 
