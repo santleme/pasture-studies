@@ -4,7 +4,8 @@
 
 - Branch: `integration/pasture-studies-20261019`
 - Worktree: `/home/lucas_coimbra/projects/experiments/riose-tech-integration`
-- HEAD: `d485b64` (integration branch; no push and no merge to `main`)
+- Integration merge tip: `d485b64`; the audit note is committed afterward (see
+  `git log` for the final branch HEAD). No push and no merge to `main`.
 - The original `main` worktree, its uncommitted files, the source branches, and
   stash remain untouched.
 
