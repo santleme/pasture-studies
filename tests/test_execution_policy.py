@@ -35,7 +35,7 @@ class ExecutionPolicyTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "must-not-exist"
             cases = [
-                [sys.executable, "scripts/train_sb3_ppo.py", "--output", str(output)],
+                [sys.executable, "-m", "scripts.train_sb3_ppo", "--output", str(output)],
                 [sys.executable, "-m", "validation.pasture_studies_dataset", "build",
                  "--output", str(output), "--license", "CC0-1.0"],
                 [sys.executable, "-m", "validation.benchmark_torch_fixed_corpus", "generate-corpus",

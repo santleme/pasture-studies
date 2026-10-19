@@ -5,8 +5,9 @@ import argparse
 import json
 from pathlib import Path
 
-from farm_sim.gym_env import PastureEnv
 from farm_sim.execution_policy import require_kaggle_for_full_workload
+
+PastureEnv = None
 
 
 def _evaluate(model, *, joint: bool, seed: int, episodes: int) -> dict:
@@ -51,6 +52,8 @@ def main() -> None:
             require_kaggle_for_full_workload("PPO training")
         except RuntimeError as exc:
             parser.error(str(exc))
+    global PastureEnv
+    from farm_sim.gym_env import PastureEnv
     if args.timesteps <= 0 or args.evaluation_episodes <= 0:
         parser.error("timesteps and evaluation-episodes must be positive")
     try:
