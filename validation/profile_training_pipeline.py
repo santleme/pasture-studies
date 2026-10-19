@@ -29,6 +29,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import farm_sim.simulation as sim_module
+from farm_sim.execution_policy import require_kaggle_for_full_workload
 from farm_sim.model import Action
 from farm_sim.policy import CategoricalPolicy, load_checkpoint, save_checkpoint
 from farm_sim.simulation import Simulation, make_world, serialize_world
@@ -336,7 +337,16 @@ def main(argv=None):
     parser.add_argument("--ticks", type=int, default=72)
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--output", type=Path, default=Path("artifacts/profile-training-pipeline.json"))
+    parser.add_argument("--smoke", action="store_true", help="explicit two-tick, one-repeat local smoke profile")
     args = parser.parse_args(argv)
+    try:
+        require_kaggle_for_full_workload("training pipeline profile", smoke=args.smoke)
+    except RuntimeError as exc:
+        parser.error(str(exc))
+    if args.smoke:
+        if args.ticks != 72 or args.repeats != 3:
+            parser.error("--smoke uses fixed limits; omit --ticks and --repeats")
+        args.ticks, args.repeats = 2, 1
     result = profile(seed=args.seed, ticks=args.ticks, repeats=args.repeats, output=args.output)
     print(json.dumps({"output": str(args.output), "configuration": result["configuration"],
                       "timings": {k: {"total_seconds": v["total_seconds"], "calls": v["calls"]}

@@ -22,6 +22,7 @@ from farm_sim.torch_training import (
     resolve_device, set_deterministic, shard_episode_indices,
     InvalidPolicyOutput, assert_finite_training_state,
 )
+from farm_sim.execution_policy import require_kaggle_for_full_workload
 
 BATCH_EPISODES = 16
 GRAD_CLIP_NORM = 2.0
@@ -533,6 +534,10 @@ def main(argv=None):
     if args.smoke and args.smoke_update:
         p.error("--smoke and --smoke-update are mutually exclusive")
     if args.readiness_ddp:
+        try:
+            require_kaggle_for_full_workload("A2C readiness training")
+        except RuntimeError as exc:
+            p.error(str(exc))
         if args.smoke or args.smoke_update or args.algorithm == "both":
             p.error("--readiness-ddp requires one algorithm and cannot combine with smoke modes")
         if args.device != "cuda":

@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+from .execution_policy import require_kaggle_for_full_workload
 
 from .model import Action, FEATURE_NAMES, FEATURE_SCHEMA_VERSION
 from .policy import CategoricalPolicy, save_checkpoint
@@ -220,8 +221,20 @@ def train_suite(output_dir: str | Path) -> dict[str, Any]:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default="artifacts/policies", help="directory for local NPZ/JSON checkpoints and metrics")
+    parser.add_argument("--smoke", action="store_true", help="explicit bounded local development run (one seed, 40 episodes)")
     args = parser.parse_args()
-    report = train_suite(args.output)
+    try:
+        require_kaggle_for_full_workload("REINFORCE policy training", smoke=args.smoke)
+    except RuntimeError as exc:
+        parser.error(str(exc))
+    if args.smoke:
+        # The production suite is intentionally kept fixed; smoke exercises the
+        # existing small training primitive without producing promotion artifacts.
+        policy, initial, returns = train_policy(TRAINING_SEEDS[0], episodes=40)
+        report = {"smoke": True, "seed": TRAINING_SEEDS[0], "episodes": policy.episodes,
+                  "initial_parameters": int(initial.parameter_vector().size), "batches": len(returns)}
+    else:
+        report = train_suite(args.output)
     print(json.dumps(report, indent=2))
     if not report["aggregate"]["learning_thresholds_pass"] or not report["aggregate"]["all_counterfactuals_pass"]:
         raise SystemExit("policy training plumbing completed, but predeclared learning criteria did not pass")

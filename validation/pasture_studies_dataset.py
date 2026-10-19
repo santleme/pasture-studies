@@ -18,6 +18,7 @@ from farm_sim.model import Action, FEATURE_NAMES
 from farm_sim.policy import CategoricalPolicy, HeuristicBaseline
 from farm_sim.simulation import Simulation, make_world, serialize_world
 from farm_sim.torch_training import derive_seed
+from farm_sim.execution_policy import require_kaggle_for_full_workload
 from validation.diagnose_navigation_mvp1 import oracle_path
 from validation.preregister_torch_mvp1 import OUTPUT_PATH, verify_manifest
 
@@ -256,6 +257,7 @@ def main(argv=None) -> int:
     build = sub.add_parser("build")
     build.add_argument("--output", type=Path, required=True)
     build.add_argument("--episodes-per-root", type=int, default=1)
+    build.add_argument("--smoke", action="store_true", help="explicit local smoke for one preregistered root and one episode")
     build.add_argument("--data-version", default="v1")
     build.add_argument("--dataset-id", default="pasture-studies/pasture-training-data")
     build.add_argument("--title", default="Pasture Studies synthetic training data")
@@ -263,7 +265,19 @@ def main(argv=None) -> int:
     verify = sub.add_parser("verify")
     verify.add_argument("--bundle", type=Path, required=True)
     args = parser.parse_args(argv)
+    root_seeds = None
+    if args.command == "build":
+        try:
+            require_kaggle_for_full_workload("DAgger trajectory generation", smoke=args.smoke)
+        except RuntimeError as exc:
+            parser.error(str(exc))
+        if args.smoke:
+            if args.episodes_per_root != 1:
+                parser.error("--smoke permits exactly one episode per root")
+            manifest = json.loads(OUTPUT_PATH.read_text())
+            root_seeds = [int(manifest["seed_splits"]["training_root_seeds"][0])]
     result = (generate_bundle(args.output, episodes_per_root=args.episodes_per_root,
+        root_seeds=root_seeds,
         data_version=args.data_version, dataset_id=args.dataset_id, title=args.title,
         license_name=args.license_name) if args.command == "build" else verify_bundle(args.bundle))
     print(json.dumps({"dataset_id": result["dataset_id"], "data_version": result["data_version"],

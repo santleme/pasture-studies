@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse, json, platform, statistics, time
 from pathlib import Path
 import numpy as np
+from farm_sim.execution_policy import require_kaggle_for_full_workload
 from farm_sim.torch_training import ActorCritic, require_torch, resolve_device, set_deterministic
 
 
@@ -79,7 +80,17 @@ def main(argv=None):
     p.add_argument("--iterations", type=int, default=200)
     p.add_argument("--repeats", type=int, default=5)
     p.add_argument("--output", type=Path, default=Path("torch-profile.json"))
+    p.add_argument("--smoke", action="store_true", help="explicit bounded local smoke profile")
     args=p.parse_args(argv)
+    try:
+        require_kaggle_for_full_workload("Torch profiling benchmark", smoke=args.smoke)
+    except RuntimeError as exc:
+        p.error(str(exc))
+    if args.smoke:
+        if args.devices or args.batches != "1,5,128,1024,4096" or (args.warmups, args.iterations, args.repeats) != (50, 200, 5):
+            p.error("--smoke uses fixed limits; omit --devices, --batches, --warmups, --iterations, and --repeats")
+        args.devices, args.batches = None, "1,5"
+        args.warmups, args.iterations, args.repeats = 1, 2, 1
     torch=require_torch(); set_deterministic(1234)
     devices=args.devices.split(",") if args.devices else [resolve_device(args.device)]
     rows=[]

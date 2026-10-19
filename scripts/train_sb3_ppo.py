@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from farm_sim.gym_env import PastureEnv
+from farm_sim.execution_policy import require_kaggle_for_full_workload
 
 
 def _evaluate(model, *, joint: bool, seed: int, episodes: int) -> dict:
@@ -39,7 +40,17 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=11)
     parser.add_argument("--timesteps", type=int, default=50_000)
     parser.add_argument("--evaluation-episodes", type=int, default=20)
+    parser.add_argument("--smoke", action="store_true", help="explicit bounded local smoke (128 timesteps, one evaluation episode)")
     args = parser.parse_args()
+    if args.smoke:
+        if args.timesteps != 50_000 or args.evaluation_episodes != 20:
+            parser.error("--smoke uses fixed limits; omit --timesteps and --evaluation-episodes")
+        args.timesteps, args.evaluation_episodes = 128, 1
+    else:
+        try:
+            require_kaggle_for_full_workload("PPO training")
+        except RuntimeError as exc:
+            parser.error(str(exc))
     if args.timesteps <= 0 or args.evaluation_episodes <= 0:
         parser.error("timesteps and evaluation-episodes must be positive")
     try:

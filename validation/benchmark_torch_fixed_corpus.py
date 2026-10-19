@@ -26,6 +26,7 @@ from farm_sim.model import Action, FEATURE_NAMES
 from farm_sim.torch_training import (ActorCritic, ROLLOUT_TICKS, collect_episode,
                                      derive_seed, require_torch, set_deterministic,
                                      shard_episode_indices, validate_equal_all_one_masks)
+from farm_sim.execution_policy import require_kaggle_for_full_workload
 
 PARTITIONS = 10
 FULL_EPISODES = 278
@@ -382,11 +383,19 @@ def main(argv=None):
     compare.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.command == "generate-corpus":
+        try:
+            require_kaggle_for_full_workload("fixed-corpus generation", smoke=args.smoke)
+        except RuntimeError as exc:
+            parser.error(str(exc))
         arrays, config = build_corpus(args.seed, smoke=args.smoke)
         path = save_corpus(args.output, arrays, config)
         print(json.dumps({"corpus": str(path), "corpus_sha256": config["corpus_sha256"],
                           "episodes": int(arrays["world_ids"].size), "smoke_mode": args.smoke}, indent=2))
     elif args.command == "benchmark":
+        try:
+            require_kaggle_for_full_workload("fixed-corpus benchmark", smoke=args.smoke)
+        except RuntimeError as exc:
+            parser.error(str(exc))
         if args.repeats <= 0:
             parser.error("--repeats must be positive")
         report = run_benchmark(args.corpus, device=args.device, repeats=args.repeats,
