@@ -15,14 +15,14 @@ class ExploratoryBatchCliTests(unittest.TestCase):
         self.assertEqual({spec["seed"] for spec in specs}, set(trainer.EXPLORATORY_BATCH_SEEDS))
         self.assertEqual({spec["episodes"] for spec in specs}, {512})
         expected = {
-            "A": ("original", 0.1, False, 0.0),
-            "B": ("original", 0.1, True, 0.01),
-            "C": ("state_aware", 0.1, False, 0.0),
-            "D": ("state_aware", 0.1, True, 0.01),
+            "A": ("original", 0.1, False, 0.0, 0.99),
+            "B": ("original", 0.1, True, 0.01, 0.99),
+            "C": ("state_aware", 0.1, False, 0.0, 0.99),
+            "D": ("state_aware", 0.1, True, 0.01, 0.99),
         }
         for spec in specs:
             self.assertEqual((spec["reward_variant"], spec["state_reward_scale"], spec["normalize_advantage"],
-                              spec["entropy_coefficient"]), expected[spec["variant"]])
+                              spec["entropy_coefficient"], spec["discount_factor"]), expected[spec["variant"]])
         for variant in expected:
             self.assertEqual(sum(spec["variant"] == variant for spec in specs), 3)
 
@@ -38,8 +38,8 @@ class ExploratoryBatchCliTests(unittest.TestCase):
             self.assertEqual(config["variant_config"], trainer.EXPLORATORY_BATCH_VARIANTS)
             self.assertEqual(config["seeds"], list(trainer.EXPLORATORY_BATCH_SEEDS))
             self.assertEqual(config["episodes_per_variant_seed"], trainer.EXPLORATORY_BATCH_EPISODES)
-            self.assertEqual(config["training_jobs"] * config["calibration_passes"],
-                             config["max_training_jobs"])
+            self.assertEqual(config["training_jobs"], 12)
+            self.assertEqual(config["max_training_jobs"], 24)
 
     def test_single_run_and_batch_flags_cannot_be_combined(self):
         with patch("sys.argv", ["train_torch_mvp1", "--exploratory-a2c", "--exploratory-batch"]):
