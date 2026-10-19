@@ -44,8 +44,18 @@ EXPLORATORY_CONFIG_VALUE = {
 EXPLORATORY_COMPARISON_CONFIG_VALUE = {
     "task": "exploratory_a2c_variant_comparison", "algorithm": "a2c",
     "variants": ["A", "B", "C", "D"], "episodes_per_variant_seed": 512,
-    "seeds": [9483001, 9483002, 9483003], "training_jobs": 24,
+    "seeds": [9483001, 9483002, 9483003], "training_jobs": 12,
     "max_training_jobs": 24, "max_devices": 2, "locked_test_access": False,
+    "variant_config": {
+        "A": {"reward_variant": "original", "state_reward_scale": 0.1,
+              "normalize_advantage": False, "entropy_coefficient": 0.0},
+        "B": {"reward_variant": "original", "state_reward_scale": 0.1,
+              "normalize_advantage": True, "entropy_coefficient": 0.01},
+        "C": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
+              "normalize_advantage": False, "entropy_coefficient": 0.0},
+        "D": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
+              "normalize_advantage": True, "entropy_coefficient": 0.01},
+    },
     "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
 }
 def _strict_notebook_json(path: Path) -> dict:
