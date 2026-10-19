@@ -24,9 +24,12 @@ class KaggleDatasetPublishTests(unittest.TestCase):
             generate_bundle(package, root_seeds=[71001], episodes_per_root=1, license_name="CC0-1.0")
             with patch("scripts.kaggle_dataset_publish.subprocess.run") as run:
                 result = publish(package, operation="create")
+                version_result = publish(package, operation="version", message="v2 refresh")
             run.assert_not_called()
             self.assertTrue(result["dry_run"])
             self.assertEqual(result["command"][1:3], ["datasets", "create"])
+            self.assertTrue(version_result["dry_run"])
+            self.assertEqual(version_result["command"][1:3], ["datasets", "version"])
 
 
 if __name__ == "__main__":
