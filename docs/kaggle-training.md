@@ -1,5 +1,17 @@
 # Pasture Studies Kaggle release workflow
 
+## Execution boundary
+
+Local execution is limited to development, lightweight tests, and explicitly
+bounded smoke diagnostics. Full training (including DAgger, PPO, and A2C), mass
+trajectory generation, and extensive benchmarks must execute on Kaggle rather
+than a local workstation. This is an execution-location requirement, not an
+authorization: the current launcher supports bounded PREFLIGHT/SMOKE/READINESS
+paths only, and EXPERIMENT/FULL_VALIDATION remain fail-closed pending separately
+trusted approval. Do not use local CLI flags or environment variables to bypass
+that release gate. Do not run Kaggle jobs or upload artifacts without an
+independent approved release.
+
 The Kaggle entry point is a source-bound launcher, not the training engine. Training and checkpoint semantics live in `validation/train_torch_mvp1.py` and `farm_sim/`; scientific protocol lives in the preserved preregistration and historical reports. `notebooks/pasture_studies_kaggle.ipynb` offers only `PREFLIGHT`, disposable `SMOKE`, and bounded `READINESS` paths. `EXPERIMENT` and `FULL_VALIDATION` are fail-closed unless a future independently trusted release approval exists. The current release API has no trust root; caller-supplied environment variables, JSON, notebook revision strings, or files cannot authorize these modes.
 
 No new scientific outcome is collected by release preparation or publishing. READINESS is a non-scientific T4x2 pipeline diagnostic only: two DDP updates, 32 diagnostic episodes, checkpoint recovery between process invocations, both GPUs participating, no evaluation, no preregistration seed splits, no pilot/locked outcome access, and no eligibility for speed, learning, or policy-promotion claims. Historical MVP1 failure evidence, reward definitions, acceptance criteria, thresholds, and dependency pins are unchanged. The Kaggle runtime is recorded separately; it is not silently converted into the formal scientific dependency environment.

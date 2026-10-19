@@ -13,13 +13,18 @@ python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
 
-Train five seeded policy checkpoints locally (10,000 episodes total), save them under `artifacts/policies/`, and write the evaluation report:
+Local execution is for development, lightweight tests, and explicit smoke checks only. Do not run full training or mass trajectory generation on a workstation. Full training, trajectory generation, and extensive benchmarks must use the approved Kaggle execution path described in [Kaggle training](docs/kaggle-training.md); experimental modes remain fail-closed unless separately authorized. To run the explicit one-update diagnostic smoke, install the optional training dependencies in a separate environment and use the command below; this is not research training:
 
 ```sh
-.venv/bin/python -m farm_sim.training --output artifacts/policies
+python3 -m venv .venv-smoke
+.venv-smoke/bin/python -m pip install -r requirements-training.txt
+.venv-smoke/bin/python -m validation.train_torch_mvp1 --smoke-update \
+  --algorithm a2c --device cpu --output /tmp/pasture-smoke
 ```
 
-The training command exits unsuccessfully if its predeclared learning or paired-memory counterfactual checks fail. `default-policy` is the last-known-good promoted checkpoint: the seed-11 policy replaces it only after the full suite passes. If a later run completes but fails those checks, its report records the failed criteria and the promoted default checkpoint and sidecar remain unchanged. Start the local server:
+For a lightweight simulator development run, use a short smoke scenario rather than the full 10,000-episode policy-training pipeline.
+
+Start the local server:
 
 ```sh
 .venv/bin/python -m farm_sim.server
@@ -33,17 +38,9 @@ Run the test suite:
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-## Optional Stable-Baselines3 PPO experiment
+## Training and benchmark execution boundary
 
-The simulator can also be exposed as a Gymnasium task without changing its runtime dependencies or transition logic. Install the separate optional stack and run a reproducible one-cow pilot followed by a joint five-cow PPO run; the command evaluates both against seeded random actions and writes models plus a comparison report under `artifacts/sb3-ppo/`:
-
-```sh
-python3 -m venv .venv-rl
-.venv-rl/bin/python -m pip install -r requirements-rl.txt
-.venv-rl/bin/python scripts/train_sb3_ppo.py --seed 11 --timesteps 50000 --evaluation-episodes 20
-```
-
-The one-animal mode controls cow-1 and holds the other four to `walk`; joint mode controls all five with a shared policy and mean per-cow simulator reward. The 72-tick boundary is an artificial Gymnasium truncation, not a biological terminal state. This is an optional research comparison, does not replace the shipped NumPy checkpoint, and must not be interpreted as cattle validation. PettingZoo/TorchRL are not needed for this single-agent/joint-action interface.
+Do not launch the full local `farm_sim.training` pipeline or Stable-Baselines3 PPO training command from this checkout. Full training (including DAgger/PPO/A2C), mass trajectory generation, and extensive benchmarks are Kaggle-only. Local mode is limited to development, lightweight tests, and explicit smoke diagnostics. The Kaggle release workflow also fails closed for experimental/full-validation execution until independently trusted authorization is available; a Kaggle requirement does not itself grant authorization. See [Kaggle training](docs/kaggle-training.md) for the current approved bounded workflow and restrictions.
 
 ## Use the simulation
 
