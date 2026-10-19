@@ -14,12 +14,12 @@ from pathlib import Path
 import re
 from typing import Any
 
-from farm_sim.model import Action, FEATURE_NAMES, Position
+from farm_sim.model import Action, FEATURE_NAMES
 from farm_sim.policy import CategoricalPolicy, HeuristicBaseline
 from farm_sim.simulation import Simulation, make_world, serialize_world
 from farm_sim.torch_training import derive_seed
 from validation.diagnose_navigation_mvp1 import oracle_path
-from validation.preregister_torch_mvp1 import FAMILIES, OUTPUT_PATH, verify_manifest
+from validation.preregister_torch_mvp1 import OUTPUT_PATH, verify_manifest
 
 
 DATA_FILES = ("procedural-worlds.jsonl", "oracle-trajectories.jsonl", "dagger-trajectories.jsonl")
@@ -94,16 +94,20 @@ def generate_bundle(output_dir: str | Path, *, root_seeds: list[int] | None = No
         raise ValueError("dataset generation accepts only frozen preregistered training root seeds")
     world_rows = _training_world_ids(manifest, selected_roots, episodes_per_root)
     heldout = _heldout_seeds(manifest)
-    world_ids = {world_seed for _, _, world_seed in world_rows}
-    if world_ids & heldout:
+    train_world_ids = {world_seed for _, _, world_seed in world_rows}
+    if train_world_ids & heldout:
         raise ValueError("training world seeds overlap a held-out preregistration split")
 
     procedural: list[dict[str, Any]] = []
     oracle: list[dict[str, Any]] = []
     dagger: list[dict[str, Any]] = []
+    world_ids: set[int] = set()
     teacher = HeuristicBaseline()
     for root_seed, episode_index, world_seed in world_rows:
         for scenario, world in _world_families(world_seed):
+            if world.seed in heldout:
+                raise ValueError("derived procedural world seed overlaps a held-out preregistration split")
+            world_ids.add(int(world.seed))
             common = {"schema_version": DATASET_SCHEMA_VERSION, "split": "training",
                       "scenario_family": scenario, "training_root_seed": root_seed,
                       "episode_index": episode_index, "world_seed": int(world.seed)}
@@ -162,7 +166,8 @@ def generate_bundle(output_dir: str | Path, *, root_seeds: list[int] | None = No
     source_hashes = {name: sha_file(Path(__file__).resolve().parents[1] / name) for name in SOURCE_FILES}
     body = {"schema_version": DATASET_SCHEMA_VERSION, "dataset_id": dataset_id,
         "data_version": data_version, "split": "training-only", "training_root_seeds": selected_roots,
-        "world_ids": sorted(world_ids), "heldout_world_ids_sha256": canonical_sha(sorted(heldout)),
+        "training_world_ids": sorted(train_world_ids), "world_ids": sorted(world_ids),
+        "heldout_world_ids_sha256": canonical_sha(sorted(heldout)),
         "preregistration_manifest_sha256": manifest["manifest_sha256"],
         "source_sha256": source_hashes,
         "family_counts": {name: len(rows) for name, rows in rows_by_file.items()},
@@ -199,7 +204,6 @@ def verify_bundle(directory: str | Path, *, verify_sources: bool = True) -> dict
         actual = {name: sha_file(base / name) for name in manifest["source_sha256"]}
         if actual != manifest["source_sha256"]:
             raise ValueError("dataset generator source provenance has changed")
-    prereg_path = root / "preregistration.json"
     # Preregistration is bound by hash rather than bundled, avoiding copying
     # locked seed values into a public training-only dataset.
     if "preregistration_manifest_sha256" not in manifest:

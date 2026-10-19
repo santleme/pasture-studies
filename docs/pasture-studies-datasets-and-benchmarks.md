@@ -1,30 +1,36 @@
 # Pasture Studies datasets and policy benchmarks
 
-This workflow generates an offline, reproducible **training-only** simulator
-corpus and summarizes held-out validation reports. It does not establish
-biological validity. The fixed-corpus performance benchmark is a stale/off-policy
-compute workload; it is not evidence of policy quality.
+This workflow generates offline, reproducible **training-only** artifacts. It
+does not establish biological validity. The fixed-corpus compute workload is
+stale/off-policy data and is not evidence of policy quality.
 
 ## Generate and package a dataset
 
-Use the existing corpus generator. A smoke corpus is deliberately too small to
-package as a dataset or use as acceptance evidence:
+The full PyTorch fixed-corpus workload remains available separately; the dataset
+release command below builds three local artifact families using the frozen
+training seed split. It defaults to one world per training root (use
+`--episodes-per-root` to select a bounded number of preregistered training
+worlds):
 
 ```bash
-python -m validation.benchmark_torch_fixed_corpus generate-corpus \
-  --seed 71001 --output /tmp/pasture-corpus.npz
-python -m validation.package_torch_corpus package \
-  --corpus /tmp/pasture-corpus.npz --output /tmp/pasture-kaggle-dataset \
-  --dataset-id <owner>/<slug> --title "Pasture Studies training corpus" \
-  --license <license-you-have-rights-to-apply> --data-version v1
-python -m validation.package_torch_corpus verify --package /tmp/pasture-kaggle-dataset
+python -m validation.pasture_studies_dataset build \
+  --output /tmp/pasture-kaggle-dataset --data-version v1 \
+  --dataset-id <owner>/<slug> --title "Pasture Studies training data" \
+  --license <license-you-have-rights-to-apply>
+python -m validation.pasture_studies_dataset verify --bundle /tmp/pasture-kaggle-dataset
 ```
 
-Packaging validates corpus hashes, copies only the compressed arrays and their
-sidecar, requires an explicit Kaggle `owner/slug`, title and license, and writes
-a checksummed manifest. The dataset split is training-only; held-out validation,
-pilot, locked-test and reserve worlds are never packaged. Keep each output
-directory empty and review its files before any separate upload step. Kaggle's
+The package contains `procedural-worlds.jsonl`, `oracle-trajectories.jsonl`,
+`dagger-trajectories.jsonl`, Kaggle metadata, and a versioned checksum manifest.
+World snapshots use deterministic `farm_sim.make_world`; route rows use the
+independent deterministic BFS navigation oracle; DAgger-style rows collect
+states visited by a seeded initialized policy and query the existing heuristic
+teacher once. This is a single aggregation pass, not iterative DAgger, and the
+BFS expert is only an oracle for shortest paths, not reward-optimal behavior.
+Packaging requires an explicit Kaggle `owner/slug`, title and license. The split
+is training-only; held-out validation, pilot, locked-test and reserve worlds are
+not packaged. Keep each output directory empty and review its files before any
+separate upload step. Kaggle's
 official [dataset CLI](https://github.com/Kaggle/kaggle-cli/blob/main/docs/datasets.md)
 creates a dataset from a directory and defaults it to private; publication
 requires an explicit `--public`. Version creation uploads directory content as
@@ -32,3 +38,16 @@ a new version. The [metadata reference](https://github.com/Kaggle/kaggle-cli/blo
 requires the dataset id and a license entry. This repository's packaging command
 does not invoke Kaggle, select a license on your behalf, publish, or delete old
 versions.
+
+The publisher wrapper validates the package then prints the exact official CLI
+command by default. Create and version use Kaggle's documented
+`datasets create -p <dir>` and `datasets version -p <dir> -m <notes>` forms:
+
+```bash
+python -m scripts.kaggle_dataset_publish create --directory /tmp/pasture-kaggle-dataset
+python -m scripts.kaggle_dataset_publish version --directory /tmp/pasture-kaggle-dataset --message "v2 data refresh"
+```
+
+Those are local dry-runs; they do not upload. The wrapper intentionally omits
+`--public` and old-version deletion flags. A real upload requires the additional
+`--publish` opt-in, which is outside this task and was not run.
