@@ -330,7 +330,7 @@ def calculate_loss(model, trajectories: Sequence[Trajectory], algorithm: str,
                 # contact reward when nobody is nearby.
                 need = observations_for_reward[..., need_index]
                 if action == Action.HERD_INTERACT:
-                    need *= observations_for_reward[..., availability_index]
+                    need = need * observations_for_reward[..., availability_index]
                 shaped[mask] += state_reward_scale * (need[mask] - 0.5)
             returns_by_trajectory.append(Trajectory(
                 trajectory.observations, trajectory.actions, shaped, trajectory.uniforms,
