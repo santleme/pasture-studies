@@ -468,7 +468,10 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
         config.update({"reward_variant": reward_variant, "state_reward_scale": float(state_reward_scale),
                        "normalize_advantage": bool(normalize_advantage),
                        "entropy_coefficient": float(entropy_coefficient),
-                       "discount_factor": float(discount_factor)})
+                       "discount_factor": float(discount_factor),
+                       "evaluation_episodes": int(eval_count),
+                       "evaluation_seed_derivation": "sha256(root,eval-world,index)",
+                       "paired_training_seed_set": list(EXPLORATORY_BATCH_SEEDS)})
     if resume:
         restored = load_generation(resume if resume != "latest" else run_dir, model=train_model,
                                    optimizer=optimizer, map_location=device,
@@ -772,18 +775,18 @@ def main(argv=None):
         if torch.cuda.device_count() < 1:
             p.error("--exploratory-a2c requires at least one visible CUDA device")
     if args.exploratory_batch:
-        if (args.algorithm != "a2c" or args.device != "cuda" or args.mode != "train"
+        if (args.algorithm != "a2c" or args.device not in {"cpu", "cuda"} or args.mode != "train"
                 or args.episodes not in {278, EXPLORATORY_BATCH_EPISODES}
                 or args.seed != 810001 or args.eval_seeds not in {10, EXPLORATORY_BATCH_EVAL_EPISODES}
                 or args.checkpoint_every != 1 or args.smoke or args.smoke_update or args.readiness_ddp
                 or args.resume is not None or args.max_updates is not None or args.allow_execution_migration):
-            p.error("--exploratory-batch requires its fixed A2C/CUDA/512-episode config; resume is automatic per job")
+            p.error("--exploratory-batch requires fixed A2C/CPU-or-CUDA/512-episode config; resume is automatic per job")
         if not 0 <= args.batch_shard_index < args.batch_shard_count or args.batch_shard_count not in {1, 2}:
             p.error("--exploratory-batch supports one or two valid worker shards")
         torch = require_torch()
-        if not torch.cuda.is_available() or torch.cuda.device_count() < 1:
-            p.error("--exploratory-batch requires at least one visible CUDA device")
-        if args.batch_shard_count == 2 and torch.cuda.device_count() != 1:
+        if args.device == "cuda" and (not torch.cuda.is_available() or torch.cuda.device_count() < 1):
+            p.error("--exploratory-batch requires a visible CUDA device")
+        if args.batch_shard_count == 2 and (args.device != "cuda" or torch.cuda.device_count() != 1):
             p.error("two-shard execution must mask each independent job to exactly one visible CUDA device")
         result = run_exploratory_batch(output=args.output / "exploratory-comparison",
             device=args.device, shard_index=args.batch_shard_index, shard_count=args.batch_shard_count)
