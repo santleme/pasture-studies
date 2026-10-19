@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "protocol_id": "autoresearch-outcome-scale-v1",
+  "status": "exploratory_only",
+  "parent_protocol": "autoresearch-outcome-aware-v1",
+  "motivation": {
+    "evidence": [
+      "Batch 3 outcome-aware scale 0.5 avoided visible-intent shaping but K/L remained high-entropy and nearly eliminated resource-seeking in held-out evaluation.",
+      "The best K/L original return came from herd/rest behavior, while forage remained below 1.3 events per episode and water was zero."
+    ],
+    "change": "Increase only the coefficient on verified post-transition drive improvement from 0.5 to 2.0; retain the same outcome gate, features, scenarios, simulator, and A2C controls.",
+    "selection": "No training reward is used for ranking; evaluate every candidate against all historical and new references on identical unseen worlds with original reward."
+  },
+  "source_control": {
+    "historical_protocols_and_evidence_immutable": true,
+    "formal_preregistration_modified": false,
+    "reserved_or_locked_outcomes_accessed": false,
+    "acceptance_thresholds_changed": false
+  },
+  "training": {
+    "algorithm": "A2C",
+    "episodes_per_model": 512,
+    "seeds": [9484301, 9484302, 9484303],
+    "perception_mode": "path-aware-v2",
+    "resource_profile": "resource-rich-v1",
+    "variants": {
+      "M": {"reward_variant": "outcome_aware", "state_reward_scale": 2.0, "normalize_advantage": false, "entropy_coefficient": 0.0},
+      "N": {"reward_variant": "outcome_aware", "state_reward_scale": 2.0, "normalize_advantage": true, "entropy_coefficient": 0.01}
+    },
+    "evaluation_root_seed": 9487999,
+    "training_job_budget": {"batch_jobs": 6, "cumulative_after": 24, "authorized_additional_max": 24, "remaining_after_batch": 0}
+  },
+  "acceptance": {
+    "inherited_unchanged_from": "autoresearch-world-perception-v1",
+    "shared_new_worlds_for_every_candidate_and_reference": true,
+    "original_reward_required": true,
+    "strictly_exceed_best_reference_for_original_return_forage_and_water": true,
+    "final_hunger_and_thirst_no_worse_than_best_reference": true,
+    "invalid_actions_zero": true,
+    "formal_or_locked_eligibility": false,
+    "biological_validation_claim": false
+  },
+  "limitations": [
+    "The scale increase is an exploratory signal-strength ablation and can still bias policy optimization.",
+    "Only original-simulator held-out outcomes determine acceptance; a failure ends the authorized 24-run budget.",
+    "No biological validity or husbandry claim is supported."
+  ]
+}

@@ -174,6 +174,11 @@ class KaggleReleaseTests(unittest.TestCase):
         with self.assertRaises(release.ReleaseError):
             release.authorize_mode("AUTORESEARCH_BATCH_3", manifest,
                                    config={**config, "training_jobs": 7})
+        self.assertEqual(kaggle_deploy.AUTORESEARCH_BATCH_CONFIGS,
+                         release.AUTORESEARCH_BATCH_CONFIGS)
+        config4 = release.AUTORESEARCH_BATCH_CONFIGS["AUTORESEARCH_BATCH_4"]
+        self.assertEqual(release.authorize_mode("AUTORESEARCH_BATCH_4", manifest, config=config4),
+                         "AUTORESEARCH_BATCH_4")
         bad_comparison = dict(release.EXPLORATORY_COMPARISON_CONFIG_VALUE)
         bad_comparison["training_jobs"] += 1
         with self.assertRaisesRegex(release.ReleaseError, "exact bounded A-D"):

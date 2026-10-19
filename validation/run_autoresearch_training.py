@@ -26,6 +26,7 @@ SEEDS_BY_BATCH = {
     1: (9484101, 9484102, 9484103),
     2: (9484104, 9484105, 9484106),
     3: (9484201, 9484202, 9484203),
+    4: (9484301, 9484302, 9484303),
 }
 VARIANTS_BY_BATCH = {
     1: {
@@ -46,16 +47,23 @@ VARIANTS_BY_BATCH = {
         "L": {"reward_variant": "outcome_aware", "state_reward_scale": 0.5,
               "normalize_advantage": True, "entropy_coefficient": 0.01},
     },
+    4: {
+        "M": {"reward_variant": "outcome_aware", "state_reward_scale": 2.0,
+              "normalize_advantage": False, "entropy_coefficient": 0.0},
+        "N": {"reward_variant": "outcome_aware", "state_reward_scale": 2.0,
+              "normalize_advantage": True, "entropy_coefficient": 0.01},
+    },
 }
 
 
 def batch_specs(batch: int) -> list[dict[str, Any]]:
     if batch not in VARIANTS_BY_BATCH:
-        raise ValueError("only preregistered autoresearch batches 1 through 3 are currently enabled")
+        raise ValueError("only preregistered autoresearch batches 1 through 4 are currently enabled")
     seeds = SEEDS_BY_BATCH[batch]
     return [{"variant": variant, **config, "seed": seed, "episodes": EPISODES,
              "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
-             "protocol": ("autoresearch-outcome-aware-v1" if variant in {"K", "L"}
+             "protocol": ("autoresearch-outcome-scale-v1" if variant in {"M", "N"}
+                          else "autoresearch-outcome-aware-v1" if variant in {"K", "L"}
                           else "autoresearch-world-perception-v1")}
             for variant, config in VARIANTS_BY_BATCH[batch].items() for seed in seeds]
 
@@ -170,7 +178,7 @@ def run_batch(*, batch: int, output: Path, device: str, shard_index: int = 0,
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--batch", type=int, required=True, choices=(1, 2, 3))
+    parser.add_argument("--batch", type=int, required=True, choices=(1, 2, 3, 4))
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", choices=("cpu", "cuda"), required=True)
     parser.add_argument("--shard-index", type=int, default=0)
