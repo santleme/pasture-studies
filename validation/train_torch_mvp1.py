@@ -440,6 +440,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
              "smoke_run": bool(smoke), "exploratory_only": bool(exploratory),
              "formal_eligible": False if exploratory else None,
              "benchmark_eligible": not smoke and not exploratory}
+    if exploratory_variant is not None:
+        state["locked_outcomes_accessed"] = False
     source_root = Path(__file__).resolve().parents[1]
     source_paths = [Path(__file__).resolve(), source_root / "farm_sim" / "torch_training.py",
                     source_root / "farm_sim" / "torch_checkpoint.py", source_root / "requirements-training.txt",
@@ -478,6 +480,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                                    expected_algorithm=algorithm, expected_config=config,
                                    allow_world_size_migration=allow_execution_migration)
         state = restored["state"]
+        if exploratory_variant is not None and state.get("locked_outcomes_accessed") is not False:
+            raise ValueError("exploratory comparison checkpoint is missing its locked-data denial marker")
         # Preserve diagnostic-only lineage through later train/eval invocations.
         # A normal invocation must never promote a smoke checkpoint to a benchmark.
         state["smoke_run"] = bool(state.get("smoke_run", False) or smoke)

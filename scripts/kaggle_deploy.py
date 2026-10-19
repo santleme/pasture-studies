@@ -45,6 +45,8 @@ EXPLORATORY_COMPARISON_CONFIG_VALUE = {
     "task": "exploratory_a2c_variant_comparison", "algorithm": "a2c",
     "variants": ["A", "B", "C", "D"], "episodes_per_variant_seed": 512,
     "seeds": [9483001, 9483002, 9483003], "training_jobs": 12, "evaluation_episodes": 5,
+    "comparison_eval_seed": 9483999, "comparison_episodes_per_family": 3,
+    "comparison_eval_seed": 9483999, "comparison_episodes_per_family": 3,
     "max_training_jobs": 24, "max_devices": 2, "locked_test_access": False,
     "variant_config": {
         "A": {"reward_variant": "original", "state_reward_scale": 0.1,
