@@ -1,8 +1,9 @@
-"""Optional Gymnasium adapter for training against the existing farm simulator.
+"""Optional Gymnasium adapter for the existing five-animal Pasture simulator.
 
-This module keeps Gymnasium out of the simulator's runtime dependency set. A
-single-agent action controls cow-1 while the other cattle walk; joint mode lets
-one PPO policy choose an action for all five cattle each tick.
+This keeps the simulator's transition and reward definitions authoritative. A
+one-animal environment controls the first cow while the other four take REST;
+the five-animal environment exposes a joint MultiDiscrete action and mean reward.
+Install the optional dependencies from ``requirements-rl.txt`` to use it.
 """
 from __future__ import annotations
 
@@ -13,88 +14,93 @@ import numpy as np
 try:
     import gymnasium as gym
     from gymnasium import spaces
-except ImportError as exc:  # pragma: no cover - depends on optional training extra
-    raise ImportError("Gymnasium environments require the optional RL dependencies; install requirements-rl.txt") from exc
+except ImportError as exc:  # pragma: no cover - optional dependency
+    raise ImportError("Gymnasium adapter requires gymnasium; install requirements-rl.txt") from exc
 
-from .model import Action, FEATURE_NAMES, PolicyDecision
-from .simulation import Simulation, make_world
-
-_ACTIONS = tuple(Action)
-_ANIMAL_IDS = tuple(f"cow-{index}" for index in range(1, 6))
+from .model import Action, PolicyDecision
+from .simulation import ANIMAL_COUNT, Simulation, make_world
 
 
-class _WalkPolicy:
-    """Valid policy injected only to satisfy Simulation's required constructor."""
+class _UnusedPolicy:
+    """Simulation requires a policy even though this adapter supplies decisions."""
 
-    def decide(self, features):
-        probabilities = tuple(1.0 if action is Action.WALK else 0.0 for action in _ACTIONS)
-        return PolicyDecision(Action.WALK, probabilities, "gymnasium-fixed-walk")
+    def decide(self, features):  # pragma: no cover - step_with_decisions bypasses it
+        raise AssertionError("Gymnasium adapter must always provide precomputed decisions")
 
 
 class PastureEnv(gym.Env):
-    """Finite-horizon Gymnasium environment backed by the canonical simulator.
+    """Gymnasium environment for one controlled animal or the five-cow joint task.
 
-    ``joint=False`` trains one focused animal (cow-1); ``joint=True`` trains a
-    shared policy on the five animals with a ``MultiDiscrete([6] * 5)`` action.
-    Rewards are unmodified simulator rewards (focused cow or five-cow mean).
-    Reaching the artificial rollout horizon is truncation, not task termination.
+    Args:
+        controlled_animals: ``1`` for a single cow with four REST background cows,
+            or ``5`` for a joint action controlling the complete simulated herd.
+        horizon: Maximum number of committed simulator ticks per episode.
     """
 
     metadata = {"render_modes": []}
 
-    def __init__(self, *, joint: bool = False, horizon: int = 72):
+    def __init__(self, controlled_animals: int = 1, horizon: int = 72):
+        super().__init__()
+        if controlled_animals not in (1, ANIMAL_COUNT):
+            raise ValueError(f"controlled_animals must be 1 or {ANIMAL_COUNT}")
         if horizon <= 0:
             raise ValueError("horizon must be positive")
-        self.joint = bool(joint)
-        self.horizon = int(horizon)
-        self.action_space = (spaces.MultiDiscrete(np.full(5, len(_ACTIONS), dtype=np.int64))
-                             if self.joint else spaces.Discrete(len(_ACTIONS)))
-        width = len(_ANIMAL_IDS) if self.joint else 1
-        self.observation_space = spaces.Box(low=0.0, high=1.0,
-                                            shape=(width * len(FEATURE_NAMES),), dtype=np.float32)
-        self.simulation: Simulation | None = None
-        self.elapsed_steps = 0
+        self.controlled_animals = controlled_animals
+        self.horizon = horizon
+        self.action_space = (spaces.Discrete(len(Action)) if controlled_animals == 1
+                             else spaces.MultiDiscrete([len(Action)] * ANIMAL_COUNT))
+        shape = (20,) if controlled_animals == 1 else (ANIMAL_COUNT, 20)
+        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=shape, dtype=np.float32)
+        self._simulation: Simulation | None = None
+        self._steps = 0
 
-    def _observation(self) -> np.ndarray:
-        assert self.simulation is not None
-        features = dict(self.simulation.decision_features())
-        ids = _ANIMAL_IDS if self.joint else _ANIMAL_IDS[:1]
-        return np.asarray([value for animal_id in ids for value in features[animal_id]], dtype=np.float32)
+    def _observations(self) -> np.ndarray:
+        assert self._simulation is not None
+        rows = self._simulation.decision_features()
+        values = np.asarray([features for _, features in rows[:self.controlled_animals]], dtype=np.float32)
+        return values[0] if self.controlled_animals == 1 else values
 
     def reset(self, *, seed: int | None = None, options: dict[str, Any] | None = None):
         super().reset(seed=seed)
-        del options
-        self.simulation = Simulation(make_world(seed=0 if seed is None else int(seed)), _WalkPolicy())
-        self.elapsed_steps = 0
-        return self._observation(), {"tick": self.simulation.world.tick, "animals": len(_ANIMAL_IDS)}
+        seed = 7 if seed is None else int(seed)
+        self._simulation = Simulation(make_world(seed), _UnusedPolicy())
+        self._steps = 0
+        info = {"seed": seed, "controlled_animal_ids": [a.animal_id for a in self._simulation.world.animals[:self.controlled_animals]]}
+        return self._observations(), info
 
     def step(self, action):
-        if self.simulation is None:
-            raise RuntimeError("reset must be called before step")
-        values = np.asarray(action)
-        expected_shape = (5,) if self.joint else ()
-        if values.shape != expected_shape:
-            raise ValueError(f"action must have shape {expected_shape}")
-        if not np.issubdtype(values.dtype, np.integer):
-            raise ValueError("action values must be integers")
-        if np.any(values < 0) or np.any(values >= len(_ACTIONS)):
-            raise ValueError("action values must be valid Action indices")
-
-        selected = values.astype(np.int64, copy=False).reshape(5) if self.joint else np.full(5, int(values), dtype=np.int64)
-        if not self.joint:
-            selected[1:] = tuple(_ACTIONS).index(Action.WALK)
-        features = dict(self.simulation.decision_features())
+        if self._simulation is None:
+            raise RuntimeError("call reset() before step()")
+        # Validate the complete action before constructing or committing a tick.
+        if not self.action_space.contains(action):
+            raise ValueError("action is outside the environment action space")
+        indices = [int(action)] if self.controlled_animals == 1 else [int(a) for a in action]
+        rows = self._simulation.decision_features()
         decisions = {}
-        for animal_id, action_index in zip(_ANIMAL_IDS, selected):
-            chosen = _ACTIONS[int(action_index)]
-            probabilities = tuple(1.0 if candidate is chosen else 0.0 for candidate in _ACTIONS)
-            decisions[animal_id] = (PolicyDecision(chosen, probabilities, "gymnasium-action"), features[animal_id])
-        result = self.simulation.step_with_decisions(decisions)
-        self.elapsed_steps += 1
-        rewards = {animal.animal_id: float(animal.last_reward) for animal in result.world.animals}
-        reward = rewards["cow-1"] if not self.joint else float(np.mean(tuple(rewards.values())))
-        truncated = self.elapsed_steps >= self.horizon
-        return self._observation(), reward, False, truncated, {
-            "tick": result.world.tick, "individual_rewards": rewards,
-            "actions": {animal_id: _ACTIONS[int(index)].value for animal_id, index in zip(_ANIMAL_IDS, selected)},
+        action_values = []
+        rest_index = tuple(Action).index(Action.REST)
+        for animal_index, (animal_id, features) in enumerate(rows):
+            action_index = indices[animal_index] if animal_index < self.controlled_animals else rest_index
+            selected = tuple(Action)[action_index]
+            probabilities = tuple(1.0 if candidate == selected else 0.0 for candidate in Action)
+            decisions[animal_id] = (PolicyDecision(selected, probabilities, "gymnasium-action"), features)
+            if animal_index < self.controlled_animals:
+                action_values.append(selected.value)
+
+        result = self._simulation.step_with_decisions(decisions)
+        rewards = [animal.last_reward for animal in result.world.animals[:self.controlled_animals]]
+        reward = float(rewards[0] if self.controlled_animals == 1 else np.mean(rewards))
+        self._steps += 1
+        terminated = False
+        truncated = self._steps >= self.horizon
+        info = {
+            "tick": result.world.tick,
+            "individual_rewards": rewards,
+            "actions": action_values,
+            "controlled_animal_ids": [a.animal_id for a in result.world.animals[:self.controlled_animals]],
         }
+        return self._observations(), reward, terminated, truncated, info
+
+    def close(self):
+        self._simulation = None
+
