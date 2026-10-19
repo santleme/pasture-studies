@@ -151,3 +151,49 @@ python3 -m farm_sim.server \
 ```
 
 This real training run consumes Kaggle GPU quota. Reward trajectories, action distributions, and rollout traces are descriptive only—not evidence of learning efficacy, cognition, acceleration, or biological validity. No Kaggle execution is initiated by documentation preparation itself.
+
+## Exploratory A2C comparison (A–D, one 12-job batch)
+
+`EXPLORATORY_COMPARISON` is separate from the formal protocol. It trains exactly 12 A2C policies from scratch: A (original reward/objective), B (original reward with normalized advantages and entropy coefficient 0.01), C (state-aware exploratory reward with the original objective), and D (state-aware reward plus the B objective); each condition uses the same three fixed training seeds and 512 complete 72-tick episodes per policy. The optional reward shape is scale 0.1, only used by C/D; its A2C returns remain undiscounted (`discount_factor=1.0`). Evaluations use one fixed, independent evaluation root seed and the original simulator reward on common synthetic scenario worlds, and compare every checkpoint with same-seed untrained and heuristic baselines. The comparison reports rewards, resource events, final toy drives, action frequencies/entropy, invalid actions, and first-decision memory/perception probes. A descriptive ranking and SVG are not acceptance or biological claims.
+
+Before those 12 jobs, the notebook performs a bounded no-optimizer/no-checkpoint calibration on CPU, each T4, and two concurrent one-batch T4 workers. Only one training schedule is selected: two independent GPU shards if their measured throughput exceeds the best single-device throughput, otherwise one fastest device (including CPU if it actually wins). This is a performance diagnostic, not a learning run or GPU speedup claim. The current execution must run only one 12-job suite. The 24-job ceiling reserves at most one additional 12-job exploratory iteration after reviewing the complete first-batch evidence; it is not a duplicate single-GPU/dual-GPU comparison. No model is selected using formal or locked data; no preregistration thresholds are changed.
+
+After pushing the source commit to `origin`, deploy and execute using the existing CLI workflow:
+
+```bash
+python3 scripts/kaggle_deploy.py preflight
+python3 scripts/kaggle_deploy.py prepare-exploratory-comparison \
+  --path /tmp/pasture-kaggle-a2c-comparison \
+  --owner pascalcoimbra \
+  --runtime-profile validation/kaggle-exploratory/kaggle-v11-runtime-profile.json
+python3 scripts/kaggle_deploy.py execute \
+  --path /tmp/pasture-kaggle-a2c-comparison \
+  --mode EXPLORATORY_COMPARISON --confirm-execution --confirm-gpu
+```
+
+Record the exact numeric notebook version reported by the push, then monitor and retrieve that exact version (do not use `latest`):
+
+```bash
+python3 scripts/kaggle_deploy.py status pascalcoimbra/pasture-studies/<version>
+python3 scripts/kaggle_deploy.py logs pascalcoimbra/pasture-studies/<version>
+python3 scripts/kaggle_deploy.py output pascalcoimbra/pasture-studies/<version> \
+  --path /tmp/pasture-kaggle-a2c-output
+```
+
+The notebook artifact manifest binds the source commit, notebook hash, runtime, calibration, all 12 training jobs, full checkpoints, local `.npz`/sidecar inference exports, raw metric curves, and common-world JSON/SVG evaluation. Verify the downloaded archive and its manifest before loading any policy:
+
+```bash
+python3 scripts/kaggle_deploy.py verify \
+  /tmp/pasture-kaggle-a2c-output/pasture-release-<run-id>/artifact-manifest.json \
+  --artifacts /tmp/pasture-kaggle-a2c-output/pasture-release-<run-id>
+```
+
+The exported `torch-a2c-seed-<seed>.npz` plus same-basename `.json` file can be loaded by the local simulation without promotion or replacing the default policy:
+
+```bash
+python3 -m farm_sim.server --checkpoint \
+  /tmp/pasture-kaggle-a2c-output/pasture-release-<run-id>/exploratory-comparison/training-suite/exploratory-comparison/variant-<A-D>/seed-<seed>/a2c/torch-a2c-seed-<seed>.npz
+# Open http://127.0.0.1:8000 and inspect the five simulated animals.
+```
+
+If a run is interrupted, the trainer commits a checkpoint generation after each update and resumes from the per-job `LATEST` pointer when the same output directory is rerun. Kaggle output retrieval and the run manifest must be checked before attempting recovery. Count every started policy attempt against the 24-job ceiling. If the failed kernel does not expose its `/kaggle/working` checkpoint outputs, do not claim cross-session resume; report the external limitation and avoid re-running the entire suite if it would exceed the cap.
