@@ -313,6 +313,10 @@ def _rng_restore(torch, state):
 def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                     device: str, resume: str | None, metrics_path: Path,
                     checkpoint_every: int, smoke: bool = False, max_updates: int | None = None, eval_count: int = 10, eval_only: bool = False, allow_execution_migration: bool = False) -> dict:
+    require_kaggle_for_full_workload(
+        f"{algorithm} training/evaluation",
+        smoke=smoke or (eval_only and episodes <= 32 and eval_count <= 10) or (not eval_only and episodes <= 32),
+    )
     torch = require_torch()
     device = resolve_device(device)
     set_deterministic(seed, device)

@@ -576,14 +576,15 @@ def main():
     parser.add_argument("--phase",choices=("train","evaluate","locked","all"),default="all")
     parser.add_argument("--family-limit",type=int,default=None,help="engineering smoke only; not valid for acceptance")
     parser.add_argument("--world-limit",type=int,default=None,help="engineering smoke only; not valid for acceptance")
-    args=parser.parse_args();out=Path(args.output).resolve();out.mkdir(parents=True,exist_ok=True)
+    args=parser.parse_args()
     smoke = args.family_limit is not None and args.world_limit is not None
-    if smoke and (args.family_limit > 1 or args.world_limit > 1):
+    if smoke and (args.family_limit <= 0 or args.world_limit <= 0 or args.family_limit > 1 or args.world_limit > 1):
         parser.error("local validation smoke is limited to one family and one world")
     try:
         require_kaggle_for_full_workload("MVP1 training/validation", smoke=smoke and args.phase in ("train", "all"))
     except RuntimeError as exc:
         parser.error(str(exc))
+    out=Path(args.output).resolve();out.mkdir(parents=True,exist_ok=True)
     manifest=read_manifest();seed_ids=manifest["seed_protocol"]["training_checkpoint_seed_ids"]
     trainworlds=manifest["seed_protocol"]["encoder_training_world_seeds"]
     train_results={}; selected={}; initials={}; hashes={}

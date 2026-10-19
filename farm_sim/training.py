@@ -58,6 +58,7 @@ def task_cases() -> tuple[tuple[np.ndarray, int, str], ...]:
 
 def train_policy(seed: int, episodes: int = EPISODES_PER_RUN) -> tuple[CategoricalPolicy, CategoricalPolicy, list[float]]:
     """Train one independently seeded policy with episodic, batched REINFORCE."""
+    require_kaggle_for_full_workload("REINFORCE policy training", smoke=episodes <= 40)
     if episodes <= 0 or episodes % 4:
         raise ValueError("episodes must be a positive multiple of four for balanced sampling")
     policy = CategoricalPolicy.initialize(seed)

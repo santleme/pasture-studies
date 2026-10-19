@@ -95,6 +95,10 @@ def generate_bundle(output_dir: str | Path, *, root_seeds: list[int] | None = No
     selected_roots = sorted(set(root_seeds if root_seeds is not None else allowed_roots))
     if not selected_roots or not set(selected_roots).issubset(allowed_roots):
         raise ValueError("dataset generation accepts only frozen preregistered training root seeds")
+    require_kaggle_for_full_workload(
+        "DAgger trajectory generation",
+        smoke=len(selected_roots) == 1 and episodes_per_root == 1,
+    )
     world_rows = _training_world_ids(manifest, selected_roots, episodes_per_root)
     heldout = _heldout_seeds(manifest)
     train_world_ids = {world_seed for _, _, world_seed in world_rows}
