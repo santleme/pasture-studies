@@ -38,6 +38,15 @@ class KaggleDeployTests(unittest.TestCase):
             with self.subTest(mode=mode), self.assertRaises(deploy.DeploymentError):
                 deploy.validate_mode(mode)
 
+    def test_exploratory_notebook_reads_metrics_from_trainer_output_root(self):
+        notebook = json.loads(deploy.NOTEBOOK.read_text())
+        code = "\n".join(
+            "".join(cell.get("source", [])) for cell in notebook["cells"]
+            if cell.get("cell_type") == "code"
+        )
+        self.assertIn('metrics_path = exploratory_root / "exploratory-only" / "metrics.jsonl"', code)
+        self.assertNotIn('metrics_path = learner_dir / "metrics.jsonl"', code)
+
     def test_metadata_uses_private_t4x2_schema(self):
         metadata = deploy.metadata_for("sample_user", gpu=True)
         self.assertEqual(metadata["id"], "sample_user/pasture-studies")
