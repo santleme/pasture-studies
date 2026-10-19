@@ -33,6 +33,23 @@ READINESS_BATCH_EPISODES = 16
 EXPLORATORY_A2C_SEED = 9482817
 EXPLORATORY_A2C_EPISODES = 256
 EXPLORATORY_A2C_EVAL_EPISODES = 5
+EXPLORATORY_BATCH_EPISODES = 512
+EXPLORATORY_BATCH_EVAL_EPISODES = 5
+EXPLORATORY_BATCH_SEEDS = (9483001, 9483002, 9483003)
+EXPLORATORY_BATCH_MAX_JOBS = 24
+EXPLORATORY_BATCH_VARIANTS = {
+    "A": {"reward_variant": "original", "normalize_advantage": False, "entropy_coefficient": 0.0},
+    "B": {"reward_variant": "original", "normalize_advantage": True, "entropy_coefficient": 0.01},
+    "C": {"reward_variant": "state_aware", "normalize_advantage": False, "entropy_coefficient": 0.0},
+    "D": {"reward_variant": "state_aware", "normalize_advantage": True, "entropy_coefficient": 0.01},
+}
+
+
+def exploratory_batch_specs() -> list[dict]:
+    """Return the fixed, paired nonformal 4-variant x 3-seed workload."""
+    return [{"variant": variant, **EXPLORATORY_BATCH_VARIANTS[variant], "seed": seed,
+             "episodes": EXPLORATORY_BATCH_EPISODES}
+            for variant in EXPLORATORY_BATCH_VARIANTS for seed in EXPLORATORY_BATCH_SEEDS]
 
 
 def _sha(path: Path) -> str:
@@ -329,7 +346,10 @@ def _rng_restore(torch, state):
 
 def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                     device: str, resume: str | None, metrics_path: Path,
-                    checkpoint_every: int, smoke: bool = False, max_updates: int | None = None, eval_count: int = 10, eval_only: bool = False, allow_execution_migration: bool = False, exploratory: bool = False) -> dict:
+                    checkpoint_every: int, smoke: bool = False, max_updates: int | None = None, eval_count: int = 10,
+                    eval_only: bool = False, allow_execution_migration: bool = False, exploratory: bool = False,
+                    exploratory_variant: str | None = None, reward_variant: str = "original",
+                    normalize_advantage: bool = False, entropy_coefficient: float = 0.0) -> dict:
     torch = require_torch()
     device = resolve_device(device)
     set_deterministic(seed, device)
@@ -371,14 +391,16 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                                 "action_uniform_derivation": "sha256(root,action-uniform,world-seed,episode,tick,animal-index)"},
               "torch_version": torch.__version__, "optimizer": "Adam",
               "reinforce_baseline": "prior_completed_batch_return_to_go_mean",
-              "a2c_targets": "monte_carlo_no_bootstrap_no_gae", "entropy_bonus": 0.0,
+              "a2c_targets": "monte_carlo_no_bootstrap_no_gae", "entropy_bonus": float(entropy_coefficient),
+              "reward_variant": reward_variant, "normalize_advantage": bool(normalize_advantage),
               "episodes": int(episodes), "rollout_ticks": ROLLOUT_TICKS, "batch_episodes": BATCH_EPISODES,
               "lr": LEARNING_RATE, "grad_clip_norm": GRAD_CLIP_NORM,
               "feature_schema": "cattle-observation-v1", "feature_names": list(FEATURE_NAMES),
               "actions": [x.value for x in ACTIONS], "dtype": "float32", "amp": False, "tf32": False,
               "world_size": world_size}
     if exploratory:
-        config.update({"protocol": "exploratory-a2c-v1", "exploratory_only": True,
+        config.update({"protocol": "exploratory-comparison-v1" if exploratory_variant else "exploratory-a2c-v1",
+                       "exploratory_variant": exploratory_variant, "exploratory_only": True,
                        "formal_eligible": False, "locked_outcomes_accessed": False})
     if resume:
         restored = load_generation(resume if resume != "latest" else run_dir, model=train_model,
@@ -407,18 +429,29 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
             raise ValueError("DDP tail must shard equally across ranks")
         episode_indices = shard_episode_indices(start_episode, batch_size, world_size, rank)
         episode_specs = [(derive_seed(seed, "train-world", ep_index), ep_index) for ep_index in episode_indices]
+        batch_started = time.perf_counter()
+        stage_started = time.perf_counter()
         trajectories = collect_episodes_batch(train_model, episode_specs, root_seed=seed)
+        rollout_seconds = time.perf_counter() - stage_started
         optimizer.zero_grad(set_to_none=True)
+        stage_started = time.perf_counter()
         loss, stats = calculate_loss(train_model, trajectories, algorithm,
-            previous_return_sum=state["baseline_return_sum"], previous_return_count=state["baseline_return_count"])
+            previous_return_sum=state["baseline_return_sum"], previous_return_count=state["baseline_return_count"],
+            reward_variant=reward_variant, normalize_advantage=normalize_advantage,
+            entropy_coefficient=entropy_coefficient)
+        forward_loss_seconds = time.perf_counter() - stage_started
         assert_finite_training_state(loss, model)
+        stage_started = time.perf_counter()
         loss.backward()
         assert_finite_training_state(loss, model, gradients=True)
         grad_norm = float(torch.nn.utils.clip_grad_norm_(model.parameters(), GRAD_CLIP_NORM).detach().cpu())
         if not np.isfinite(grad_norm):
             raise FloatingPointError("non-finite gradient norm; refusing optimizer/checkpoint update")
+        backward_seconds = time.perf_counter() - stage_started
+        stage_started = time.perf_counter()
         optimizer.step()
         assert_finite_training_state(loss.detach(), model)
+        optimizer_seconds = time.perf_counter() - stage_started
         returns = np.concatenate([x.returns_to_go().reshape(-1) for x in trajectories])
         # With equal per-rank episodes, DDP all-reduce mean is the global sample mean.
         batch_return_sum = float(returns.sum())
@@ -465,15 +498,26 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                "execution_migration": state.get("execution_migration"),
                "exploratory_only": bool(exploratory), "formal_eligible": False if exploratory else None,
                "benchmark_eligible": not state.get("smoke_run", False) and not exploratory and state.get("execution_migration") is None,
-               "timing": {"elapsed_seconds": None,
+               "exploratory_variant": exploratory_variant,
+               "timing": {"rollout_seconds": rollout_seconds,
+                          "forward_loss_seconds": forward_loss_seconds,
+                          "backward_gradient_seconds": backward_seconds,
+                          "optimizer_seconds": optimizer_seconds,
+                          "checkpoint_io_seconds": 0.0,
+                          "batch_wall_seconds": None,
                           "execution_migration": state.get("execution_migration"),
                           "exploratory_only": bool(exploratory),
                           "benchmark_eligible": not state.get("smoke_run", False) and not exploratory and state.get("execution_migration") is None}}
         if rank == 0:
-            _metrics_write(metrics_path, row)
             if state["update"] % checkpoint_every == 0 or state["episode_cursor"] >= episodes:
+                checkpoint_started = time.perf_counter()
                 save_generation(run_dir, model=model, optimizer=optimizer, state=state,
                                 config=config, algorithm=algorithm, rank=rank)
+                row["timing"]["checkpoint_io_seconds"] = time.perf_counter() - checkpoint_started
+            row["timing"]["batch_wall_seconds"] = time.perf_counter() - batch_started
+            row["elapsed_seconds"] = row["timing"]["batch_wall_seconds"]
+            row["timing"]["elapsed_seconds"] = row["timing"]["batch_wall_seconds"]
+            _metrics_write(metrics_path, row)
         if distributed:
             torch.distributed.barrier()
         start_episode = int(state["episode_cursor"])
@@ -540,6 +584,50 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
     return {"rank": rank, "updates": state["update"]}
 
 
+def run_exploratory_batch(*, output: Path, device: str, shard_index: int = 0,
+                          shard_count: int = 1) -> dict:
+    """Run one shard of the immutable 12-job exploratory comparison suite.
+
+    The notebook uses one shard for the single-GPU baseline and two independent
+    shards, each masked to one T4, for its bounded dual-GPU calibration pass.
+    """
+    specs = exploratory_batch_specs()
+    if len(specs) > EXPLORATORY_BATCH_MAX_JOBS:
+        raise ValueError("exploratory comparison exceeds the 24-job safety limit")
+    if device not in {"cpu", "cuda"}:
+        raise ValueError("exploratory comparison requires an explicit cpu or cuda device")
+    if shard_count not in {1, 2} or not 0 <= shard_index < shard_count:
+        raise ValueError("exploratory comparison supports one or two valid worker shards")
+    if int(os.environ.get("WORLD_SIZE", "1")) != 1:
+        raise ValueError("exploratory comparison uses independent single-process jobs, not DDP")
+    selected = specs[shard_index::shard_count]
+    results = []
+    for spec in selected:
+        run_root = output / f"variant-{spec['variant']}" / f"seed-{spec['seed']}"
+        checkpoint = run_root / "a2c"
+        result = train_algorithm(
+            "a2c", seed=spec["seed"], episodes=EXPLORATORY_BATCH_EPISODES,
+            output=run_root, device=device,
+            resume=str(checkpoint) if (checkpoint / "LATEST").is_file() else None,
+            metrics_path=run_root / "metrics.jsonl", checkpoint_every=1,
+            eval_count=EXPLORATORY_BATCH_EVAL_EPISODES, exploratory=True,
+            exploratory_variant=spec["variant"], reward_variant=spec["reward_variant"],
+            normalize_advantage=spec["normalize_advantage"],
+            entropy_coefficient=spec["entropy_coefficient"])
+        results.append({**spec, **result, "run_root": str(run_root)})
+    summary = {"schema_version": 1, "protocol": "exploratory-comparison-v1",
+               "exploratory_only": True, "formal_eligible": False,
+               "locked_outcomes_accessed": False, "device": device,
+               "planned_jobs": len(specs), "max_jobs": EXPLORATORY_BATCH_MAX_JOBS,
+               "shard_index": shard_index, "shard_count": shard_count,
+               "jobs": results}
+    output.mkdir(parents=True, exist_ok=True)
+    summary_path = output / f"batch-shard-{shard_index}-of-{shard_count}.json"
+    summary_path.write_text(json.dumps(summary, sort_keys=True, indent=2) + "\n")
+    summary["summary_path"] = str(summary_path)
+    return summary
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--smoke", action="store_true", help="two-update CPU smoke run with export/eval")
@@ -549,6 +637,12 @@ def main(argv=None):
                    help="bounded 2-rank CUDA readiness test (32 episodes, 2 updates), no evaluation/promotion")
     p.add_argument("--exploratory-a2c", action="store_true",
                    help="separate, fixed-budget nonformal A2C learning run (256 episodes, CUDA, 5 exploratory rollouts)")
+    p.add_argument("--exploratory-batch", action="store_true",
+                   help="fixed A-D x 3-seed nonformal comparison (512 episodes per job); separate from --exploratory-a2c")
+    p.add_argument("--batch-shard-index", type=int, default=0,
+                   help=argparse.SUPPRESS)
+    p.add_argument("--batch-shard-count", type=int, default=1,
+                   help=argparse.SUPPRESS)
     p.add_argument("--algorithm", choices=("reinforce", "a2c", "both"), default="both")
     p.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     p.add_argument("--seed", type=int, default=810001)
@@ -567,6 +661,8 @@ def main(argv=None):
         p.error("--episodes and --checkpoint-every must be positive")
     if args.smoke and args.smoke_update:
         p.error("--smoke and --smoke-update are mutually exclusive")
+    if args.exploratory_a2c and args.exploratory_batch:
+        p.error("--exploratory-a2c and --exploratory-batch are separate fixed protocols")
     if args.exploratory_a2c:
         if (args.algorithm != "a2c" or args.device != "cuda" or args.mode != "train"
                 or args.seed != EXPLORATORY_A2C_SEED or args.episodes != EXPLORATORY_A2C_EPISODES
@@ -579,6 +675,26 @@ def main(argv=None):
             p.error("--exploratory-a2c requires CUDA")
         if torch.cuda.device_count() < 1:
             p.error("--exploratory-a2c requires at least one visible CUDA device")
+    if args.exploratory_batch:
+        if (args.algorithm != "a2c" or args.device != "cuda" or args.mode != "train"
+                or args.episodes not in {278, EXPLORATORY_BATCH_EPISODES}
+                or args.seed != 810001 or args.eval_seeds not in {10, EXPLORATORY_BATCH_EVAL_EPISODES}
+                or args.checkpoint_every != 1 or args.smoke or args.smoke_update or args.readiness_ddp
+                or args.resume is not None or args.max_updates is not None or args.allow_execution_migration):
+            p.error("--exploratory-batch requires its fixed A2C/CUDA/512-episode config; resume is automatic per job")
+        if not 0 <= args.batch_shard_index < args.batch_shard_count or args.batch_shard_count not in {1, 2}:
+            p.error("--exploratory-batch supports one or two valid worker shards")
+        torch = require_torch()
+        if not torch.cuda.is_available() or torch.cuda.device_count() < 1:
+            p.error("--exploratory-batch requires at least one visible CUDA device")
+        if args.batch_shard_count == 2 and torch.cuda.device_count() != 1:
+            p.error("two-shard execution must mask each independent job to exactly one visible CUDA device")
+        result = run_exploratory_batch(output=args.output / "exploratory-comparison",
+            device=args.device, shard_index=args.batch_shard_index, shard_count=args.batch_shard_count)
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return
+    if (args.batch_shard_index != 0 or args.batch_shard_count != 1):
+        p.error("batch shard options require --exploratory-batch")
     if args.readiness_ddp:
         if args.smoke or args.smoke_update or args.algorithm == "both":
             p.error("--readiness-ddp requires one algorithm and cannot combine with smoke modes")

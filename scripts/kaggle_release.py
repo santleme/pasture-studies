@@ -44,6 +44,13 @@ EXPLORATORY_CONFIG_VALUE = {
     "device_count": 1, "locked_test_access": False, "formal_eligible": False,
     "benchmark_eligible": False, "checkpoint_promotion": False,
 }
+EXPLORATORY_COMPARISON_CONFIG_VALUE = {
+    "task": "exploratory_a2c_variant_comparison", "algorithm": "a2c",
+    "variants": ["A", "B", "C", "D"], "episodes_per_variant_seed": 512,
+    "seeds": [9483001, 9483002, 9483003], "training_jobs": 24,
+    "max_training_jobs": 24, "max_devices": 2, "locked_test_access": False,
+    "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
+}
 READINESS_DIAGNOSTIC_TASKS = frozenset({"checkpoint_recovery", "t4x2_path_smoke"})
 READINESS_CONFIG_KEYS = frozenset({
     "task", "max_updates", "max_episodes", "max_devices", "locked_test_access",
@@ -315,6 +322,10 @@ def authorize_mode(mode: str, manifest: dict[str, Any], approval: Any = None, *,
         if config != EXPLORATORY_CONFIG_VALUE or not isinstance(manifest, dict):
             raise ReleaseError("EXPLORATORY requires the exact fixed A2C-only nonformal config")
         return "EXPLORATORY"
+    if normalized == "EXPLORATORY_COMPARISON":
+        if config != EXPLORATORY_COMPARISON_CONFIG_VALUE or not isinstance(manifest, dict):
+            raise ReleaseError("EXPLORATORY_COMPARISON requires the exact bounded A-D nonformal config")
+        return normalized
     if normalized in {"EXPERIMENT", "FULL_VALIDATION"}:
         if config is not None:
             raise ReleaseError("Experimental execution does not accept an unreviewed runtime config")
@@ -373,7 +384,7 @@ def main(argv: list[str] | None = None) -> int:
     verify.add_argument("--staged-notebook", type=Path,
                         help="Exact staged notebook; otherwise the recorded staged path is used")
     gate = commands.add_parser("gate", help="Check mode gate; experimental modes remain denied without trusted signature")
-    gate.add_argument("mode", choices=("PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPERIMENT", "FULL_VALIDATION"))
+    gate.add_argument("mode", choices=("PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPERIMENT", "FULL_VALIDATION"))
     gate.add_argument("manifest", type=Path)
     gate.add_argument("--approval", type=Path, help="Separate approval artifact; not trusted without pinned verifier")
     gate.add_argument("--config", type=Path, help="Exact bounded config required for READINESS or EXPLORATORY mode")
