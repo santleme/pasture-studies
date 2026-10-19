@@ -11,12 +11,13 @@ from validation import compare_exploratory_checkpoints as compare
 
 class ExploratoryCheckpointComparisonTests(unittest.TestCase):
     def _manifest(self, root: Path, *, episodes: int = 512, formal: bool = False,
-                  condition_names=None):
+                  condition_names=None, followup_seeds=(404, 505, 606)):
         conditions = {}
         for name in condition_names or compare.CONDITIONS[:4]:
             reward, scale, normalize, entropy = compare.EXPECTED_TRAINING_VARIANTS[name]
             rows = []
-            for seed in (101, 202, 303):
+            seeds = followup_seeds if name in {"E", "F"} else (101, 202, 303)
+            for seed in seeds:
                 generation = root / name / str(seed) / "generation-00000032"
                 generation.mkdir(parents=True)
                 (generation / "manifest.json").write_text(json.dumps({
@@ -60,6 +61,7 @@ class ExploratoryCheckpointComparisonTests(unittest.TestCase):
                         "formal_eligible": False, "locked_outcomes_accessed": False}}):
                 groups, _ = compare.load_checkpoint_manifest(manifest)
             self.assertEqual(tuple(groups), compare.CONDITIONS)
+            self.assertEqual(tuple(row["seed"] for row in groups["E"]), (404, 505, 606))
 
     def test_manifest_rejects_formal_locked_and_non_512_checkpoint_inputs(self):
         with tempfile.TemporaryDirectory() as temp:
