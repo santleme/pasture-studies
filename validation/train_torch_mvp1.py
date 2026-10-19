@@ -59,6 +59,13 @@ def exploratory_batch_specs() -> list[dict]:
             for variant in EXPLORATORY_BATCH_VARIANTS for seed in EXPLORATORY_BATCH_SEEDS]
 
 
+def _mark_exploratory_checkpoint_state(state: dict, *, exploratory_variant: str | None) -> dict:
+    """Bind the explicit locked-data denial marker only to A-D checkpoint state."""
+    if exploratory_variant is not None:
+        state["locked_outcomes_accessed"] = False
+    return state
+
+
 def profile_exploratory_step(*, device: str, output: Path, repeats: int = 2) -> dict:
     """Measure one real 16-episode rollout/forward/backward batch; never step/save."""
     torch = require_torch()
@@ -440,8 +447,7 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
              "smoke_run": bool(smoke), "exploratory_only": bool(exploratory),
              "formal_eligible": False if exploratory else None,
              "benchmark_eligible": not smoke and not exploratory}
-    if exploratory_variant is not None:
-        state["locked_outcomes_accessed"] = False
+    _mark_exploratory_checkpoint_state(state, exploratory_variant=exploratory_variant)
     source_root = Path(__file__).resolve().parents[1]
     source_paths = [Path(__file__).resolve(), source_root / "farm_sim" / "torch_training.py",
                     source_root / "farm_sim" / "torch_checkpoint.py", source_root / "requirements-training.txt",

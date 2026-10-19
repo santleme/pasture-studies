@@ -41,6 +41,18 @@ class ExploratoryBatchCliTests(unittest.TestCase):
             self.assertEqual(config["evaluation_episodes"], trainer.EXPLORATORY_BATCH_EVAL_EPISODES)
             self.assertEqual(config["training_jobs"], 12)
             self.assertEqual(config["max_training_jobs"], 24)
+            self.assertEqual(config["comparison_eval_seed"], 9483999)
+            self.assertEqual(config["comparison_episodes_per_family"], 3)
+
+    def test_locked_data_denial_marker_is_only_added_to_variant_checkpoint_state(self):
+        ordinary = {"update": 1}
+        self.assertIs(trainer._mark_exploratory_checkpoint_state(
+            ordinary, exploratory_variant=None), ordinary)
+        self.assertNotIn("locked_outcomes_accessed", ordinary)
+        variant = {"update": 1}
+        self.assertIs(trainer._mark_exploratory_checkpoint_state(
+            variant, exploratory_variant="A"), variant)
+        self.assertIs(variant["locked_outcomes_accessed"], False)
 
     def test_single_run_and_batch_flags_cannot_be_combined(self):
         with patch("sys.argv", ["train_torch_mvp1", "--exploratory-a2c", "--exploratory-batch"]):
