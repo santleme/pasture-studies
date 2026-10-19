@@ -84,6 +84,57 @@ class ExploratoryCheckpointComparisonTests(unittest.TestCase):
         self.assertIn("descriptive only", plot)
         self.assertIn("n=3", plot)
 
+    def test_compare_evaluates_every_checkpoint_against_same_schedule_and_writes_rankings(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            manifest = root / "input.json"
+            manifest.write_text("{}")
+            groups = {}
+            for index, condition in enumerate(compare.CONDITIONS):
+                groups[condition] = []
+                for seed in (101, 202, 303):
+                    generation = root / condition / str(seed) / "generation-00000032"
+                    generation.mkdir(parents=True)
+                    (generation / "manifest.json").write_text(json.dumps({"config": {"episodes": 512}}))
+                    groups[condition].append({"generation": generation, "algorithm": "a2c", "seed": seed})
+
+            def fake_evaluate(generation, *, algorithm, seed, eval_seed, output,
+                              episodes_per_family, device):
+                condition = Path(generation).parents[1].name
+                mean_reward = float(compare.CONDITIONS.index(condition))
+                runs = []
+                for policy, reward in (("trained", mean_reward),
+                                       ("untrained_same_seed", -1.0),
+                                       ("heuristic_baseline", -2.0)):
+                    runs.append({"policy": policy, "total_reward": reward,
+                                 "mean_policy_entropy_nats": .4,
+                                 "entropy_of_mean_action_distribution_nats": .6,
+                                 "action_frequencies": {"rest": 1.0},
+                                 "final_drive_means": {"hunger": .2},
+                                 "resource_state": {"forage_available": 1, "forage_total": 2},
+                                 "reward_components": {"forage_success": {"count": 2}},
+                                 "invalid_actions": 0})
+                Path(output).parent.mkdir(parents=True, exist_ok=True)
+                Path(output).write_text(json.dumps({
+                    "split_seed": {"evaluation_root_seed": eval_seed},
+                    "generation_manifest_sha256": "a" * 64,
+                    "runs": runs,
+                    "cognition_influence": {"contrasts": {}},
+                }))
+
+            with patch.object(compare, "load_checkpoint_manifest", return_value=(groups, manifest)), \
+                    patch.object(compare, "evaluation_world_schedule", return_value=[("starter", 5001), ("wide", 5002)]), \
+                    patch.object(compare, "evaluate", side_effect=fake_evaluate) as evaluate_mock:
+                result = compare.compare(manifest, eval_seed=999, output=root / "out", episodes_per_family=1)
+
+            self.assertEqual(evaluate_mock.call_count, 12)
+            report = json.loads(Path(result["output"]).read_text())
+            self.assertEqual(report["ranking"][0]["condition"], "D")
+            self.assertEqual(report["conditions"]["A"]["policies"]["trained"]["episodes"], 3)
+            self.assertEqual(report["conditions"]["A"]["common_worlds"],
+                             [{"scenario": "starter", "seed": 5001}, {"scenario": "wide", "seed": 5002}])
+            self.assertTrue(Path(result["plot"]).is_file())
+
 
 if __name__ == "__main__":
     unittest.main()
