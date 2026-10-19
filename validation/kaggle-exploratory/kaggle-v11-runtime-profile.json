@@ -1,0 +1,1 @@
+{"python":"3.13.15","numpy":"2.1.3","pytorch":"2.11.0+cu128","cuda_runtime":"12.8","cuda_available":true,"gpu_count":2,"gpu_names":["Tesla T4","Tesla T4"]}

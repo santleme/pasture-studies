@@ -1,0 +1,13 @@
+{
+  "algorithm": "a2c",
+  "benchmark_eligible": false,
+  "checkpoint_promotion": false,
+  "device_count": 1,
+  "episodes": 256,
+  "evaluation_episodes": 5,
+  "formal_eligible": false,
+  "locked_test_access": false,
+  "optimizer_updates": 16,
+  "seed": 9482817,
+  "task": "exploratory_a2c_training"
+}

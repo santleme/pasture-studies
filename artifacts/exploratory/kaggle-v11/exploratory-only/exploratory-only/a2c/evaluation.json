@@ -1,0 +1,948 @@
+{
+  "algorithm": "a2c",
+  "benchmark_eligible": false,
+  "claims_boundary": "Synthetic software-task results only; not biological validation.",
+  "device": "cuda",
+  "episodes": [
+    {
+      "action_counts": {
+        "drink": 24,
+        "graze": 5,
+        "herd_interact": 0,
+        "rest": 328,
+        "ruminate": 0,
+        "walk": 3
+      },
+      "action_frequencies": {
+        "drink": 0.06666666666666667,
+        "graze": 0.013888888888888888,
+        "herd_interact": 0.0,
+        "rest": 0.9111111111111111,
+        "ruminate": 0.0,
+        "walk": 0.008333333333333333
+      },
+      "complete": true,
+      "decision_attempts": 360,
+      "final_drive_means": [
+        1.0,
+        1.0,
+        0.0,
+        0.25235315266569497
+      ],
+      "invalid_actions": 0,
+      "mean_tick_reward": 0.012395526133021749,
+      "memory_perception_influence": {
+        "actions": {
+          "full": "rest",
+          "memory_off": "rest",
+          "water_perception_off": "drink"
+        },
+        "memory_delta_l1": 0.0,
+        "perception_delta_l1": 0.2644760087132454,
+        "probabilities": {
+          "full": [
+            0.05876777321100235,
+            0.20521892607212067,
+            0.15890026092529297,
+            0.30432313680648804,
+            0.13032254576683044,
+            0.14246736466884613
+          ],
+          "memory_off": [
+            0.05876777321100235,
+            0.20521892607212067,
+            0.15890026092529297,
+            0.30432313680648804,
+            0.13032254576683044,
+            0.14246736466884613
+          ],
+          "water_perception_off": [
+            0.07107320427894592,
+            0.30240437388420105,
+            0.10986676067113876,
+            0.2535293400287628,
+            0.09791184216737747,
+            0.16521449387073517
+          ]
+        }
+      },
+      "per_animal": {
+        "cow-1": {
+          "action_counts": {
+            "drink": 6,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 63,
+            "ruminate": 0,
+            "walk": 3
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 11,
+              "y": 3
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.8705564396292672,
+          "ticks": 72
+        },
+        "cow-2": {
+          "action_counts": {
+            "drink": 8,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 64,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 9,
+              "y": 5
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 1.0318572724286297,
+          "ticks": 72
+        },
+        "cow-3": {
+          "action_counts": {
+            "drink": 0,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 72,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 8,
+              "y": 6
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 1.518690173683769,
+          "ticks": 72
+        },
+        "cow-4": {
+          "action_counts": {
+            "drink": 10,
+            "graze": 5,
+            "herd_interact": 0,
+            "rest": 57,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 1,
+            "position": {
+              "x": 10,
+              "y": 4
+            },
+            "social_need": 0.2617657633284749,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.23119987822840998,
+          "ticks": 72
+        },
+        "cow-5": {
+          "action_counts": {
+            "drink": 0,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 72,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 10,
+              "y": 7
+            },
+            "social_need": 1.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.8100856439177532,
+          "ticks": 72
+        }
+      },
+      "resources_remaining": {
+        "forage_available": 2,
+        "water_available": 1
+      },
+      "return": 4.46238940788783,
+      "seed": 2472705239361891417,
+      "ticks": 72
+    },
+    {
+      "action_counts": {
+        "drink": 40,
+        "graze": 15,
+        "herd_interact": 0,
+        "rest": 300,
+        "ruminate": 0,
+        "walk": 5
+      },
+      "action_frequencies": {
+        "drink": 0.1111111111111111,
+        "graze": 0.041666666666666664,
+        "herd_interact": 0.0,
+        "rest": 0.8333333333333334,
+        "ruminate": 0.0,
+        "walk": 0.013888888888888888
+      },
+      "complete": true,
+      "decision_attempts": 360,
+      "final_drive_means": [
+        1.0,
+        1.0,
+        0.0,
+        0.10606492210131742
+      ],
+      "invalid_actions": 0,
+      "mean_tick_reward": 0.007419030807015585,
+      "memory_perception_influence": {
+        "actions": {
+          "full": "rest",
+          "memory_off": "rest",
+          "water_perception_off": "drink"
+        },
+        "memory_delta_l1": 0.0,
+        "perception_delta_l1": 0.26527659967541695,
+        "probabilities": {
+          "full": [
+            0.059676643460989,
+            0.20051835477352142,
+            0.15663954615592957,
+            0.3209635317325592,
+            0.13284911215305328,
+            0.12935277819633484
+          ],
+          "memory_off": [
+            0.059676643460989,
+            0.20051835477352142,
+            0.15663954615592957,
+            0.3209635317325592,
+            0.13284911215305328,
+            0.12935277819633484
+          ],
+          "water_perception_off": [
+            0.07326126843690872,
+            0.29775944352149963,
+            0.10687605291604996,
+            0.27054017782211304,
+            0.10039766132831573,
+            0.15116536617279053
+          ]
+        }
+      },
+      "per_animal": {
+        "cow-1": {
+          "action_counts": {
+            "drink": 1,
+            "graze": 2,
+            "herd_interact": 0,
+            "rest": 66,
+            "ruminate": 0,
+            "walk": 3
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 1,
+            "position": {
+              "x": 11,
+              "y": 3
+            },
+            "social_need": 0.30110998006059553,
+            "thirst": 1.0
+          },
+          "reward_sum": 1.0327423194588128,
+          "ticks": 72
+        },
+        "cow-2": {
+          "action_counts": {
+            "drink": 9,
+            "graze": 3,
+            "herd_interact": 0,
+            "rest": 60,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 1,
+            "position": {
+              "x": 8,
+              "y": 8
+            },
+            "social_need": 0.013040464679086173,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.8842139685334988,
+          "ticks": 72
+        },
+        "cow-3": {
+          "action_counts": {
+            "drink": 12,
+            "graze": 5,
+            "herd_interact": 0,
+            "rest": 55,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 10,
+              "y": 4
+            },
+            "social_need": 0.2161741657669054,
+            "thirst": 1.0
+          },
+          "reward_sum": -0.2515749010059971,
+          "ticks": 72
+        },
+        "cow-4": {
+          "action_counts": {
+            "drink": 11,
+            "graze": 5,
+            "herd_interact": 0,
+            "rest": 54,
+            "ruminate": 0,
+            "walk": 2
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 8,
+              "y": 6
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.05039223649248021,
+          "ticks": 72
+        },
+        "cow-5": {
+          "action_counts": {
+            "drink": 7,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 65,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 9,
+              "y": 5
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.9550774670468158,
+          "ticks": 72
+        }
+      },
+      "resources_remaining": {
+        "forage_available": 1,
+        "water_available": 1
+      },
+      "return": 2.6708510905256104,
+      "seed": 8829379239484648900,
+      "ticks": 72
+    },
+    {
+      "action_counts": {
+        "drink": 212,
+        "graze": 28,
+        "herd_interact": 0,
+        "rest": 116,
+        "ruminate": 0,
+        "walk": 4
+      },
+      "action_frequencies": {
+        "drink": 0.5888888888888889,
+        "graze": 0.07777777777777778,
+        "herd_interact": 0.0,
+        "rest": 0.32222222222222224,
+        "ruminate": 0.0,
+        "walk": 0.011111111111111112
+      },
+      "complete": true,
+      "decision_attempts": 360,
+      "final_drive_means": [
+        1.0,
+        1.0,
+        0.6849999999999999,
+        0.502
+      ],
+      "invalid_actions": 0,
+      "mean_tick_reward": -0.058664108315387646,
+      "memory_perception_influence": {
+        "actions": {
+          "full": "rest",
+          "memory_off": "rest",
+          "water_perception_off": "rest"
+        },
+        "memory_delta_l1": 0.0,
+        "perception_delta_l1": 0.0,
+        "probabilities": {
+          "full": [
+            0.06872826814651489,
+            0.2702941596508026,
+            0.10986852645874023,
+            0.3049916923046112,
+            0.11945728957653046,
+            0.1266600787639618
+          ],
+          "memory_off": [
+            0.06872826814651489,
+            0.2702941596508026,
+            0.10986852645874023,
+            0.3049916923046112,
+            0.11945728957653046,
+            0.1266600787639618
+          ],
+          "water_perception_off": [
+            0.06872826814651489,
+            0.2702941596508026,
+            0.10986852645874023,
+            0.3049916923046112,
+            0.11945728957653046,
+            0.1266600787639618
+          ]
+        }
+      },
+      "per_animal": {
+        "cow-1": {
+          "action_counts": {
+            "drink": 43,
+            "graze": 3,
+            "herd_interact": 0,
+            "rest": 25,
+            "ruminate": 0,
+            "walk": 1
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 6,
+              "y": 9
+            },
+            "social_need": 0.5100000000000003,
+            "thirst": 1.0
+          },
+          "reward_sum": -2.3949877133524886,
+          "ticks": 72
+        },
+        "cow-2": {
+          "action_counts": {
+            "drink": 37,
+            "graze": 12,
+            "herd_interact": 0,
+            "rest": 23,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.4250000000000001,
+            "hunger": 1.0,
+            "memory_events": 1,
+            "position": {
+              "x": 2,
+              "y": 2
+            },
+            "social_need": 1.0,
+            "thirst": 1.0
+          },
+          "reward_sum": -2.9137205189366164,
+          "ticks": 72
+        },
+        "cow-3": {
+          "action_counts": {
+            "drink": 64,
+            "graze": 2,
+            "herd_interact": 0,
+            "rest": 6,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 1.0,
+            "hunger": 1.0,
+            "memory_events": 32,
+            "position": {
+              "x": 11,
+              "y": 7
+            },
+            "social_need": 1.0,
+            "thirst": 1.0
+          },
+          "reward_sum": -12.457021913569653,
+          "ticks": 72
+        },
+        "cow-4": {
+          "action_counts": {
+            "drink": 35,
+            "graze": 5,
+            "herd_interact": 0,
+            "rest": 31,
+            "ruminate": 0,
+            "walk": 1
+          },
+          "final_state": {
+            "fatigue": 1.0,
+            "hunger": 1.0,
+            "memory_events": 1,
+            "position": {
+              "x": 3,
+              "y": 7
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": -1.5855074100022266,
+          "ticks": 72
+        },
+        "cow-5": {
+          "action_counts": {
+            "drink": 33,
+            "graze": 6,
+            "herd_interact": 0,
+            "rest": 31,
+            "ruminate": 0,
+            "walk": 2
+          },
+          "final_state": {
+            "fatigue": 1.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 4,
+              "y": 8
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": -1.7678414376785614,
+          "ticks": 72
+        }
+      },
+      "resources_remaining": {
+        "forage_available": 0,
+        "water_available": 0
+      },
+      "return": -21.119078993539553,
+      "seed": 4839487136867918680,
+      "ticks": 72
+    },
+    {
+      "action_counts": {
+        "drink": 24,
+        "graze": 4,
+        "herd_interact": 0,
+        "rest": 332,
+        "ruminate": 0,
+        "walk": 0
+      },
+      "action_frequencies": {
+        "drink": 0.06666666666666667,
+        "graze": 0.011111111111111112,
+        "herd_interact": 0.0,
+        "rest": 0.9222222222222223,
+        "ruminate": 0.0,
+        "walk": 0.0
+      },
+      "complete": true,
+      "decision_attempts": 360,
+      "final_drive_means": [
+        1.0,
+        1.0,
+        0.0,
+        0.10074376606079476
+      ],
+      "invalid_actions": 0,
+      "mean_tick_reward": 0.015035731904253266,
+      "memory_perception_influence": {
+        "actions": {
+          "full": "rest",
+          "memory_off": "rest",
+          "water_perception_off": "rest"
+        },
+        "memory_delta_l1": 0.0,
+        "perception_delta_l1": 0.25665903091430664,
+        "probabilities": {
+          "full": [
+            0.05952411890029907,
+            0.1861613392829895,
+            0.16018082201480865,
+            0.328726589679718,
+            0.14440178871154785,
+            0.12100538611412048
+          ],
+          "memory_off": [
+            0.05952411890029907,
+            0.1861613392829895,
+            0.16018082201480865,
+            0.328726589679718,
+            0.14440178871154785,
+            0.12100538611412048
+          ],
+          "water_perception_off": [
+            0.07473509013652802,
+            0.27538973093032837,
+            0.11196298152208328,
+            0.28406432271003723,
+            0.10895233601331711,
+            0.1448954939842224
+          ]
+        }
+      },
+      "per_animal": {
+        "cow-1": {
+          "action_counts": {
+            "drink": 12,
+            "graze": 2,
+            "herd_interact": 0,
+            "rest": 58,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 1,
+            "position": {
+              "x": 10,
+              "y": 4
+            },
+            "social_need": 0.4429279318405849,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.13184438704670542,
+          "ticks": 72
+        },
+        "cow-2": {
+          "action_counts": {
+            "drink": 11,
+            "graze": 2,
+            "herd_interact": 0,
+            "rest": 59,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 1,
+            "position": {
+              "x": 11,
+              "y": 6
+            },
+            "social_need": 0.05357519242467256,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.7951463401847341,
+          "ticks": 72
+        },
+        "cow-3": {
+          "action_counts": {
+            "drink": 0,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 72,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 8,
+              "y": 6
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 1.5671681765869918,
+          "ticks": 72
+        },
+        "cow-4": {
+          "action_counts": {
+            "drink": 0,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 72,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 11,
+              "y": 4
+            },
+            "social_need": 0.0072157060387163675,
+            "thirst": 1.0
+          },
+          "reward_sum": 1.4203169824485986,
+          "ticks": 72
+        },
+        "cow-5": {
+          "action_counts": {
+            "drink": 1,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 71,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 9,
+              "y": 5
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 1.4983875992641438,
+          "ticks": 72
+        }
+      },
+      "resources_remaining": {
+        "forage_available": 1,
+        "water_available": 1
+      },
+      "return": 5.412863485531175,
+      "seed": 7594068007128657542,
+      "ticks": 72
+    },
+    {
+      "action_counts": {
+        "drink": 19,
+        "graze": 6,
+        "herd_interact": 0,
+        "rest": 334,
+        "ruminate": 0,
+        "walk": 1
+      },
+      "action_frequencies": {
+        "drink": 0.05277777777777778,
+        "graze": 0.016666666666666666,
+        "herd_interact": 0.0,
+        "rest": 0.9277777777777778,
+        "ruminate": 0.0,
+        "walk": 0.002777777777777778
+      },
+      "complete": true,
+      "decision_attempts": 360,
+      "final_drive_means": [
+        1.0,
+        1.0,
+        0.0,
+        0.25084816711533436
+      ],
+      "invalid_actions": 0,
+      "mean_tick_reward": 0.01279907460415661,
+      "memory_perception_influence": {
+        "actions": {
+          "full": "rest",
+          "memory_off": "rest",
+          "water_perception_off": "rest"
+        },
+        "memory_delta_l1": 0.0,
+        "perception_delta_l1": 0.24030900746583939,
+        "probabilities": {
+          "full": [
+            0.05393266677856445,
+            0.18119125068187714,
+            0.1591041088104248,
+            0.3147375285625458,
+            0.17640070617198944,
+            0.11463376879692078
+          ],
+          "memory_off": [
+            0.05393266677856445,
+            0.18119125068187714,
+            0.1591041088104248,
+            0.3147375285625458,
+            0.17640070617198944,
+            0.11463376879692078
+          ],
+          "water_perception_off": [
+            0.06588151305913925,
+            0.26372790336608887,
+            0.11654333770275116,
+            0.2771298587322235,
+            0.13641464710235596,
+            0.14030277729034424
+          ]
+        }
+      },
+      "per_animal": {
+        "cow-1": {
+          "action_counts": {
+            "drink": 0,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 72,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 9,
+              "y": 7
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 1.7112357489117211,
+          "ticks": 72
+        },
+        "cow-2": {
+          "action_counts": {
+            "drink": 0,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 72,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 11,
+              "y": 6
+            },
+            "social_need": 1.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.592399334598136,
+          "ticks": 72
+        },
+        "cow-3": {
+          "action_counts": {
+            "drink": 7,
+            "graze": 2,
+            "herd_interact": 0,
+            "rest": 62,
+            "ruminate": 0,
+            "walk": 1
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 1,
+            "position": {
+              "x": 10,
+              "y": 4
+            },
+            "social_need": 0.0,
+            "thirst": 1.0
+          },
+          "reward_sum": 1.1049369204736517,
+          "ticks": 72
+        },
+        "cow-4": {
+          "action_counts": {
+            "drink": 8,
+            "graze": 4,
+            "herd_interact": 0,
+            "rest": 60,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 9,
+              "y": 5
+            },
+            "social_need": 0.11425762748012361,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.2722500385899547,
+          "ticks": 72
+        },
+        "cow-5": {
+          "action_counts": {
+            "drink": 4,
+            "graze": 0,
+            "herd_interact": 0,
+            "rest": 68,
+            "ruminate": 0,
+            "walk": 0
+          },
+          "final_state": {
+            "fatigue": 0.0,
+            "hunger": 1.0,
+            "memory_events": 0,
+            "position": {
+              "x": 8,
+              "y": 8
+            },
+            "social_need": 0.13998320809654818,
+            "thirst": 1.0
+          },
+          "reward_sum": 0.9268448149229155,
+          "ticks": 72
+        }
+      },
+      "resources_remaining": {
+        "forage_available": 2,
+        "water_available": 1
+      },
+      "return": 4.60766685749638,
+      "seed": 4504889049047831684,
+      "ticks": 72
+    }
+  ],
+  "execution_migration": null,
+  "exploratory_only": true,
+  "formal_eligible": false,
+  "mean_return": -0.7930616304197116,
+  "seed": 9482817
+}

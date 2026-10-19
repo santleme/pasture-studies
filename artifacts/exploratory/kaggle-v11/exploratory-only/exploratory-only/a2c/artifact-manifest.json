@@ -1,0 +1,23 @@
+{
+  "actions": [
+    "graze",
+    "drink",
+    "walk",
+    "rest",
+    "ruminate",
+    "herd_interact"
+  ],
+  "algorithm": "a2c",
+  "benchmark_eligible": false,
+  "execution_migration": null,
+  "exploratory_only": true,
+  "feature_schema": "cattle-observation-v1",
+  "formal_eligible": false,
+  "policy_json": "torch-a2c-seed-9482817.json",
+  "policy_json_sha256": "85628c06edf65302fda7c4ef29eb96b72f805c318a15467f8793c1bc790154ac",
+  "policy_npz": "torch-a2c-seed-9482817.npz",
+  "policy_npz_sha256": "091d45068ba30d6040737107c8e0d597948cbae9f7a1e276945853e5da428789",
+  "synthetic_task_only": true,
+  "training_generation": "generation-00000016",
+  "training_state_sha256": "19cf005d9006f5ab28118fe9a0af1d3f1c6b0633092f644706aa72462238fc59"
+}
