@@ -19,6 +19,11 @@ from datetime import datetime, timezone
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    # Direct `python scripts/kaggle_deploy.py ...` execution otherwise places
+    # only the scripts/ directory on sys.path, breaking source-root package
+    # imports used by the READINESS and EXPLORATORY gates.
+    sys.path.insert(0, str(ROOT))
 NOTEBOOK = ROOT / "notebooks" / "pasture_studies_kaggle.ipynb"
 MODES = {"PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY"}
 T4X2_SHAPE = "NvidiaTeslaT4"

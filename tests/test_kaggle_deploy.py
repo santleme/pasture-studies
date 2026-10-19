@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -46,6 +48,25 @@ class KaggleDeployTests(unittest.TestCase):
         )
         self.assertIn('metrics_path = exploratory_root / "exploratory-only" / "metrics.jsonl"', code)
         self.assertNotIn('metrics_path = learner_dir / "metrics.jsonl"', code)
+
+    def test_direct_cli_imports_release_gate_from_repository_root(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            runtime = root / "runtime.json"
+            runtime.write_text(json.dumps({
+                "python": "3.13.15", "numpy": "2.1.3", "pytorch": "2.11.0+cu128",
+                "cuda_runtime": "12.8", "cuda_available": True, "gpu_count": 2,
+                "gpu_names": ["Tesla T4", "Tesla T4"],
+            }))
+            result = subprocess.run(
+                [sys.executable, str(deploy.ROOT / "scripts/kaggle_deploy.py"),
+                 "prepare-exploratory", "--path", str(root / "stage"),
+                 "--owner", "sample_user", "--runtime-profile", str(runtime)],
+                cwd=root, capture_output=True, text=True, check=False,
+            )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("must be clean and committed", result.stderr)
+        self.assertNotIn("runtime profile is invalid", result.stderr)
 
     def test_metadata_uses_private_t4x2_schema(self):
         metadata = deploy.metadata_for("sample_user", gpu=True)
