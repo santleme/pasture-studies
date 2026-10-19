@@ -44,6 +44,8 @@ Names and order are declared in `farm_sim/model.py`; `encode_features` in `farm_
 
 ## Training task, reward, and checkpoint validation
 
+The task and historical checkpoint results below describe the pipeline, not permission to execute it locally. Full training is Kaggle-only; local execution is limited to development, lightweight tests, and explicit smoke diagnostics as described in [Kaggle training](kaggle-training.md).
+
 `python3 -m farm_sim.training` runs episodic REINFORCE on a fixed one-step, four-case synthetic task. In two paired cases the animal has visible nearby water and high thirst, or visible nearby forage and low hunger. Exactly one retrieved-memory bit differs within each pair: prior successful access maps to `drink`/`graze`, while blocked/depleted memory maps to `walk`. The target action earns **+1**, every other action **−0.25**. These labels and rewards are invented task semantics, not claims about cattle.
 
 Five independent seeds (`11`, `29`, `47`, `83`, `101`) each train for 2,000 balanced episodes. The REINFORCE update uses a per-case baseline equal to the current policy's expected reward for that case, learning rate 0.07, gradient norm clipping, and seeded sampling. Evaluation uses a separate matched-random-draw stream (`100000 + training seed`): five draws per each of four cases for each run, 100 cases overall. A run suite passes only when aggregate trained accuracy is at least 85%, improvement is at least 25 percentage points, and every checkpoint passes both deterministic paired-memory tests. Those tests require the expected argmax action swap and at least 0.20 contrast in the desired-action probability for both pairs.
