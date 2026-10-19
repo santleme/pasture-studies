@@ -33,9 +33,9 @@ def state_aware_rewards(observations, actions, rewards, *, scale: float = 0.1) -
         raise ValueError(f"observations must end in {len(FEATURE_NAMES)} features")
     if acts.shape != obs.shape[:-1] or base.shape != acts.shape:
         raise ValueError("actions and rewards must match observation leading dimensions")
-    if not np.isfinite(obs).all() or not np.isfinite(base).all() or not np.isfinite(acts).all():
-        raise ValueError("observations, actions, and rewards must be finite")
-    if np.any(acts != np.floor(acts)) or np.any(acts < 0) or np.any(acts >= len(Action)):
+    if not np.isfinite(obs).all() or not np.isfinite(base).all():
+        raise ValueError("observations and rewards must be finite")
+    if np.any(acts < 0) or np.any(acts >= len(Action)):
         raise ValueError("actions must be valid Action indices")
 
     result = base.astype(np.result_type(base.dtype, np.float32), copy=True)
