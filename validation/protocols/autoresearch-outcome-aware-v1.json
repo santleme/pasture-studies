@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "protocol_id": "autoresearch-outcome-aware-v1",
+  "status": "exploratory_only",
+  "parent_protocol": "autoresearch-world-perception-v1",
+  "motivation": {
+    "evidence": [
+      "Batch 1 G/H mostly selected REST (about 0.71-0.72 action frequency), achieved forage <=0.06 and water <=0.50 successes per episode, and ended at maximum toy hunger.",
+      "Batch 2 I/J increased GRAZE and DRINK actions, but received intent-based shaping when a resource was visible even when the animal only moved en route or another animal consumed it first; original reward was negative and successful water remained below the heuristic reference."
+    ],
+    "change": "Use observed post-transition drive deltas for optional training shaping; never award positive shaping for an action attempt without the corresponding observed drive improvement.",
+    "evaluation": "All model selection remains on unchanged original simulator reward and shared new evaluation worlds."
+  },
+  "source_control": {
+    "historical_protocol_and_reports_immutable": true,
+    "formal_preregistration_modified": false,
+    "reserved_or_locked_outcomes_accessed": false,
+    "acceptance_thresholds_changed": false
+  },
+  "training": {
+    "algorithm": "A2C",
+    "episodes_per_model": 512,
+    "seeds": [9484201, 9484202, 9484203],
+    "perception_mode": "path-aware-v2",
+    "resource_profile": "resource-rich-v1",
+    "variants": {
+      "K": {"reward_variant": "outcome_aware", "state_reward_scale": 0.5, "normalize_advantage": false, "entropy_coefficient": 0.0},
+      "L": {"reward_variant": "outcome_aware", "state_reward_scale": 0.5, "normalize_advantage": true, "entropy_coefficient": 0.01}
+    },
+    "semantics": "The additional target is scale times positive measured pre-to-post drive reduction for the selected action (REST shaping only when fatigue at action time is at least 0.5). No visible-resource intent bonus is used. This remains training-only; validation always scores original simulator reward.",
+    "evaluation_root_seed": 9486999,
+    "training_job_budget": {"batch_jobs": 6, "cumulative_after": 18, "authorized_additional_max": 24, "remaining_after_batch": 6}
+  },
+  "acceptance": {
+    "inherited_unchanged_from": "autoresearch-world-perception-v1",
+    "shared_new_worlds_for_every_candidate_and_reference": true,
+    "original_reward_required": true,
+    "strictly_exceed_best_reference_for_original_return_forage_and_water": true,
+    "final_hunger_and_thirst_no_worse_than_best_reference": true,
+    "invalid_actions_zero": true,
+    "formal_or_locked_eligibility": false,
+    "biological_validation_claim": false
+  },
+  "limitations": [
+    "Toy drive reductions are simulator state transitions, not cattle physiological validity.",
+    "Post-transition reward shaping can still bias training; original-reward evaluation is the only candidate acceptance score.",
+    "This protocol only authorizes batch 3 K/L; later adaptive runs require a separately versioned protocol and immutable seed allocation."
+  ]
+}

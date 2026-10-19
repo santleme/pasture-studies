@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -32,11 +34,49 @@ class KaggleDeployTests(unittest.TestCase):
                 self._real_source_commit()
 
     def test_modes_allow_only_safe_readiness_and_legacy_modes(self):
-        for mode in ("PREFLIGHT", "SMOKE", "READINESS"):
+        for mode in ("PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON",
+                     "EXPLORATORY_ITERATION_2"):
             self.assertEqual(deploy.validate_mode(f" {mode.lower()} "), mode)
         for mode in ("EXPERIMENT", "FULL_VALIDATION", "", "other"):
             with self.subTest(mode=mode), self.assertRaises(deploy.DeploymentError):
                 deploy.validate_mode(mode)
+
+    def test_exploratory_notebook_reads_metrics_from_trainer_output_root(self):
+        notebook = json.loads(deploy.NOTEBOOK.read_text())
+        code = "\n".join(
+            "".join(cell.get("source", [])) for cell in notebook["cells"]
+            if cell.get("cell_type") == "code"
+        )
+        self.assertIn('metrics_path = exploratory_root / "exploratory-only" / "metrics.jsonl"', code)
+        self.assertNotIn('metrics_path = learner_dir / "metrics.jsonl"', code)
+        self.assertIn('"--filter=blob:none"', code)
+        self.assertIn('"sparse-checkout"', code)
+        self.assertIn('"/validation/train_torch_mvp1.py"', code)
+        self.assertIn('"/farm_sim/"', code)
+        self.assertIn('reserved evaluation artifacts', code)
+
+    def test_direct_cli_imports_release_gate_from_repository_root(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            runtime = root / "runtime.json"
+            runtime.write_text(json.dumps({
+                "python": "3.13.15", "numpy": "2.1.3", "pytorch": "2.11.0+cu128",
+                "cuda_runtime": "12.8", "cuda_available": True, "gpu_count": 2,
+                "gpu_names": ["Tesla T4", "Tesla T4"],
+            }))
+            result = subprocess.run(
+                [sys.executable, str(deploy.ROOT / "scripts/kaggle_deploy.py"),
+                 "prepare-exploratory", "--path", str(root / "stage"),
+                 "--owner", "sample_user", "--runtime-profile", str(runtime)],
+                cwd=root, capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(Path(result.stdout.strip()), root / "stage/kernel-metadata.json")
+            metadata = json.loads((root / "stage/kernel-metadata.json").read_text())
+            config = json.loads(deploy.deployment_record_path(root / "stage").read_text())
+            self.assertEqual(metadata["machine_shape"], "NvidiaTeslaT4")
+            self.assertEqual(config["mode"], "EXPLORATORY")
+            self.assertEqual(config["exploratory_config"], deploy.EXPLORATORY_CONFIG_VALUE)
 
     def test_metadata_uses_private_t4x2_schema(self):
         metadata = deploy.metadata_for("sample_user", gpu=True)
@@ -73,11 +113,13 @@ class KaggleDeployTests(unittest.TestCase):
                 "gpu_names": ["Tesla T4", "Tesla T4"]}
             runtime_path = root / "runtime.json"
             runtime_path.write_text(json.dumps(runtime))
-            for mode in ("PREFLIGHT", "SMOKE", "READINESS"):
+            for mode in ("PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY"):
                 with self.subTest(mode=mode):
                     stage = root / mode.lower()
                     if mode == "READINESS":
                         deploy.prepare_release(stage, "sample_user", runtime_profile_path=runtime_path)
+                    elif mode == "EXPLORATORY":
+                        deploy.prepare_exploratory(stage, "sample_user", runtime_profile_path=runtime_path)
                     else:
                         deploy.prepare(stage, "sample_user", mode=mode)
                     staged_path = stage / deploy.NOTEBOOK.name
@@ -122,6 +164,93 @@ class KaggleDeployTests(unittest.TestCase):
             staged.write_text(staged.read_text() + " ")
             with self.assertRaisesRegex(deploy.DeploymentError, "exact staged notebook"):
                 deploy.validate_staging_folder(stage)
+
+    def test_exploratory_requires_exact_fixed_nonformal_config_and_bound_t4x2_release(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            runtime = {"python": "3.13.15", "numpy": "2.1.3", "pytorch": "2.11.0+cu128",
+                "cuda_runtime": "12.8", "cuda_available": True, "gpu_count": 2,
+                "gpu_names": ["Tesla T4", "Tesla T4"]}
+            runtime_path = root / "runtime.json"
+            runtime_path.write_text(json.dumps(runtime))
+            stage = root / "staged"
+            with patch.object(deploy, "_source_commit", return_value="a" * 40):
+                deploy.prepare_exploratory(stage, "sample_user", runtime_profile_path=runtime_path)
+            notebook = stage / deploy.NOTEBOOK.name
+            config = json.loads(deploy.deployment_record_path(stage).read_text())
+            self.assertEqual(config["mode"], "EXPLORATORY")
+            self.assertFalse(config["exploratory_config"]["formal_eligible"])
+            self.assertFalse(config["exploratory_config"]["locked_test_access"])
+            release_doc = {"source": {"commit_sha": "a" * 40}, "notebook": {
+                "source_sha256": config["source_notebook_sha256"],
+                "staged_sha256": hashlib.sha256(notebook.read_bytes()).hexdigest()}}
+            release = root / "release.json"
+            release.write_text(json.dumps(release_doc))
+            with patch.object(deploy, "_manifest_digest",
+                              return_value=hashlib.sha256(release.read_bytes()).hexdigest()):
+                digest = deploy.bind_release(stage, release)
+                metadata, validated_notebook = deploy.validate_staging_folder(stage)
+            self.assertEqual(metadata["machine_shape"], "NvidiaTeslaT4")
+            self.assertEqual(validated_notebook, notebook)
+            self.assertEqual(digest, json.loads(deploy.deployment_record_path(stage).read_text())["release_manifest_sha256"])
+            bad_stage = root / "bad-stage"
+            with patch.object(deploy, "_source_commit", return_value="a" * 40):
+                deploy.prepare_exploratory(bad_stage, "sample_user", runtime_profile_path=runtime_path)
+            bad_config_path = deploy.deployment_record_path(bad_stage)
+            bad_config = json.loads(bad_config_path.read_text())
+            bad_config["exploratory_config"]["episodes"] = 257
+            bad_config_path.write_text(json.dumps(bad_config))
+            with self.assertRaises(deploy.DeploymentError):
+                deploy.validate_staging_folder(bad_stage)
+
+    def test_exploratory_comparison_has_separate_exact_bound_t4x2_config(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            runtime = {"python": "3.13.15", "numpy": "2.1.3", "pytorch": "2.11.0+cu128",
+                "cuda_runtime": "12.8", "cuda_available": True, "gpu_count": 2,
+                "gpu_names": ["Tesla T4", "Tesla T4"]}
+            runtime_path = root / "runtime.json"
+            runtime_path.write_text(json.dumps(runtime))
+            stage = root / "comparison"
+            deploy.prepare_exploratory(stage, "sample_user", runtime_profile_path=runtime_path,
+                                       comparison=True)
+            notebook = stage / deploy.NOTEBOOK.name
+            config = json.loads(deploy.deployment_record_path(stage).read_text())
+            self.assertEqual(config["mode"], "EXPLORATORY_COMPARISON")
+            self.assertEqual(config["exploratory_config"], deploy.EXPLORATORY_COMPARISON_CONFIG_VALUE)
+            release_doc = {"source": {"commit_sha": "a" * 40}, "notebook": {
+                "source_sha256": config["source_notebook_sha256"],
+                "staged_sha256": hashlib.sha256(notebook.read_bytes()).hexdigest()}}
+            release = root / "release.json"
+            release.write_text(json.dumps(release_doc))
+            with patch.object(deploy, "_manifest_digest",
+                              return_value=hashlib.sha256(release.read_bytes()).hexdigest()):
+                deploy.bind_release(stage, release)
+                metadata, validated_notebook = deploy.validate_staging_folder(stage)
+            self.assertEqual(metadata["machine_shape"], "NvidiaTeslaT4")
+            self.assertEqual(validated_notebook, notebook)
+            bad_config_path = deploy.deployment_record_path(stage)
+            bad_config = json.loads(bad_config_path.read_text())
+            bad_config["exploratory_config"]["training_jobs"] = 25
+            bad_config_path.write_text(json.dumps(bad_config))
+            with self.assertRaises(deploy.DeploymentError):
+                deploy.validate_staging_folder(stage)
+
+    def test_iteration_two_staging_has_separate_nonformal_allowlist(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            runtime_path = root / "runtime.json"
+            runtime_path.write_text(json.dumps({"python": "3.13.15", "numpy": "2.1.3",
+                "pytorch": "2.11.0+cu128", "cuda_runtime": "12.8", "cuda_available": True,
+                "gpu_count": 2, "gpu_names": ["Tesla T4", "Tesla T4"]}))
+            stage = root / "iteration-2"
+            deploy.prepare_exploratory(stage, "sample_user", runtime_profile_path=runtime_path,
+                                       iteration_2=True)
+            config = json.loads(deploy.deployment_record_path(stage).read_text())
+            self.assertEqual(config["mode"], "EXPLORATORY_ITERATION_2")
+            self.assertEqual(config["exploratory_config"], deploy.EXPLORATORY_ITERATION_2_CONFIG_VALUE)
+            metadata = json.loads((stage / "kernel-metadata.json").read_text())
+            self.assertEqual(metadata["enable_gpu"], "true")
 
     def test_readiness_rejects_manifest_mismatch_on_staged_validation(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -218,7 +347,7 @@ class KaggleDeployTests(unittest.TestCase):
                 deploy.execute(stage, mode="SMOKE", confirm_execution=True)
             deploy.execute(stage, mode="SMOKE", confirm_execution=True, confirm_gpu=True)
             self.assertEqual(run_mock.call_args.args[0][-2:], ["--accelerator", "NvidiaTeslaT4"])
-            attest_mock.assert_called_once_with(stage, 5, cli_version="2.2.4")
+            attest_mock.assert_called_once_with(stage, 5, cli_version="2.2.4", execution=True)
 
     def test_revision_is_taken_from_exact_numeric_kaggle_push_output(self):
         self.assertEqual(deploy.revision_from_push_output("Kernel version 7 successfully pushed. Please check progress"), 7)
@@ -302,6 +431,22 @@ class KaggleDeployTests(unittest.TestCase):
             self.assertTrue(record["raw_notebook_bytes_identical"])
             self.assertTrue(record["canonical_content_match"])
             self.assertNotIn("key", record)
+
+    def test_execution_after_no_run_publish_writes_a_separate_attestation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            stage = parent / "staging"
+            deploy.prepare(stage, "sample_user", mode="PREFLIGHT")
+            def fake_run(args):
+                target = Path(args[args.index("--path") + 1]) / deploy.NOTEBOOK.name
+                target.write_bytes((stage / deploy.NOTEBOOK.name).read_bytes())
+                return result("pulled")
+            with patch.object(deploy, "run", side_effect=fake_run):
+                published = deploy.write_publication_attestation(stage, 12, cli_version="2.2.4")
+                executed = deploy.write_publication_attestation(stage, 13, cli_version="2.2.4", execution=True)
+            self.assertNotEqual(published["attestation_path"], executed["attestation_path"])
+            self.assertTrue(Path(published["attestation_path"]).is_file())
+            self.assertTrue(Path(executed["attestation_path"]).is_file())
     def test_attestation_rejects_fabricated_evidence_and_staging_tampering(self):
         with tempfile.TemporaryDirectory() as tmp:
             stage = Path(tmp) / "stage"

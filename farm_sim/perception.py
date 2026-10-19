@@ -8,16 +8,20 @@ from .model import (
     FEATURE_NAMES, FEATURE_SCHEMA_VERSION, AnimalState, FarmWorld, MemoryFeatures,
     Observation, Position,
 )
+from .navigation import static_path_distance
 
 VISION_RADIUS = 4
 HERD_RADIUS = 3
+PERCEPTION_MODES = {"legacy-v1", "path-aware-v2"}
 
 
 def manhattan(a: Position, b: Position) -> int:
     return abs(a.x - b.x) + abs(a.y - b.y)
 
 
-def perceive(world: FarmWorld, animal: AnimalState) -> Observation:
+def perceive(world: FarmWorld, animal: AnimalState, *, mode: str = "legacy-v1") -> Observation:
+    if mode not in PERCEPTION_MODES:
+        raise ValueError(f"unknown perception mode {mode!r}")
     def visible(patch):
         return manhattan(animal.position, patch.position) <= VISION_RADIUS
     forage = tuple(p for p in world.forage if visible(p))
@@ -28,11 +32,24 @@ def perceive(world: FarmWorld, animal: AnimalState) -> Observation:
                     for y in range(max(0, animal.position.y - 1), min(world.height, animal.position.y + 2))]
     blocked = sum(p in world.obstacles for p in nearby_cells)
     denom = max(1, len(nearby_cells))
+    if mode == "legacy-v1":
+        forage_distance = min((manhattan(animal.position, p.position) for p in forage), default=VISION_RADIUS + 1)
+        water_distance = min((manhattan(animal.position, p.position) for p in water), default=VISION_RADIUS + 1)
+    else:
+        # V2 corrects stale target distances and reports obstacle-aware travel
+        # costs using the same static grid topology as the navigation layer.
+        def target_distance(patches):
+            distances = (static_path_distance(world, animal.position, p.position)
+                         for p in patches if p.available)
+            reachable = [distance for distance in distances if distance is not None]
+            return min(reachable, default=VISION_RADIUS + 1)
+        forage_distance = target_distance(forage)
+        water_distance = target_distance(water)
     return Observation(
         tick=world.tick, animal_id=animal.animal_id, position=animal.position,
         visible_forage=forage, visible_water=water,
-        nearest_forage_distance=float(min((manhattan(animal.position, p.position) for p in forage), default=VISION_RADIUS + 1)),
-        nearest_water_distance=float(min((manhattan(animal.position, p.position) for p in water), default=VISION_RADIUS + 1)),
+        nearest_forage_distance=float(forage_distance),
+        nearest_water_distance=float(water_distance),
         local_herd_count=len(others), local_herd_positions=others,
         local_blocked_fraction=blocked / denom,
     )

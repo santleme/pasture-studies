@@ -1,0 +1,127 @@
+[{"stream_name":"stderr","time":7.655280052,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.655344024,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.655350382,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.655354211,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":8.31273843,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.312776666,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.312781103,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.312784105,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":9.52629602,"data":"Mode: EXPLORATORY run_id: exploratory-098b9998639e47f29aa271d3f7538718 source SHA: 45eace9bb7adb3dfebd334b471f6ede520f128e2\n"}
+,{"stream_name":"stdout","time":9.526324805,"data":"Python: 3.13.15 (main, Aug  6 2026, 11:06:22) [GCC 13.3.0] platform: Linux-6.18.48+-x86_64-with-glibc2.39\n"}
+,{"stream_name":"stderr","time":9.574868136,"data":"Cloning into '/kaggle/working/pasture-source-45eace9bb7ad'...\n"}
+,{"stream_name":"stdout","time":9.727973502,"data":"$ git clone --no-checkout --no-tags https://github.com/santleme/pasture-studies.git /kaggle/working/pasture-source-45eace9bb7ad\n"}
+,{"stream_name":"stderr","time":9.776928657,"data":"Cloning into '/kaggle/working/pasture-source-45eace9bb7ad'...\n"}
+,{"stream_name":"stderr","time":9.776957702,"data":"\n"}
+,{"stream_name":"stderr","time":9.776962446,"data":"Cloning into '/kaggle/working/pasture-source-45eace9bb7ad'...\n"}
+,{"stream_name":"stdout","time":15.322619535,"data":"$ git -C /kaggle/working/pasture-source-45eace9bb7ad fetch --depth 1 origin 45eace9bb7adb3dfebd334b471f6ede520f128e2\n"}
+,{"stream_name":"stderr","time":15.355487488,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":15.355539822,"data":" * branch            45eace9bb7adb3dfebd334b471f6ede520f128e2 -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":15.558746734,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":15.558799565,"data":" * branch            45eace9bb7adb3dfebd334b471f6ede520f128e2 -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":15.55880723,"data":"\n"}
+,{"stream_name":"stderr","time":15.558812688,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":15.558817825,"data":" * branch            45eace9bb7adb3dfebd334b471f6ede520f128e2 -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stdout","time":15.5608556,"data":"$ git -C /kaggle/working/pasture-source-45eace9bb7ad checkout --detach FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":15.655454731,"data":"HEAD is now at 45eace9 Enable bounded exploratory A2C training\n"}
+,{"stream_name":"stderr","time":17.968937544,"data":"HEAD is now at 45eace9 Enable bounded exploratory A2C training\n"}
+,{"stream_name":"stderr","time":17.968967831,"data":"\n"}
+,{"stream_name":"stderr","time":17.968972749,"data":"HEAD is now at 45eace9 Enable bounded exploratory A2C training\n"}
+,{"stream_name":"stdout","time":23.063701312,"data":"Observed runtime: {\"cuda_available\": true, \"cuda_runtime\": \"12.8\", \"gpu_count\": 2, \"gpu_names\": [\"Tesla T4\", \"Tesla T4\"], \"numpy\": \"2.1.3\", \"python\": \"3.13.15\", \"pytorch\": \"2.11.0+cu128\"}\n"}
+,{"stream_name":"stdout","time":23.063762066,"data":"Historical scientific dependency pins (unchanged):\n"}
+,{"stream_name":"stdout","time":23.063767921,"data":" # Optional training stack; never install this into the web/runtime requirements.\n"}
+,{"stream_name":"stdout","time":23.063772412,"data":"numpy==1.26.4\n"}
+,{"stream_name":"stdout","time":23.063776319,"data":"torch==2.14.0\n"}
+,{"stream_name":"stdout","time":23.063780016,"data":"\n"}
+,{"stream_name":"stdout","time":24.117637086,"data":"CUDA forward/backward: PASS ['Tesla T4', 'Tesla T4']\n"}
+,{"stream_name":"stdout","time":24.324568228,"data":"$ /usr/bin/python3 -m validation.train_torch_mvp1 --exploratory-a2c --algorithm a2c --device cuda --seed 9482817 --episodes 256 --eval-seeds 5 --checkpoint-every 1 --output /kaggle/working/pasture-release-exploratory-098b9998639e47f29aa271d3f7538718/exploratory-only\n"}
+,{"stream_name":"stdout","time":80.339102201,"data":"{\n"}
+,{"stream_name":"stdout","time":80.339148663,"data":"  \"results\": [\n"}
+,{"stream_name":"stdout","time":80.339156944,"data":"    {\n"}
+,{"stream_name":"stdout","time":80.339161895,"data":"      \"checkpoint\": \"/kaggle/working/pasture-release-exploratory-098b9998639e47f29aa271d3f7538718/exploratory-only/exploratory-only/a2c/generation-00000016/manifest.json\",\n"}
+,{"stream_name":"stdout","time":80.339167565,"data":"      \"export\": \"/kaggle/working/pasture-release-exploratory-098b9998639e47f29aa271d3f7538718/exploratory-only/exploratory-only/a2c/torch-a2c-seed-9482817.npz\",\n"}
+,{"stream_name":"stdout","time":80.339173136,"data":"      \"evaluation\": \"/kaggle/working/pasture-release-exploratory-098b9998639e47f29aa271d3f7538718/exploratory-only/exploratory-only/a2c/evaluation.json\",\n"}
+,{"stream_name":"stdout","time":80.339178447,"data":"      \"updates\": 16,\n"}
+,{"stream_name":"stdout","time":80.339182813,"data":"      \"eval_only\": false,\n"}
+,{"stream_name":"stdout","time":80.339187367,"data":"      \"execution_migration\": null,\n"}
+,{"stream_name":"stdout","time":80.339192116,"data":"      \"exploratory_only\": true,\n"}
+,{"stream_name":"stdout","time":80.339196815,"data":"      \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":80.339202016,"data":"      \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":80.339207127,"data":"    }\n"}
+,{"stream_name":"stdout","time":80.339211823,"data":"  ],\n"}
+,{"stream_name":"stdout","time":80.339216513,"data":"  \"device_requested\": \"cuda\",\n"}
+,{"stream_name":"stdout","time":80.339221269,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":80.339225603,"data":"  \"cuda_available\": true,\n"}
+,{"stream_name":"stdout","time":80.339230321,"data":"  \"python\": \"3.13.15\"\n"}
+,{"stream_name":"stdout","time":80.339235471,"data":"}\n"}
+,{"stream_name":"stdout","time":80.54504357,"data":"{\n"}
+,{"stream_name":"stdout","time":80.545073906,"data":"  \"results\": [\n"}
+,{"stream_name":"stdout","time":80.545078745,"data":"    {\n"}
+,{"stream_name":"stdout","time":80.545082215,"data":"      \"checkpoint\": \"/kaggle/working/pasture-release-exploratory-098b9998639e47f29aa271d3f7538718/exploratory-only/exploratory-only/a2c/generation-00000016/manifest.json\",\n"}
+,{"stream_name":"stdout","time":80.545085978,"data":"      \"export\": \"/kaggle/working/pasture-release-exploratory-098b9998639e47f29aa271d3f7538718/exploratory-only/exploratory-only/a2c/torch-a2c-seed-9482817.npz\",\n"}
+,{"stream_name":"stdout","time":80.545090309,"data":"      \"evaluation\": \"/kaggle/working/pasture-release-exploratory-098b9998639e47f29aa271d3f7538718/exploratory-only/exploratory-only/a2c/evaluation.json\",\n"}
+,{"stream_name":"stdout","time":80.545119485,"data":"      \"updates\": 16,\n"}
+,{"stream_name":"stdout","time":80.54512448,"data":"      \"eval_only\": false,\n"}
+,{"stream_name":"stdout","time":80.545128359,"data":"      \"execution_migration\": null,\n"}
+,{"stream_name":"stdout","time":80.545131985,"data":"      \"exploratory_only\": true,\n"}
+,{"stream_name":"stdout","time":80.545135582,"data":"      \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":80.545139261,"data":"      \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":80.545142892,"data":"    }\n"}
+,{"stream_name":"stdout","time":80.545146367,"data":"  ],\n"}
+,{"stream_name":"stdout","time":80.545151659,"data":"  \"device_requested\": \"cuda\",\n"}
+,{"stream_name":"stdout","time":80.545158605,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":80.545161133,"data":"  \"cuda_available\": true,\n"}
+,{"stream_name":"stdout","time":80.545163567,"data":"  \"python\": \"3.13.15\"\n"}
+,{"stream_name":"stdout","time":80.545166077,"data":"}\n"}
+,{"stream_name":"stderr","time":85.011127068,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":85.012132217,"data":"  File \"\u003cstring\u003e\", line 1, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":85.012154366,"data":"    import sys;import papermill as pm;pm.execute_notebook(\"__notebook__.ipynb\",\"__notebook__.ipynb\",progress_bar=False,log_output=True,stdout_file=sys.stdout,stderr_file=sys.stderr,allow_errors=False,timeout=43200)\n"}
+,{"stream_name":"stderr","time":85.012161544,"data":"                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":85.012167595,"data":"  File \"/usr/local/lib/python3.13/dist-packages/papermill/execute.py\", line 131, in execute_notebook\n"}
+,{"stream_name":"stderr","time":85.012172964,"data":"    raise_for_execution_errors(nb, output_path)\n"}
+,{"stream_name":"stderr","time":85.012177695,"data":"    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":85.01218232,"data":"  File \"/usr/local/lib/python3.13/dist-packages/papermill/execute.py\", line 251, in raise_for_execution_errors\n"}
+,{"stream_name":"stderr","time":85.012187783,"data":"    raise error\n"}
+,{"stream_name":"stderr","time":85.01219276,"data":"papermill.exceptions.PapermillExecutionError: \n"}
+,{"stream_name":"stderr","time":85.012197285,"data":"---------------------------------------------------------------------------\n"}
+,{"stream_name":"stderr","time":85.012202092,"data":"Exception encountered at \"In [4]\":\n"}
+,{"stream_name":"stderr","time":85.012206879,"data":"---------------------------------------------------------------------------\n"}
+,{"stream_name":"stderr","time":85.012211622,"data":"FileNotFoundError                         Traceback (most recent call last)\n"}
+,{"stream_name":"stderr","time":85.012216476,"data":"/tmp/ipykernel_22/2410102208.py in \u003ccell line: 0\u003e()\n"}
+,{"stream_name":"stderr","time":85.012221389,"data":"     71     learner_dir = exploratory_root / \"exploratory-only\" / \"a2c\"\n"}
+,{"stream_name":"stderr","time":85.012226245,"data":"     72     metrics_path = learner_dir / \"metrics.jsonl\"\n"}
+,{"stream_name":"stderr","time":85.012231836,"data":"---\u003e 73     rows = [json.loads(line) for line in metrics_path.read_text().splitlines() if line.strip()]\n"}
+,{"stream_name":"stderr","time":85.012236998,"data":"     74     if len(rows) != 16 or [row.get(\"update\") for row in rows] != list(range(1, 17)):\n"}
+,{"stream_name":"stderr","time":85.012253147,"data":"     75         raise RuntimeError(\"Exploratory A2C did not complete its fixed 16 updates\")\n"}
+,{"stream_name":"stderr","time":85.012258269,"data":"\n"}
+,{"stream_name":"stderr","time":85.012262796,"data":"/usr/lib/python3.13/pathlib/_local.py in read_text(self, encoding, errors, newline)\n"}
+,{"stream_name":"stderr","time":85.012267439,"data":"    544         # appropriate stack level.\n"}
+,{"stream_name":"stderr","time":85.01227199,"data":"    545         encoding = io.text_encoding(encoding)\n"}
+,{"stream_name":"stderr","time":85.012276255,"data":"--\u003e 546         return PathBase.read_text(self, encoding, errors, newline)\n"}
+,{"stream_name":"stderr","time":85.012280991,"data":"    547 \n"}
+,{"stream_name":"stderr","time":85.012285535,"data":"    548     def write_text(self, data, encoding=None, errors=None, newline=None):\n"}
+,{"stream_name":"stderr","time":85.012290508,"data":"\n"}
+,{"stream_name":"stderr","time":85.012295161,"data":"/usr/lib/python3.13/pathlib/_abc.py in read_text(self, encoding, errors, newline)\n"}
+,{"stream_name":"stderr","time":85.01230133,"data":"    630         Open the file in text mode, read it, and close the file.\n"}
+,{"stream_name":"stderr","time":85.012306109,"data":"    631         \"\"\"\n"}
+,{"stream_name":"stderr","time":85.012310466,"data":"--\u003e 632         with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:\n"}
+,{"stream_name":"stderr","time":85.012315109,"data":"    633             return f.read()\n"}
+,{"stream_name":"stderr","time":85.012319714,"data":"    634 \n"}
+,{"stream_name":"stderr","time":85.01232408,"data":"\n"}
+,{"stream_name":"stderr","time":85.012328945,"data":"/usr/lib/python3.13/pathlib/_local.py in open(self, mode, buffering, encoding, errors, newline)\n"}
+,{"stream_name":"stderr","time":85.012333967,"data":"    535         if \"b\" not in mode:\n"}
+,{"stream_name":"stderr","time":85.012339023,"data":"    536             encoding = io.text_encoding(encoding)\n"}
+,{"stream_name":"stderr","time":85.012343413,"data":"--\u003e 537         return io.open(self, mode, buffering, encoding, errors, newline)\n"}
+,{"stream_name":"stderr","time":85.012348392,"data":"    538 \n"}
+,{"stream_name":"stderr","time":85.012353636,"data":"    539     def read_text(self, encoding=None, errors=None, newline=None):\n"}
+,{"stream_name":"stderr","time":85.012358089,"data":"\n"}
+,{"stream_name":"stderr","time":85.012363385,"data":"FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/working/pasture-release-exploratory-098b9998639e47f29aa271d3f7538718/exploratory-only/exploratory-only/a2c/metrics.jsonl'\n"}
+,{"stream_name":"stderr","time":85.012368669,"data":"\n"}
+,{"stream_name":"stderr","time":87.526283855,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":87.526318414,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":87.724629474,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":87.724658558,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":88.648231248,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":88.744780316,"data":"[NbConvertApp] Writing 38546 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":91.604873287,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":92.291332627,"data":"[NbConvertApp] Writing 368658 bytes to __results__.html\n"}
+]

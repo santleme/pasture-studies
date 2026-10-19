@@ -1,0 +1,68 @@
+{
+  "benchmark_eligible": false,
+  "biological_validation": false,
+  "evaluation_root_seed": 9487999,
+  "failures": [
+    "candidate did not strictly exceed best reference for forage_successes_per_episode",
+    "candidate did not strictly exceed best reference for water_successes_per_episode",
+    "candidate final_hunger is worse than best reference"
+  ],
+  "formal_eligible": false,
+  "gate_metrics": {
+    "final_hunger": {
+      "best_reference": 0.9420909371504771,
+      "best_reference_label": "reference-E/trained",
+      "candidate": 1.0,
+      "comparison": "no worse than best reference",
+      "passed": false
+    },
+    "final_thirst": {
+      "best_reference": 1.0,
+      "best_reference_label": "reference-A/trained",
+      "candidate": 1.0,
+      "comparison": "no worse than best reference",
+      "passed": true
+    },
+    "forage_successes_per_episode": {
+      "best_reference": 2.5,
+      "best_reference_label": "reference-A/heuristic_baseline",
+      "candidate": 1.2777777777777777,
+      "comparison": "strictly greater",
+      "passed": false
+    },
+    "invalid_actions": {
+      "candidate": 0.0,
+      "passed": true
+    },
+    "navigation_failures_per_episode": {
+      "best_reference": 0.0,
+      "best_reference_label": "reference-B/trained",
+      "candidate": 0.0,
+      "passed": null,
+      "role": "diagnostic_only; reason-coded navigation correctness is covered by pathfinding regression tests"
+    },
+    "original_return_per_episode": {
+      "best_reference": 3.940428834028769,
+      "best_reference_label": "reference-B/trained",
+      "candidate": 10.066343046208893,
+      "comparison": "strictly greater",
+      "passed": true
+    },
+    "water_successes_per_episode": {
+      "best_reference": 0.9166666666666666,
+      "best_reference_label": "reference-A/heuristic_baseline",
+      "candidate": 0.0,
+      "comparison": "strictly greater",
+      "passed": false
+    }
+  },
+  "locked_test_access": false,
+  "passed": false,
+  "status": "failed",
+  "summary": "candidate failed one or more preregistered exploratory gates",
+  "training_seeds": [
+    9484201,
+    9484202,
+    9484203
+  ]
+}

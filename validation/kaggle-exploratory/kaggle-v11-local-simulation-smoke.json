@@ -1,0 +1,24 @@
+{
+  "checkpoint": "artifacts/exploratory/kaggle-v11/exploratory-only/exploratory-only/a2c/torch-a2c-seed-9482817.npz",
+  "policy_id": "torch-9482817-256",
+  "mode": "local farm server HTTP API inference smoke; no training",
+  "seed": 7,
+  "initial_animals": 5,
+  "ticks": 72,
+  "animal_decisions": 360,
+  "action_counts": {
+    "drink": 177,
+    "graze": 36,
+    "rest": 140,
+    "walk": 7
+  },
+  "final_hunger_state_values": [1.0, 1.0, 1.0, 1.0, 1.0],
+  "final_thirst_state_values": [1.0, 1.0, 1.0, 1.0, 1.0],
+  "assertions": [
+    "checkpoint and JSON sidecar loaded through farm_sim.policy.load_checkpoint",
+    "GET /api/state returned five cattle at tick 0",
+    "72 POST /api/step requests returned five cattle with monotonically advancing ticks",
+    "all 360 serialized action labels were accepted by the simulation API"
+  ],
+  "limitations": "This is a software inference check on the local simulator, not browser visual QA, a baseline comparison, or biological validation."
+}

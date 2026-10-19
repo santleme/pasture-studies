@@ -408,6 +408,5 @@ class TorchEvaluationTests(unittest.TestCase):
         verify.assert_called_once_with(pending, verify_current_sources=False)
         self.assertEqual(len(rows), 30 * len(FAMILIES))
 
-
 if __name__ == "__main__":
     unittest.main()

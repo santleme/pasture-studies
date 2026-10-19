@@ -121,3 +121,107 @@ The notebook writes checkpoint generations, readiness evidence, observed runtime
 - No claim of biological validation, cognition acceptance, or production husbandry suitability.
 
 The previous successful Kaggle SMOKE v5 record remains in `validation/KAGGLE_SMOKE_V5_REPORT.md`; it is historical evidence and is not overwritten by this launcher release.
+
+## User-authorized exploratory A2C run (nonformal)
+
+`EXPLORATORY` is a separate, fixed-budget path for hands-on exploration—not a way to unlock `EXPERIMENT` or `FULL_VALIDATION`. It trains A2C for exactly 256 complete 72-tick episodes (16 optimizer updates) on one T4 from the Kaggle T4x2 profile, checkpoints every update, records reward/action/invalid-action metrics, exports a local-inference `.npz` policy, and runs five generated exploratory worlds with all five animals for behavior inspection. The fixed seed is `9482817`; it is used only as an unregistered exploratory seed. Outputs are tagged `exploratory_only=true`, `formal_eligible=false`, and `benchmark_eligible=false`. No preregistered splits, pilot, held-out, locked outcomes, selection rules, or scientific acceptance thresholds are used. The resulting policy is not promoted into the app's default policy automatically.
+
+After a clean commit is pushed to the public source repository, use the same existing deployment workflow:
+
+```bash
+python3 scripts/kaggle_deploy.py prepare-exploratory \
+  --path /tmp/pasture-kaggle-exploratory \
+  --owner pascalcoimbra \
+  --runtime-profile /tmp/pasture-kaggle-runtime.json
+python3 scripts/kaggle_release.py generate \
+  --runtime-profile /tmp/pasture-kaggle-runtime.json \
+  --staged-notebook /tmp/pasture-kaggle-exploratory/pasture_studies_kaggle.ipynb \
+  --output /tmp/pasture-exploratory-release.json
+python3 scripts/kaggle_release.py gate EXPLORATORY /tmp/pasture-exploratory-release.json \
+  --config /tmp/pasture-kaggle-exploratory-config.json \
+  --staged-notebook /tmp/pasture-kaggle-exploratory/pasture_studies_kaggle.ipynb
+python3 scripts/kaggle_deploy.py bind-release \
+  --path /tmp/pasture-kaggle-exploratory --manifest /tmp/pasture-exploratory-release.json
+python3 scripts/kaggle_deploy.py publish --path /tmp/pasture-kaggle-exploratory
+python3 scripts/kaggle_deploy.py compare \
+  --path /tmp/pasture-kaggle-exploratory \
+  --kernel pascalcoimbra/pasture-studies --version <published-version>
+python3 scripts/kaggle_deploy.py execute \
+  --path /tmp/pasture-kaggle-exploratory --mode EXPLORATORY \
+  --confirm-execution --confirm-gpu
+python3 scripts/kaggle_deploy.py status pascalcoimbra/pasture-studies/<executed-version>
+python3 scripts/kaggle_deploy.py logs pascalcoimbra/pasture-studies/<executed-version>
+python3 scripts/kaggle_deploy.py output pascalcoimbra/pasture-studies/<executed-version> \
+  --path /tmp/pasture-kaggle-exploratory-output
+python3 scripts/kaggle_deploy.py verify \
+  /tmp/pasture-kaggle-exploratory-output/pasture-release-<run-id>/artifact-manifest.json \
+  --artifacts /tmp/pasture-kaggle-exploratory-output/pasture-release-<run-id>
+# Optional: inspect the downloaded policy in the local 2D app (does not replace the default policy).
+python3 -m farm_sim.server \
+  --checkpoint /tmp/pasture-kaggle-exploratory-output/pasture-release-<run-id>/exploratory-only/exploratory-only/a2c/torch-a2c-seed-9482817.npz
+# Open http://127.0.0.1:8000 and inspect the five per-animal trajectories/action histories.
+```
+
+This real training run consumes Kaggle GPU quota. Reward trajectories, action distributions, and rollout traces are descriptive only—not evidence of learning efficacy, cognition, acceleration, or biological validity. No Kaggle execution is initiated by documentation preparation itself.
+
+## Exploratory A2C comparison (A–D, one 12-job batch)
+
+`EXPLORATORY_COMPARISON` is separate from the formal protocol. It trains exactly 12 A2C policies from scratch: A (original reward/objective), B (original reward with normalized advantages and entropy coefficient 0.01), C (state-aware exploratory reward with the original objective), and D (state-aware reward plus the B objective); each condition uses the same three fixed training seeds and 512 complete 72-tick episodes per policy. The optional reward shape is scale 0.1, only used by C/D; its A2C returns remain undiscounted (`discount_factor=1.0`). Evaluations use one fixed, independent evaluation root seed and the original simulator reward on common synthetic scenario worlds, and compare every checkpoint with same-seed untrained and heuristic baselines. The comparison reports rewards, resource events, final toy drives, action frequencies/entropy, invalid actions, and first-decision memory/perception probes. A descriptive ranking and SVG are not acceptance or biological claims.
+
+Before those 12 jobs, the notebook performs a bounded no-optimizer/no-checkpoint calibration on CPU, each T4, and two concurrent one-batch T4 workers. Only one training schedule is selected: two independent GPU shards if their measured throughput exceeds the best single-device throughput, otherwise one fastest device (including CPU if it actually wins). This is a performance diagnostic, not a learning run or GPU speedup claim. The current execution must run only one 12-job suite. The 24-job ceiling reserves at most one additional 12-job exploratory iteration after reviewing the complete first-batch evidence; it is not a duplicate single-GPU/dual-GPU comparison. No model is selected using formal or locked data; no preregistration thresholds are changed.
+
+After pushing the source commit to `origin`, deploy and execute using the existing CLI workflow:
+
+```bash
+python3 scripts/kaggle_deploy.py preflight
+python3 scripts/kaggle_deploy.py prepare-exploratory-comparison \
+  --path /tmp/pasture-kaggle-a2c-comparison \
+  --owner pascalcoimbra \
+  --runtime-profile validation/kaggle-exploratory/kaggle-v11-runtime-profile.json
+python3 scripts/kaggle_deploy.py execute \
+  --path /tmp/pasture-kaggle-a2c-comparison \
+  --mode EXPLORATORY_COMPARISON --confirm-execution --confirm-gpu
+```
+
+Record the exact numeric notebook version reported by the push, then monitor and retrieve that exact version (do not use `latest`):
+
+```bash
+python3 scripts/kaggle_deploy.py status pascalcoimbra/pasture-studies/<version>
+python3 scripts/kaggle_deploy.py logs pascalcoimbra/pasture-studies/<version>
+python3 scripts/kaggle_deploy.py output pascalcoimbra/pasture-studies/<version> \
+  --path /tmp/pasture-kaggle-a2c-output
+```
+
+The notebook artifact manifest binds the source commit, notebook hash, runtime, calibration, all 12 training jobs, full checkpoints, local `.npz`/sidecar inference exports, raw metric curves, and common-world JSON/SVG evaluation. Verify the downloaded archive and its manifest before loading any policy:
+
+```bash
+python3 scripts/kaggle_deploy.py verify \
+  /tmp/pasture-kaggle-a2c-output/pasture-release-<run-id>/artifact-manifest.json \
+  --artifacts /tmp/pasture-kaggle-a2c-output/pasture-release-<run-id>
+```
+
+The exported `torch-a2c-seed-<seed>.npz` plus same-basename `.json` file can be loaded by the local simulation without promotion or replacing the default policy:
+
+```bash
+python3 -m farm_sim.server --checkpoint \
+  /tmp/pasture-kaggle-a2c-output/pasture-release-<run-id>/exploratory-comparison/training-suite/exploratory-comparison/variant-<A-D>/seed-<seed>/a2c/torch-a2c-seed-<seed>.npz
+# Open http://127.0.0.1:8000 and inspect the five simulated animals.
+```
+
+If A-D evaluation confirms reward exploitation (specifically no forage successes with near-maximal final hunger), the bounded follow-up is a separate `EXPLORATORY_ITERATION_2` mode: E/F each use three new seeds and 512 episodes, state-aware reward scale `0.5` (up from `0.1`), and the same original-vs-normalized/entropy A2C objective contrast. Its six jobs bring the cumulative count to 18/24; it does not change the original reward, the formal protocol, or its acceptance criteria. Stage and run only after inspecting the first comparison:
+
+```bash
+python3 scripts/kaggle_deploy.py prepare-exploratory-iteration-2 \
+  --path /tmp/pasture-kaggle-a2c-iteration-2 \
+  --owner pascalcoimbra \
+  --runtime-profile validation/kaggle-exploratory/kaggle-v11-runtime-profile.json
+# Generate a fresh outcome-blind release manifest with scripts/kaggle_release.py,
+# bind it with scripts/kaggle_deploy.py bind-release, then:
+python3 scripts/kaggle_deploy.py execute \
+  --path /tmp/pasture-kaggle-a2c-iteration-2 \
+  --mode EXPLORATORY_ITERATION_2 --confirm-execution --confirm-gpu
+```
+
+Iteration-2 outputs are E/F-only; create a combined A-F checkpoint manifest from the verified A-D and E/F final generations and pass it to `validation.compare_exploratory_checkpoints` with the same `9483999` evaluation root to produce a fully common-world six-condition report. Never copy any formal/locked artifacts into this exploratory directory.
+
+If a run is interrupted, the trainer commits a checkpoint generation after each update and resumes from the per-job `LATEST` pointer when the same output directory is rerun. Kaggle output retrieval and the run manifest must be checked before attempting recovery. Count every started policy attempt against the 24-job ceiling. If the failed kernel does not expose its `/kaggle/working` checkpoint outputs, do not claim cross-session resume; report the external limitation and avoid re-running the entire suite if it would exceed the cap.

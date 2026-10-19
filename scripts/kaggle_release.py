@@ -23,12 +23,18 @@ PREREGISTRATION = Path("validation/kaggle-mvp1/preregistration.json")
 RUNTIME_PROTOCOL_CANDIDATE = Path("validation/protocols/pasture-experiment-runtime-v2-candidate.json")
 NOTEBOOK = Path("notebooks/pasture_studies_kaggle.ipynb")
 ENGINE_SOURCE_PATHS = (
-    "farm_sim/torch_training.py", "farm_sim/torch_checkpoint.py", "farm_sim/simulation.py",
+    "farm_sim/torch_training.py", "farm_sim/exploratory_learning.py", "farm_sim/torch_checkpoint.py", "farm_sim/simulation.py",
     "farm_sim/model.py", "farm_sim/navigation.py", "farm_sim/perception.py",
     "farm_sim/memory.py", "farm_sim/physiology.py", "farm_sim/policy.py",
     "validation/train_torch_mvp1.py", "validation/evaluate_torch_mvp1.py",
     "validation/benchmark_torch_fixed_corpus.py", "validation/preregister_torch_mvp1.py",
     "validation/profile_torch_training.py", "validation/profile_training_pipeline.py",
+    "validation/compare_exploratory_checkpoints.py",
+    "validation/run_autoresearch_training.py", "validation/compare_autoresearch_checkpoints.py",
+    "validation/validate_autoresearch_candidate.py",
+    "validation/protocols/autoresearch-world-perception-v1.json",
+    "validation/protocols/autoresearch-outcome-aware-v1.json",
+    "validation/protocols/autoresearch-outcome-scale-v1.json",
     "requirements-training.txt",
 )
 SCHEMA_VERSION = 1
@@ -38,6 +44,107 @@ REQUIRED_RUNTIME_FIELDS = frozenset({
 APPROVAL_SCHEMA_VERSION = 1
 APPROVAL_STATUS_PENDING = "PENDING_INDEPENDENT_SIGNATURE"
 ALLOWED_MODES = frozenset({"PREFLIGHT", "SMOKE"})
+EXPLORATORY_CONFIG_VALUE = {
+    "task": "exploratory_a2c_training", "algorithm": "a2c", "episodes": 256,
+    "optimizer_updates": 16, "seed": 9482817, "evaluation_episodes": 5,
+    "device_count": 1, "locked_test_access": False, "formal_eligible": False,
+    "benchmark_eligible": False, "checkpoint_promotion": False,
+}
+EXPLORATORY_COMPARISON_CONFIG_VALUE = {
+    "task": "exploratory_a2c_variant_comparison", "algorithm": "a2c",
+    "variants": ["A", "B", "C", "D"], "episodes_per_variant_seed": 512,
+    "seeds": [9483001, 9483002, 9483003], "training_jobs": 12, "evaluation_episodes": 5,
+    "comparison_eval_seed": 9483999, "comparison_episodes_per_family": 3,
+    "max_training_jobs": 24, "max_devices": 2, "locked_test_access": False,
+    "variant_config": {
+        "A": {"reward_variant": "original", "state_reward_scale": 0.1,
+              "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+        "B": {"reward_variant": "original", "state_reward_scale": 0.1,
+              "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
+        "C": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
+              "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+        "D": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
+              "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
+    },
+    "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
+}
+EXPLORATORY_ITERATION_2_CONFIG_VALUE = {
+    "task": "exploratory_a2c_reward_scale_followup", "algorithm": "a2c",
+    "variants": ["E", "F"], "episodes_per_variant_seed": 512,
+    "seeds": [9483004, 9483005, 9483006], "training_jobs": 6,
+    "comparison_eval_seed": 9483999, "comparison_episodes_per_family": 3,
+    "max_training_jobs": 24, "cumulative_jobs_before": 12,
+    "max_devices": 2, "locked_test_access": False,
+    "variant_config": {
+        "E": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+              "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+        "F": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+              "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
+    },
+    "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
+}
+AUTORESEARCH_BATCH_CONFIGS = {
+    "AUTORESEARCH_BATCH_1": {
+        "task": "autoresearch_resource_perception_batch", "protocol": "autoresearch-world-perception-v1",
+        "batch": 1, "algorithm": "a2c", "variants": ["G", "H"],
+        "seeds": [9484101, 9484102, 9484103], "episodes_per_variant_seed": 512,
+        "training_jobs": 6, "cumulative_jobs_before": 0, "max_additional_training_jobs": 24,
+        "evaluation_root_seed": 9484999, "comparison_episodes_per_family": 3,
+        "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
+        "variant_config": {
+            "G": {"reward_variant": "original", "state_reward_scale": 0.0,
+                  "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+            "H": {"reward_variant": "original", "state_reward_scale": 0.0,
+                  "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0}},
+        "locked_test_access": False, "formal_eligible": False,
+        "benchmark_eligible": False, "checkpoint_promotion": False,
+    },
+    "AUTORESEARCH_BATCH_2": {
+        "task": "autoresearch_resource_perception_batch", "protocol": "autoresearch-world-perception-v1",
+        "batch": 2, "algorithm": "a2c", "variants": ["I", "J"],
+        "seeds": [9484104, 9484105, 9484106], "episodes_per_variant_seed": 512,
+        "training_jobs": 6, "cumulative_jobs_before": 6, "max_additional_training_jobs": 24,
+        "evaluation_root_seed": 9485999, "comparison_episodes_per_family": 3,
+        "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
+        "variant_config": {
+            "I": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+                  "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+            "J": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+                  "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0}},
+        "locked_test_access": False, "formal_eligible": False,
+        "benchmark_eligible": False, "checkpoint_promotion": False,
+    },
+    "AUTORESEARCH_BATCH_3": {
+        "task": "autoresearch_outcome_aware_recovery", "protocol": "autoresearch-outcome-aware-v1",
+        "batch": 3, "algorithm": "a2c", "variants": ["K", "L"],
+        "seeds": [9484201, 9484202, 9484203], "episodes_per_variant_seed": 512,
+        "training_jobs": 6, "cumulative_jobs_before": 12, "max_additional_training_jobs": 24,
+        "evaluation_root_seed": 9486999, "comparison_episodes_per_family": 3,
+        "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
+        "variant_config": {
+            "K": {"reward_variant": "outcome_aware", "state_reward_scale": 0.5,
+                  "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+            "L": {"reward_variant": "outcome_aware", "state_reward_scale": 0.5,
+                  "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0}},
+        "locked_test_access": False, "formal_eligible": False,
+        "benchmark_eligible": False, "checkpoint_promotion": False,
+    },
+    "AUTORESEARCH_BATCH_4": {
+        "task": "autoresearch_outcome_aware_scale_followup", "protocol": "autoresearch-outcome-scale-v1",
+        "batch": 4, "algorithm": "a2c", "variants": ["M", "N"],
+        "seeds": [9484301, 9484302, 9484303], "episodes_per_variant_seed": 512,
+        "training_jobs": 6, "cumulative_jobs_before": 18, "max_additional_training_jobs": 24,
+        "evaluation_root_seed": 9487999, "comparison_episodes_per_family": 3,
+        "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
+        "variant_config": {
+            "M": {"reward_variant": "outcome_aware", "state_reward_scale": 2.0,
+                  "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+            "N": {"reward_variant": "outcome_aware", "state_reward_scale": 2.0,
+                  "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0}},
+        "locked_test_access": False, "formal_eligible": False,
+        "benchmark_eligible": False, "checkpoint_promotion": False,
+    },
+}
 READINESS_DIAGNOSTIC_TASKS = frozenset({"checkpoint_recovery", "t4x2_path_smoke"})
 READINESS_CONFIG_KEYS = frozenset({
     "task", "max_updates", "max_episodes", "max_devices", "locked_test_access",
@@ -305,6 +412,22 @@ def authorize_mode(mode: str, manifest: dict[str, Any], approval: Any = None, *,
         return normalized
     if normalized == "READINESS":
         return authorize_readiness(config)
+    if normalized == "EXPLORATORY":
+        if config != EXPLORATORY_CONFIG_VALUE or not isinstance(manifest, dict):
+            raise ReleaseError("EXPLORATORY requires the exact fixed A2C-only nonformal config")
+        return "EXPLORATORY"
+    if normalized == "EXPLORATORY_COMPARISON":
+        if config != EXPLORATORY_COMPARISON_CONFIG_VALUE or not isinstance(manifest, dict):
+            raise ReleaseError("EXPLORATORY_COMPARISON requires the exact bounded A-D nonformal config")
+        return normalized
+    if normalized == "EXPLORATORY_ITERATION_2":
+        if config != EXPLORATORY_ITERATION_2_CONFIG_VALUE or not isinstance(manifest, dict):
+            raise ReleaseError("EXPLORATORY_ITERATION_2 requires the exact bounded E/F reward-scale config")
+        return normalized
+    if normalized in AUTORESEARCH_BATCH_CONFIGS:
+        if config != AUTORESEARCH_BATCH_CONFIGS[normalized] or not isinstance(manifest, dict):
+            raise ReleaseError(f"{normalized} requires its exact fixed-budget nonformal cohort config")
+        return normalized
     if normalized in {"EXPERIMENT", "FULL_VALIDATION"}:
         if config is not None:
             raise ReleaseError("Experimental execution does not accept an unreviewed runtime config")
@@ -363,10 +486,10 @@ def main(argv: list[str] | None = None) -> int:
     verify.add_argument("--staged-notebook", type=Path,
                         help="Exact staged notebook; otherwise the recorded staged path is used")
     gate = commands.add_parser("gate", help="Check mode gate; experimental modes remain denied without trusted signature")
-    gate.add_argument("mode", choices=("PREFLIGHT", "SMOKE", "READINESS", "EXPERIMENT", "FULL_VALIDATION"))
+    gate.add_argument("mode", choices=("PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2", "AUTORESEARCH_BATCH_1", "AUTORESEARCH_BATCH_2", "AUTORESEARCH_BATCH_3", "AUTORESEARCH_BATCH_4", "EXPERIMENT", "FULL_VALIDATION"))
     gate.add_argument("manifest", type=Path)
     gate.add_argument("--approval", type=Path, help="Separate approval artifact; not trusted without pinned verifier")
-    gate.add_argument("--config", type=Path, help="Exact bounded config required for READINESS mode")
+    gate.add_argument("--config", type=Path, help="Exact bounded config required for READINESS or EXPLORATORY mode")
     gate.add_argument("--staged-notebook", type=Path,
                       help="Exact staged notebook bytes bound by the manifest; required when verifying outside the staging host")
     args = parser.parse_args(argv)
@@ -394,9 +517,9 @@ def main(argv: list[str] | None = None) -> int:
             manifest = _load_json(args.manifest)
             verify_release_manifest(manifest, staged_notebook=args.staged_notebook)
             approval = _load_json(args.approval) if args.approval else None
-            if args.mode == "READINESS":
+            if args.mode in {"READINESS", "EXPLORATORY"}:
                 if not args.config:
-                    raise ReleaseError("READINESS requires --config")
+                    raise ReleaseError(f"{args.mode} requires --config")
                 authorize_mode(args.mode, manifest, approval, config=_load_json(args.config))
             else:
                 if args.config:

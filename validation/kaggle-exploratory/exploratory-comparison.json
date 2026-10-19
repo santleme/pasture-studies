@@ -1,0 +1,4146 @@
+{
+  "benchmark_eligible": false,
+  "checkpoint_manifest_sha256": "70c215af83733532e9552ee28cfc1890de10585561c834ba546463756964e4ee",
+  "checkpoint_reports": [
+    {
+      "condition": "A",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-A/seed-9483001/a2c/generation-00000032",
+      "generation_manifest_sha256": "9ead8e95f86af33b12be56b2a6cd7be66a5e35bc2845dcf6b29846dc9b570c5f",
+      "report": "/tmp/pasture-exploratory-final-evaluation/A/seed-9483001-evaluation.json",
+      "report_sha256": "5de9cff7a39485e8e3206c7a09e57b3de1a10087daf3378928e767b6d9eee14d",
+      "training_seed": 9483001
+    },
+    {
+      "condition": "A",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-A/seed-9483002/a2c/generation-00000032",
+      "generation_manifest_sha256": "5e37a7f1610da4ca1d7c90435514f1eac6677fdb0364d1eac981aa6445437599",
+      "report": "/tmp/pasture-exploratory-final-evaluation/A/seed-9483002-evaluation.json",
+      "report_sha256": "1e277fe5fc9dae8eeefab2a42876d47da70fc0f5b6a32d7012efa9886321a94f",
+      "training_seed": 9483002
+    },
+    {
+      "condition": "A",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-A/seed-9483003/a2c/generation-00000032",
+      "generation_manifest_sha256": "38f6914eb503e84f90b9f0ca22113adc7326741f58e439cde4f08c07bd26a34c",
+      "report": "/tmp/pasture-exploratory-final-evaluation/A/seed-9483003-evaluation.json",
+      "report_sha256": "ffc68b7fcfc06773d21f01be5b1ec99432e88308424f6a20ee5fc2a7dac25fb8",
+      "training_seed": 9483003
+    },
+    {
+      "condition": "B",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-B/seed-9483001/a2c/generation-00000032",
+      "generation_manifest_sha256": "4c2bcf0f28b247e33b287e9670c49d6b25c17a3f10b6cabb230d40c109fff8c0",
+      "report": "/tmp/pasture-exploratory-final-evaluation/B/seed-9483001-evaluation.json",
+      "report_sha256": "15a0dd739bda3209b8d9b705f17d6d8f23acd168e3f01a6894c54a982bf1ee17",
+      "training_seed": 9483001
+    },
+    {
+      "condition": "B",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-B/seed-9483002/a2c/generation-00000032",
+      "generation_manifest_sha256": "a3fc299d027a019d9feb02d6df33366fa0e96dff3a896600fa6e61861c11bcc3",
+      "report": "/tmp/pasture-exploratory-final-evaluation/B/seed-9483002-evaluation.json",
+      "report_sha256": "84d874613e371ad942e3945a0688df77e9744adf801695ac40932540be95b632",
+      "training_seed": 9483002
+    },
+    {
+      "condition": "B",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-B/seed-9483003/a2c/generation-00000032",
+      "generation_manifest_sha256": "706698518a45e095980a915113728438abc5940c74d80974c68477d512e47ca4",
+      "report": "/tmp/pasture-exploratory-final-evaluation/B/seed-9483003-evaluation.json",
+      "report_sha256": "44f8a04424db43d8006c914b40d9c15723893c6efcd27dd5f5614001ba30d6a4",
+      "training_seed": 9483003
+    },
+    {
+      "condition": "C",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-C/seed-9483001/a2c/generation-00000032",
+      "generation_manifest_sha256": "fc8d4806a3e4ad126da95bb37b6ccf09101b6b317045111d1928f698cc6e8db9",
+      "report": "/tmp/pasture-exploratory-final-evaluation/C/seed-9483001-evaluation.json",
+      "report_sha256": "703c66da8f981ae3402d371b3fa341159cbd87a0c4729b9aadd63fb766ac25cd",
+      "training_seed": 9483001
+    },
+    {
+      "condition": "C",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-C/seed-9483002/a2c/generation-00000032",
+      "generation_manifest_sha256": "af4c3fe6ba3a7b949fea616b170f4ee6650607c44e79b7daaf91ea539d274538",
+      "report": "/tmp/pasture-exploratory-final-evaluation/C/seed-9483002-evaluation.json",
+      "report_sha256": "039f389cd1c98e8e63d9666b1372adc81ce9cc1f1c1373f1fc2758932592ce1d",
+      "training_seed": 9483002
+    },
+    {
+      "condition": "C",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-C/seed-9483003/a2c/generation-00000032",
+      "generation_manifest_sha256": "d8efc72f30c09c22a4858132e7b83118f028d87d9efd1eca9d6d0d22d4a27ce8",
+      "report": "/tmp/pasture-exploratory-final-evaluation/C/seed-9483003-evaluation.json",
+      "report_sha256": "0ee06ee5f3cb179464d29370328813b3c83cc7aa2f139ff69a9dcd87c3b42fc9",
+      "training_seed": 9483003
+    },
+    {
+      "condition": "D",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-D/seed-9483001/a2c/generation-00000032",
+      "generation_manifest_sha256": "2d31f54ea683793ff396d1fcc794f8cebecd53e8fe22c4de230bc60cd78bae2d",
+      "report": "/tmp/pasture-exploratory-final-evaluation/D/seed-9483001-evaluation.json",
+      "report_sha256": "ebaff95470af31941696aedd947b3b37444508e601af647fe33236d7352adfc1",
+      "training_seed": 9483001
+    },
+    {
+      "condition": "D",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-D/seed-9483002/a2c/generation-00000032",
+      "generation_manifest_sha256": "614543499e0c052efdb0d85cce597cf56eacb1f7bd344df1d8237c6402350791",
+      "report": "/tmp/pasture-exploratory-final-evaluation/D/seed-9483002-evaluation.json",
+      "report_sha256": "ac53c6c4c6b1da41bf66f6c233e438a1a26010f01e387fdf16e604a5ecb71525",
+      "training_seed": 9483002
+    },
+    {
+      "condition": "D",
+      "generation": "/tmp/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/variant-D/seed-9483003/a2c/generation-00000032",
+      "generation_manifest_sha256": "25e0517ae80f0594da22a2e73be8af8719623b9f1cb7b24d05c80fb1c634c73a",
+      "report": "/tmp/pasture-exploratory-final-evaluation/D/seed-9483003-evaluation.json",
+      "report_sha256": "be066dd7fde98547d7a136c03d9f5ecae196357f4e06bd0f15eb730bffc29d95",
+      "training_seed": 9483003
+    },
+    {
+      "condition": "E",
+      "generation": "/tmp/pasture-kaggle-v13-output/pasture-release-exploratory_iteration_2-2b3c4beba71b49e9a8060c833789402c/exploratory-iteration-2/training-suite/exploratory-iteration-2/variant-E/seed-9483004/a2c/generation-00000032",
+      "generation_manifest_sha256": "4c5635999f59a84d2cc7e4b7ffe544963773bb128eeff5118c5d4ff7512256f8",
+      "report": "/tmp/pasture-exploratory-final-evaluation/E/seed-9483004-evaluation.json",
+      "report_sha256": "a79415fd0cb8f465e27d6eb3b9c42f05eeb54a2e146ae4abd688d35554c98fab",
+      "training_seed": 9483004
+    },
+    {
+      "condition": "E",
+      "generation": "/tmp/pasture-kaggle-v13-output/pasture-release-exploratory_iteration_2-2b3c4beba71b49e9a8060c833789402c/exploratory-iteration-2/training-suite/exploratory-iteration-2/variant-E/seed-9483005/a2c/generation-00000032",
+      "generation_manifest_sha256": "eb33286e770c930e683ef087d29c7b0c4bc73dba717296f1032c916b07e97be4",
+      "report": "/tmp/pasture-exploratory-final-evaluation/E/seed-9483005-evaluation.json",
+      "report_sha256": "a9fdaa3bc5896c5054bc4d8f4086505c8cf1ec4035838366b2892de5f1c83222",
+      "training_seed": 9483005
+    },
+    {
+      "condition": "E",
+      "generation": "/tmp/pasture-kaggle-v13-output/pasture-release-exploratory_iteration_2-2b3c4beba71b49e9a8060c833789402c/exploratory-iteration-2/training-suite/exploratory-iteration-2/variant-E/seed-9483006/a2c/generation-00000032",
+      "generation_manifest_sha256": "9acd6c2c30ba06ac192a7600fd5388f77f0c7ec8aff6a5f13626b8a097a1306a",
+      "report": "/tmp/pasture-exploratory-final-evaluation/E/seed-9483006-evaluation.json",
+      "report_sha256": "0c274c7c8d316a9deec79c0ca520d3fe4aeb301998f325c13bb9660984a6bccb",
+      "training_seed": 9483006
+    },
+    {
+      "condition": "F",
+      "generation": "/tmp/pasture-kaggle-v13-output/pasture-release-exploratory_iteration_2-2b3c4beba71b49e9a8060c833789402c/exploratory-iteration-2/training-suite/exploratory-iteration-2/variant-F/seed-9483004/a2c/generation-00000032",
+      "generation_manifest_sha256": "a068ff9f978017a2e6381d1b955e4cbff0397fc34ad2c03b3271c13de6561919",
+      "report": "/tmp/pasture-exploratory-final-evaluation/F/seed-9483004-evaluation.json",
+      "report_sha256": "ccc323c74611f1592ef99f2daa02eb4b6475c97cb5172b6fb0338762b6c2c5bf",
+      "training_seed": 9483004
+    },
+    {
+      "condition": "F",
+      "generation": "/tmp/pasture-kaggle-v13-output/pasture-release-exploratory_iteration_2-2b3c4beba71b49e9a8060c833789402c/exploratory-iteration-2/training-suite/exploratory-iteration-2/variant-F/seed-9483005/a2c/generation-00000032",
+      "generation_manifest_sha256": "cacaffa8024da9cf66e2a46a897b1d36b82be430101d8cc8e246cb6761419438",
+      "report": "/tmp/pasture-exploratory-final-evaluation/F/seed-9483005-evaluation.json",
+      "report_sha256": "ab5b0a01e3e1eb2949ec467a45f798120fa11f4ac70be88f3388dd10209b2d2c",
+      "training_seed": 9483005
+    },
+    {
+      "condition": "F",
+      "generation": "/tmp/pasture-kaggle-v13-output/pasture-release-exploratory_iteration_2-2b3c4beba71b49e9a8060c833789402c/exploratory-iteration-2/training-suite/exploratory-iteration-2/variant-F/seed-9483006/a2c/generation-00000032",
+      "generation_manifest_sha256": "5cbc0a02f6d1e46e459f4a86d1ab908049b98139a563346e9a566b65de7a90d5",
+      "report": "/tmp/pasture-exploratory-final-evaluation/F/seed-9483006-evaluation.json",
+      "report_sha256": "2cf7e8532a07f5725d2f43f803c4a39a8bcf34d834a1b68dc8ddddc262ed80a6",
+      "training_seed": 9483006
+    }
+  ],
+  "conditions": {
+    "A": {
+      "common_worlds": [
+        {
+          "scenario": "starter",
+          "seed": 6619704477179181735
+        },
+        {
+          "scenario": "starter",
+          "seed": 1752855882460042278
+        },
+        {
+          "scenario": "starter",
+          "seed": 8967502443206149104
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8418540021433723923
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 3107094352858000820
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8765291124535248195
+        },
+        {
+          "scenario": "wide",
+          "seed": 2113054247403305903
+        },
+        {
+          "scenario": "wide",
+          "seed": 3157812328197597260
+        },
+        {
+          "scenario": "wide",
+          "seed": 3718101156952247866
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 155914781031058929
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 1534143706552124239
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 3394740966311773029
+        }
+      ],
+      "description": "original A2C + original training reward",
+      "descriptive_rank_by_mean_original_reward": 3,
+      "memory_perception_interventions": [
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": -0.002188168466091156,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.13467995822429657,
+                  "changed_drink_probability": 0.13467995822429657,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.11209255456924438,
+                  "graze": 0.07807302474975586,
+                  "herd_interact": 0.14339932799339294,
+                  "rest": 0.3707323372364044,
+                  "ruminate": 0.18643216788768768,
+                  "walk": 0.10927057266235352
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.10990438610315323,
+                  "graze": 0.09458965063095093,
+                  "herd_interact": 0.19838272035121918,
+                  "rest": 0.31316834688186646,
+                  "ruminate": 0.16563087701797485,
+                  "walk": 0.11832404881715775
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": -0.002188168466091156,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": -0.03632820397615433,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.14623259007930756,
+                  "changed_drink_probability": 0.14623259007930756,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.14623259007930756,
+                  "graze": 0.09758131206035614,
+                  "herd_interact": 0.22037822008132935,
+                  "rest": 0.22867178916931152,
+                  "ruminate": 0.1857728660106659,
+                  "walk": 0.12136320024728775
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.10990438610315323,
+                  "graze": 0.09458965063095093,
+                  "herd_interact": 0.19838272035121918,
+                  "rest": 0.31316834688186646,
+                  "ruminate": 0.16563087701797485,
+                  "walk": 0.11832404881715775
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": -0.03632820397615433,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483004
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": 0.007043607532978058,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.09768907725811005,
+                  "changed_drink_probability": 0.09768907725811005,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.08388780802488327,
+                  "graze": 0.13771387934684753,
+                  "herd_interact": 0.2294374257326126,
+                  "rest": 0.0723743811249733,
+                  "ruminate": 0.2262934297323227,
+                  "walk": 0.25029319524765015
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.09093141555786133,
+                  "graze": 0.08487080037593842,
+                  "herd_interact": 0.23042677342891693,
+                  "rest": 0.06844054162502289,
+                  "ruminate": 0.2103869467973709,
+                  "walk": 0.3149435222148895
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": 0.007043607532978058,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": 0.004213452339172363,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.08671796321868896,
+                  "changed_drink_probability": 0.08671796321868896,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.08671796321868896,
+                  "graze": 0.06806783378124237,
+                  "herd_interact": 0.3027643859386444,
+                  "rest": 0.1114659383893013,
+                  "ruminate": 0.19054561853408813,
+                  "walk": 0.24043826758861542
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.09093141555786133,
+                  "graze": 0.08487080037593842,
+                  "herd_interact": 0.23042677342891693,
+                  "rest": 0.06844054162502289,
+                  "ruminate": 0.2103869467973709,
+                  "walk": 0.3149435222148895
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": 0.004213452339172363,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483005
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": -0.0023181214928627014,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.07989063858985901,
+                  "changed_drink_probability": 0.07989063858985901,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.08749431371688843,
+                  "graze": 0.1872982680797577,
+                  "herd_interact": 0.2015065848827362,
+                  "rest": 0.25768792629241943,
+                  "ruminate": 0.15322262048721313,
+                  "walk": 0.1127903088927269
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.08517619222402573,
+                  "graze": 0.10604974627494812,
+                  "herd_interact": 0.23195518553256989,
+                  "rest": 0.3287963271141052,
+                  "ruminate": 0.15099066495895386,
+                  "walk": 0.09703183174133301
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": -0.0023181214928627014,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": 0.027474384754896164,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.05770180746912956,
+                  "changed_drink_probability": 0.05770180746912956,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.05770180746912956,
+                  "graze": 0.15449243783950806,
+                  "herd_interact": 0.20329979062080383,
+                  "rest": 0.31076928973197937,
+                  "ruminate": 0.1478528380393982,
+                  "walk": 0.1258838027715683
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.08517619222402573,
+                  "graze": 0.10604974627494812,
+                  "herd_interact": 0.23195518553256989,
+                  "rest": 0.3287963271141052,
+                  "ruminate": 0.15099066495895386,
+                  "walk": 0.09703183174133301
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": 0.027474384754896164,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483006
+        }
+      ],
+      "policies": {
+        "heuristic_baseline": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.22685185185185183,
+            "graze": 0.5777777777777778,
+            "herd_interact": 0.010648148148148148,
+            "rest": 0.008796296296296295,
+            "ruminate": 0.0,
+            "walk": 0.17592592592592593
+          },
+          "mean_entropy_of_action_distribution_nats": 0.9423803552701747,
+          "mean_final_drives": {
+            "fatigue": 0.9868321952424763,
+            "hunger": 1.0,
+            "social_need": 0.5656473569410538,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -35.87237458357041,
+          "mean_policy_entropy_nats": 0.0,
+          "mean_remaining_resources": {
+            "forage_available": 0.0,
+            "forage_total": 3.0,
+            "water_available": 0.16666666666666666,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1962,
+            "forage_depleted": 1188,
+            "forage_success": 90,
+            "grazing_en_route": 6210,
+            "herd_alone": 108,
+            "herd_contact": 30,
+            "rested": 114,
+            "ruminated": 0,
+            "walked": 2280,
+            "water_blocked": 948,
+            "water_success": 30
+          }
+        },
+        "trained": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.012268518518518519,
+            "graze": 0.0006944444444444445,
+            "herd_interact": 0.3517746913580247,
+            "rest": 0.271141975308642,
+            "ruminate": 0.2479938271604938,
+            "walk": 0.11612654320987653
+          },
+          "mean_entropy_of_action_distribution_nats": 1.733133431018099,
+          "mean_final_drives": {
+            "fatigue": 0.0002777777777777778,
+            "hunger": 0.9898989126626458,
+            "social_need": 0.2053199914280245,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": 0.3728877950618466,
+          "mean_policy_entropy_nats": 1.7007180458593607,
+          "mean_remaining_resources": {
+            "forage_available": 2.5,
+            "forage_total": 3.0,
+            "water_available": 0.8611111111111112,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 154,
+            "forage_depleted": 0,
+            "forage_success": 0,
+            "grazing_en_route": 9,
+            "herd_alone": 326,
+            "herd_contact": 4233,
+            "rested": 3514,
+            "ruminated": 3214,
+            "walked": 1505,
+            "water_blocked": 0,
+            "water_success": 5
+          }
+        },
+        "untrained_same_seed": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.0896604938271605,
+            "graze": 0.009722222222222222,
+            "herd_interact": 0.0283179012345679,
+            "rest": 0.14320987654320988,
+            "ruminate": 0.408179012345679,
+            "walk": 0.32091049382716047
+          },
+          "mean_entropy_of_action_distribution_nats": 1.748945890380969,
+          "mean_final_drives": {
+            "fatigue": 0.2021388888888889,
+            "hunger": 0.9528341550702168,
+            "social_need": 0.5919792307513237,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -16.447630150340515,
+          "mean_policy_entropy_nats": 1.712686597845997,
+          "mean_remaining_resources": {
+            "forage_available": 2.5,
+            "forage_total": 3.0,
+            "water_available": 0.6111111111111112,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1148,
+            "forage_depleted": 0,
+            "forage_success": 0,
+            "grazing_en_route": 126,
+            "herd_alone": 46,
+            "herd_contact": 321,
+            "rested": 1856,
+            "ruminated": 5290,
+            "walked": 4159,
+            "water_blocked": 0,
+            "water_success": 14
+          }
+        }
+      }
+    },
+    "B": {
+      "common_worlds": [
+        {
+          "scenario": "starter",
+          "seed": 6619704477179181735
+        },
+        {
+          "scenario": "starter",
+          "seed": 1752855882460042278
+        },
+        {
+          "scenario": "starter",
+          "seed": 8967502443206149104
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8418540021433723923
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 3107094352858000820
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8765291124535248195
+        },
+        {
+          "scenario": "wide",
+          "seed": 2113054247403305903
+        },
+        {
+          "scenario": "wide",
+          "seed": 3157812328197597260
+        },
+        {
+          "scenario": "wide",
+          "seed": 3718101156952247866
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 155914781031058929
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 1534143706552124239
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 3394740966311773029
+        }
+      ],
+      "description": "original reward + entropy/advantage training improvements",
+      "descriptive_rank_by_mean_original_reward": 1,
+      "memory_perception_interventions": [
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": -0.0020563751459121704,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.12058213353157043,
+                  "changed_drink_probability": 0.12058213353157043,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.10109002888202667,
+                  "graze": 0.07369803637266159,
+                  "herd_interact": 0.15980617702007294,
+                  "rest": 0.3960629105567932,
+                  "ruminate": 0.1697915494441986,
+                  "walk": 0.09955122321844101
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.0990336537361145,
+                  "graze": 0.08941751718521118,
+                  "herd_interact": 0.22042082250118256,
+                  "rest": 0.33035027980804443,
+                  "ruminate": 0.1520998179912567,
+                  "walk": 0.10867787897586823
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": -0.0020563751459121704,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": -0.03646419942378998,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.13549785315990448,
+                  "changed_drink_probability": 0.13549785315990448,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.13549785315990448,
+                  "graze": 0.09308190643787384,
+                  "herd_interact": 0.24506545066833496,
+                  "rest": 0.24054238200187683,
+                  "ruminate": 0.17220525443553925,
+                  "walk": 0.1136072427034378
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.0990336537361145,
+                  "graze": 0.08941751718521118,
+                  "herd_interact": 0.22042082250118256,
+                  "rest": 0.33035027980804443,
+                  "ruminate": 0.1520998179912567,
+                  "walk": 0.10867787897586823
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": -0.03646419942378998,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483004
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": 0.007777251303195953,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.10009650141000748,
+                  "changed_drink_probability": 0.10009650141000748,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.08574453741312027,
+                  "graze": 0.13416869938373566,
+                  "herd_interact": 0.24514688551425934,
+                  "rest": 0.07655330747365952,
+                  "ruminate": 0.21074837446212769,
+                  "walk": 0.2476382851600647
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.09352178871631622,
+                  "graze": 0.08228810876607895,
+                  "herd_interact": 0.24723000824451447,
+                  "rest": 0.07245372980833054,
+                  "ruminate": 0.1964135617017746,
+                  "walk": 0.30809277296066284
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": 0.007777251303195953,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": 0.005218580365180969,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.08830320835113525,
+                  "changed_drink_probability": 0.08830320835113525,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.08830320835113525,
+                  "graze": 0.06433182209730148,
+                  "herd_interact": 0.3228682577610016,
+                  "rest": 0.11908995360136032,
+                  "ruminate": 0.1750217229127884,
+                  "walk": 0.23038503527641296
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.09352178871631622,
+                  "graze": 0.08228810876607895,
+                  "herd_interact": 0.24723000824451447,
+                  "rest": 0.07245372980833054,
+                  "ruminate": 0.1964135617017746,
+                  "walk": 0.30809277296066284
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": 0.005218580365180969,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483005
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": -0.002116769552230835,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.07954554259777069,
+                  "changed_drink_probability": 0.07954554259777069,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.08704780042171478,
+                  "graze": 0.18242907524108887,
+                  "herd_interact": 0.20685896277427673,
+                  "rest": 0.2677089273929596,
+                  "ruminate": 0.14827966690063477,
+                  "walk": 0.10767557471990585
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.08493103086948395,
+                  "graze": 0.10251578688621521,
+                  "herd_interact": 0.23684337735176086,
+                  "rest": 0.33944568037986755,
+                  "ruminate": 0.14472219347953796,
+                  "walk": 0.09154186397790909
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": -0.002116769552230835,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": 0.027007870376110077,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.05792316049337387,
+                  "changed_drink_probability": 0.05792316049337387,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.05792316049337387,
+                  "graze": 0.1501413732767105,
+                  "herd_interact": 0.20888124406337738,
+                  "rest": 0.32035523653030396,
+                  "ruminate": 0.14303214848041534,
+                  "walk": 0.1196669191122055
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.08493103086948395,
+                  "graze": 0.10251578688621521,
+                  "herd_interact": 0.23684337735176086,
+                  "rest": 0.33944568037986755,
+                  "ruminate": 0.14472219347953796,
+                  "walk": 0.09154186397790909
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": 0.027007870376110077,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483006
+        }
+      ],
+      "policies": {
+        "heuristic_baseline": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.22685185185185183,
+            "graze": 0.5777777777777778,
+            "herd_interact": 0.010648148148148148,
+            "rest": 0.008796296296296295,
+            "ruminate": 0.0,
+            "walk": 0.17592592592592593
+          },
+          "mean_entropy_of_action_distribution_nats": 0.9423803552701747,
+          "mean_final_drives": {
+            "fatigue": 0.9868321952424763,
+            "hunger": 1.0,
+            "social_need": 0.5656473569410538,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -35.87237458357041,
+          "mean_policy_entropy_nats": 0.0,
+          "mean_remaining_resources": {
+            "forage_available": 0.0,
+            "forage_total": 3.0,
+            "water_available": 0.16666666666666666,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1962,
+            "forage_depleted": 1188,
+            "forage_success": 90,
+            "grazing_en_route": 6210,
+            "herd_alone": 108,
+            "herd_contact": 30,
+            "rested": 114,
+            "ruminated": 0,
+            "walked": 2280,
+            "water_blocked": 948,
+            "water_success": 30
+          }
+        },
+        "trained": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.00625,
+            "graze": 0.0003858024691358025,
+            "herd_interact": 0.47523148148148153,
+            "rest": 0.24467592592592594,
+            "ruminate": 0.17962962962962964,
+            "walk": 0.09382716049382717
+          },
+          "mean_entropy_of_action_distribution_nats": 1.726854527085126,
+          "mean_final_drives": {
+            "fatigue": 0.0001388888888888889,
+            "hunger": 0.9969791745613805,
+            "social_need": 0.06326527217523237,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": 4.129776664806057,
+          "mean_policy_entropy_nats": 1.6964054971844253,
+          "mean_remaining_resources": {
+            "forage_available": 2.5,
+            "forage_total": 3.0,
+            "water_available": 0.8888888888888888,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 77,
+            "forage_depleted": 0,
+            "forage_success": 0,
+            "grazing_en_route": 5,
+            "herd_alone": 391,
+            "herd_contact": 5768,
+            "rested": 3171,
+            "ruminated": 2328,
+            "walked": 1216,
+            "water_blocked": 0,
+            "water_success": 4
+          }
+        },
+        "untrained_same_seed": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.0896604938271605,
+            "graze": 0.009722222222222222,
+            "herd_interact": 0.0283179012345679,
+            "rest": 0.14320987654320988,
+            "ruminate": 0.408179012345679,
+            "walk": 0.32091049382716047
+          },
+          "mean_entropy_of_action_distribution_nats": 1.748945890380969,
+          "mean_final_drives": {
+            "fatigue": 0.2021388888888889,
+            "hunger": 0.9528341550702168,
+            "social_need": 0.5919792307513237,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -16.447630150340515,
+          "mean_policy_entropy_nats": 1.712686597845997,
+          "mean_remaining_resources": {
+            "forage_available": 2.5,
+            "forage_total": 3.0,
+            "water_available": 0.6111111111111112,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1148,
+            "forage_depleted": 0,
+            "forage_success": 0,
+            "grazing_en_route": 126,
+            "herd_alone": 46,
+            "herd_contact": 321,
+            "rested": 1856,
+            "ruminated": 5290,
+            "walked": 4159,
+            "water_blocked": 0,
+            "water_success": 14
+          }
+        }
+      }
+    },
+    "C": {
+      "common_worlds": [
+        {
+          "scenario": "starter",
+          "seed": 6619704477179181735
+        },
+        {
+          "scenario": "starter",
+          "seed": 1752855882460042278
+        },
+        {
+          "scenario": "starter",
+          "seed": 8967502443206149104
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8418540021433723923
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 3107094352858000820
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8765291124535248195
+        },
+        {
+          "scenario": "wide",
+          "seed": 2113054247403305903
+        },
+        {
+          "scenario": "wide",
+          "seed": 3157812328197597260
+        },
+        {
+          "scenario": "wide",
+          "seed": 3718101156952247866
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 155914781031058929
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 1534143706552124239
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 3394740966311773029
+        }
+      ],
+      "description": "state-aware training reward + original A2C",
+      "descriptive_rank_by_mean_original_reward": 4,
+      "memory_perception_interventions": [
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": -0.0028007999062538147,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.14894643425941467,
+                  "changed_drink_probability": 0.14894643425941467,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.12476061284542084,
+                  "graze": 0.08661897480487823,
+                  "herd_interact": 0.14316368103027344,
+                  "rest": 0.32493090629577637,
+                  "ruminate": 0.2013999968767166,
+                  "walk": 0.11912588030099869
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.12195981293916702,
+                  "graze": 0.10360194742679596,
+                  "herd_interact": 0.19577987492084503,
+                  "rest": 0.275386244058609,
+                  "ruminate": 0.17710933089256287,
+                  "walk": 0.12616267800331116
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": -0.0028007999062538147,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": -0.036873139441013336,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.15883295238018036,
+                  "changed_drink_probability": 0.15883295238018036,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.15883295238018036,
+                  "graze": 0.10474075376987457,
+                  "herd_interact": 0.21534185111522675,
+                  "rest": 0.19981154799461365,
+                  "ruminate": 0.19344288110733032,
+                  "walk": 0.12783007323741913
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.12195981293916702,
+                  "graze": 0.10360194742679596,
+                  "herd_interact": 0.19577987492084503,
+                  "rest": 0.275386244058609,
+                  "ruminate": 0.17710933089256287,
+                  "walk": 0.12616267800331116
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": -0.036873139441013336,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483004
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": 0.007597729563713074,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.10116153955459595,
+                  "changed_drink_probability": 0.10116153955459595,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.08661026507616043,
+                  "graze": 0.14020965993404388,
+                  "herd_interact": 0.22244234383106232,
+                  "rest": 0.06157563254237175,
+                  "ruminate": 0.22993572056293488,
+                  "walk": 0.25922638177871704
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.0942079946398735,
+                  "graze": 0.08625110238790512,
+                  "herd_interact": 0.2232874035835266,
+                  "rest": 0.05765482410788536,
+                  "ruminate": 0.21280616521835327,
+                  "walk": 0.325792521238327
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": 0.007597729563713074,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": 0.002692773938179016,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.09151522070169449,
+                  "changed_drink_probability": 0.09151522070169449,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.09151522070169449,
+                  "graze": 0.07020608335733414,
+                  "herd_interact": 0.2957459092140198,
+                  "rest": 0.09148813039064407,
+                  "ruminate": 0.19813767075538635,
+                  "walk": 0.2529069781303406
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.0942079946398735,
+                  "graze": 0.08625110238790512,
+                  "herd_interact": 0.2232874035835266,
+                  "rest": 0.05765482410788536,
+                  "ruminate": 0.21280616521835327,
+                  "walk": 0.325792521238327
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": 0.002692773938179016,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483005
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": -0.0018246844410896301,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.09182916581630707,
+                  "changed_drink_probability": 0.09182916581630707,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.09916902333498001,
+                  "graze": 0.20212042331695557,
+                  "herd_interact": 0.21743977069854736,
+                  "rest": 0.2070682942867279,
+                  "ruminate": 0.15486831963062286,
+                  "walk": 0.11933418363332748
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.09734433889389038,
+                  "graze": 0.1165539026260376,
+                  "herd_interact": 0.2571732699871063,
+                  "rest": 0.2630777657032013,
+                  "ruminate": 0.15906991064548492,
+                  "walk": 0.10678078234195709
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": -0.0018246844410896301,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": 0.03188030421733856,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.06546403467655182,
+                  "changed_drink_probability": 0.06546403467655182,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.06546403467655182,
+                  "graze": 0.1673596352338791,
+                  "herd_interact": 0.22355718910694122,
+                  "rest": 0.2509365379810333,
+                  "ruminate": 0.15419386327266693,
+                  "walk": 0.1384887546300888
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.09734433889389038,
+                  "graze": 0.1165539026260376,
+                  "herd_interact": 0.2571732699871063,
+                  "rest": 0.2630777657032013,
+                  "ruminate": 0.15906991064548492,
+                  "walk": 0.10678078234195709
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": 0.03188030421733856,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483006
+        }
+      ],
+      "policies": {
+        "heuristic_baseline": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.22685185185185183,
+            "graze": 0.5777777777777778,
+            "herd_interact": 0.010648148148148148,
+            "rest": 0.008796296296296295,
+            "ruminate": 0.0,
+            "walk": 0.17592592592592593
+          },
+          "mean_entropy_of_action_distribution_nats": 0.9423803552701747,
+          "mean_final_drives": {
+            "fatigue": 0.9868321952424763,
+            "hunger": 1.0,
+            "social_need": 0.5656473569410538,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -35.87237458357041,
+          "mean_policy_entropy_nats": 0.0,
+          "mean_remaining_resources": {
+            "forage_available": 0.0,
+            "forage_total": 3.0,
+            "water_available": 0.16666666666666666,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1962,
+            "forage_depleted": 1188,
+            "forage_success": 90,
+            "grazing_en_route": 6210,
+            "herd_alone": 108,
+            "herd_contact": 30,
+            "rested": 114,
+            "ruminated": 0,
+            "walked": 2280,
+            "water_blocked": 948,
+            "water_success": 30
+          }
+        },
+        "trained": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.03510802469135802,
+            "graze": 0.0014660493827160495,
+            "herd_interact": 0.3621141975308642,
+            "rest": 0.13371913580246914,
+            "ruminate": 0.34097222222222223,
+            "walk": 0.12662037037037038
+          },
+          "mean_entropy_of_action_distribution_nats": 1.7358861687209206,
+          "mean_final_drives": {
+            "fatigue": 5.9857919952126175e-05,
+            "hunger": 0.9787667157537148,
+            "social_need": 0.2784165836328699,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -2.1738815213652263,
+          "mean_policy_entropy_nats": 1.7035954587921065,
+          "mean_remaining_resources": {
+            "forage_available": 2.5,
+            "forage_total": 3.0,
+            "water_available": 0.8055555555555556,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 448,
+            "forage_depleted": 0,
+            "forage_success": 0,
+            "grazing_en_route": 19,
+            "herd_alone": 213,
+            "herd_contact": 4480,
+            "rested": 1733,
+            "ruminated": 4419,
+            "walked": 1641,
+            "water_blocked": 0,
+            "water_success": 7
+          }
+        },
+        "untrained_same_seed": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.0896604938271605,
+            "graze": 0.009722222222222222,
+            "herd_interact": 0.0283179012345679,
+            "rest": 0.14320987654320988,
+            "ruminate": 0.408179012345679,
+            "walk": 0.32091049382716047
+          },
+          "mean_entropy_of_action_distribution_nats": 1.748945890380969,
+          "mean_final_drives": {
+            "fatigue": 0.2021388888888889,
+            "hunger": 0.9528341550702168,
+            "social_need": 0.5919792307513237,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -16.447630150340515,
+          "mean_policy_entropy_nats": 1.712686597845997,
+          "mean_remaining_resources": {
+            "forage_available": 2.5,
+            "forage_total": 3.0,
+            "water_available": 0.6111111111111112,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1148,
+            "forage_depleted": 0,
+            "forage_success": 0,
+            "grazing_en_route": 126,
+            "herd_alone": 46,
+            "herd_contact": 321,
+            "rested": 1856,
+            "ruminated": 5290,
+            "walked": 4159,
+            "water_blocked": 0,
+            "water_success": 14
+          }
+        }
+      }
+    },
+    "D": {
+      "common_worlds": [
+        {
+          "scenario": "starter",
+          "seed": 6619704477179181735
+        },
+        {
+          "scenario": "starter",
+          "seed": 1752855882460042278
+        },
+        {
+          "scenario": "starter",
+          "seed": 8967502443206149104
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8418540021433723923
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 3107094352858000820
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8765291124535248195
+        },
+        {
+          "scenario": "wide",
+          "seed": 2113054247403305903
+        },
+        {
+          "scenario": "wide",
+          "seed": 3157812328197597260
+        },
+        {
+          "scenario": "wide",
+          "seed": 3718101156952247866
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 155914781031058929
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 1534143706552124239
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 3394740966311773029
+        }
+      ],
+      "description": "state-aware training reward + entropy/advantage improvements",
+      "descriptive_rank_by_mean_original_reward": 2,
+      "memory_perception_interventions": [
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": -0.0042724162340164185,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.14011089503765106,
+                  "changed_drink_probability": 0.14011089503765106,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.12020993232727051,
+                  "graze": 0.09027290344238281,
+                  "herd_interact": 0.16940893232822418,
+                  "rest": 0.29068291187286377,
+                  "ruminate": 0.21725375950336456,
+                  "walk": 0.11217159777879715
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.11593751609325409,
+                  "graze": 0.10682038217782974,
+                  "herd_interact": 0.22880586981773376,
+                  "rest": 0.24354635179042816,
+                  "ruminate": 0.18707333505153656,
+                  "walk": 0.11781661957502365
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": -0.0042724162340164185,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": -0.03357607126235962,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.1495135873556137,
+                  "changed_drink_probability": 0.1495135873556137,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.1495135873556137,
+                  "graze": 0.10634301602840424,
+                  "herd_interact": 0.2474444955587387,
+                  "rest": 0.17660130560398102,
+                  "ruminate": 0.20119492709636688,
+                  "walk": 0.11890266090631485
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.11593751609325409,
+                  "graze": 0.10682038217782974,
+                  "herd_interact": 0.22880586981773376,
+                  "rest": 0.24354635179042816,
+                  "ruminate": 0.18707333505153656,
+                  "walk": 0.11781661957502365
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": -0.03357607126235962,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483004
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": 0.009900972247123718,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.10813961923122406,
+                  "changed_drink_probability": 0.10813961923122406,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.0918494239449501,
+                  "graze": 0.13936582207679749,
+                  "herd_interact": 0.23459301888942719,
+                  "rest": 0.06309318542480469,
+                  "ruminate": 0.21546363830566406,
+                  "walk": 0.2556348741054535
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.10175039619207382,
+                  "graze": 0.08563759922981262,
+                  "herd_interact": 0.23761089146137238,
+                  "rest": 0.058441195636987686,
+                  "ruminate": 0.19885963201522827,
+                  "walk": 0.3177003264427185
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": 0.009900972247123718,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": 0.0031577199697494507,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.09859267622232437,
+                  "changed_drink_probability": 0.09859267622232437,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.09859267622232437,
+                  "graze": 0.06830346584320068,
+                  "herd_interact": 0.3148869276046753,
+                  "rest": 0.09059245884418488,
+                  "ruminate": 0.18499137461185455,
+                  "walk": 0.24263304471969604
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.10175039619207382,
+                  "graze": 0.08563759922981262,
+                  "herd_interact": 0.23761089146137238,
+                  "rest": 0.058441195636987686,
+                  "ruminate": 0.19885963201522827,
+                  "walk": 0.3177003264427185
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": 0.0031577199697494507,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483005
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": -0.0006895586848258972,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.09282653778791428,
+                  "changed_drink_probability": 0.09282653778791428,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.09931059926748276,
+                  "graze": 0.20448803901672363,
+                  "herd_interact": 0.2173001915216446,
+                  "rest": 0.21506182849407196,
+                  "ruminate": 0.14898154139518738,
+                  "walk": 0.11485772579908371
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.09862104058265686,
+                  "graze": 0.11773776262998581,
+                  "herd_interact": 0.25700435042381287,
+                  "rest": 0.27135413885116577,
+                  "ruminate": 0.15282130241394043,
+                  "walk": 0.10246136039495468
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": -0.0006895586848258972,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": 0.032261960208415985,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.06635908037424088,
+                  "changed_drink_probability": 0.06635908037424088,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.06635908037424088,
+                  "graze": 0.1690666377544403,
+                  "herd_interact": 0.22364817559719086,
+                  "rest": 0.25996658205986023,
+                  "ruminate": 0.14806458353996277,
+                  "walk": 0.1328948587179184
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.09862104058265686,
+                  "graze": 0.11773776262998581,
+                  "herd_interact": 0.25700435042381287,
+                  "rest": 0.27135413885116577,
+                  "ruminate": 0.15282130241394043,
+                  "walk": 0.10246136039495468
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": 0.032261960208415985,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483006
+        }
+      ],
+      "policies": {
+        "heuristic_baseline": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.22685185185185183,
+            "graze": 0.5777777777777778,
+            "herd_interact": 0.010648148148148148,
+            "rest": 0.008796296296296295,
+            "ruminate": 0.0,
+            "walk": 0.17592592592592593
+          },
+          "mean_entropy_of_action_distribution_nats": 0.9423803552701747,
+          "mean_final_drives": {
+            "fatigue": 0.9868321952424763,
+            "hunger": 1.0,
+            "social_need": 0.5656473569410538,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -35.87237458357041,
+          "mean_policy_entropy_nats": 0.0,
+          "mean_remaining_resources": {
+            "forage_available": 0.0,
+            "forage_total": 3.0,
+            "water_available": 0.16666666666666666,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1962,
+            "forage_depleted": 1188,
+            "forage_success": 90,
+            "grazing_en_route": 6210,
+            "herd_alone": 108,
+            "herd_contact": 30,
+            "rested": 114,
+            "ruminated": 0,
+            "walked": 2280,
+            "water_blocked": 948,
+            "water_success": 30
+          }
+        },
+        "trained": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.010725308641975309,
+            "graze": 0.000771604938271605,
+            "herd_interact": 0.5001543209876543,
+            "rest": 0.09452160493827161,
+            "ruminate": 0.2828703703703704,
+            "walk": 0.11095679012345679
+          },
+          "mean_entropy_of_action_distribution_nats": 1.7340743304583346,
+          "mean_final_drives": {
+            "fatigue": 0.0,
+            "hunger": 0.990034730116936,
+            "social_need": 0.10038565019758532,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": 1.6369260441841411,
+          "mean_policy_entropy_nats": 1.7041453013019834,
+          "mean_remaining_resources": {
+            "forage_available": 2.5,
+            "forage_total": 3.0,
+            "water_available": 0.8333333333333334,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 133,
+            "forage_depleted": 0,
+            "forage_success": 0,
+            "grazing_en_route": 10,
+            "herd_alone": 342,
+            "herd_contact": 6140,
+            "rested": 1225,
+            "ruminated": 3666,
+            "walked": 1438,
+            "water_blocked": 0,
+            "water_success": 6
+          }
+        },
+        "untrained_same_seed": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.0896604938271605,
+            "graze": 0.009722222222222222,
+            "herd_interact": 0.0283179012345679,
+            "rest": 0.14320987654320988,
+            "ruminate": 0.408179012345679,
+            "walk": 0.32091049382716047
+          },
+          "mean_entropy_of_action_distribution_nats": 1.748945890380969,
+          "mean_final_drives": {
+            "fatigue": 0.2021388888888889,
+            "hunger": 0.9528341550702168,
+            "social_need": 0.5919792307513237,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -16.447630150340515,
+          "mean_policy_entropy_nats": 1.712686597845997,
+          "mean_remaining_resources": {
+            "forage_available": 2.5,
+            "forage_total": 3.0,
+            "water_available": 0.6111111111111112,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1148,
+            "forage_depleted": 0,
+            "forage_success": 0,
+            "grazing_en_route": 126,
+            "herd_alone": 46,
+            "herd_contact": 321,
+            "rested": 1856,
+            "ruminated": 5290,
+            "walked": 4159,
+            "water_blocked": 0,
+            "water_success": 14
+          }
+        }
+      }
+    },
+    "E": {
+      "common_worlds": [
+        {
+          "scenario": "starter",
+          "seed": 6619704477179181735
+        },
+        {
+          "scenario": "starter",
+          "seed": 1752855882460042278
+        },
+        {
+          "scenario": "starter",
+          "seed": 8967502443206149104
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8418540021433723923
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 3107094352858000820
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8765291124535248195
+        },
+        {
+          "scenario": "wide",
+          "seed": 2113054247403305903
+        },
+        {
+          "scenario": "wide",
+          "seed": 3157812328197597260
+        },
+        {
+          "scenario": "wide",
+          "seed": 3718101156952247866
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 155914781031058929
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 1534143706552124239
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 3394740966311773029
+        }
+      ],
+      "description": "stronger state-aware reward (scale 0.5) + original A2C objective",
+      "descriptive_rank_by_mean_original_reward": 5,
+      "memory_perception_interventions": [
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": -0.0678732693195343,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.11638469994068146,
+                  "changed_drink_probability": 0.11638469994068146,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.15867356956005096,
+                  "graze": 0.1462794691324234,
+                  "herd_interact": 0.3337772488594055,
+                  "rest": 0.16278380155563354,
+                  "ruminate": 0.1072251945734024,
+                  "walk": 0.09126073122024536
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.09080030024051666,
+                  "graze": 0.2757490575313568,
+                  "herd_interact": 0.25301694869995117,
+                  "rest": 0.16354122757911682,
+                  "ruminate": 0.1145821213722229,
+                  "walk": 0.10231034457683563
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": -0.0678732693195343,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": 0.01594044268131256,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.0748598575592041,
+                  "changed_drink_probability": 0.0748598575592041,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.0748598575592041,
+                  "graze": 0.2378692626953125,
+                  "herd_interact": 0.31514090299606323,
+                  "rest": 0.16425621509552002,
+                  "ruminate": 0.10241733491420746,
+                  "walk": 0.10545643419027328
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.09080030024051666,
+                  "graze": 0.2757490575313568,
+                  "herd_interact": 0.25301694869995117,
+                  "rest": 0.16354122757911682,
+                  "ruminate": 0.1145821213722229,
+                  "walk": 0.10231034457683563
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": 0.01594044268131256,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483004
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": 0.015760570764541626,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.23471352458000183,
+                  "changed_drink_probability": 0.23471352458000183,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.22130942344665527,
+                  "graze": 0.1456945389509201,
+                  "herd_interact": 0.09581491351127625,
+                  "rest": 0.18405470252037048,
+                  "ruminate": 0.1980181783437729,
+                  "walk": 0.155108243227005
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.2370699942111969,
+                  "graze": 0.15259340405464172,
+                  "herd_interact": 0.0757405161857605,
+                  "rest": 0.16574838757514954,
+                  "ruminate": 0.20868980884552002,
+                  "walk": 0.16015799343585968
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": 0.015760570764541626,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": -0.0031932294368743896,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.2402632236480713,
+                  "changed_drink_probability": 0.2402632236480713,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.2402632236480713,
+                  "graze": 0.1823713779449463,
+                  "herd_interact": 0.08759725093841553,
+                  "rest": 0.15408855676651,
+                  "ruminate": 0.2009011209011078,
+                  "walk": 0.13477852940559387
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.2370699942111969,
+                  "graze": 0.15259340405464172,
+                  "herd_interact": 0.0757405161857605,
+                  "rest": 0.16574838757514954,
+                  "ruminate": 0.20868980884552002,
+                  "walk": 0.16015799343585968
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": -0.0031932294368743896,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483005
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": 0.029577240347862244,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.17163793742656708,
+                  "changed_drink_probability": 0.17163793742656708,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.16729772090911865,
+                  "graze": 0.21055467426776886,
+                  "herd_interact": 0.2912918031215668,
+                  "rest": 0.10623802989721298,
+                  "ruminate": 0.08416158705949783,
+                  "walk": 0.1404561996459961
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.1968749612569809,
+                  "graze": 0.1554335057735443,
+                  "herd_interact": 0.2235022932291031,
+                  "rest": 0.11549197882413864,
+                  "ruminate": 0.15561825037002563,
+                  "walk": 0.15307901799678802
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": 0.029577240347862244,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": -0.0042743682861328125,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.2011493295431137,
+                  "changed_drink_probability": 0.2011493295431137,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.2011493295431137,
+                  "graze": 0.16211701929569244,
+                  "herd_interact": 0.19479459524154663,
+                  "rest": 0.12386958301067352,
+                  "ruminate": 0.18782638013362885,
+                  "walk": 0.13024301826953888
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.1968749612569809,
+                  "graze": 0.1554335057735443,
+                  "herd_interact": 0.2235022932291031,
+                  "rest": 0.11549197882413864,
+                  "ruminate": 0.15561825037002563,
+                  "walk": 0.15307901799678802
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": -0.0042743682861328125,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483006
+        }
+      ],
+      "policies": {
+        "heuristic_baseline": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.22685185185185183,
+            "graze": 0.5777777777777778,
+            "herd_interact": 0.010648148148148148,
+            "rest": 0.008796296296296295,
+            "ruminate": 0.0,
+            "walk": 0.17592592592592593
+          },
+          "mean_entropy_of_action_distribution_nats": 0.9423803552701747,
+          "mean_final_drives": {
+            "fatigue": 0.9868321952424763,
+            "hunger": 1.0,
+            "social_need": 0.5656473569410538,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -35.87237458357041,
+          "mean_policy_entropy_nats": 0.0,
+          "mean_remaining_resources": {
+            "forage_available": 0.0,
+            "forage_total": 3.0,
+            "water_available": 0.16666666666666666,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1962,
+            "forage_depleted": 1188,
+            "forage_success": 90,
+            "grazing_en_route": 6210,
+            "herd_alone": 108,
+            "herd_contact": 30,
+            "rested": 114,
+            "ruminated": 0,
+            "walked": 2280,
+            "water_blocked": 948,
+            "water_success": 30
+          }
+        },
+        "trained": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.18904320987654322,
+            "graze": 0.2423611111111111,
+            "herd_interact": 0.3268518518518519,
+            "rest": 0.035339506172839506,
+            "ruminate": 0.20347222222222222,
+            "walk": 0.002932098765432099
+          },
+          "mean_entropy_of_action_distribution_nats": 1.7124646994098849,
+          "mean_final_drives": {
+            "fatigue": 0.2685883021333347,
+            "hunger": 0.9541498725539417,
+            "social_need": 0.44290436212950807,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -12.3978690486008,
+          "mean_policy_entropy_nats": 1.682281605574411,
+          "mean_remaining_resources": {
+            "forage_available": 0.8333333333333334,
+            "forage_total": 3.0,
+            "water_available": 0.3611111111111111,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1897,
+            "forage_depleted": 496,
+            "forage_success": 60,
+            "grazing_en_route": 2585,
+            "herd_alone": 183,
+            "herd_contact": 4053,
+            "rested": 458,
+            "ruminated": 2637,
+            "walked": 38,
+            "water_blocked": 530,
+            "water_success": 23
+          }
+        },
+        "untrained_same_seed": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.18611111111111112,
+            "graze": 0.21003086419753086,
+            "herd_interact": 0.26373456790123456,
+            "rest": 0.19344135802469134,
+            "ruminate": 0.14050925925925928,
+            "walk": 0.00617283950617284
+          },
+          "mean_entropy_of_action_distribution_nats": 1.7309599801142195,
+          "mean_final_drives": {
+            "fatigue": 0.15366630220745828,
+            "hunger": 0.9683417145453469,
+            "social_need": 0.3559552082649129,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -8.596190398452874,
+          "mean_policy_entropy_nats": 1.699693475709081,
+          "mean_remaining_resources": {
+            "forage_available": 0.8333333333333334,
+            "forage_total": 3.0,
+            "water_available": 0.5277777777777778,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 2011,
+            "forage_depleted": 306,
+            "forage_success": 60,
+            "grazing_en_route": 2356,
+            "herd_alone": 204,
+            "herd_contact": 3214,
+            "rested": 2507,
+            "ruminated": 1821,
+            "walked": 80,
+            "water_blocked": 384,
+            "water_success": 17
+          }
+        }
+      }
+    },
+    "F": {
+      "common_worlds": [
+        {
+          "scenario": "starter",
+          "seed": 6619704477179181735
+        },
+        {
+          "scenario": "starter",
+          "seed": 1752855882460042278
+        },
+        {
+          "scenario": "starter",
+          "seed": 8967502443206149104
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8418540021433723923
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 3107094352858000820
+        },
+        {
+          "scenario": "resource_scarce_relocated",
+          "seed": 8765291124535248195
+        },
+        {
+          "scenario": "wide",
+          "seed": 2113054247403305903
+        },
+        {
+          "scenario": "wide",
+          "seed": 3157812328197597260
+        },
+        {
+          "scenario": "wide",
+          "seed": 3718101156952247866
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 155914781031058929
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 1534143706552124239
+        },
+        {
+          "scenario": "unseen_corridor",
+          "seed": 3394740966311773029
+        }
+      ],
+      "description": "stronger state-aware reward (scale 0.5) + normalized advantages and entropy",
+      "descriptive_rank_by_mean_original_reward": 6,
+      "memory_perception_interventions": [
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": -0.06671846657991409,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.11783719807863235,
+                  "changed_drink_probability": 0.11783719807863235,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.1588956117630005,
+                  "graze": 0.14263054728507996,
+                  "herd_interact": 0.3359684348106384,
+                  "rest": 0.16017977893352509,
+                  "ruminate": 0.10295386612415314,
+                  "walk": 0.09937169402837753
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.0921771451830864,
+                  "graze": 0.2698507606983185,
+                  "herd_interact": 0.2550286054611206,
+                  "rest": 0.16125619411468506,
+                  "ruminate": 0.1089552566409111,
+                  "walk": 0.11273203790187836
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": -0.06671846657991409,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": 0.01589713990688324,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.07628000527620316,
+                  "changed_drink_probability": 0.07628000527620316,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.07628000527620316,
+                  "graze": 0.231999471783638,
+                  "herd_interact": 0.317387193441391,
+                  "rest": 0.16121573746204376,
+                  "ruminate": 0.09758385270833969,
+                  "walk": 0.11553386598825455
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.0921771451830864,
+                  "graze": 0.2698507606983185,
+                  "herd_interact": 0.2550286054611206,
+                  "rest": 0.16125619411468506,
+                  "ruminate": 0.1089552566409111,
+                  "walk": 0.11273203790187836
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": 0.01589713990688324,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483004
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": 0.017918825149536133,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.23545269668102264,
+                  "changed_drink_probability": 0.23545269668102264,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.21927231550216675,
+                  "graze": 0.14573337137699127,
+                  "herd_interact": 0.10209918022155762,
+                  "rest": 0.1661943644285202,
+                  "ruminate": 0.21080756187438965,
+                  "walk": 0.1558932214975357
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.23719114065170288,
+                  "graze": 0.15069648623466492,
+                  "herd_interact": 0.07943564653396606,
+                  "rest": 0.1519608199596405,
+                  "ruminate": 0.21984989941120148,
+                  "walk": 0.16086602210998535
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": 0.017918825149536133,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": -0.002864360809326172,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.24005550146102905,
+                  "changed_drink_probability": 0.24005550146102905,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.24005550146102905,
+                  "graze": 0.17999359965324402,
+                  "herd_interact": 0.09194423258304596,
+                  "rest": 0.1415148675441742,
+                  "ruminate": 0.2104945182800293,
+                  "walk": 0.1359972059726715
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.23719114065170288,
+                  "graze": 0.15069648623466492,
+                  "herd_interact": 0.07943564653396606,
+                  "rest": 0.1519608199596405,
+                  "ruminate": 0.21984989941120148,
+                  "walk": 0.16086602210998535
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": -0.002864360809326172,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483005
+        },
+        {
+          "probe": {
+            "contrasts": {
+              "memory_success": {
+                "ablation": {
+                  "attenuation": 0.030581533908843994,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.18842601776123047,
+                  "changed_drink_probability": 0.18842601776123047,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.18245892226696014,
+                  "graze": 0.18886223435401917,
+                  "herd_interact": 0.30211782455444336,
+                  "rest": 0.10038973391056061,
+                  "ruminate": 0.07718511670827866,
+                  "walk": 0.14898623526096344
+                },
+                "changed_feature_names": [
+                  "mem_water_success",
+                  "mem_water_blocked"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.21304045617580414,
+                  "graze": 0.14159415662288666,
+                  "herd_interact": 0.23024332523345947,
+                  "rest": 0.10995284467935562,
+                  "ruminate": 0.14425283670425415,
+                  "walk": 0.16091641783714294
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "memory_success_minus_blocked",
+                "drink_probability_effect": 0.030581533908843994,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ],
+                  "expected_features_changed": [
+                    "mem_water_success",
+                    "mem_water_blocked"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "baseline_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ea509b10d9c5d0436e8b08c06476419c95ed730d5b1e8835b7225b81082528ca"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "1a96904aac18d3b21584845bbd67ddc4f24905a8a72e25d5e636ee996b199be6"
+                }
+              },
+              "perception_available": {
+                "ablation": {
+                  "attenuation": -0.003664255142211914,
+                  "attenuation_fraction_of_full": 1.0,
+                  "baseline_drink_probability": 0.21670471131801605,
+                  "changed_drink_probability": 0.21670471131801605,
+                  "drink_probability_effect": 0.0,
+                  "features_zeroed": [
+                    "water_available"
+                  ]
+                },
+                "baseline_probabilities": {
+                  "drink": 0.21670471131801605,
+                  "graze": 0.14871017634868622,
+                  "herd_interact": 0.2023192048072815,
+                  "rest": 0.11926449835300446,
+                  "ruminate": 0.17646954953670502,
+                  "walk": 0.136531800031662
+                },
+                "changed_feature_names": [
+                  "water_available"
+                ],
+                "changed_probabilities": {
+                  "drink": 0.21304045617580414,
+                  "graze": 0.14159415662288666,
+                  "herd_interact": 0.23024332523345947,
+                  "rest": 0.10995284467935562,
+                  "ruminate": 0.14425283670425415,
+                  "walk": 0.16091641783714294
+                },
+                "contrast": "changed_minus_baseline",
+                "direction": "water_available_feature_minus_unavailable_feature",
+                "drink_probability_effect": -0.003664255142211914,
+                "effect_meets_plus_0_05_margin": false,
+                "fidelity": {
+                  "actual_features_changed": [
+                    "water_available"
+                  ],
+                  "expected_features_changed": [
+                    "water_available"
+                  ]
+                },
+                "input_sha256": {
+                  "baseline": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "baseline_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "changed": "2bf9c3107b1c894ba01fc9d526fbe71f6974fda27d0c76bd0377668423b00f2a",
+                  "changed_ablation": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                },
+                "required_effect_margin_descriptive_only": 0.05,
+                "sham": {
+                  "input_bit_identical": true,
+                  "input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2",
+                  "probabilities_bit_identical": true,
+                  "repeat_input_sha256": "ef0039dcf7263a3fd3bf99ba802f47e0f9ab72a2fa39716c9b92cd80a5e5bdd2"
+                }
+              }
+            },
+            "feature_names": [
+              "hunger",
+              "thirst",
+              "fatigue",
+              "social_need",
+              "forage_visible",
+              "water_visible",
+              "forage_distance_norm",
+              "water_distance_norm",
+              "forage_available",
+              "water_available",
+              "local_blocked_fraction",
+              "herd_count_norm",
+              "mem_water_success",
+              "mem_forage_success",
+              "mem_water_blocked",
+              "mem_forage_depleted",
+              "mem_event_recency",
+              "tick_phase_sin",
+              "tick_phase_cos",
+              "self_in_herd"
+            ],
+            "fixture": {
+              "fixture_seed": 83831,
+              "memory_encoder_changed": [
+                "mem_water_success",
+                "mem_water_blocked"
+              ],
+              "thirst": 0.8500000238418579,
+              "water_available": 1.0,
+              "water_visible": 1.0
+            },
+            "interpretation": "The +0.05 margin is reported as predeclared; these single-checkpoint effects are descriptive and do not satisfy the preregistered clustered/Holm acceptance gate.",
+            "scope": "paired first-decision policy probability intervention; not a full trajectory causal effect"
+          },
+          "training_seed": 9483006
+        }
+      ],
+      "policies": {
+        "heuristic_baseline": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.22685185185185183,
+            "graze": 0.5777777777777778,
+            "herd_interact": 0.010648148148148148,
+            "rest": 0.008796296296296295,
+            "ruminate": 0.0,
+            "walk": 0.17592592592592593
+          },
+          "mean_entropy_of_action_distribution_nats": 0.9423803552701747,
+          "mean_final_drives": {
+            "fatigue": 0.9868321952424763,
+            "hunger": 1.0,
+            "social_need": 0.5656473569410538,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -35.87237458357041,
+          "mean_policy_entropy_nats": 0.0,
+          "mean_remaining_resources": {
+            "forage_available": 0.0,
+            "forage_total": 3.0,
+            "water_available": 0.16666666666666666,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1962,
+            "forage_depleted": 1188,
+            "forage_success": 90,
+            "grazing_en_route": 6210,
+            "herd_alone": 108,
+            "herd_contact": 30,
+            "rested": 114,
+            "ruminated": 0,
+            "walked": 2280,
+            "water_blocked": 948,
+            "water_success": 30
+          }
+        },
+        "trained": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.16342592592592592,
+            "graze": 0.27546296296296297,
+            "herd_interact": 0.3294753086419753,
+            "rest": 0.01412037037037037,
+            "ruminate": 0.20864197530864198,
+            "walk": 0.008873456790123458
+          },
+          "mean_entropy_of_action_distribution_nats": 1.7182318629124467,
+          "mean_final_drives": {
+            "fatigue": 0.2960170271977315,
+            "hunger": 0.9605045749348299,
+            "social_need": 0.41727372581275746,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -13.105644030823079,
+          "mean_policy_entropy_nats": 1.6894088856323064,
+          "mean_remaining_resources": {
+            "forage_available": 0.8333333333333334,
+            "forage_total": 3.0,
+            "water_available": 0.3611111111111111,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 1601,
+            "forage_depleted": 540,
+            "forage_success": 60,
+            "grazing_en_route": 2970,
+            "herd_alone": 201,
+            "herd_contact": 4069,
+            "rested": 183,
+            "ruminated": 2704,
+            "walked": 115,
+            "water_blocked": 494,
+            "water_success": 23
+          }
+        },
+        "untrained_same_seed": {
+          "episodes": 36,
+          "invalid_actions": 0,
+          "mean_action_frequencies": {
+            "drink": 0.18611111111111112,
+            "graze": 0.21003086419753086,
+            "herd_interact": 0.26373456790123456,
+            "rest": 0.19344135802469134,
+            "ruminate": 0.14050925925925928,
+            "walk": 0.00617283950617284
+          },
+          "mean_entropy_of_action_distribution_nats": 1.7309599801142195,
+          "mean_final_drives": {
+            "fatigue": 0.15366630220745828,
+            "hunger": 0.9683417145453469,
+            "social_need": 0.3559552082649129,
+            "thirst": 1.0
+          },
+          "mean_original_reward_per_episode": -8.596190398452874,
+          "mean_policy_entropy_nats": 1.699693475709081,
+          "mean_remaining_resources": {
+            "forage_available": 0.8333333333333334,
+            "forage_total": 3.0,
+            "water_available": 0.5277777777777778,
+            "water_total": 1.0
+          },
+          "reward_component_counts": {
+            "drinking_en_route": 2011,
+            "forage_depleted": 306,
+            "forage_success": 60,
+            "grazing_en_route": 2356,
+            "herd_alone": 204,
+            "herd_contact": 3214,
+            "rested": 2507,
+            "ruminated": 1821,
+            "walked": 80,
+            "water_blocked": 384,
+            "water_success": 17
+          }
+        }
+      }
+    }
+  },
+  "episodes_per_family": 3,
+  "evaluation_reward_source": "original simulator reward from per-animal step rewards; training reward/config is not used for evaluation scoring",
+  "evaluation_root_seed": 9483999,
+  "evaluation_world_seed_derivation": "sha256(root,heldout,family,index)",
+  "formal_eligible": false,
+  "limitations": [
+    "synthetic software-task outcomes only; not biological or husbandry evidence",
+    "exploratory comparison is not formal validation, hypothesis testing, selection, or promotion",
+    "memory/perception probes are paired first-decision input interventions, not full-trajectory causal effects"
+  ],
+  "locked_test_access": false,
+  "mode": "exploratory_comparison",
+  "ranking": [
+    {
+      "condition": "B",
+      "description": "original reward + entropy/advantage training improvements",
+      "mean_original_reward_per_episode": 4.129776664806057,
+      "trained_episode_count": 36
+    },
+    {
+      "condition": "D",
+      "description": "state-aware training reward + entropy/advantage improvements",
+      "mean_original_reward_per_episode": 1.6369260441841411,
+      "trained_episode_count": 36
+    },
+    {
+      "condition": "A",
+      "description": "original A2C + original training reward",
+      "mean_original_reward_per_episode": 0.3728877950618466,
+      "trained_episode_count": 36
+    },
+    {
+      "condition": "C",
+      "description": "state-aware training reward + original A2C",
+      "mean_original_reward_per_episode": -2.1738815213652263,
+      "trained_episode_count": 36
+    },
+    {
+      "condition": "E",
+      "description": "stronger state-aware reward (scale 0.5) + original A2C objective",
+      "mean_original_reward_per_episode": -12.3978690486008,
+      "trained_episode_count": 36
+    },
+    {
+      "condition": "F",
+      "description": "stronger state-aware reward (scale 0.5) + normalized advantages and entropy",
+      "mean_original_reward_per_episode": -13.105644030823079,
+      "trained_episode_count": 36
+    }
+  ],
+  "ranking_method": "descending descriptive mean original simulator reward per trained episode; no acceptance threshold or inference",
+  "runner_source_sha256": "94cefef875af8237e1edcd33657d6ca07ce262dfb685888ef4eb35a257f980c4",
+  "scenario_families": [
+    "starter",
+    "resource_scarce_relocated",
+    "wide",
+    "unseen_corridor"
+  ],
+  "schema_version": 1,
+  "seed_disjointness": {
+    "common_worlds_disjoint_from_training_worlds": true,
+    "eval_root_distinct_from_training_roots": true,
+    "world_seeds_unique": true
+  },
+  "ticks_per_episode": 72,
+  "title": "A-F common-world checkpoint comparison",
+  "training_executed": false,
+  "training_seed_pairing": "same seed triplet across A-D; E/F follow-up uses its separately fixed triplet",
+  "training_seed_sets": {
+    "A": [
+      9483001,
+      9483002,
+      9483003
+    ],
+    "B": [
+      9483001,
+      9483002,
+      9483003
+    ],
+    "C": [
+      9483001,
+      9483002,
+      9483003
+    ],
+    "D": [
+      9483001,
+      9483002,
+      9483003
+    ],
+    "E": [
+      9483004,
+      9483005,
+      9483006
+    ],
+    "F": [
+      9483004,
+      9483005,
+      9483006
+    ]
+  }
+}

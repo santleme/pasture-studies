@@ -1,0 +1,216 @@
+{
+  "benchmark_eligible": false,
+  "exploratory_only": true,
+  "files": [
+    {
+      "path": "exploratory-only/exploratory-only/a2c/LATEST",
+      "sha256": "c5c50c2f27d4317c7470490a2a6ee992797add51315b62c8c933203c8d02bea0",
+      "size_bytes": 20
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/evaluation.json",
+      "sha256": "5fb01ff488ee0a87588cc82278bc05406833cab5299e1baf9f4f8f3c694068fa",
+      "size_bytes": 23915
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000001/manifest.json",
+      "sha256": "1439020d6fc4a22b07b0a1ea8ae0bbd23abd8cf8863bc84b0c6cdcc2daebb60d",
+      "size_bytes": 2947
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000001/training.pt",
+      "sha256": "dda8f4ca3fc9c0fa59d234f89778e65d46957f21a8873e898d018a5fc6584b7e",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000002/manifest.json",
+      "sha256": "8fbb8e84f49bba86720fc99ba105b749903453211687c796c4ede04e2ca97b18",
+      "size_bytes": 2947
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000002/training.pt",
+      "sha256": "3933a58bd5e7e81bd73824cefb6801e0c635d581e2e371000382f180a98404ac",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000003/manifest.json",
+      "sha256": "93033ef6bc7c856cf9f21d4c5ccdc223fc2d1425d5e2cbfc502da248474d63c6",
+      "size_bytes": 2947
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000003/training.pt",
+      "sha256": "0612ba0bfdf4e231c0347fe6c0aef6735181a605a0d77227f49e20bc97d45fe1",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000004/manifest.json",
+      "sha256": "a34e445625bc094f3ce7d909a541667407527abe3ed588ad2d1d45f39c3193e5",
+      "size_bytes": 2947
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000004/training.pt",
+      "sha256": "3e9a8e691f44751c62927ca05125ce8ea55f65be818f7b759f3a3a0a1e05e575",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000005/manifest.json",
+      "sha256": "2a7cf8e99d2dd4942089b5ac90eb45c7f9236db2264d60df7fc3e36a0c522b53",
+      "size_bytes": 2947
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000005/training.pt",
+      "sha256": "5124e4b8a94f0feea7607a2d1eb8755e96d91c21b66bf3b7d981673c05b76ee4",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000006/manifest.json",
+      "sha256": "ad8af66c02977518cce3a411a5b33c86c9ea792be6b9271d47ba0da2f076bace",
+      "size_bytes": 2947
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000006/training.pt",
+      "sha256": "cec5b926ab75c20ab6f368f813eaa5b73542796e2e040a0d0f61cec5e19db8d7",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000007/manifest.json",
+      "sha256": "96592e7bd4a4c9553ececfeebb58c16b9347aeab66f576c1c8472fb50ba05710",
+      "size_bytes": 2947
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000007/training.pt",
+      "sha256": "a41c8ad3a584a19277d6a28f1cdf9351a63d2b4daf9bc462144d54f8a7e38211",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000008/manifest.json",
+      "sha256": "bcb6b23695b674d5526f84a055d8637c7970588cb03055f641e846d859dd5a0f",
+      "size_bytes": 2947
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000008/training.pt",
+      "sha256": "115dd2b511f8c89c44e12ef3fe05ad73b8eabb17fbc0f98d8aa6a04585d85c3a",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000009/manifest.json",
+      "sha256": "46cbbe47831e2a61774877b1ca62955d332cec675a365fe3eb612a1d3fc3bf97",
+      "size_bytes": 2947
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000009/training.pt",
+      "sha256": "ed37a5ab52a66636567c8bede4a95692cc994f48f6a7da8a1f0d6ddc241c7121",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000010/manifest.json",
+      "sha256": "73718b68d4e3114fcd7701e6771636b53b5675ce41e94f01fbb37410523b1f70",
+      "size_bytes": 2948
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000010/training.pt",
+      "sha256": "2ab940bffa23e57027488b79b8f68d54760d33c3fb25abbe35b818c56dceaf91",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000011/manifest.json",
+      "sha256": "e67621ca1547fb0724c5d63bf290cc6c832a708013e470e9fa2282143c6a5b72",
+      "size_bytes": 2948
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000011/training.pt",
+      "sha256": "4f59194c983a01c85422e6c368bc778a1c50a134091b1130fc6de5af1f3501f7",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000012/manifest.json",
+      "sha256": "b122b5b1c3ffe3cd7812c42cd91679437ef46283c366a77029c2ee1320b90f89",
+      "size_bytes": 2948
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000012/training.pt",
+      "sha256": "2bc4fe667d538f3445365722211d7ae77d644eccfa99d41053284c2d36956896",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000013/manifest.json",
+      "sha256": "e9c7040ab7cd6057b85d6c6ced14ce5e415add4b839a57d4841de84fe5659c0c",
+      "size_bytes": 2948
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000013/training.pt",
+      "sha256": "ef1494b8fc43828ded36c1092b418e074ae5bf212da72ba40139bab2f323f70f",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000014/manifest.json",
+      "sha256": "ac78bb1d786b27446ffb3366a40fb5726a5a38468856b3e31f1e024f6ae87d1a",
+      "size_bytes": 2948
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000014/training.pt",
+      "sha256": "6aa2061b2f2b154fabc64ff4a6959661c2318aded78482a556951d7e585d47cf",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000015/manifest.json",
+      "sha256": "bef505789edc669cd5280bffdd72588f307d2ec03c97317be82d0f1bfd37f454",
+      "size_bytes": 2948
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000015/training.pt",
+      "sha256": "97d333829bae776be5f9b28d93b240b7cec973e3e799a39e1a3e7de7399abc48",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000016/manifest.json",
+      "sha256": "2677562a96477a96e9ff98f929704a8e7bad9fc2528460f1c1e270003c474df7",
+      "size_bytes": 2948
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/generation-00000016/training.pt",
+      "sha256": "19cf005d9006f5ab28118fe9a0af1d3f1c6b0633092f644706aa72462238fc59",
+      "size_bytes": 32435
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/torch-a2c-seed-9482817.json",
+      "sha256": "85628c06edf65302fda7c4ef29eb96b72f805c318a15467f8793c1bc790154ac",
+      "size_bytes": 4193
+    },
+    {
+      "path": "exploratory-only/exploratory-only/a2c/torch-a2c-seed-9482817.npz",
+      "sha256": "091d45068ba30d6040737107c8e0d597948cbae9f7a1e276945853e5da428789",
+      "size_bytes": 4871
+    },
+    {
+      "path": "exploratory-only/exploratory-only/metrics.jsonl",
+      "sha256": "a9a072dddbd09ac4ae73f359054ba06865d6b7c8cbd2541e52b55de325002ca7",
+      "size_bytes": 23028
+    },
+    {
+      "path": "exploratory-report.json",
+      "sha256": "1d091692b987a99696127ea6c526f2b01dd5629998b41af1a845aa7e26617534",
+      "size_bytes": 28112
+    }
+  ],
+  "formal_eligible": false,
+  "locked_outcomes_accessed": false,
+  "mode": "EXPLORATORY",
+  "notebook_sha256": "c8ea2315306f028352580feba6abf22ef29d51b46277b68d678ba8431d14b404",
+  "release_manifest_sha256": null,
+  "run_id": "exploratory-2c97e3c7dc674e728574282eb0873e46",
+  "runtime": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "gpu_count": 2,
+    "gpu_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "numpy": "2.1.3",
+    "python": "3.13.15",
+    "pytorch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "source_commit": "73e4ae05af06e14cc27901a54d0c2b652c1a73b7"
+}

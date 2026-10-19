@@ -159,6 +159,35 @@ class KaggleReleaseTests(unittest.TestCase):
                 release.authorize_mode(mode, manifest, fake)
         self.assertEqual(release.authorize_mode("SMOKE", manifest), "SMOKE")
         self.assertEqual(release.authorize_mode("PREFLIGHT", manifest), "PREFLIGHT")
+        self.assertEqual(release.authorize_mode("EXPLORATORY", manifest,
+                         config=release.EXPLORATORY_CONFIG_VALUE), "EXPLORATORY")
+        self.assertEqual(release.authorize_mode("EXPLORATORY_COMPARISON", manifest,
+                         config=release.EXPLORATORY_COMPARISON_CONFIG_VALUE), "EXPLORATORY_COMPARISON")
+        self.assertEqual(release.authorize_mode("EXPLORATORY_ITERATION_2", manifest,
+                         config=release.EXPLORATORY_ITERATION_2_CONFIG_VALUE), "EXPLORATORY_ITERATION_2")
+        from scripts import kaggle_deploy
+        self.assertEqual(kaggle_deploy.AUTORESEARCH_BATCH_CONFIGS,
+                         release.AUTORESEARCH_BATCH_CONFIGS)
+        config = release.AUTORESEARCH_BATCH_CONFIGS["AUTORESEARCH_BATCH_3"]
+        self.assertEqual(release.authorize_mode("AUTORESEARCH_BATCH_3", manifest, config=config),
+                         "AUTORESEARCH_BATCH_3")
+        with self.assertRaises(release.ReleaseError):
+            release.authorize_mode("AUTORESEARCH_BATCH_3", manifest,
+                                   config={**config, "training_jobs": 7})
+        self.assertEqual(kaggle_deploy.AUTORESEARCH_BATCH_CONFIGS,
+                         release.AUTORESEARCH_BATCH_CONFIGS)
+        config4 = release.AUTORESEARCH_BATCH_CONFIGS["AUTORESEARCH_BATCH_4"]
+        self.assertEqual(release.authorize_mode("AUTORESEARCH_BATCH_4", manifest, config=config4),
+                         "AUTORESEARCH_BATCH_4")
+        bad_comparison = dict(release.EXPLORATORY_COMPARISON_CONFIG_VALUE)
+        bad_comparison["training_jobs"] += 1
+        with self.assertRaisesRegex(release.ReleaseError, "exact bounded A-D"):
+            release.authorize_mode("EXPLORATORY_COMPARISON", manifest, config=bad_comparison)
+        for key in ("episodes", "seed", "locked_test_access", "formal_eligible"):
+            bad = dict(release.EXPLORATORY_CONFIG_VALUE)
+            bad[key] = not bad[key] if isinstance(bad[key], bool) else bad[key] + 1
+            with self.assertRaises(release.ReleaseError):
+                release.authorize_mode("EXPLORATORY", manifest, config=bad)
 
     def test_readiness_accepts_only_the_two_bounded_non_outcome_workloads(self):
         for workload, updates, episodes in (("t4x2_path_smoke", 1, 16),

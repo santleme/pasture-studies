@@ -1,0 +1,298 @@
+{
+  "benchmark_eligible": false,
+  "calibration": {
+    "cpu": {
+      "animals_per_episode": 5,
+      "benchmark_eligible": false,
+      "checkpoint_write": false,
+      "device": "cpu",
+      "elapsed_wall_seconds": 6.991691336999992,
+      "episodes_per_batch": 16,
+      "formal_eligible": false,
+      "learning_update": false,
+      "locked_outcomes_accessed": false,
+      "optimizer_step": false,
+      "profile": "exploratory-real-rollout-forward-backward-v1",
+      "repeat_count": 1,
+      "rows": [
+        {
+          "batch_seconds": 3.4524623700000063,
+          "checkpoint_write": false,
+          "decisions": 5760,
+          "episodes": 16,
+          "forward_backward_seconds": 0.10558850900000039,
+          "mean_environment_reward": -7.209957599639893,
+          "mean_training_target_return_to_go": -0.7273591756820679,
+          "optimizer_step": false,
+          "repeat": 0,
+          "rollout_seconds": 3.346873861000006
+        }
+      ],
+      "schema_version": 1,
+      "ticks_per_episode": 72,
+      "timing_scope": "simulator collection incl. policy inference; then loss forward/backward",
+      "torch_version": "2.11.0+cu128",
+      "total_seconds": 3.4524623700000063
+    },
+    "cuda:0": {
+      "animals_per_episode": 5,
+      "benchmark_eligible": false,
+      "checkpoint_write": false,
+      "device": "cuda:0",
+      "elapsed_wall_seconds": 6.174668923999974,
+      "episodes_per_batch": 16,
+      "formal_eligible": false,
+      "learning_update": false,
+      "locked_outcomes_accessed": false,
+      "optimizer_step": false,
+      "profile": "exploratory-real-rollout-forward-backward-v1",
+      "repeat_count": 1,
+      "rows": [
+        {
+          "batch_seconds": 3.634608732999993,
+          "checkpoint_write": false,
+          "decisions": 5760,
+          "episodes": 16,
+          "forward_backward_seconds": 0.26569050300000185,
+          "mean_environment_reward": -7.209957599639893,
+          "mean_training_target_return_to_go": -0.7273591756820679,
+          "optimizer_step": false,
+          "repeat": 0,
+          "rollout_seconds": 3.3689182299999914
+        }
+      ],
+      "schema_version": 1,
+      "ticks_per_episode": 72,
+      "timing_scope": "simulator collection incl. policy inference; then loss forward/backward",
+      "torch_version": "2.11.0+cu128",
+      "total_seconds": 3.634608732999993
+    },
+    "cuda:1": {
+      "animals_per_episode": 5,
+      "benchmark_eligible": false,
+      "checkpoint_write": false,
+      "device": "cuda:1",
+      "elapsed_wall_seconds": 6.192117738999997,
+      "episodes_per_batch": 16,
+      "formal_eligible": false,
+      "learning_update": false,
+      "locked_outcomes_accessed": false,
+      "optimizer_step": false,
+      "profile": "exploratory-real-rollout-forward-backward-v1",
+      "repeat_count": 1,
+      "rows": [
+        {
+          "batch_seconds": 3.6445956989999786,
+          "checkpoint_write": false,
+          "decisions": 5760,
+          "episodes": 16,
+          "forward_backward_seconds": 0.22211874299998158,
+          "mean_environment_reward": -7.209957599639893,
+          "mean_training_target_return_to_go": -0.7273591756820679,
+          "optimizer_step": false,
+          "repeat": 0,
+          "rollout_seconds": 3.422476955999997
+        }
+      ],
+      "schema_version": 1,
+      "ticks_per_episode": 72,
+      "timing_scope": "simulator collection incl. policy inference; then loss forward/backward",
+      "torch_version": "2.11.0+cu128",
+      "total_seconds": 3.6445956989999786
+    },
+    "dual-0": {
+      "animals_per_episode": 5,
+      "benchmark_eligible": false,
+      "checkpoint_write": false,
+      "device": "cuda:0",
+      "episodes_per_batch": 16,
+      "formal_eligible": false,
+      "learning_update": false,
+      "locked_outcomes_accessed": false,
+      "optimizer_step": false,
+      "profile": "exploratory-real-rollout-forward-backward-v1",
+      "repeat_count": 1,
+      "rows": [
+        {
+          "batch_seconds": 3.685008836999998,
+          "checkpoint_write": false,
+          "decisions": 5760,
+          "episodes": 16,
+          "forward_backward_seconds": 0.2207187440000098,
+          "mean_environment_reward": -7.209957599639893,
+          "mean_training_target_return_to_go": -0.7273591756820679,
+          "optimizer_step": false,
+          "repeat": 0,
+          "rollout_seconds": 3.4642900929999882
+        }
+      ],
+      "schema_version": 1,
+      "ticks_per_episode": 72,
+      "timing_scope": "simulator collection incl. policy inference; then loss forward/backward",
+      "torch_version": "2.11.0+cu128",
+      "total_seconds": 3.685008836999998
+    },
+    "dual-1": {
+      "animals_per_episode": 5,
+      "benchmark_eligible": false,
+      "checkpoint_write": false,
+      "device": "cuda:0",
+      "episodes_per_batch": 16,
+      "formal_eligible": false,
+      "learning_update": false,
+      "locked_outcomes_accessed": false,
+      "optimizer_step": false,
+      "profile": "exploratory-real-rollout-forward-backward-v1",
+      "repeat_count": 1,
+      "rows": [
+        {
+          "batch_seconds": 3.6317289020000203,
+          "checkpoint_write": false,
+          "decisions": 5760,
+          "episodes": 16,
+          "forward_backward_seconds": 0.2183660350000025,
+          "mean_environment_reward": -7.209957599639893,
+          "mean_training_target_return_to_go": -0.7273591756820679,
+          "optimizer_step": false,
+          "repeat": 0,
+          "rollout_seconds": 3.413362867000018
+        }
+      ],
+      "schema_version": 1,
+      "ticks_per_episode": 72,
+      "timing_scope": "simulator collection incl. policy inference; then loss forward/backward",
+      "torch_version": "2.11.0+cu128",
+      "total_seconds": 3.6317289020000203
+    }
+  },
+  "candidate_manifest": "/kaggle/working/pasture-release-autoresearch_batch_4-4aa0441761844272986f6ade83834591/autoresearch/batch-4/training/autoresearch-candidate-manifest.json",
+  "candidate_manifest_sha256": "7a071dedd0e691602eff9bdcbad0de62ecdcd2cdfece18d98584061a83ba25be",
+  "claim_boundary": "Kaggle exploratory training only; evaluation/acceptance is run locally on new shared worlds using unchanged original reward. No biological validation or GPU speedup claim.",
+  "config": {
+    "algorithm": "a2c",
+    "batch": 4,
+    "benchmark_eligible": false,
+    "checkpoint_promotion": false,
+    "comparison_episodes_per_family": 3,
+    "cumulative_jobs_before": 18,
+    "episodes_per_variant_seed": 512,
+    "evaluation_root_seed": 9487999,
+    "formal_eligible": false,
+    "locked_test_access": false,
+    "max_additional_training_jobs": 24,
+    "perception_mode": "path-aware-v2",
+    "protocol": "autoresearch-outcome-scale-v1",
+    "resource_profile": "resource-rich-v1",
+    "seeds": [
+      9484301,
+      9484302,
+      9484303
+    ],
+    "task": "autoresearch_outcome_aware_scale_followup",
+    "training_jobs": 6,
+    "variant_config": {
+      "M": {
+        "discount_factor": 1.0,
+        "entropy_coefficient": 0.0,
+        "normalize_advantage": false,
+        "reward_variant": "outcome_aware",
+        "state_reward_scale": 2.0
+      },
+      "N": {
+        "discount_factor": 1.0,
+        "entropy_coefficient": 0.01,
+        "normalize_advantage": true,
+        "reward_variant": "outcome_aware",
+        "state_reward_scale": 2.0
+      }
+    },
+    "variants": [
+      "M",
+      "N"
+    ]
+  },
+  "cuda_forward_backward": "PASS",
+  "cumulative_jobs_after": 24,
+  "cumulative_jobs_before": 18,
+  "dual_gpu_makespan_seconds": 6.5414869600000145,
+  "dual_vs_best_single_throughput_ratio": 1.8878487297328375,
+  "formal_eligible": false,
+  "gpu_names": [
+    "Tesla T4",
+    "Tesla T4"
+  ],
+  "job_checks": [
+    {
+      "inference_export": "/kaggle/working/pasture-release-autoresearch_batch_4-4aa0441761844272986f6ade83834591/autoresearch/batch-4/training/variant-M/seed-9484301/a2c/torch-a2c-seed-9484301.npz",
+      "inference_sha256": "471f09414c0a651d647bcbc3124fc597b33e92a75cf610fb9c1079cf359a1c1b",
+      "latest_generation": "generation-00000032",
+      "seed": 9484301,
+      "updates": 32,
+      "variant": "M"
+    },
+    {
+      "inference_export": "/kaggle/working/pasture-release-autoresearch_batch_4-4aa0441761844272986f6ade83834591/autoresearch/batch-4/training/variant-M/seed-9484302/a2c/torch-a2c-seed-9484302.npz",
+      "inference_sha256": "6e2d5849e4f88a27af78c5d5b44757fdbb7149b50ade7faf25649862f81b9187",
+      "latest_generation": "generation-00000032",
+      "seed": 9484302,
+      "updates": 32,
+      "variant": "M"
+    },
+    {
+      "inference_export": "/kaggle/working/pasture-release-autoresearch_batch_4-4aa0441761844272986f6ade83834591/autoresearch/batch-4/training/variant-M/seed-9484303/a2c/torch-a2c-seed-9484303.npz",
+      "inference_sha256": "adc79071ee083d79bb705a888cb1f806e97bd20e478077dd33f16a8d9740233e",
+      "latest_generation": "generation-00000032",
+      "seed": 9484303,
+      "updates": 32,
+      "variant": "M"
+    },
+    {
+      "inference_export": "/kaggle/working/pasture-release-autoresearch_batch_4-4aa0441761844272986f6ade83834591/autoresearch/batch-4/training/variant-N/seed-9484301/a2c/torch-a2c-seed-9484301.npz",
+      "inference_sha256": "43a5e169aa36e715975b0dad538f4c84bf083207652fcf3741f03ea7dd0c3be5",
+      "latest_generation": "generation-00000032",
+      "seed": 9484301,
+      "updates": 32,
+      "variant": "N"
+    },
+    {
+      "inference_export": "/kaggle/working/pasture-release-autoresearch_batch_4-4aa0441761844272986f6ade83834591/autoresearch/batch-4/training/variant-N/seed-9484302/a2c/torch-a2c-seed-9484302.npz",
+      "inference_sha256": "b76da359030e8c39b572db7e640b1f597e5bae9f3df547ae50191e6c339a03fa",
+      "latest_generation": "generation-00000032",
+      "seed": 9484302,
+      "updates": 32,
+      "variant": "N"
+    },
+    {
+      "inference_export": "/kaggle/working/pasture-release-autoresearch_batch_4-4aa0441761844272986f6ade83834591/autoresearch/batch-4/training/variant-N/seed-9484303/a2c/torch-a2c-seed-9484303.npz",
+      "inference_sha256": "3b511d9b11219d79f74d040feabf4173de356d3f80d3c04b0e0359ffd6371c82",
+      "latest_generation": "generation-00000032",
+      "seed": 9484303,
+      "updates": 32,
+      "variant": "N"
+    }
+  ],
+  "jobs_completed": 6,
+  "jobs_started": 6,
+  "locked_outcomes_accessed": false,
+  "max_additional_training_jobs": 24,
+  "mode": "AUTORESEARCH_BATCH_4",
+  "notebook_sha256": "0d3215a07b9dde1ef54be3ca8353cfa4d7b9c03f3ea758cc246d8ec1003c65a2",
+  "protocol": "autoresearch-outcome-scale-v1",
+  "runtime": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "gpu_count": 2,
+    "gpu_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "numpy": "2.1.3",
+    "python": "3.13.15",
+    "pytorch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "selected_schedule": "two-independent-T4-jobs",
+  "selected_single_device": "cuda:0",
+  "source_commit": "3372ed7b1452a0fb92165b15c33092f6049625b2",
+  "training_wall_seconds": 452.10058567
+}

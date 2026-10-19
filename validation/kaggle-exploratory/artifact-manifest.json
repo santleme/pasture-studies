@@ -1,0 +1,725 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "A/seed-9483001/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "A/seed-9483001/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "1c3f14cb41bd190f7d0f740ecdc9713048632767241ae91a2e01ce3d361cf07a"
+    },
+    {
+      "path": "A/seed-9483001/evaluation.json",
+      "size_bytes": 23943,
+      "sha256": "66add8c6ab6658a04e043dd8660ca0c19799a61bca055c4d777644e61f9de02e"
+    },
+    {
+      "path": "A/seed-9483001/generation-00000032/manifest.json",
+      "size_bytes": 3438,
+      "sha256": "9ead8e95f86af33b12be56b2a6cd7be66a5e35bc2845dcf6b29846dc9b570c5f"
+    },
+    {
+      "path": "A/seed-9483001/generation-00000032/training.pt",
+      "size_bytes": 32309,
+      "sha256": "f8e1282c6fc1f2470665aa2eed8971a4e06949ad06aeb64aa684ec99d097f90d"
+    },
+    {
+      "path": "A/seed-9483001/torch-a2c-seed-9483001.json",
+      "size_bytes": 4772,
+      "sha256": "3b6024daa40d208621fd8f809a74af0c3e19fe80f10b0373758e942daf9d9142"
+    },
+    {
+      "path": "A/seed-9483001/torch-a2c-seed-9483001.npz",
+      "size_bytes": 4879,
+      "sha256": "4573c96a7d15a4a8427700745884f07cc8bc555c12403ad96ccf4f3e018710ee"
+    },
+    {
+      "path": "A/seed-9483002/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "A/seed-9483002/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "f34872cc05581f07dc9e82be6063d6f8d9fd31d5aba514adb68d405888e7a492"
+    },
+    {
+      "path": "A/seed-9483002/evaluation.json",
+      "size_bytes": 23946,
+      "sha256": "4f3199189ce0dfac1e479b2254e86c4ab9ad462c9a26f56f943ea700c2e39871"
+    },
+    {
+      "path": "A/seed-9483002/generation-00000032/manifest.json",
+      "size_bytes": 3438,
+      "sha256": "5e37a7f1610da4ca1d7c90435514f1eac6677fdb0364d1eac981aa6445437599"
+    },
+    {
+      "path": "A/seed-9483002/generation-00000032/training.pt",
+      "size_bytes": 32245,
+      "sha256": "08c6b0a2437d44237b6bd9f00ea7fab7b6a3b47a6b2d4b4be10bc9f78022d571"
+    },
+    {
+      "path": "A/seed-9483002/torch-a2c-seed-9483002.json",
+      "size_bytes": 4772,
+      "sha256": "06bd5318b6f96135bec5092f33c459c930252335b89d82c98889e83653c7748d"
+    },
+    {
+      "path": "A/seed-9483002/torch-a2c-seed-9483002.npz",
+      "size_bytes": 4892,
+      "sha256": "1f2bbffaf926aa035717362c0e2b647b746287c81a1b8f7ad9fe2e7f84ed96ac"
+    },
+    {
+      "path": "A/seed-9483003/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "A/seed-9483003/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "851da1be40762f2579c1c4d235fa7ae967c1003534ffcdf071ffb992d921d0d2"
+    },
+    {
+      "path": "A/seed-9483003/evaluation.json",
+      "size_bytes": 23647,
+      "sha256": "c87f8da214032ed58c32f54d10eeac96d4115eb2b841c62c6bde47046ac0479c"
+    },
+    {
+      "path": "A/seed-9483003/generation-00000032/manifest.json",
+      "size_bytes": 3438,
+      "sha256": "38f6914eb503e84f90b9f0ca22113adc7326741f58e439cde4f08c07bd26a34c"
+    },
+    {
+      "path": "A/seed-9483003/generation-00000032/training.pt",
+      "size_bytes": 32245,
+      "sha256": "d700d7524857dee04b54b795e50dbf2d1051746c31d424baaaa8c9e4918e465c"
+    },
+    {
+      "path": "A/seed-9483003/torch-a2c-seed-9483003.json",
+      "size_bytes": 4772,
+      "sha256": "926e1e438e966a866023d5dace30012be8c955fcc157260b954910c74268395d"
+    },
+    {
+      "path": "A/seed-9483003/torch-a2c-seed-9483003.npz",
+      "size_bytes": 4885,
+      "sha256": "6d809df5e9f50d305863614e8ebab60657094f48b9cd625e5268425faec5e4d6"
+    },
+    {
+      "path": "B/seed-9483001/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "B/seed-9483001/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "09fc06645bcf8e52c424e6321b3a9d8328a8814debd04bd0db3df9708fba88a2"
+    },
+    {
+      "path": "B/seed-9483001/evaluation.json",
+      "size_bytes": 23730,
+      "sha256": "31ed8a566d5b647bf083adbdeee4563fa756f429d527c0cff1c875dc5a71f713"
+    },
+    {
+      "path": "B/seed-9483001/generation-00000032/manifest.json",
+      "size_bytes": 3438,
+      "sha256": "4c2bcf0f28b247e33b287e9670c49d6b25c17a3f10b6cabb230d40c109fff8c0"
+    },
+    {
+      "path": "B/seed-9483001/generation-00000032/training.pt",
+      "size_bytes": 32309,
+      "sha256": "c614ca1e87e3ca1f2d08fbbef47170049aa101d9e2f6e6b460768ba2c9d33bdf"
+    },
+    {
+      "path": "B/seed-9483001/torch-a2c-seed-9483001.json",
+      "size_bytes": 4772,
+      "sha256": "442f751a1223137f246ead79ee56079c8f245d98473343688be0c280f55f3c1c"
+    },
+    {
+      "path": "B/seed-9483001/torch-a2c-seed-9483001.npz",
+      "size_bytes": 4886,
+      "sha256": "e40f34d900c8693ed1df1568b5016e73ffc3075c8446ed29732bab0752d794e1"
+    },
+    {
+      "path": "B/seed-9483002/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "B/seed-9483002/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "ac01d7f1b075bd3057e19d05e23f3c89967c36ac45798b3ddd193c2d12fffddc"
+    },
+    {
+      "path": "B/seed-9483002/evaluation.json",
+      "size_bytes": 23930,
+      "sha256": "70fd05e33090688f75146234066a39cb9d673e07cca00ebc78f425df9f19db04"
+    },
+    {
+      "path": "B/seed-9483002/generation-00000032/manifest.json",
+      "size_bytes": 3438,
+      "sha256": "a3fc299d027a019d9feb02d6df33366fa0e96dff3a896600fa6e61861c11bcc3"
+    },
+    {
+      "path": "B/seed-9483002/generation-00000032/training.pt",
+      "size_bytes": 32245,
+      "sha256": "dee6e70fb78e8a0beaa251c0d59b5d8c30570239cb8de365a64f2373f8559670"
+    },
+    {
+      "path": "B/seed-9483002/torch-a2c-seed-9483002.json",
+      "size_bytes": 4772,
+      "sha256": "77afa9c746cf3c7f4430d83d3a7809781259bf24facadf4aa79382aa5ead78f6"
+    },
+    {
+      "path": "B/seed-9483002/torch-a2c-seed-9483002.npz",
+      "size_bytes": 4881,
+      "sha256": "bcc4ad05baad7d3031e22a6572069438c6420d6eb383d48d0ee3378629481f16"
+    },
+    {
+      "path": "B/seed-9483003/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "B/seed-9483003/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "43c4468a2df759a021fd7db14b3d695757eb7eecff1fb0e70c91a3d3651b6032"
+    },
+    {
+      "path": "B/seed-9483003/evaluation.json",
+      "size_bytes": 23637,
+      "sha256": "9bd6b133b8ceb87f6a7bbd220e40269eed68126b6890f7c6cb7061c26d92d5be"
+    },
+    {
+      "path": "B/seed-9483003/generation-00000032/manifest.json",
+      "size_bytes": 3438,
+      "sha256": "706698518a45e095980a915113728438abc5940c74d80974c68477d512e47ca4"
+    },
+    {
+      "path": "B/seed-9483003/generation-00000032/training.pt",
+      "size_bytes": 32245,
+      "sha256": "b9bd1c5e3ff180441f2683041898f499b702202e19cd84966653fbfc4fae1330"
+    },
+    {
+      "path": "B/seed-9483003/torch-a2c-seed-9483003.json",
+      "size_bytes": 4772,
+      "sha256": "e53073b34e050e0895d400d5af629b5a3a92b47b526114cdbc1f978751b828a0"
+    },
+    {
+      "path": "B/seed-9483003/torch-a2c-seed-9483003.npz",
+      "size_bytes": 4874,
+      "sha256": "30e4d4e74368a3312188ab712f36ed98f6bd82c0624b4f131e9e47aaacb883fe"
+    },
+    {
+      "path": "C/seed-9483001/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "C/seed-9483001/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "43c86b1b2c36c38cdf1da5dd21b29c3ead9e24cef97e108463c96cf880b82be5"
+    },
+    {
+      "path": "C/seed-9483001/evaluation.json",
+      "size_bytes": 24153,
+      "sha256": "6dbbb3fdc4ff33e002c7fe803b0ad00993b709053a2e7428ee536292d8ff9c9c"
+    },
+    {
+      "path": "C/seed-9483001/generation-00000032/manifest.json",
+      "size_bytes": 3441,
+      "sha256": "fc8d4806a3e4ad126da95bb37b6ccf09101b6b317045111d1928f698cc6e8db9"
+    },
+    {
+      "path": "C/seed-9483001/generation-00000032/training.pt",
+      "size_bytes": 32309,
+      "sha256": "810dab8ac2fda539f2c902900f7a23b42792ea3038cd704516419c8d1f9ace16"
+    },
+    {
+      "path": "C/seed-9483001/torch-a2c-seed-9483001.json",
+      "size_bytes": 4775,
+      "sha256": "2ed39ad4b17ae28338cd958de4189f99edb70f773d91e91281674afca747d2d9"
+    },
+    {
+      "path": "C/seed-9483001/torch-a2c-seed-9483001.npz",
+      "size_bytes": 4861,
+      "sha256": "ac96452bd64aea2f4165088f54eb155af59a847432149f2d4408bc7e90c8ea1c"
+    },
+    {
+      "path": "C/seed-9483002/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "C/seed-9483002/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "716e139ad52b4f9593244ab4b5e272787d6512c5bf49335fee9643ff067bffc9"
+    },
+    {
+      "path": "C/seed-9483002/evaluation.json",
+      "size_bytes": 23828,
+      "sha256": "4f9103e536fcf0c59ff3f56fdfdde830071326b1edd0108573ba0a849db9e73b"
+    },
+    {
+      "path": "C/seed-9483002/generation-00000032/manifest.json",
+      "size_bytes": 3441,
+      "sha256": "af4c3fe6ba3a7b949fea616b170f4ee6650607c44e79b7daaf91ea539d274538"
+    },
+    {
+      "path": "C/seed-9483002/generation-00000032/training.pt",
+      "size_bytes": 32245,
+      "sha256": "a9d35dfda039b060510f88e32960f326272a4e7cae9ed072854a783dd4fc8fd4"
+    },
+    {
+      "path": "C/seed-9483002/torch-a2c-seed-9483002.json",
+      "size_bytes": 4775,
+      "sha256": "1d09f987f22bcc61433a2122d1bb2d45340a835bcebd5c94e6db94b5e58cb76b"
+    },
+    {
+      "path": "C/seed-9483002/torch-a2c-seed-9483002.npz",
+      "size_bytes": 4881,
+      "sha256": "d30bd2c96a9f667df866b511b58bbc7a2bf9a4d10f1d5d840629a3a0239f023e"
+    },
+    {
+      "path": "C/seed-9483003/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "C/seed-9483003/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "b1d41c338d17e80eb974b98046238ffe5bc560b33bcdbe4e358fccb9a665be8f"
+    },
+    {
+      "path": "C/seed-9483003/evaluation.json",
+      "size_bytes": 23629,
+      "sha256": "67744b947adeb59c092334e7f0d92c929fffdc579a30feda81b45a5d54a0d40e"
+    },
+    {
+      "path": "C/seed-9483003/generation-00000032/manifest.json",
+      "size_bytes": 3441,
+      "sha256": "d8efc72f30c09c22a4858132e7b83118f028d87d9efd1eca9d6d0d22d4a27ce8"
+    },
+    {
+      "path": "C/seed-9483003/generation-00000032/training.pt",
+      "size_bytes": 32245,
+      "sha256": "96eac4af9348fb489441a7196aeb46b9d847b652802872b9d41ac24cf30388a1"
+    },
+    {
+      "path": "C/seed-9483003/torch-a2c-seed-9483003.json",
+      "size_bytes": 4775,
+      "sha256": "a543f2c84ef5e606ca1a86382d6dda82ce2b4d8145d21570b0ec31b84cfc3d11"
+    },
+    {
+      "path": "C/seed-9483003/torch-a2c-seed-9483003.npz",
+      "size_bytes": 4881,
+      "sha256": "288ddfcc50c14ebbf1ff56770948dc923595bdf5af20f727c1f544e4d2c90083"
+    },
+    {
+      "path": "D/seed-9483001/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "D/seed-9483001/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "9b5c16b3e358efab9b075a5d3ca81dac9aaf6dd639f3d512f63ccd161d93e2a6"
+    },
+    {
+      "path": "D/seed-9483001/evaluation.json",
+      "size_bytes": 23850,
+      "sha256": "32e34030a0af8cbadebd49003a1ef493137d5e4d3a480975b17a1b0c3f2367db"
+    },
+    {
+      "path": "D/seed-9483001/generation-00000032/manifest.json",
+      "size_bytes": 3441,
+      "sha256": "2d31f54ea683793ff396d1fcc794f8cebecd53e8fe22c4de230bc60cd78bae2d"
+    },
+    {
+      "path": "D/seed-9483001/generation-00000032/training.pt",
+      "size_bytes": 32309,
+      "sha256": "34032ce1bfcbf7b4362fe2f87cddba855e8cc391dd2a301a6ab39fa3656b92d0"
+    },
+    {
+      "path": "D/seed-9483001/torch-a2c-seed-9483001.json",
+      "size_bytes": 4775,
+      "sha256": "32d71870c6bbae7e779d71812801dd4779f4c6b98ece1b938a522108fab9a4e1"
+    },
+    {
+      "path": "D/seed-9483001/torch-a2c-seed-9483001.npz",
+      "size_bytes": 4885,
+      "sha256": "70e55896d9f4d0b6b8e4b608a32032fb64667e7cd9ea60b87754e899fc96d01a"
+    },
+    {
+      "path": "D/seed-9483002/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "D/seed-9483002/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "6e2692f03387ac412a81aa13ce2eedde17255f1925f3ea9b03e86e1241558e80"
+    },
+    {
+      "path": "D/seed-9483002/evaluation.json",
+      "size_bytes": 24042,
+      "sha256": "7bc220fcf5b8156267b69d19108cbb4d5403b1e15f9a0dcb2020adf0104e6a99"
+    },
+    {
+      "path": "D/seed-9483002/generation-00000032/manifest.json",
+      "size_bytes": 3441,
+      "sha256": "614543499e0c052efdb0d85cce597cf56eacb1f7bd344df1d8237c6402350791"
+    },
+    {
+      "path": "D/seed-9483002/generation-00000032/training.pt",
+      "size_bytes": 32245,
+      "sha256": "79a30751ca85ad4edff8ed5a72af08eb2a539c171e05f253d4f9ee74868f93c6"
+    },
+    {
+      "path": "D/seed-9483002/torch-a2c-seed-9483002.json",
+      "size_bytes": 4775,
+      "sha256": "732b7c74d41fef9b41ab019b7dd0213e84e6474afc085fc7fb5c8ee9e4d22235"
+    },
+    {
+      "path": "D/seed-9483002/torch-a2c-seed-9483002.npz",
+      "size_bytes": 4887,
+      "sha256": "1252cb1fff28b67a3350a9ad577295aba36b27b2da7498bc38c6098d5839a262"
+    },
+    {
+      "path": "D/seed-9483003/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "D/seed-9483003/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "2aac7ac372eb0134d4b17a88ec00b277df0599bf7b819fe5e5967620cc4992f0"
+    },
+    {
+      "path": "D/seed-9483003/evaluation.json",
+      "size_bytes": 23647,
+      "sha256": "4a870d86c3391e45591c7ffa5b63307438a3887b717c5b99077dd3be56698942"
+    },
+    {
+      "path": "D/seed-9483003/generation-00000032/manifest.json",
+      "size_bytes": 3441,
+      "sha256": "25e0517ae80f0594da22a2e73be8af8719623b9f1cb7b24d05c80fb1c634c73a"
+    },
+    {
+      "path": "D/seed-9483003/generation-00000032/training.pt",
+      "size_bytes": 32245,
+      "sha256": "bdd8cff150213e0fefb7ecbb75d58595ec446e86df74c89b4b73a5268cfba1cb"
+    },
+    {
+      "path": "D/seed-9483003/torch-a2c-seed-9483003.json",
+      "size_bytes": 4775,
+      "sha256": "68e5023b040f1ae0714ca819e1b5569949650e47c2e22ef0528be568a32834e9"
+    },
+    {
+      "path": "D/seed-9483003/torch-a2c-seed-9483003.npz",
+      "size_bytes": 4876,
+      "sha256": "9df715ff03de65e8a227ea2f29720f43fa4a7e768bb8031342d95c679d3ed608"
+    },
+    {
+      "path": "E/seed-9483004/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "E/seed-9483004/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "08ed86430034635b320dd08917e457175d65a2deaa6f6436b0bf985051b61332"
+    },
+    {
+      "path": "E/seed-9483004/evaluation.json",
+      "size_bytes": 23571,
+      "sha256": "096b6faecd47447868e2adf961be919330faff4ac42339890127a0b6ff8648f9"
+    },
+    {
+      "path": "E/seed-9483004/generation-00000032/manifest.json",
+      "size_bytes": 3442,
+      "sha256": "4c5635999f59a84d2cc7e4b7ffe544963773bb128eeff5118c5d4ff7512256f8"
+    },
+    {
+      "path": "E/seed-9483004/generation-00000032/training.pt",
+      "size_bytes": 32181,
+      "sha256": "16732b1a8f11f95431ffba60b6961df4dbf1f28b007410230920c6750e734bd7"
+    },
+    {
+      "path": "E/seed-9483004/torch-a2c-seed-9483004.json",
+      "size_bytes": 4779,
+      "sha256": "d27971076c6932bfb5284858a01606ff3e6f192ec7c77d4559c008dd5180f871"
+    },
+    {
+      "path": "E/seed-9483004/torch-a2c-seed-9483004.npz",
+      "size_bytes": 4892,
+      "sha256": "4570e3938b78c2040c71ee36a1e2b75d837ad4ba1c81fb82b386a4f29a5df5f6"
+    },
+    {
+      "path": "E/seed-9483005/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "E/seed-9483005/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "c6caefa5adaf0862dabf45de1b46d3ddbb663678e71608939d6f20f349b7ff88"
+    },
+    {
+      "path": "E/seed-9483005/evaluation.json",
+      "size_bytes": 23874,
+      "sha256": "0b7fb7d91e05b1f9ef24a743c0229c2f4d2162a0b95441736554e0c30701016a"
+    },
+    {
+      "path": "E/seed-9483005/generation-00000032/manifest.json",
+      "size_bytes": 3442,
+      "sha256": "eb33286e770c930e683ef087d29c7b0c4bc73dba717296f1032c916b07e97be4"
+    },
+    {
+      "path": "E/seed-9483005/generation-00000032/training.pt",
+      "size_bytes": 32309,
+      "sha256": "7799810d9bd837bdf56433380b5fa3971ce79a6754ad75579d63b26ba1b7f0bb"
+    },
+    {
+      "path": "E/seed-9483005/torch-a2c-seed-9483005.json",
+      "size_bytes": 4779,
+      "sha256": "583c2cf3f3d97653475d23ed8eacc4403ef9490cdfbb67aa47620a62343fb348"
+    },
+    {
+      "path": "E/seed-9483005/torch-a2c-seed-9483005.npz",
+      "size_bytes": 4871,
+      "sha256": "4e5262d13985c26bc93a59092854518884effbd059e043a120f514f46040e26d"
+    },
+    {
+      "path": "E/seed-9483006/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "E/seed-9483006/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "d2f0d704839927ade7baa0bebbe4b6c23c52af68296a7b7a573a7a93ae4a9bb6"
+    },
+    {
+      "path": "E/seed-9483006/evaluation.json",
+      "size_bytes": 23868,
+      "sha256": "339e56732603a0d352a50adc432dd935a9c35f2cc66ee39203f0ccc6cdf21f89"
+    },
+    {
+      "path": "E/seed-9483006/generation-00000032/manifest.json",
+      "size_bytes": 3442,
+      "sha256": "9acd6c2c30ba06ac192a7600fd5388f77f0c7ec8aff6a5f13626b8a097a1306a"
+    },
+    {
+      "path": "E/seed-9483006/generation-00000032/training.pt",
+      "size_bytes": 32245,
+      "sha256": "cbf2e51050683ea00517fe309555672804049f33d28e42e4635d706c8429e198"
+    },
+    {
+      "path": "E/seed-9483006/torch-a2c-seed-9483006.json",
+      "size_bytes": 4779,
+      "sha256": "a1f5f48d5e8e5b1f86d62dbe0fe583695ec49724f04d1512b5e17b0a9ce54e0d"
+    },
+    {
+      "path": "E/seed-9483006/torch-a2c-seed-9483006.npz",
+      "size_bytes": 4884,
+      "sha256": "cce9c7735452c99c9b8bad2a7ba892f28ccc8039844dbb086f8f4534f92dc0f8"
+    },
+    {
+      "path": "F/seed-9483004/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "F/seed-9483004/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "ee5ff43d41c3138533c5529cc1c97b1d3dfc5d62fe9646db9b7b1dc0db7ef3e1"
+    },
+    {
+      "path": "F/seed-9483004/evaluation.json",
+      "size_bytes": 23608,
+      "sha256": "cc119bcde51950b6c0715103c5be06b138b694baafa1d5f7769cc62f4c13bc11"
+    },
+    {
+      "path": "F/seed-9483004/generation-00000032/manifest.json",
+      "size_bytes": 3442,
+      "sha256": "a068ff9f978017a2e6381d1b955e4cbff0397fc34ad2c03b3271c13de6561919"
+    },
+    {
+      "path": "F/seed-9483004/generation-00000032/training.pt",
+      "size_bytes": 32181,
+      "sha256": "41c0b4dcffe3914c300febbf9f891446308af7df2856e5e130677f01bfd411f5"
+    },
+    {
+      "path": "F/seed-9483004/torch-a2c-seed-9483004.json",
+      "size_bytes": 4779,
+      "sha256": "1ad7412b0e89ce0ac9f102eed8a65eb209529b57a9cbb5835907cf1494735968"
+    },
+    {
+      "path": "F/seed-9483004/torch-a2c-seed-9483004.npz",
+      "size_bytes": 4885,
+      "sha256": "ab6247377e2fdc31f7f6424f42eab5cda78b00f72bfd8b0122566249a0e31d7e"
+    },
+    {
+      "path": "F/seed-9483005/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "F/seed-9483005/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "bbeb0ae59c0fe9645a581701b7290b8255395f1f7f5cf042fc07229bfc52a4bd"
+    },
+    {
+      "path": "F/seed-9483005/evaluation.json",
+      "size_bytes": 23874,
+      "sha256": "f8896325137695511a34d00b25ccb5d4f20523650310e9c5ef658cd769dafcb0"
+    },
+    {
+      "path": "F/seed-9483005/generation-00000032/manifest.json",
+      "size_bytes": 3442,
+      "sha256": "cacaffa8024da9cf66e2a46a897b1d36b82be430101d8cc8e246cb6761419438"
+    },
+    {
+      "path": "F/seed-9483005/generation-00000032/training.pt",
+      "size_bytes": 32309,
+      "sha256": "0b3699b608d1081b671314fef6ae25b08c39290fce926f88537c103521048e68"
+    },
+    {
+      "path": "F/seed-9483005/torch-a2c-seed-9483005.json",
+      "size_bytes": 4779,
+      "sha256": "d7b67deeb7c0f0141d80f9487e7cf8995e64bf758f2d7cd8c9502c7526649e82"
+    },
+    {
+      "path": "F/seed-9483005/torch-a2c-seed-9483005.npz",
+      "size_bytes": 4872,
+      "sha256": "3a9bcee8e4399d09e0286a944fc167a6857775b4458d39f41497e21dd07cc664"
+    },
+    {
+      "path": "F/seed-9483006/LATEST",
+      "size_bytes": 20,
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7"
+    },
+    {
+      "path": "F/seed-9483006/artifact-manifest.json",
+      "size_bytes": 745,
+      "sha256": "d01b08253c46710fe8e59f30e021eea2c4b1de1a269edb6004939c24188532c1"
+    },
+    {
+      "path": "F/seed-9483006/evaluation.json",
+      "size_bytes": 23920,
+      "sha256": "1f849be07c63354df673ad6aac6318f297fe82e0a875a4ca70eb219688e4abb6"
+    },
+    {
+      "path": "F/seed-9483006/generation-00000032/manifest.json",
+      "size_bytes": 3442,
+      "sha256": "5cbc0a02f6d1e46e459f4a86d1ab908049b98139a563346e9a566b65de7a90d5"
+    },
+    {
+      "path": "F/seed-9483006/generation-00000032/training.pt",
+      "size_bytes": 32245,
+      "sha256": "69a5c4533aa58d6f1006f55b0f9838ac7b46c790cd3c193587e73440fcf78eea"
+    },
+    {
+      "path": "F/seed-9483006/torch-a2c-seed-9483006.json",
+      "size_bytes": 4779,
+      "sha256": "a2ca2ebcfe09a03046224e8d862f14e1be4827c563b35f0d4976540cb2801dba"
+    },
+    {
+      "path": "F/seed-9483006/torch-a2c-seed-9483006.npz",
+      "size_bytes": 4874,
+      "sha256": "a6b7ef1eda7c96c3829df6349ed72c5e2b3c1f07ecaac4e5bc3d4f1b258573de"
+    },
+    {
+      "path": "exploratory-comparison.json",
+      "size_bytes": 174644,
+      "sha256": "df62812358ff5b6ac8620689a3e769af1c093c28c59f6b449756ce9db569866a"
+    },
+    {
+      "path": "exploratory-comparison.svg",
+      "size_bytes": 2379,
+      "sha256": "9ab578aa427f743a79f7266d472d8a9b059c4267fe4ca1405af7937a71e25187"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/calibration/device-mlp-profile.json",
+      "size_bytes": 8054,
+      "sha256": "bde57bfb81f35a533c17f6130ea90dafe5fd6b0de141a0bea372aa0c1fba6e9e"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/calibration/real-step-cpu.json",
+      "size_bytes": 974,
+      "sha256": "c9a61024dc39a835474f9de9631daaafb1a6965e969753ecec2171e4776707e0"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/calibration/real-step-cuda-0.json",
+      "size_bytes": 975,
+      "sha256": "2eefbb4c501bcf66c0774ddc80dd1b8c50f61cfe3544af5ccb82c1061cd99c6c"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/calibration/real-step-cuda-1.json",
+      "size_bytes": 978,
+      "sha256": "939f491621e2fda14d4be2fdbb2a36cdbeb90d6c27fa22987e1f3e1f4ba0bd62"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/calibration/real-step-dual-0.json",
+      "size_bytes": 975,
+      "sha256": "6a9d9b3d0ede3a336567393c6435020e9bcddc00bcd59f800276183895694c34"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/calibration/real-step-dual-1.json",
+      "size_bytes": 974,
+      "sha256": "5f861bf59657c6288ade49f13d5170e958c19c6b178a0e705a51de1665fb5136"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/batch-shard-0-of-2.json",
+      "size_bytes": 8045,
+      "sha256": "84c6d8a9496d3850253c48799ac0c943a94406f5096bb772e16655c4ba6247e8"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-suite/exploratory-comparison/batch-shard-1-of-2.json",
+      "size_bytes": 8045,
+      "sha256": "918985941bb03a1d8077f6d225ac853fac8cf8906e4fc9d7361b8ef84e1a3424"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-worker-0.log",
+      "size_bytes": 8239,
+      "sha256": "fa2c089691bc14b88371705c0743db3e7c257cef704721169e6ad978c22cb810"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v12-output/pasture-release-exploratory_comparison-12d213bce1624fb6b39d0d6a1f14ca90/exploratory-comparison/training-worker-1.log",
+      "size_bytes": 8239,
+      "sha256": "e53ebb2a73cf4d097b9679a910ce1ef68b5f491df1ba522dcc2f4f67ef291137"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v13-output/pasture-release-exploratory_iteration_2-2b3c4beba71b49e9a8060c833789402c/exploratory-iteration-2/training-suite/exploratory-iteration-2/iteration-2-shard-0-of-2.json",
+      "size_bytes": 4235,
+      "sha256": "b492963a38dd0fd56ae3e1e0645bec9fbcadbb19a6246aa8715c4ebb55f1953f"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v13-output/pasture-release-exploratory_iteration_2-2b3c4beba71b49e9a8060c833789402c/exploratory-iteration-2/training-suite/exploratory-iteration-2/iteration-2-shard-1-of-2.json",
+      "size_bytes": 4235,
+      "sha256": "6f51843df2e3c90cfc475fea0fbe3a473e4a82a3a1ac04b0342da651607cd3b5"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v13-output/pasture-release-exploratory_iteration_2-2b3c4beba71b49e9a8060c833789402c/exploratory-iteration-2/training-worker-0.log",
+      "size_bytes": 4438,
+      "sha256": "e104979760116ed70850f57f61dbb1c6485f211202c2e258eb96b17f7d7e14e1"
+    },
+    {
+      "path": "kaggle-metadata/pasture-kaggle-v13-output/pasture-release-exploratory_iteration_2-2b3c4beba71b49e9a8060c833789402c/exploratory-iteration-2/training-worker-1.log",
+      "size_bytes": 4438,
+      "sha256": "6b5206910c3fceaf29d9b6e84ac2a1127282c24c9f5c906e7e19cf64b412f928"
+    },
+    {
+      "path": "pasture-kaggle-v12-output-pasture-studies.log",
+      "size_bytes": 36507,
+      "sha256": "950960779b079de4878f8b111631032b499be944b0d4b3454d9fa361ad338215"
+    },
+    {
+      "path": "pasture-kaggle-v13-output-pasture-studies.log",
+      "size_bytes": 12420,
+      "sha256": "dffcbf6defdf73e6b3c4401dc7dfb6472d1f1e0ba3f1c100e434e398eff1db81"
+    }
+  ]
+}

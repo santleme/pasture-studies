@@ -30,6 +30,7 @@ class CategoricalPolicy:
     seed: int = 0
     episodes: int = 0
     policy_id: str = "untrained"
+    perception_mode: str = "legacy-v1"
 
     @classmethod
     def initialize(cls, seed: int, hidden_size: int = HIDDEN_SIZE) -> "CategoricalPolicy":
@@ -66,7 +67,7 @@ class CategoricalPolicy:
 
     def copy(self) -> "CategoricalPolicy":
         return CategoricalPolicy(self.w1.copy(), self.b1.copy(), self.w2.copy(), self.b2.copy(),
-                                 self.seed, self.episodes, self.policy_id)
+                                 self.seed, self.episodes, self.policy_id, self.perception_mode)
 
     def parameter_vector(self) -> np.ndarray:
         return np.concatenate((self.w1.ravel(), self.b1.ravel(), self.w2.ravel(), self.b2.ravel()))
@@ -113,7 +114,13 @@ def load_checkpoint(path: str | Path) -> CategoricalPolicy:
         _validate_metadata(doc)
         with np.load(target, allow_pickle=False) as weights:
             arrays = [np.array(weights[k], dtype=np.float64) for k in ("w1", "b1", "w2", "b2")]
-        policy = CategoricalPolicy(*arrays, seed=int(doc["seed"]), episodes=int(doc["episodes"]), policy_id=str(doc["policy_id"]))
+        metadata = doc.get("metadata", {})
+        config = metadata.get("config", {}) if isinstance(metadata, dict) else {}
+        perception_mode = config.get("perception_mode", metadata.get("perception_mode", "legacy-v1"))
+        if perception_mode not in {"legacy-v1", "path-aware-v2"}:
+            raise CheckpointError("checkpoint requests an unsupported perception mode")
+        policy = CategoricalPolicy(*arrays, seed=int(doc["seed"]), episodes=int(doc["episodes"]),
+                                   policy_id=str(doc["policy_id"]), perception_mode=perception_mode)
         dims = doc["dimensions"]
         expected = ((dims["input"], dims["hidden"]), (dims["hidden"],),
                     (dims["hidden"], dims["output"]), (dims["output"],))
