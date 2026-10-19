@@ -292,52 +292,16 @@ def collect_episode(model, world_seed: int, *, root_seed: int, episode_index: in
 
 
 def calculate_loss(model, trajectories: Sequence[Trajectory], algorithm: str,
-                   *, previous_return_sum: float = 0.0, previous_return_count: int = 0,
-                   reward_variant: str = "original", state_reward_scale: float = 0.1,
-                   entropy_coefficient: float = 0.0, normalize_advantage: bool = False):
+                   *, previous_return_sum: float = 0.0, previous_return_count: int = 0):
     """Return actor/critic loss tensors and auditable scalars for one rollout batch."""
     t = require_torch()
     if algorithm not in {"reinforce", "a2c"}:
         raise ValueError("algorithm must be reinforce or a2c")
-    if reward_variant not in {"original", "state_aware"}:
-        raise ValueError("reward_variant must be original or state_aware")
-    if not math.isfinite(state_reward_scale) or state_reward_scale < 0:
-        raise ValueError("state_reward_scale must be finite and nonnegative")
-    if not math.isfinite(entropy_coefficient) or entropy_coefficient < 0:
-        raise ValueError("entropy_coefficient must be finite and nonnegative")
     if not trajectories:
         raise ValueError("training batch must contain at least one complete trajectory")
     observations = np.concatenate([x.observations.reshape(-1, N_INPUTS) for x in trajectories])
     actions = np.concatenate([x.actions.reshape(-1) for x in trajectories])
-    returns_by_trajectory = []
-    for trajectory in trajectories:
-        rewards = trajectory.rewards
-        if reward_variant == "state_aware":
-            # Small optional intent shaping: reward selecting an action aligned with
-            # the corresponding normalized drive. Keep availability-gated resource
-            # actions, and discourage REST when fatigue is already low. This only
-            # affects training targets; simulator rewards/control remain unchanged.
-            observations_for_reward = np.asarray(trajectory.observations, dtype=np.float32)
-            shaped = rewards.astype(np.float32, copy=True)
-            for action, need_index, availability_index in (
-                (Action.GRAZE, 0, 8), (Action.DRINK, 1, 9),
-                (Action.REST, 2, None), (Action.HERD_INTERACT, 3, 11),
-            ):
-                mask = trajectory.actions == ACTIONS.index(action)
-                if availability_index is not None:
-                    mask &= observations_for_reward[..., availability_index] > 0.5
-                # Social need is discounted by local herd count: no fabricated
-                # contact reward when nobody is nearby.
-                need = observations_for_reward[..., need_index]
-                if action == Action.HERD_INTERACT:
-                    need = need * observations_for_reward[..., availability_index]
-                shaped[mask] += state_reward_scale * (need[mask] - 0.5)
-            returns_by_trajectory.append(Trajectory(
-                trajectory.observations, trajectory.actions, shaped, trajectory.uniforms,
-                trajectory.seed).returns_to_go().reshape(-1))
-        else:
-            returns_by_trajectory.append(trajectory.returns_to_go().reshape(-1))
-    returns = np.concatenate(returns_by_trajectory)
+    returns = np.concatenate([x.returns_to_go().reshape(-1) for x in trajectories])
     for name, values in (("observations", observations), ("returns", returns)):
         if not np.isfinite(values).all():
             raise FloatingPointError(f"trajectory {name} contain non-finite values")
@@ -368,11 +332,9 @@ def calculate_loss(model, trajectories: Sequence[Trajectory], algorithm: str,
         if values is None:
             raise ValueError("A2C model must include value head")
         advantages = g - values
-        if normalize_advantage:
-            advantages = (advantages - advantages.mean()) / advantages.std(unbiased=False).clamp_min(1e-8)
         actor_loss = -(log_probs * advantages.detach()).mean()
         value_loss = 0.5 * ((values - g) ** 2).mean()
-    total_loss = actor_loss + value_loss - float(entropy_coefficient) * entropy
+    total_loss = actor_loss + value_loss
     if not t.isfinite(total_loss).all().item():
         raise FloatingPointError("non-finite actor/critic loss")
     return total_loss, {
@@ -381,8 +343,6 @@ def calculate_loss(model, trajectories: Sequence[Trajectory], algorithm: str,
         "return_sum": float(g.sum().detach().cpu()), "return_count": int(g.numel()),
         "mean_value": float(values.mean().detach().cpu()) if values is not None else 0.0,
         "mean_advantage": float(advantages.mean().detach().cpu()),
-        "reward_variant": reward_variant, "entropy_coefficient": float(entropy_coefficient),
-        "advantage_normalized": bool(normalize_advantage and algorithm == "a2c"),
         "baseline_used": float(previous_return_sum / previous_return_count if previous_return_count else 0.0) if algorithm == "reinforce" else None,
     }
 
