@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import unittest
+import json
+from pathlib import Path
 from unittest.mock import patch
 
 from scripts import kaggle_deploy, kaggle_release
@@ -53,6 +55,28 @@ class ExploratoryBatchCliTests(unittest.TestCase):
         self.assertIs(trainer._mark_exploratory_checkpoint_state(
             variant, exploratory_variant="A"), variant)
         self.assertIs(variant["locked_outcomes_accessed"], False)
+
+    def test_notebook_calibrates_then_runs_one_suite_and_compares_common_worlds(self):
+        notebook_path = Path(__file__).resolve().parents[1] / "notebooks/pasture_studies_kaggle.ipynb"
+        notebook = json.loads(notebook_path.read_text())
+        code_cells = ["".join(cell["source"]) for cell in notebook["cells"]
+                      if cell.get("cell_type") == "code"]
+        checkout = next(code for code in code_cells if "sparse-checkout" in code)
+        self.assertIn("/validation/evaluate_torch_mvp1.py", checkout)
+        self.assertIn("/validation/compare_exploratory_checkpoints.py", checkout)
+        comparison = next(code for code in code_cells if 'if MODE == "EXPLORATORY_COMPARISON":' in code)
+        self.assertIn("if use_dual:", comparison)
+        self.assertIn("else:", comparison)
+        self.assertIn("--profile-only", comparison)
+        self.assertIn("--exploratory-batch", comparison)
+        self.assertEqual(comparison.count("--exploratory-batch"), 2)  # exclusive single/dual branches
+        self.assertIn("--checkpoints", comparison)
+        self.assertIn("--eval-seed", comparison)
+        self.assertIn("9483999", comparison)
+        self.assertNotIn("--seed-manifest", comparison)
+        self.assertNotIn("--locked-test", comparison)
+        self.assertIn("evaluation_summary_sha256", comparison)
+        self.assertIn("evaluation_plot_sha256", comparison)
 
     def test_single_run_and_batch_flags_cannot_be_combined(self):
         with patch("sys.argv", ["train_torch_mvp1", "--exploratory-a2c", "--exploratory-batch"]):

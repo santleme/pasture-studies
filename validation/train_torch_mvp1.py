@@ -41,14 +41,18 @@ EXPLORATORY_BATCH_DISCOUNT_FACTOR = 1.0
 EXPLORATORY_BATCH_SEEDS = (9483001, 9483002, 9483003)
 EXPLORATORY_BATCH_MAX_JOBS = 24
 EXPLORATORY_BATCH_VARIANTS = {
-    "A": {"reward_variant": "original", "state_reward_scale": 0.1,
-          "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
-    "B": {"reward_variant": "original", "state_reward_scale": 0.1,
-          "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
-    "C": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
-          "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
-    "D": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
-          "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
+    "A": {"reward_variant": "original", "state_reward_scale": EXPLORATORY_BATCH_STATE_REWARD_SCALE,
+          "normalize_advantage": False, "entropy_coefficient": 0.0,
+          "discount_factor": EXPLORATORY_BATCH_DISCOUNT_FACTOR},
+    "B": {"reward_variant": "original", "state_reward_scale": EXPLORATORY_BATCH_STATE_REWARD_SCALE,
+          "normalize_advantage": True, "entropy_coefficient": 0.01,
+          "discount_factor": EXPLORATORY_BATCH_DISCOUNT_FACTOR},
+    "C": {"reward_variant": "state_aware", "state_reward_scale": EXPLORATORY_BATCH_STATE_REWARD_SCALE,
+          "normalize_advantage": False, "entropy_coefficient": 0.0,
+          "discount_factor": EXPLORATORY_BATCH_DISCOUNT_FACTOR},
+    "D": {"reward_variant": "state_aware", "state_reward_scale": EXPLORATORY_BATCH_STATE_REWARD_SCALE,
+          "normalize_advantage": True, "entropy_coefficient": 0.01,
+          "discount_factor": EXPLORATORY_BATCH_DISCOUNT_FACTOR},
 }
 
 
