@@ -1,28 +1,27 @@
 {
   "claimTokenSha256": "15f21c3b97bf9ed915eb1486d548936f724ac642b9dbe154a4d3f2cef8458bab",
-  "summary": "Added descriptive aggregate reporting for paired neural-policy evaluations, with matched baseline deltas and novel-family generalization summaries; documents validation-only workflow and locked-test boundary.",
+  "summary": "Consolidated documentation on worker-1\u2019s single guarded benchmark_policy_report entry point; removed duplicate summarizer and its tests. Preserved existing paired baseline, resource-event, action-frequency, and generalization metrics.",
   "taskId": "3",
   "teamName": "implement-the-pasture-98bb716e",
   "unverified": [
-    "Python type-check/lint not run: mypy, ruff, and pycodestyle are unavailable.",
-    "PyTorch evaluator end-to-end tests skipped because optional PyTorch is not installed.",
-    "Full suite is not green for the environment/pre-existing failures listed above.",
-    "Full suite was attempted but is not green: 50 optional-dependency skips, four unrelated errors, and one worktree-path guard failure; this is detailed in the completion result."
+    "Full suite remains not green for previously reported missing optional dependencies/ignored workspace fixtures and unrelated profile report key error.",
+    "Python typecheck/lint unavailable (mypy/ruff/pycodestyle not installed); PyTorch evaluator end-to-end checks skipped because PyTorch is absent.",
+    "No Kaggle or locked-test workloads were run."
   ],
   "verification": [
     {
-      "command": "python3 -m py_compile validation/summarize_neural_benchmark.py tests/test_neural_benchmark_summary.py",
-      "output": "Both files compiled successfully.",
+      "command": "python3 -m py_compile validation/benchmark_policy_report.py tests/test_pasture_studies_artifacts.py",
+      "output": "Compiled successfully.",
       "result": "passed"
     },
     {
-      "command": "python3 -m unittest tests.test_neural_benchmark_summary -v",
-      "output": "Ran 2 tests; OK. Covers paired aggregates, baseline deltas, generalization gap, locked-test rejection, incomplete pairs and duplicates.",
+      "command": "python3 -m unittest tests.test_pasture_studies_artifacts -v",
+      "output": "3 tests passed, including summary pairing/baseline/generalization, validation guards, and artifact checks.",
       "result": "passed"
     },
     {
-      "command": "python3 validation/summarize_neural_benchmark.py --input <synthetic fixture> --output <temp summary>",
-      "output": "CLI emitted summary with 4 families and validation split; output assertions passed.",
+      "command": "python3 validation/benchmark_policy_report.py --input <synthetic fixture> --output <temp summary>",
+      "output": "CLI emitted validation summary for 2 held-out worlds; assertions passed.",
       "result": "passed"
     },
     {
