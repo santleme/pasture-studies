@@ -408,6 +408,25 @@ class TorchEvaluationTests(unittest.TestCase):
         verify.assert_called_once_with(pending, verify_current_sources=False)
         self.assertEqual(len(rows), 30 * len(FAMILIES))
 
+    def test_locked_schedule_rejects_pending_manifest_and_unfrozen_delta0(self):
+        from validation.preregister_torch_mvp1 import build_manifest
+        from validation.evaluate_torch_mvp1 import evaluation_world_schedule
+
+        pending = build_manifest()
+        with patch("validation.preregister_torch_mvp1.verify_manifest") as verify:
+            with self.assertRaisesRegex(ValueError, "locked evaluation prohibited"):
+                evaluation_world_schedule(eval_seed=None, episodes_per_family=1,
+                                          seed_manifest=pending, split_name="locked_test")
+        verify.assert_called_once_with(pending, verify_current_sources=True)
+
+        locked_without_delta0 = build_manifest()
+        locked_without_delta0["status"] = "LOCKED_PRE_OUTCOME"
+        with patch("validation.preregister_torch_mvp1.verify_manifest"):
+            with self.assertRaisesRegex(ValueError, "locked evaluation prohibited"):
+                evaluation_world_schedule(eval_seed=None, episodes_per_family=1,
+                                          seed_manifest=locked_without_delta0,
+                                          split_name="locked_test")
+
 
 if __name__ == "__main__":
     unittest.main()
