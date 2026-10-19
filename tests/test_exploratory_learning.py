@@ -64,6 +64,15 @@ class ExploratoryLearningTests(unittest.TestCase):
         exploratory_loss, exploratory_metrics = calculate_exploratory_loss(model, [trajectory], "a2c")
         torch.testing.assert_close(original_loss, exploratory_loss, rtol=0, atol=0)
         self.assertEqual(original_metrics, exploratory_metrics)
+        model.zero_grad(set_to_none=True)
+        original_loss, _ = calculate_loss(model, [trajectory], "a2c")
+        original_loss.backward()
+        control_gradients = [parameter.grad.detach().clone() for parameter in model.parameters()]
+        model.zero_grad(set_to_none=True)
+        exploratory_loss, _ = calculate_exploratory_loss(model, [trajectory], "a2c")
+        exploratory_loss.backward()
+        for expected, parameter in zip(control_gradients, model.parameters()):
+            torch.testing.assert_close(expected, parameter.grad, rtol=0, atol=0)
 
     @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
     def test_exploratory_loss_applies_opt_in_entropy_and_advantage_options(self):

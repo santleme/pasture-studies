@@ -87,6 +87,7 @@ def calculate_exploratory_loss(
     state_reward_scale: float = 0.1,
     entropy_coefficient: float = 0.0,
     normalize_advantage: bool = False,
+    discount_factor: float = 0.99,
     previous_return_sum: float = 0.0,
     previous_return_count: int = 0,
 ):
@@ -106,6 +107,8 @@ def calculate_exploratory_loss(
         raise ValueError("state_reward_scale must be finite and nonnegative")
     if not math.isfinite(entropy_coefficient) or entropy_coefficient < 0:
         raise ValueError("entropy_coefficient must be finite and nonnegative")
+    if not math.isfinite(discount_factor) or not 0.0 <= discount_factor <= 1.0:
+        raise ValueError("discount_factor must be finite and in [0, 1]")
     if not trajectories:
         raise ValueError("training batch must contain at least one complete trajectory")
 
@@ -123,7 +126,7 @@ def calculate_exploratory_loss(
             returns = np.zeros_like(rewards, dtype=np.float32)
             running = np.zeros(rewards.shape[1], dtype=np.float64)
             for tick in range(rewards.shape[0] - 1, -1, -1):
-                running += rewards[tick]
+                running = rewards[tick] + discount_factor * running
                 returns[tick] = running
             return_chunks.append(returns.reshape(-1))
     returns = np.concatenate(return_chunks)
