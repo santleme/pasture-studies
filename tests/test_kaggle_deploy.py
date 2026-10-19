@@ -69,9 +69,13 @@ class KaggleDeployTests(unittest.TestCase):
                  "--owner", "sample_user", "--runtime-profile", str(runtime)],
                 cwd=root, capture_output=True, text=True, check=False,
             )
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("must be clean and committed", result.stderr)
-        self.assertNotIn("runtime profile is invalid", result.stderr)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(Path(result.stdout.strip()), root / "stage/kernel-metadata.json")
+            metadata = json.loads((root / "stage/kernel-metadata.json").read_text())
+            config = json.loads(deploy.deployment_record_path(root / "stage").read_text())
+            self.assertEqual(metadata["machine_shape"], "NvidiaTeslaT4")
+            self.assertEqual(config["mode"], "EXPLORATORY")
+            self.assertEqual(config["exploratory_config"], deploy.EXPLORATORY_CONFIG_VALUE)
 
     def test_metadata_uses_private_t4x2_schema(self):
         metadata = deploy.metadata_for("sample_user", gpu=True)
