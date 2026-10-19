@@ -67,3 +67,104 @@ checkpoints remain explicitly non-formal and non-benchmark eligible.
 
 No branches, stashes, worktrees, or remote refs were deleted, reset, force-pushed,
 or merged into `main`.
+
+## Follow-up integration audit — 2026-10-19
+
+This section supersedes the earlier “not integrated” status for compatible
+uncommitted main-worktree changes. It records the follow-up integration requested
+by the user. The source main worktree and stash are still unchanged.
+
+### Session and OMX ownership check
+
+Before transporting files, I inspected all three tmux OMX sessions and the main
+worktree. The current integration session was attached; the older dataset Team
+session had a complete manifest (4 complete, 0 pending/in-progress); the other
+detached Codex session (`omx-1792426377062-vjxj7w`, pane `%39`) was alive but
+showed an idle prompt with no active command. I did not send input to or stop
+any session. The earlier read-only integration Team still has unresolved
+pending tasks and lost worker-pane identity; its detached worker worktrees remain
+untouched at the main base. Its artifacts were not treated as completed source
+work. A failed `omx ultragoal create-goals` reported that the current
+`session.json` was unusable and no writable lifecycle scope could be resolved;
+no OMX goal/state files were edited as a workaround.
+
+### Changes integrated
+
+Two follow-up commits were added after the earlier audit:
+
+- `490e5ae Integrate DAgger generalization and RL pilot evidence`
+- `b14f030 Add fail-closed precision analysis and audit binding`
+
+They add the main-worktree-only DAgger causal/generalization metrics and test,
+solvability-v2 and pilot reports, optional PettingZoo/SB3 requirements, PPO
+Gymnasium API compatibility, locked-evaluation post-write audit binding, and the
+synthetic masked precision-pilot/statistical/cohort-analysis candidate with
+fail-closed v2 finalization. The candidate source hashes were rebound to the
+integrated implementation; its independent review and all pilot/training/
+locked-test authorization flags remain false, and `release_eligible` remains
+false. No historical preregistration, reward, threshold, or locked result was
+rewritten.
+
+Existing integration versions were retained rather than replaced where they
+were already equal or more complete. In particular, dataset DAgger already had
+two aggregation rounds plus a Kaggle workload guard and `deepcopy`-reset worlds;
+this is safer than the dirty-main copy, which omitted those safeguards. The
+existing guarded autoresearch/SB3/DAgger CLI versions were also kept; dirty-main
+changes that removed Kaggle guards were excluded. The latest DAgger report now
+includes action distributions, and its resource-preview test was added without
+discarding the prior tests.
+
+The Kaggle execution-boundary documentation and the new experimental-analysis
+candidate section were combined, not substituted. The PPO CLI changes preserve
+the existing Kaggle gate, adapt to `PastureEnv(controlled_animals=...)`, and
+lazily import the adapter for random-policy evaluation. Dataset packaging,
+benchmark seed/split checks, previous Kaggle manifests, and the exploratory A2C
+work remain intact.
+
+### Exclusions and preservation
+
+- `.codex/` and its associated `.gitignore` relaxation were not imported. The
+  directory contains live session transcripts, SQLite state/queue databases,
+  WAL/SHM files, plus local OMX profiles/prompts/skills; none is Pasture source,
+  and copying it would conflate local session/runtime data with project code.
+- Dirty-main edits that weaken/remove local Kaggle workload guards in
+  `validation/autoresearch_pasture_rl.py`, `validation/run_dagger_generalization.py`,
+  `validation/sb3_pilot.py`, and `validation/sb3_single_agent_followup.py` were
+  excluded. The integration branch retains the stronger guarded implementations.
+- Files already identical on the integration branch were not copied again. The
+  dataset-generation and policy-summary tests were already integrated; local
+  DAgger dataset generation tests were not re-run because they perform local
+  supervised fitting.
+- `stash@{0}` was not applied, dropped, rewritten, or otherwise changed. Its
+  `.gitignore`, Kaggle docs, evaluator, and evaluator-test hunks overlap the
+  dirty main snapshot. The compatible docs/evaluator/test changes were brought
+  from the main working tree through reviewed patches; the local OMX ignore
+  relaxation was excluded. The stash remains available verbatim.
+- All main-worktree edits remain present in place. `main` still points to
+  `7ed39ca` and remains dirty; the follow-up imported copies only into this
+  branch's isolated worktree. No worktree, branch, stash, or remote ref was
+  removed, reset, pushed, or merged into `main`.
+
+### Verification and deviation
+
+- Static compilation passed:
+  `/home/lucas_coimbra/projects/experiments/riose-tech/.venv/bin/python -m compileall -q farm_sim scripts validation tests`.
+- The final focused, non-training verification passed **54 tests** across
+  Gymnasium contract/random-policy evaluation, solvability-v2, synthetic pilot
+  and locked statistics/cohort analysis, artifact summaries, evaluator audit
+  binding, and execution-policy gates. The source-hash candidate test initially
+  failed after the docs merge; after rebinding candidate hashes it passed.
+- **Process deviation:** an earlier broad test selection unintentionally ran
+  the pre-existing SB3 optimizer-smoke test before I noticed it. It performed
+  eight PPO timesteps for each of one- and five-animal environments on CPU,
+  with in-memory models only and no checkpoint/model output retained. I stopped
+  that broad selection; the final 54-test run explicitly selected tests that do
+  not optimize/train, and no dataset-generation or research-training tests were
+  run. This accidental smoke run did not satisfy the user's no-training
+  constraint and is disclosed rather than represented as compliant.
+- `git diff --check` passed before commit. No test submitted Kaggle jobs, accessed
+  locked outcomes, published datasets, or altered preregistration evidence.
+
+The integration branch tip after this audit is recorded by `git log`; it remains
+local-only. No push, main merge, worktree cleanup, stash operation, or training
+run was authorized or performed apart from the disclosed test-smoke deviation.
