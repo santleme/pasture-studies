@@ -109,3 +109,45 @@ The notebook writes checkpoint generations, readiness evidence, observed runtime
 - No claim of biological validation, cognition acceptance, or production husbandry suitability.
 
 The previous successful Kaggle SMOKE v5 record remains in `validation/KAGGLE_SMOKE_V5_REPORT.md`; it is historical evidence and is not overwritten by this launcher release.
+
+## User-authorized exploratory A2C run (nonformal)
+
+`EXPLORATORY` is a separate, fixed-budget path for hands-on exploration—not a way to unlock `EXPERIMENT` or `FULL_VALIDATION`. It trains A2C for exactly 256 complete 72-tick episodes (16 optimizer updates) on one T4 from the Kaggle T4x2 profile, checkpoints every update, records reward/action/invalid-action metrics, exports a local-inference `.npz` policy, and runs five generated exploratory worlds with all five animals for behavior inspection. The fixed seed is `9482817`; it is used only as an unregistered exploratory seed. Outputs are tagged `exploratory_only=true`, `formal_eligible=false`, and `benchmark_eligible=false`. No preregistered splits, pilot, held-out, locked outcomes, selection rules, or scientific acceptance thresholds are used. The resulting policy is not promoted into the app's default policy automatically.
+
+After a clean commit is pushed to the public source repository, use the same existing deployment workflow:
+
+```bash
+python3 scripts/kaggle_deploy.py prepare-exploratory \
+  --path /tmp/pasture-kaggle-exploratory \
+  --owner pascalcoimbra \
+  --runtime-profile /tmp/pasture-kaggle-runtime.json
+python3 scripts/kaggle_release.py generate \
+  --runtime-profile /tmp/pasture-kaggle-runtime.json \
+  --staged-notebook /tmp/pasture-kaggle-exploratory/pasture_studies_kaggle.ipynb \
+  --output /tmp/pasture-exploratory-release.json
+python3 scripts/kaggle_release.py gate EXPLORATORY /tmp/pasture-exploratory-release.json \
+  --config /tmp/pasture-kaggle-exploratory-config.json \
+  --staged-notebook /tmp/pasture-kaggle-exploratory/pasture_studies_kaggle.ipynb
+python3 scripts/kaggle_deploy.py bind-release \
+  --path /tmp/pasture-kaggle-exploratory --manifest /tmp/pasture-exploratory-release.json
+python3 scripts/kaggle_deploy.py publish --path /tmp/pasture-kaggle-exploratory
+python3 scripts/kaggle_deploy.py compare \
+  --path /tmp/pasture-kaggle-exploratory \
+  --kernel pascalcoimbra/pasture-studies --version <published-version>
+python3 scripts/kaggle_deploy.py execute \
+  --path /tmp/pasture-kaggle-exploratory --mode EXPLORATORY \
+  --confirm-execution --confirm-gpu
+python3 scripts/kaggle_deploy.py status pascalcoimbra/pasture-studies/<executed-version>
+python3 scripts/kaggle_deploy.py logs pascalcoimbra/pasture-studies/<executed-version>
+python3 scripts/kaggle_deploy.py output pascalcoimbra/pasture-studies/<executed-version> \
+  --path /tmp/pasture-kaggle-exploratory-output
+python3 scripts/kaggle_deploy.py verify \
+  /tmp/pasture-kaggle-exploratory-output/pasture-release-<run-id>/artifact-manifest.json \
+  --artifacts /tmp/pasture-kaggle-exploratory-output/pasture-release-<run-id>
+# Optional: inspect the downloaded policy in the local 2D app (does not replace the default policy).
+python3 -m farm_sim.server \
+  --checkpoint /tmp/pasture-kaggle-exploratory-output/pasture-release-<run-id>/exploratory-only/exploratory-only/a2c/torch-a2c-seed-9482817.npz
+# Open http://127.0.0.1:8000 and inspect the five per-animal trajectories/action histories.
+```
+
+This real training run consumes Kaggle GPU quota. Reward trajectories, action distributions, and rollout traces are descriptive only—not evidence of learning efficacy, cognition, acceleration, or biological validity. No Kaggle execution is initiated by documentation preparation itself.

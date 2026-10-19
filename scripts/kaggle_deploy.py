@@ -20,7 +20,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK = ROOT / "notebooks" / "pasture_studies_kaggle.ipynb"
-MODES = {"PREFLIGHT", "SMOKE", "READINESS"}
+MODES = {"PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY"}
 T4X2_SHAPE = "NvidiaTeslaT4"
 RELEASE_MANIFEST = "release-manifest.json"
 DEPLOYMENT_CONFIG = "pasture-deployment.json"
@@ -28,6 +28,12 @@ READINESS_CONFIG = "readiness-config.json"
 READINESS_CONFIG_VALUE = {
     "task": "checkpoint_recovery", "max_updates": 2, "max_episodes": 32,
     "max_devices": 2, "locked_test_access": False, "outcome_analysis": False,
+    "benchmark_eligible": False, "checkpoint_promotion": False,
+}
+EXPLORATORY_CONFIG_VALUE = {
+    "task": "exploratory_a2c_training", "algorithm": "a2c", "episodes": 256,
+    "optimizer_updates": 16, "seed": 9482817, "evaluation_episodes": 5,
+    "device_count": 1, "locked_test_access": False, "formal_eligible": False,
     "benchmark_eligible": False, "checkpoint_promotion": False,
 }
 def _strict_notebook_json(path: Path) -> dict:
@@ -94,6 +100,10 @@ def readiness_config_path(folder: Path) -> Path:
     return folder.parent / f"{folder.name}-readiness-config.json"
 
 
+def exploratory_config_path(folder: Path) -> Path:
+    return folder.parent / f"{folder.name}-config.json"
+
+
 class DeploymentError(RuntimeError):
     """An unsafe or invalid deployment operation was refused."""
 
@@ -136,7 +146,7 @@ def check_cli(*, require_no_run: bool = False) -> tuple[str, str]:
 def validate_mode(mode: str) -> str:
     normalized = mode.strip().upper()
     if normalized not in MODES:
-        raise DeploymentError("Only PREFLIGHT, SMOKE, and READINESS are permitted; experimental modes are disabled")
+        raise DeploymentError("Only PREFLIGHT, SMOKE, READINESS, and EXPLORATORY are permitted; formal experiments remain disabled")
     return normalized
 
 
@@ -232,11 +242,13 @@ def prepare(folder: Path, owner: str, *, mode: str = "SMOKE", gpu: bool = False)
     _ensure_detached_paths_available(folder)
     if mode == "READINESS":
         raise DeploymentError("READINESS staging requires --runtime-profile; use prepare-release")
+    if mode == "EXPLORATORY":
+        raise DeploymentError("EXPLORATORY staging requires --runtime-profile; use prepare-exploratory")
     source_bytes = _committed_notebook_bytes(source_commit)
     source_sha = hashlib.sha256(source_bytes).hexdigest()
     deployment = {"schema_version": 1, "mode": mode, "source_commit": source_commit,
                   "source_notebook_sha256": source_sha,
-                  "readiness_config": None, "runtime_profile": None,
+                  "readiness_config": None, "exploratory_config": None, "runtime_profile": None,
                   "release_manifest_sha256": None, "gpu_required": bool(gpu)}
     return _write_staging(folder, owner, deployment)
 
@@ -251,6 +263,9 @@ def _write_staging(folder: Path, owner: str, deployment: dict) -> Path:
     target.write_text(json.dumps(metadata_for(owner, mode=deployment["mode"], gpu=gpu), indent=2) + "\n")
     if deployment["mode"] == "READINESS":
         _write_new_file(readiness_config_path(folder), (json.dumps(READINESS_CONFIG_VALUE, sort_keys=True, indent=2) + "\n").encode())
+    if deployment["mode"] == "EXPLORATORY":
+        _write_new_file(exploratory_config_path(folder),
+                        (json.dumps(EXPLORATORY_CONFIG_VALUE, sort_keys=True, indent=2) + "\n").encode())
     return target
 
 
@@ -278,14 +293,47 @@ def prepare_release(folder: Path, owner: str, *, runtime_profile_path: Path,
     source_bytes = _committed_notebook_bytes(source_commit)
     deployment = {"schema_version": 1, "mode": "READINESS", "source_commit": source_commit,
                   "source_notebook_sha256": hashlib.sha256(source_bytes).hexdigest(),
-                  "readiness_config": READINESS_CONFIG_VALUE, "runtime_profile": runtime_profile,
+                  "readiness_config": READINESS_CONFIG_VALUE, "exploratory_config": None,
+                  "runtime_profile": runtime_profile,
                   "release_manifest_sha256": None, "gpu_required": True}
+    return _write_staging(folder, owner, deployment)
+
+
+def prepare_exploratory(folder: Path, owner: str, *, runtime_profile_path: Path,
+                        gpu: bool = True) -> Path:
+    """Stage the fixed-budget, nonformal A2C exploration notebook for one T4."""
+    try:
+        runtime_profile = json.loads(runtime_profile_path.read_text())
+        from scripts.kaggle_release import _validate_runtime
+        runtime_profile = _validate_runtime(runtime_profile)
+    except Exception as exc:
+        raise DeploymentError("EXPLORATORY runtime profile is invalid") from exc
+    if (not gpu or not runtime_profile["cuda_available"] or runtime_profile["gpu_count"] != 2
+            or any("T4" not in name for name in runtime_profile["gpu_names"])):
+        raise DeploymentError("EXPLORATORY requires a CUDA-enabled T4x2 Kaggle profile")
+    if folder.is_symlink():
+        raise DeploymentError(f"Staging path must not be a symlink: {folder}")
+    source_commit = _source_commit()
+    if folder.exists():
+        if not folder.is_dir() or any(folder.iterdir()):
+            raise DeploymentError(f"Staging directory must be empty to prevent uploading stale files: {folder}")
+    else:
+        folder.mkdir(parents=True)
+    _ensure_detached_paths_available(folder)
+    source_bytes = _committed_notebook_bytes(source_commit)
+    deployment = {"schema_version": 1, "mode": "EXPLORATORY", "source_commit": source_commit,
+                  "source_notebook_sha256": hashlib.sha256(source_bytes).hexdigest(),
+                  "readiness_config": None, "exploratory_config": EXPLORATORY_CONFIG_VALUE,
+                  "runtime_profile": runtime_profile, "release_manifest_sha256": None,
+                  "gpu_required": True}
     return _write_staging(folder, owner, deployment)
 
 
 def _ensure_detached_paths_available(folder: Path) -> None:
     for detached in (deployment_record_path(folder), readiness_config_path(folder),
-                     detached_manifest_path(folder), folder.parent / f"{folder.name}-publication-attestation.json"):
+                     exploratory_config_path(folder),
+                     detached_manifest_path(folder), folder.parent / f"{folder.name}-publication-attestation.json",
+                     folder.parent / f"{folder.name}-execution-attestation.json"):
         if detached.is_symlink():
             raise DeploymentError("Detached deployment evidence path must not be a symlink")
         if detached.exists():
@@ -311,9 +359,9 @@ def bind_release(folder: Path, release_manifest: Path) -> str:
     except (OSError, json.JSONDecodeError) as exc:
         raise DeploymentError("Readiness staging metadata/config is missing or malformed") from exc
     notebook = folder / metadata.get("code_file", "")
-    if (config.get("mode") != "READINESS" or metadata.get("enable_gpu") != "true"
+    if (config.get("mode") not in {"READINESS", "EXPLORATORY"} or metadata.get("enable_gpu") != "true"
             or not notebook.is_file() or notebook.is_symlink()):
-        raise DeploymentError("Release manifests may only bind a GPU READINESS staging folder")
+        raise DeploymentError("Release manifests may only bind a GPU READINESS/EXPLORATORY staging folder")
     manifest_sha = _manifest_digest(release_manifest, staged_notebook=notebook)
     manifest = json.loads(release_manifest.read_text())
     staged = manifest.get("notebook", {})
@@ -430,7 +478,8 @@ def pull_and_compare(folder: Path, kernel: str, revision: int) -> dict:
             "exact_match": True}
 
 
-def write_publication_attestation(folder: Path, revision: int, *, cli_version: str) -> dict:
+def write_publication_attestation(folder: Path, revision: int, *, cli_version: str,
+                                  execution: bool = False) -> dict:
     """Pull the exact numeric revision, compare it, then persist the attestation."""
     metadata = json.loads((folder / "kernel-metadata.json").read_text())
     evidence = pull_and_compare(folder, metadata["id"], revision)
@@ -467,7 +516,8 @@ def write_publication_attestation(folder: Path, revision: int, *, cli_version: s
         "canonical_content_match": True, "kaggle_cli_version": cli_version,
         "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
     }
-    output = folder.parent / f"{folder.name}-publication-attestation.json"
+    suffix = "execution-attestation" if execution else "publication-attestation"
+    output = folder.parent / f"{folder.name}-{suffix}.json"
     payload = (json.dumps(record, sort_keys=True, indent=2) + "\n").encode("utf-8")
     _write_new_file(output, payload)
     result = dict(evidence)
@@ -523,7 +573,7 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
     if hashlib.sha256(notebook_path.read_bytes()).hexdigest() != config.get("notebook_sha256"):
         raise DeploymentError("Deployment config does not bind the exact staged notebook bytes")
     required_config_keys = {"schema_version", "mode", "source_commit", "source_notebook_sha256",
-                            "readiness_config", "runtime_profile", "release_manifest_sha256",
+                            "readiness_config", "exploratory_config", "runtime_profile", "release_manifest_sha256",
                             "gpu_required", "notebook_sha256"}
     if set(config) != required_config_keys or config.get("schema_version") != 1:
         raise DeploymentError("Deployment record has an unsupported or incomplete schema")
@@ -543,10 +593,13 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
     expected_staged = _stage_notebook_bytes(committed_source, expected_embedded)
     if notebook_path.read_bytes() != expected_staged:
         raise DeploymentError("Staged notebook differs from the exact committed source plus approved config injection")
-    if mode == "READINESS":
-        if (metadata.get("enable_gpu") != "true" or config.get("readiness_config") != READINESS_CONFIG_VALUE
-                or not isinstance(config.get("runtime_profile"), dict)):
-            raise DeploymentError("READINESS staging requires GPU, release manifest, and bounded readiness config")
+    if mode in {"READINESS", "EXPLORATORY"}:
+        expected_config = READINESS_CONFIG_VALUE if mode == "READINESS" else EXPLORATORY_CONFIG_VALUE
+        config_field = "readiness_config" if mode == "READINESS" else "exploratory_config"
+        other_field = "exploratory_config" if mode == "READINESS" else "readiness_config"
+        if (metadata.get("enable_gpu") != "true" or config.get(config_field) != expected_config
+                or config.get(other_field) is not None or not isinstance(config.get("runtime_profile"), dict)):
+            raise DeploymentError(f"{mode} staging requires GPU, release manifest, and exact mode config")
         try:
             from scripts.kaggle_release import _validate_runtime
             profile = _validate_runtime(config["runtime_profile"])
@@ -563,12 +616,16 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
             raise DeploymentError("Staged release manifest is not bound to deployment source commit")
         if manifest.get("notebook", {}).get("staged_sha256") != config.get("notebook_sha256"):
             raise DeploymentError("Staged release manifest does not bind the exact notebook bytes")
-        if config.get("readiness_config") != READINESS_CONFIG_VALUE:
-            raise DeploymentError("Readiness config differs from the fixed allowlisted diagnostic bounds")
+        if config.get(config_field) != expected_config:
+            raise DeploymentError(f"{mode} config differs from the fixed allowlisted workload")
+        if mode == "EXPLORATORY":
+            from scripts.kaggle_release import authorize_mode
+            authorize_mode(mode, manifest, config=expected_config)
     elif config.get("release_manifest_sha256"):
         raise DeploymentError("Non-readiness deployment must not carry a release manifest claim")
-    elif config.get("readiness_config") is not None or config.get("runtime_profile") is not None:
-        raise DeploymentError("Non-readiness deployment must not carry readiness-only configuration")
+    elif (config.get("readiness_config") is not None or config.get("exploratory_config") is not None
+          or config.get("runtime_profile") is not None):
+        raise DeploymentError("Non-readiness deployment must not carry bounded-run configuration")
     if type(config.get("gpu_required")) is not bool:
         raise DeploymentError("Deployment GPU requirement must be boolean")
     if bool(config.get("gpu_required")) != (metadata.get("enable_gpu") == "true"):
@@ -604,7 +661,7 @@ def execute(folder: Path, *, mode: str, confirm_execution: bool, confirm_gpu: bo
     result = run(args)
     revision = revision_from_push_output(result.stdout)
     version, _ = check_cli()
-    return write_publication_attestation(folder, revision, cli_version=version)
+    return write_publication_attestation(folder, revision, cli_version=version, execution=True)
 
 
 def retrieve(kind: str, kernel: str, destination: Path | None = None) -> str:
@@ -725,6 +782,10 @@ def main(argv: list[str] | None = None) -> int:
     prep_release.add_argument("--path", type=Path, required=True)
     prep_release.add_argument("--owner", required=True)
     prep_release.add_argument("--runtime-profile", type=Path, required=True)
+    prep_exploratory = sub.add_parser("prepare-exploratory", help="Stage a fixed-budget nonformal A2C Kaggle run")
+    prep_exploratory.add_argument("--path", type=Path, required=True)
+    prep_exploratory.add_argument("--owner", required=True)
+    prep_exploratory.add_argument("--runtime-profile", type=Path, required=True)
     bind = sub.add_parser("bind-release")
     bind.add_argument("--path", type=Path, required=True)
     bind.add_argument("--manifest", type=Path, required=True)
@@ -763,6 +824,8 @@ def main(argv: list[str] | None = None) -> int:
             print(prepare(args.path, args.owner, mode=args.mode, gpu=args.gpu))
         elif args.command == "prepare-release":
             print(prepare_release(args.path, args.owner, runtime_profile_path=args.runtime_profile))
+        elif args.command == "prepare-exploratory":
+            print(prepare_exploratory(args.path, args.owner, runtime_profile_path=args.runtime_profile))
         elif args.command == "bind-release":
             print(json.dumps({"release_manifest_sha256": bind_release(args.path, args.manifest)}, indent=2))
         elif args.command == "publish":

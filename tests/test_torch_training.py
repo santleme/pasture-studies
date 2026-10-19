@@ -215,7 +215,8 @@ class TorchTrainingContractTests(unittest.TestCase):
         result = subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1", "--help"],
                                 check=True, capture_output=True, text=True)
         for flag in ("--smoke", "--algorithm", "--device", "--seed", "--episodes",
-                     "--smoke-update", "--readiness-ddp", "--output", "--resume", "--metrics", "--checkpoint-every", "--mode"):
+                     "--smoke-update", "--readiness-ddp", "--exploratory-a2c",
+                     "--output", "--resume", "--metrics", "--checkpoint-every", "--mode"):
             self.assertIn(flag, result.stdout)
 
     def test_smoke_update_requires_one_algorithm_and_explicit_device(self):
@@ -243,6 +244,49 @@ class TorchTrainingContractTests(unittest.TestCase):
                     self.assertNotEqual(result.returncode, 0)
                     self.assertIn("no independently trusted experimental authorization verifier", result.stderr)
                     self.assertFalse(output.exists())
+
+    def test_exploratory_cli_requires_fixed_budget_before_cuda_check(self):
+        result = subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1",
+            "--exploratory-a2c", "--algorithm", "a2c", "--device", "cuda",
+            "--seed", "9482817", "--episodes", "32", "--eval-seeds", "5"],
+            capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("fixed A2C/CUDA/seed/budget config", result.stderr)
+
+    @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
+    def test_exploratory_training_lineage_is_never_formal_or_benchmark_eligible(self):
+        import json
+        import tempfile
+        import validation.train_torch_mvp1 as runner
+        runner.BATCH_EPISODES = 16
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            result = runner.train_algorithm("a2c", seed=9482817, episodes=16, output=root,
+                device="cpu", resume=None, metrics_path=root / "metrics.jsonl",
+                checkpoint_every=1, eval_count=1, exploratory=True)
+            metrics = [json.loads(line) for line in (root / "metrics.jsonl").read_text().splitlines()]
+            self.assertEqual(len(metrics), 1)
+            self.assertTrue(metrics[0]["exploratory_only"])
+            self.assertFalse(metrics[0]["formal_eligible"])
+            self.assertFalse(metrics[0]["benchmark_eligible"])
+            artifact = json.loads((root / "a2c" / "artifact-manifest.json").read_text())
+            evaluation = json.loads((root / "a2c" / "evaluation.json").read_text())
+            self.assertTrue(artifact["exploratory_only"])
+            self.assertFalse(artifact["formal_eligible"])
+            self.assertFalse(artifact["benchmark_eligible"])
+            self.assertTrue(evaluation["exploratory_only"])
+            self.assertFalse(evaluation["formal_eligible"])
+            self.assertFalse(result["benchmark_eligible"])
+            self.assertEqual(len(evaluation["episodes"]), 1)
+            rollout = evaluation["episodes"][0]
+            self.assertEqual(sum(rollout["action_counts"].values()), 72 * 5)
+            self.assertEqual(len(rollout["per_animal"]), 5)
+            for animal in rollout["per_animal"].values():
+                self.assertEqual(animal["ticks"], 72)
+                self.assertEqual(sum(animal["action_counts"].values()), 72)
+        # Restore the production default even if an earlier legacy test left
+        # this module-level constant modified.
+        runner.BATCH_EPISODES = 16
 
     @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
     def test_smoke_update_runs_exactly_one_cpu_update_and_exports_checkpoint(self):

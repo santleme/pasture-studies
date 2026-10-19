@@ -38,6 +38,12 @@ REQUIRED_RUNTIME_FIELDS = frozenset({
 APPROVAL_SCHEMA_VERSION = 1
 APPROVAL_STATUS_PENDING = "PENDING_INDEPENDENT_SIGNATURE"
 ALLOWED_MODES = frozenset({"PREFLIGHT", "SMOKE"})
+EXPLORATORY_CONFIG_VALUE = {
+    "task": "exploratory_a2c_training", "algorithm": "a2c", "episodes": 256,
+    "optimizer_updates": 16, "seed": 9482817, "evaluation_episodes": 5,
+    "device_count": 1, "locked_test_access": False, "formal_eligible": False,
+    "benchmark_eligible": False, "checkpoint_promotion": False,
+}
 READINESS_DIAGNOSTIC_TASKS = frozenset({"checkpoint_recovery", "t4x2_path_smoke"})
 READINESS_CONFIG_KEYS = frozenset({
     "task", "max_updates", "max_episodes", "max_devices", "locked_test_access",
@@ -305,6 +311,10 @@ def authorize_mode(mode: str, manifest: dict[str, Any], approval: Any = None, *,
         return normalized
     if normalized == "READINESS":
         return authorize_readiness(config)
+    if normalized == "EXPLORATORY":
+        if config != EXPLORATORY_CONFIG_VALUE or not isinstance(manifest, dict):
+            raise ReleaseError("EXPLORATORY requires the exact fixed A2C-only nonformal config")
+        return "EXPLORATORY"
     if normalized in {"EXPERIMENT", "FULL_VALIDATION"}:
         if config is not None:
             raise ReleaseError("Experimental execution does not accept an unreviewed runtime config")
@@ -363,10 +373,10 @@ def main(argv: list[str] | None = None) -> int:
     verify.add_argument("--staged-notebook", type=Path,
                         help="Exact staged notebook; otherwise the recorded staged path is used")
     gate = commands.add_parser("gate", help="Check mode gate; experimental modes remain denied without trusted signature")
-    gate.add_argument("mode", choices=("PREFLIGHT", "SMOKE", "READINESS", "EXPERIMENT", "FULL_VALIDATION"))
+    gate.add_argument("mode", choices=("PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPERIMENT", "FULL_VALIDATION"))
     gate.add_argument("manifest", type=Path)
     gate.add_argument("--approval", type=Path, help="Separate approval artifact; not trusted without pinned verifier")
-    gate.add_argument("--config", type=Path, help="Exact bounded config required for READINESS mode")
+    gate.add_argument("--config", type=Path, help="Exact bounded config required for READINESS or EXPLORATORY mode")
     gate.add_argument("--staged-notebook", type=Path,
                       help="Exact staged notebook bytes bound by the manifest; required when verifying outside the staging host")
     args = parser.parse_args(argv)
@@ -394,9 +404,9 @@ def main(argv: list[str] | None = None) -> int:
             manifest = _load_json(args.manifest)
             verify_release_manifest(manifest, staged_notebook=args.staged_notebook)
             approval = _load_json(args.approval) if args.approval else None
-            if args.mode == "READINESS":
+            if args.mode in {"READINESS", "EXPLORATORY"}:
                 if not args.config:
-                    raise ReleaseError("READINESS requires --config")
+                    raise ReleaseError(f"{args.mode} requires --config")
                 authorize_mode(args.mode, manifest, approval, config=_load_json(args.config))
             else:
                 if args.config:

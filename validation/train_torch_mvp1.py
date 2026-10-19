@@ -30,6 +30,9 @@ CONFIG_VERSION = "trajectory-v1"
 READINESS_EPISODES = 32
 READINESS_UPDATES = 2
 READINESS_BATCH_EPISODES = 16
+EXPLORATORY_A2C_SEED = 9482817
+EXPLORATORY_A2C_EPISODES = 256
+EXPLORATORY_A2C_EVAL_EPISODES = 5
 
 
 def _sha(path: Path) -> str:
@@ -260,6 +263,10 @@ def deterministic_rollout(model, seed: int, *, root_seed: int, episode_index: in
     actions = {a.value: 0 for a in Action}
     returns = []
     drive_rows = []
+    per_animal = {}
+    for animal in sim.world.animals:
+        per_animal[animal.animal_id] = {"action_counts": {a.value: 0 for a in Action},
+                                        "reward_sum": 0.0, "ticks": 0}
     for _ in range(ROLLOUT_TICKS):
         try:
             sim.step()
@@ -270,7 +277,17 @@ def deterministic_rollout(model, seed: int, *, root_seed: int, episode_index: in
             returns.append(animal.last_reward)
             drive_rows.append((animal.physiology.hunger, animal.physiology.thirst,
                                animal.physiology.fatigue, animal.physiology.social_need))
+            row = per_animal[animal.animal_id]
+            row["action_counts"][animal.action.value] += 1
+            row["reward_sum"] += float(animal.last_reward)
+            row["ticks"] += 1
     animal_rows = sim.world.animals
+    for animal in animal_rows:
+        row = per_animal[animal.animal_id]
+        row["final_state"] = {"position": {"x": animal.position.x, "y": animal.position.y},
+                              "hunger": animal.physiology.hunger, "thirst": animal.physiology.thirst,
+                              "fatigue": animal.physiology.fatigue, "social_need": animal.physiology.social_need,
+                              "memory_events": len(animal.memory.events)}
     feature_rows = np.asarray([a.last_features for a in animal_rows], dtype=np.float32)
     influence = intervention_probabilities(model, feature_rows[0]) if sim.world.tick == ROLLOUT_TICKS else None
     resources = {"forage_available": sum(p.available for p in sim.world.forage),
@@ -281,6 +298,7 @@ def deterministic_rollout(model, seed: int, *, root_seed: int, episode_index: in
             "invalid_actions": greedy.invalid_outputs, "decision_attempts": greedy.decisions,
             "complete": sim.world.tick == ROLLOUT_TICKS,
             "final_drive_means": np.asarray(drive_rows[-5:]).mean(0).tolist() if drive_rows else [],
+            "per_animal": per_animal,
             "resources_remaining": resources, "memory_perception_influence": influence,
             "ticks": sim.world.tick}
 
@@ -311,7 +329,7 @@ def _rng_restore(torch, state):
 
 def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                     device: str, resume: str | None, metrics_path: Path,
-                    checkpoint_every: int, smoke: bool = False, max_updates: int | None = None, eval_count: int = 10, eval_only: bool = False, allow_execution_migration: bool = False) -> dict:
+                    checkpoint_every: int, smoke: bool = False, max_updates: int | None = None, eval_count: int = 10, eval_only: bool = False, allow_execution_migration: bool = False, exploratory: bool = False) -> dict:
     torch = require_torch()
     device = resolve_device(device)
     set_deterministic(seed, device)
@@ -338,7 +356,9 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
     state = {"generation": 0, "update": 0, "episode_cursor": 0,
              "baseline_return_sum": 0.0, "baseline_return_count": 0,
              "history": [], "rng": _rng_snapshot(torch), "execution_migration": None,
-             "smoke_run": bool(smoke)}
+             "smoke_run": bool(smoke), "exploratory_only": bool(exploratory),
+             "formal_eligible": False if exploratory else None,
+             "benchmark_eligible": not smoke and not exploratory}
     source_root = Path(__file__).resolve().parents[1]
     source_paths = [Path(__file__).resolve(), source_root / "farm_sim" / "torch_training.py",
                     source_root / "farm_sim" / "torch_checkpoint.py", source_root / "requirements-training.txt",
@@ -357,6 +377,9 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
               "feature_schema": "cattle-observation-v1", "feature_names": list(FEATURE_NAMES),
               "actions": [x.value for x in ACTIONS], "dtype": "float32", "amp": False, "tf32": False,
               "world_size": world_size}
+    if exploratory:
+        config.update({"protocol": "exploratory-a2c-v1", "exploratory_only": True,
+                       "formal_eligible": False, "locked_outcomes_accessed": False})
     if resume:
         restored = load_generation(resume if resume != "latest" else run_dir, model=train_model,
                                    optimizer=optimizer, map_location=device,
@@ -366,6 +389,10 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
         # Preserve diagnostic-only lineage through later train/eval invocations.
         # A normal invocation must never promote a smoke checkpoint to a benchmark.
         state["smoke_run"] = bool(state.get("smoke_run", False) or smoke)
+        if bool(state.get("exploratory_only", False)) != bool(exploratory):
+            raise ValueError("checkpoint exploratory/formal lineage differs from requested mode")
+        if exploratory and state.get("formal_eligible") is not False:
+            raise ValueError("exploratory checkpoint is missing its nonformal eligibility marker")
         if restored.get("execution_migration") is not None:
             # Keep migration provenance durable across later same-world-size
             # resumes so metrics/evaluations cannot be mistaken for direct runs.
@@ -436,10 +463,12 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                "parameter_norm": float(torch.sqrt(sum((p.detach() ** 2).sum() for p in model.parameters())).cpu()),
                "elapsed_seconds": None, "device": device, "world_size": world_size,
                "execution_migration": state.get("execution_migration"),
-               "benchmark_eligible": not state.get("smoke_run", False) and state.get("execution_migration") is None,
+               "exploratory_only": bool(exploratory), "formal_eligible": False if exploratory else None,
+               "benchmark_eligible": not state.get("smoke_run", False) and not exploratory and state.get("execution_migration") is None,
                "timing": {"elapsed_seconds": None,
                           "execution_migration": state.get("execution_migration"),
-                          "benchmark_eligible": not state.get("smoke_run", False) and state.get("execution_migration") is None}}
+                          "exploratory_only": bool(exploratory),
+                          "benchmark_eligible": not state.get("smoke_run", False) and not exploratory and state.get("execution_migration") is None}}
         if rank == 0:
             _metrics_write(metrics_path, row)
             if state["update"] % checkpoint_every == 0 or state["episode_cursor"] >= episodes:
@@ -483,7 +512,9 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                 "feature_schema": "cattle-observation-v1", "actions": [x.value for x in ACTIONS],
                 "synthetic_task_only": True}
             artifact_manifest["execution_migration"] = state.get("execution_migration")
-            artifact_manifest["benchmark_eligible"] = not state.get("smoke_run", False) and state.get("execution_migration") is None
+            artifact_manifest["exploratory_only"] = bool(exploratory)
+            artifact_manifest["formal_eligible"] = False if exploratory else None
+            artifact_manifest["benchmark_eligible"] = not state.get("smoke_run", False) and not exploratory and state.get("execution_migration") is None
             (run_dir / "artifact-manifest.json").write_text(json.dumps(artifact_manifest, sort_keys=True, indent=2) + "\n")
         eval_count = 2 if smoke else eval_count
         eval_rows = [deterministic_rollout(model, derive_seed(seed, "eval-world", i), root_seed=seed, episode_index=i)
@@ -492,7 +523,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                       "mean_return": float(np.mean([x["return"] for x in eval_rows])),
                       "episodes": eval_rows,
                       "execution_migration": state.get("execution_migration"),
-                      "benchmark_eligible": not state.get("smoke_run", False) and state.get("execution_migration") is None,
+                      "exploratory_only": bool(exploratory), "formal_eligible": False if exploratory else None,
+                      "benchmark_eligible": not state.get("smoke_run", False) and not exploratory and state.get("execution_migration") is None,
                       "claims_boundary": "Synthetic software-task results only; not biological validation."}
         evaluation_path = run_dir / (f"evaluation-readonly-seed-{seed}.json" if eval_only else "evaluation.json")
         evaluation_path.write_text(json.dumps(evaluation, indent=2, sort_keys=True) + "\n")
@@ -500,7 +532,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                   "export": str(exported) if exported is not None else None,
                   "evaluation": str(evaluation_path), "updates": state["update"], "eval_only": eval_only,
                   "execution_migration": state.get("execution_migration"),
-                  "benchmark_eligible": not state.get("smoke_run", False) and state.get("execution_migration") is None}
+                  "exploratory_only": bool(exploratory), "formal_eligible": False if exploratory else None,
+                  "benchmark_eligible": not state.get("smoke_run", False) and not exploratory and state.get("execution_migration") is None}
         if distributed: torch.distributed.destroy_process_group()
         return result
     if distributed: torch.distributed.destroy_process_group()
@@ -514,6 +547,8 @@ def main(argv=None):
                    help="one disposable BATCH_EPISODES update on explicit CPU or CUDA; single algorithm only")
     p.add_argument("--readiness-ddp", action="store_true",
                    help="bounded 2-rank CUDA readiness test (32 episodes, 2 updates), no evaluation/promotion")
+    p.add_argument("--exploratory-a2c", action="store_true",
+                   help="separate, fixed-budget nonformal A2C learning run (256 episodes, CUDA, 5 exploratory rollouts)")
     p.add_argument("--algorithm", choices=("reinforce", "a2c", "both"), default="both")
     p.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     p.add_argument("--seed", type=int, default=810001)
@@ -532,6 +567,18 @@ def main(argv=None):
         p.error("--episodes and --checkpoint-every must be positive")
     if args.smoke and args.smoke_update:
         p.error("--smoke and --smoke-update are mutually exclusive")
+    if args.exploratory_a2c:
+        if (args.algorithm != "a2c" or args.device != "cuda" or args.mode != "train"
+                or args.seed != EXPLORATORY_A2C_SEED or args.episodes != EXPLORATORY_A2C_EPISODES
+                or args.eval_seeds != EXPLORATORY_A2C_EVAL_EPISODES or args.checkpoint_every != 1
+                or args.smoke or args.smoke_update or args.readiness_ddp or args.max_updates is not None
+                or int(os.environ.get("WORLD_SIZE", "1")) != 1):
+            p.error("--exploratory-a2c requires its fixed A2C/CUDA/seed/budget config and one process")
+        torch = require_torch()
+        if not torch.cuda.is_available():
+            p.error("--exploratory-a2c requires CUDA")
+        if torch.cuda.device_count() < 1:
+            p.error("--exploratory-a2c requires at least one visible CUDA device")
     if args.readiness_ddp:
         if args.smoke or args.smoke_update or args.algorithm == "both":
             p.error("--readiness-ddp requires one algorithm and cannot combine with smoke modes")
@@ -570,7 +617,7 @@ def main(argv=None):
         finally:
             torch.distributed.destroy_process_group()
         return
-    if not args.smoke and not args.smoke_update and args.mode != "eval":
+    if not args.smoke and not args.smoke_update and not args.exploratory_a2c and args.mode != "eval":
         p.error("ordinary CLI training is disabled: no independently trusted experimental authorization verifier is configured; use the reviewed release workflow after authorization is established")
     if args.smoke:
         args.algorithm = "both"
@@ -591,6 +638,8 @@ def main(argv=None):
         args.checkpoint_every = 1
         args.max_updates = 1
         args.output = args.output / "smoke"
+    if args.exploratory_a2c:
+        args.output = args.output / "exploratory-only"
     if args.mode == "eval" and args.resume is None:
         p.error("--mode eval requires --resume pointing at a committed checkpoint")
     metrics = args.metrics or args.output / "metrics.jsonl"
@@ -604,7 +653,8 @@ def main(argv=None):
                                  metrics_path=metrics, checkpoint_every=args.checkpoint_every,
                                  smoke=(args.smoke or args.smoke_update), max_updates=args.max_updates,
                                  eval_count=args.eval_seeds, eval_only=args.mode == "eval",
-                                 allow_execution_migration=args.allow_execution_migration)
+                                 allow_execution_migration=args.allow_execution_migration,
+                                 exploratory=args.exploratory_a2c)
         results.append(result)
     if not int(os.environ.get("RANK", "0")):
         print(json.dumps({"results": results, "device_requested": args.device,
