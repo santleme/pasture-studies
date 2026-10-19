@@ -10,9 +10,11 @@ from validation import compare_exploratory_checkpoints as compare
 
 
 class ExploratoryCheckpointComparisonTests(unittest.TestCase):
-    def _manifest(self, root: Path, *, episodes: int = 512, formal: bool = False):
+    def _manifest(self, root: Path, *, episodes: int = 512, formal: bool = False,
+                  condition_names=None):
         conditions = {}
-        for name in compare.CONDITIONS:
+        for name in condition_names or compare.CONDITIONS[:4]:
+            reward, scale, normalize, entropy = compare.EXPECTED_TRAINING_VARIANTS[name]
             rows = []
             for seed in (101, 202, 303):
                 generation = root / name / str(seed) / "generation-00000032"
@@ -21,7 +23,9 @@ class ExploratoryCheckpointComparisonTests(unittest.TestCase):
                     "algorithm": "a2c",
                     "config": {"algorithm": "a2c", "seed": seed, "episodes": episodes,
                                "exploratory_only": True, "formal_eligible": False,
-                               "locked_outcomes_accessed": False},
+                               "locked_outcomes_accessed": False, "exploratory_variant": name,
+                               "reward_variant": reward, "state_reward_scale": scale,
+                               "normalize_advantage": normalize, "entropy_coefficient": entropy},
                 }))
                 rows.append({"generation": str(generation.relative_to(root)), "algorithm": "a2c", "seed": seed})
             conditions[name] = rows
@@ -41,9 +45,21 @@ class ExploratoryCheckpointComparisonTests(unittest.TestCase):
                         "episode_cursor": 512, "exploratory_only": True,
                         "formal_eligible": False, "locked_outcomes_accessed": False}}):
                 groups, _ = compare.load_checkpoint_manifest(manifest)
-            self.assertEqual(tuple(groups), compare.CONDITIONS)
+            self.assertEqual(tuple(groups), compare.CONDITIONS[:4])
             self.assertEqual({tuple(row["seed"] for row in group) for group in groups.values()},
                              {(101, 202, 303)})
+
+    def test_manifest_accepts_six_condition_a_to_f_followup(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            manifest = self._manifest(root, condition_names=compare.CONDITIONS)
+            with patch.object(compare, "ActorCritic", return_value=object()), \
+                    patch.object(compare, "require_torch", return_value=type("Torch", (), {"float32": "float32"})()), \
+                    patch.object(compare, "load_generation", return_value={"state": {
+                        "episode_cursor": 512, "exploratory_only": True,
+                        "formal_eligible": False, "locked_outcomes_accessed": False}}):
+                groups, _ = compare.load_checkpoint_manifest(manifest)
+            self.assertEqual(tuple(groups), compare.CONDITIONS)
 
     def test_manifest_rejects_formal_locked_and_non_512_checkpoint_inputs(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -90,7 +106,7 @@ class ExploratoryCheckpointComparisonTests(unittest.TestCase):
             manifest = root / "input.json"
             manifest.write_text("{}")
             groups = {}
-            for index, condition in enumerate(compare.CONDITIONS):
+            for index, condition in enumerate(compare.CONDITIONS[:4]):
                 groups[condition] = []
                 for seed in (101, 202, 303):
                     generation = root / condition / str(seed) / "generation-00000032"

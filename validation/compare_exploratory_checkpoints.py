@@ -29,18 +29,28 @@ from validation.evaluate_torch_mvp1 import (
     sha_file,
 )
 
-CONDITIONS = ("A", "B", "C", "D")
+CONDITIONS = ("A", "B", "C", "D", "E", "F")
 CONDITION_DESCRIPTIONS = {
     "A": "original A2C + original training reward",
     "B": "original reward + entropy/advantage training improvements",
     "C": "state-aware training reward + original A2C",
     "D": "state-aware training reward + entropy/advantage improvements",
+    "E": "stronger state-aware reward (scale 0.5) + original A2C objective",
+    "F": "stronger state-aware reward (scale 0.5) + normalized advantages and entropy",
 }
 POLICIES = ("trained", "untrained_same_seed", "heuristic_baseline")
+EXPECTED_TRAINING_VARIANTS = {
+    "A": ("original", 0.1, False, 0.0),
+    "B": ("original", 0.1, True, 0.01),
+    "C": ("state_aware", 0.1, False, 0.0),
+    "D": ("state_aware", 0.1, True, 0.01),
+    "E": ("state_aware", 0.5, False, 0.0),
+    "F": ("state_aware", 0.5, True, 0.01),
+}
 
 
 def load_checkpoint_manifest(path: str | Path) -> tuple[dict[str, list[dict[str, Any]]], Path]:
-    """Read and validate an explicit exploratory-only A-D, three-seed manifest."""
+    """Read and validate an explicit exploratory-only A-D/A-F, three-seed manifest."""
     manifest_path = Path(path).resolve()
     try:
         doc = json.loads(manifest_path.read_text())
@@ -52,12 +62,13 @@ def load_checkpoint_manifest(path: str | Path) -> tuple[dict[str, list[dict[str,
             or doc.get("locked_test_access") is not False):
         raise ValueError("A-D comparison requires explicit exploratory-only and locked-data-denial flags")
     raw = doc.get("conditions")
-    if not isinstance(raw, dict) or set(raw) != set(CONDITIONS):
-        raise ValueError("conditions must contain exactly A, B, C, and D")
+    if not isinstance(raw, dict) or set(raw) not in (set(CONDITIONS[:4]), set(CONDITIONS)):
+        raise ValueError("conditions must contain exactly A-D or the measured A-F follow-up set")
+    condition_labels = tuple(label for label in CONDITIONS if label in raw)
 
     conditions: dict[str, list[dict[str, Any]]] = {}
     expected_seeds: set[int] | None = None
-    for condition in CONDITIONS:
+    for condition in condition_labels:
         entries = raw[condition]
         if not isinstance(entries, list) or len(entries) != 3:
             raise ValueError(f"condition {condition} must contain exactly three checkpoint entries")
@@ -80,6 +91,11 @@ def load_checkpoint_manifest(path: str | Path) -> tuple[dict[str, list[dict[str,
                     or config.get("formal_eligible") is not False
                     or config.get("locked_outcomes_accessed") is not False):
                 raise ValueError(f"condition {condition} checkpoint is not a 512-episode exploratory-only A2C run: {target}")
+            expected_variant = EXPECTED_TRAINING_VARIANTS[condition]
+            observed_variant = (config.get("reward_variant"), config.get("state_reward_scale"),
+                                config.get("normalize_advantage"), config.get("entropy_coefficient"))
+            if config.get("exploratory_variant") != condition or observed_variant != expected_variant:
+                raise ValueError(f"condition {condition} checkpoint does not match its registered exploratory treatment: {target}")
             # Resolve and safely load the committed generation so provenance is
             # checked from the checkpoint payload, not inferred from its name.
             model = ActorCritic(value_head=True, seed=entry["seed"], dtype=require_torch().float32)
@@ -184,7 +200,7 @@ def compare( manifest_path: str | Path, *, eval_seed: int, output: str | Path,
     per_checkpoint = []
     ranking = []
     condition_reports: dict[str, list[dict[str, Any]]] = {}
-    for condition in CONDITIONS:
+    for condition in conditions:
         reports = []
         for entry in conditions[condition]:
             seed = entry["seed"]
@@ -213,7 +229,7 @@ def compare( manifest_path: str | Path, *, eval_seed: int, output: str | Path,
     ranking.sort(key=lambda row: row["mean_original_reward_per_episode"], reverse=True)
     rank_by_condition = {row["condition"]: idx + 1 for idx, row in enumerate(ranking)}
     conditions_doc = {}
-    for condition in CONDITIONS:
+    for condition in conditions:
         conditions_doc[condition] = {
             "description": CONDITION_DESCRIPTIONS[condition],
             "descriptive_rank_by_mean_original_reward": rank_by_condition[condition],
@@ -228,7 +244,7 @@ def compare( manifest_path: str | Path, *, eval_seed: int, output: str | Path,
     doc = {
         "schema_version": 1,
         "mode": "exploratory_comparison",
-        "title": "A-D common-world checkpoint comparison",
+        "title": f"A-{max(conditions)} common-world checkpoint comparison",
         "formal_eligible": False,
         "benchmark_eligible": False,
         "locked_test_access": False,
@@ -239,7 +255,7 @@ def compare( manifest_path: str | Path, *, eval_seed: int, output: str | Path,
         "episodes_per_family": episodes_per_family,
         "scenario_families": list(FAMILIES),
         "ticks_per_episode": 72,
-        "training_seed_sets": {condition: sorted(entry["seed"] for entry in conditions[condition]) for condition in CONDITIONS},
+        "training_seed_sets": {condition: sorted(entry["seed"] for entry in conditions[condition]) for condition in conditions},
         "seed_disjointness": {"eval_root_distinct_from_training_roots": True,
                               "world_seeds_unique": True,
                               "common_worlds_disjoint_from_training_worlds": True},
@@ -264,7 +280,7 @@ def compare( manifest_path: str | Path, *, eval_seed: int, output: str | Path,
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoints", required=True, type=Path,
-                        help="exploratory-only JSON manifest with three A2C checkpoints for each A-D")
+                        help="exploratory-only JSON manifest with three A2C checkpoints for each A-D or A-F")
     parser.add_argument("--eval-seed", required=True, type=int,
                         help="independent shared evaluation root seed; must not be a training seed")
     parser.add_argument("--episodes-per-family", type=int, default=3)

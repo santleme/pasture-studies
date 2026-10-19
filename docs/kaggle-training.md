@@ -196,4 +196,20 @@ python3 -m farm_sim.server --checkpoint \
 # Open http://127.0.0.1:8000 and inspect the five simulated animals.
 ```
 
+If A-D evaluation confirms reward exploitation (specifically no forage successes with near-maximal final hunger), the bounded follow-up is a separate `EXPLORATORY_ITERATION_2` mode: E/F each use three new seeds and 512 episodes, state-aware reward scale `0.5` (up from `0.1`), and the same original-vs-normalized/entropy A2C objective contrast. Its six jobs bring the cumulative count to 18/24; it does not change the original reward, the formal protocol, or its acceptance criteria. Stage and run only after inspecting the first comparison:
+
+```bash
+python3 scripts/kaggle_deploy.py prepare-exploratory-iteration-2 \
+  --path /tmp/pasture-kaggle-a2c-iteration-2 \
+  --owner pascalcoimbra \
+  --runtime-profile validation/kaggle-exploratory/kaggle-v11-runtime-profile.json
+# Generate a fresh outcome-blind release manifest with scripts/kaggle_release.py,
+# bind it with scripts/kaggle_deploy.py bind-release, then:
+python3 scripts/kaggle_deploy.py execute \
+  --path /tmp/pasture-kaggle-a2c-iteration-2 \
+  --mode EXPLORATORY_ITERATION_2 --confirm-execution --confirm-gpu
+```
+
+Iteration-2 outputs are E/F-only; create a combined A-F checkpoint manifest from the verified A-D and E/F final generations and pass it to `validation.compare_exploratory_checkpoints` with the same `9483999` evaluation root to produce a fully common-world six-condition report. Never copy any formal/locked artifacts into this exploratory directory.
+
 If a run is interrupted, the trainer commits a checkpoint generation after each update and resumes from the per-job `LATEST` pointer when the same output directory is rerun. Kaggle output retrieval and the run manifest must be checked before attempting recovery. Count every started policy attempt against the 24-job ceiling. If the failed kernel does not expose its `/kaggle/working` checkpoint outputs, do not claim cross-session resume; report the external limitation and avoid re-running the entire suite if it would exceed the cap.

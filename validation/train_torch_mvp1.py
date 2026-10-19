@@ -39,6 +39,7 @@ EXPLORATORY_BATCH_EVAL_EPISODES = 5
 EXPLORATORY_BATCH_STATE_REWARD_SCALE = 0.1
 EXPLORATORY_BATCH_DISCOUNT_FACTOR = 1.0
 EXPLORATORY_BATCH_SEEDS = (9483001, 9483002, 9483003)
+EXPLORATORY_ITERATION_2_SEEDS = (9483004, 9483005, 9483006)
 EXPLORATORY_BATCH_MAX_JOBS = 24
 EXPLORATORY_BATCH_VARIANTS = {
     "A": {"reward_variant": "original", "state_reward_scale": EXPLORATORY_BATCH_STATE_REWARD_SCALE,
@@ -54,6 +55,17 @@ EXPLORATORY_BATCH_VARIANTS = {
           "normalize_advantage": True, "entropy_coefficient": 0.01,
           "discount_factor": EXPLORATORY_BATCH_DISCOUNT_FACTOR},
 }
+EXPLORATORY_ITERATION_2_VARIANTS = {
+    # Batch one measured no forage successes and persistent maximum hunger.
+    # E/F therefore test a five-fold stronger need-conditioned intent signal,
+    # retaining an unchanged-reward control and the same A2C objective ablation.
+    "E": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+          "normalize_advantage": False, "entropy_coefficient": 0.0,
+          "discount_factor": EXPLORATORY_BATCH_DISCOUNT_FACTOR},
+    "F": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+          "normalize_advantage": True, "entropy_coefficient": 0.01,
+          "discount_factor": EXPLORATORY_BATCH_DISCOUNT_FACTOR},
+}
 
 
 def exploratory_batch_specs() -> list[dict]:
@@ -61,6 +73,13 @@ def exploratory_batch_specs() -> list[dict]:
     return [{"variant": variant, **EXPLORATORY_BATCH_VARIANTS[variant], "seed": seed,
              "episodes": EXPLORATORY_BATCH_EPISODES}
             for variant in EXPLORATORY_BATCH_VARIANTS for seed in EXPLORATORY_BATCH_SEEDS]
+
+
+def exploratory_iteration_2_specs() -> list[dict]:
+    """Return the bounded E/F scale-response follow-up (six independent fits)."""
+    return [{"variant": variant, **EXPLORATORY_ITERATION_2_VARIANTS[variant], "seed": seed,
+             "episodes": EXPLORATORY_BATCH_EPISODES}
+            for variant in EXPLORATORY_ITERATION_2_VARIANTS for seed in EXPLORATORY_ITERATION_2_SEEDS]
 
 
 def _mark_exploratory_checkpoint_state(state: dict, *, exploratory_variant: str | None) -> dict:
@@ -473,7 +492,9 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
               "actions": [x.value for x in ACTIONS], "dtype": "float32", "amp": False, "tf32": False,
               "world_size": world_size}
     if exploratory:
-        config.update({"protocol": "exploratory-comparison-v1" if exploratory_variant else "exploratory-a2c-v1",
+        config.update({"protocol": ("exploratory-iteration-2-v1" if exploratory_variant in {"E", "F"}
+                                     else "exploratory-comparison-v1" if exploratory_variant
+                                     else "exploratory-a2c-v1"),
                        "exploratory_variant": exploratory_variant, "exploratory_only": True,
                        "formal_eligible": False, "locked_outcomes_accessed": False})
     if exploratory_variant is not None:
@@ -724,6 +745,50 @@ def run_exploratory_batch(*, output: Path, device: str, shard_index: int = 0,
     return summary
 
 
+def run_exploratory_iteration_2(*, output: Path, device: str, shard_index: int = 0,
+                                shard_count: int = 1) -> dict:
+    """Run the six-fit state-aware reward-scale follow-up, within the 24-fit cap."""
+    specs = exploratory_iteration_2_specs()
+    if len(exploratory_batch_specs()) + len(specs) > EXPLORATORY_BATCH_MAX_JOBS:
+        raise ValueError("exploratory follow-up exceeds the cumulative 24-job safety limit")
+    if device not in {"cpu", "cuda"}:
+        raise ValueError("exploratory comparison requires an explicit cpu or cuda device")
+    if shard_count not in {1, 2} or not 0 <= shard_index < shard_count:
+        raise ValueError("exploratory comparison supports one or two valid worker shards")
+    if shard_count == 2 and device != "cuda":
+        raise ValueError("two-worker exploratory comparison shards require CUDA")
+    if int(os.environ.get("WORLD_SIZE", "1")) != 1:
+        raise ValueError("exploratory comparison uses independent single-process jobs, not DDP")
+    selected = specs[shard_index::shard_count]
+    results = []
+    for spec in selected:
+        run_root = output / f"variant-{spec['variant']}" / f"seed-{spec['seed']}"
+        checkpoint = run_root / "a2c"
+        result = train_algorithm(
+            "a2c", seed=spec["seed"], episodes=EXPLORATORY_BATCH_EPISODES,
+            output=run_root, device=device,
+            resume=str(checkpoint) if (checkpoint / "LATEST").is_file() else None,
+            metrics_path=run_root / "metrics.jsonl", checkpoint_every=1,
+            eval_count=EXPLORATORY_BATCH_EVAL_EPISODES, exploratory=True,
+            exploratory_variant=spec["variant"], reward_variant=spec["reward_variant"],
+            state_reward_scale=spec["state_reward_scale"],
+            normalize_advantage=spec["normalize_advantage"],
+            entropy_coefficient=spec["entropy_coefficient"])
+        results.append({**spec, **result, "run_root": str(run_root)})
+    summary = {"schema_version": 1, "protocol": "exploratory-iteration-2-v1",
+               "exploratory_only": True, "formal_eligible": False,
+               "locked_outcomes_accessed": False, "device": device,
+               "planned_jobs": len(specs), "cumulative_planned_jobs": 18,
+               "max_jobs": EXPLORATORY_BATCH_MAX_JOBS,
+               "shard_index": shard_index, "shard_count": shard_count,
+               "jobs": results}
+    output.mkdir(parents=True, exist_ok=True)
+    summary_path = output / f"iteration-2-shard-{shard_index}-of-{shard_count}.json"
+    summary_path.write_text(json.dumps(summary, sort_keys=True, indent=2) + "\n")
+    summary["summary_path"] = str(summary_path)
+    return summary
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--smoke", action="store_true", help="two-update CPU smoke run with export/eval")
@@ -735,6 +800,8 @@ def main(argv=None):
                    help="separate, fixed-budget nonformal A2C learning run (256 episodes, CUDA, 5 exploratory rollouts)")
     p.add_argument("--exploratory-batch", action="store_true",
                    help="fixed A-D x 3-seed nonformal comparison (512 episodes per job); separate from --exploratory-a2c")
+    p.add_argument("--exploratory-iteration-2", action="store_true",
+                   help="six-run nonformal reward-scale follow-up, cumulative 18/24 jobs")
     p.add_argument("--profile-only", action="store_true",
                    help="performance-only real 16-episode calibration; no optimizer step or checkpoint")
     p.add_argument("--profile-device", choices=("cpu", "cuda:0", "cuda:1"), default=None)
@@ -762,11 +829,12 @@ def main(argv=None):
         p.error("--episodes and --checkpoint-every must be positive")
     if args.smoke and args.smoke_update:
         p.error("--smoke and --smoke-update are mutually exclusive")
-    if args.exploratory_a2c and args.exploratory_batch:
-        p.error("--exploratory-a2c and --exploratory-batch are separate fixed protocols")
+    exploratory_modes = [args.exploratory_a2c, args.exploratory_batch, args.exploratory_iteration_2]
+    if sum(bool(flag) for flag in exploratory_modes) > 1:
+        p.error("exploratory training protocols are separate fixed workloads")
     if args.profile_only:
         if (args.profile_device is None or args.profile_output is None or args.exploratory_a2c
-                or args.exploratory_batch or args.smoke or args.smoke_update or args.readiness_ddp
+                or args.exploratory_batch or args.exploratory_iteration_2 or args.smoke or args.smoke_update or args.readiness_ddp
                 or args.resume is not None or args.max_updates is not None):
             p.error("--profile-only requires --profile-device and --profile-output, and cannot train/resume")
         try:
@@ -803,6 +871,24 @@ def main(argv=None):
         if args.batch_shard_count == 2 and (args.device != "cuda" or torch.cuda.device_count() != 1):
             p.error("two-shard execution must mask each independent job to exactly one visible CUDA device")
         result = run_exploratory_batch(output=args.output / "exploratory-comparison",
+            device=args.device, shard_index=args.batch_shard_index, shard_count=args.batch_shard_count)
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return
+    if args.exploratory_iteration_2:
+        if (args.algorithm != "a2c" or args.device not in {"cpu", "cuda"} or args.mode != "train"
+                or args.episodes not in {278, EXPLORATORY_BATCH_EPISODES}
+                or args.seed != 810001 or args.eval_seeds not in {10, EXPLORATORY_BATCH_EVAL_EPISODES}
+                or args.checkpoint_every != 1 or args.smoke or args.smoke_update or args.readiness_ddp
+                or args.resume is not None or args.max_updates is not None or args.allow_execution_migration):
+            p.error("--exploratory-iteration-2 requires fixed A2C/CPU-or-CUDA/512-episode config; resume is automatic per job")
+        if not 0 <= args.batch_shard_index < args.batch_shard_count or args.batch_shard_count not in {1, 2}:
+            p.error("--exploratory-iteration-2 supports one or two valid worker shards")
+        torch = require_torch()
+        if args.device == "cuda" and (not torch.cuda.is_available() or torch.cuda.device_count() < 1):
+            p.error("--exploratory-iteration-2 requires a visible CUDA device")
+        if args.batch_shard_count == 2 and (args.device != "cuda" or torch.cuda.device_count() != 1):
+            p.error("two-shard execution must mask each independent job to exactly one visible CUDA device")
+        result = run_exploratory_iteration_2(output=args.output / "exploratory-iteration-2",
             device=args.device, shard_index=args.batch_shard_index, shard_count=args.batch_shard_count)
         print(json.dumps(result, indent=2, sort_keys=True))
         return

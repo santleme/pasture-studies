@@ -34,7 +34,8 @@ class KaggleDeployTests(unittest.TestCase):
                 self._real_source_commit()
 
     def test_modes_allow_only_safe_readiness_and_legacy_modes(self):
-        for mode in ("PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON"):
+        for mode in ("PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON",
+                     "EXPLORATORY_ITERATION_2"):
             self.assertEqual(deploy.validate_mode(f" {mode.lower()} "), mode)
         for mode in ("EXPERIMENT", "FULL_VALIDATION", "", "other"):
             with self.subTest(mode=mode), self.assertRaises(deploy.DeploymentError):
@@ -234,6 +235,22 @@ class KaggleDeployTests(unittest.TestCase):
             bad_config_path.write_text(json.dumps(bad_config))
             with self.assertRaises(deploy.DeploymentError):
                 deploy.validate_staging_folder(stage)
+
+    def test_iteration_two_staging_has_separate_nonformal_allowlist(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            runtime_path = root / "runtime.json"
+            runtime_path.write_text(json.dumps({"python": "3.13.15", "numpy": "2.1.3",
+                "pytorch": "2.11.0+cu128", "cuda_runtime": "12.8", "cuda_available": True,
+                "gpu_count": 2, "gpu_names": ["Tesla T4", "Tesla T4"]}))
+            stage = root / "iteration-2"
+            deploy.prepare_exploratory(stage, "sample_user", runtime_profile_path=runtime_path,
+                                       iteration_2=True)
+            config = json.loads(deploy.deployment_record_path(stage).read_text())
+            self.assertEqual(config["mode"], "EXPLORATORY_ITERATION_2")
+            self.assertEqual(config["exploratory_config"], deploy.EXPLORATORY_ITERATION_2_CONFIG_VALUE)
+            metadata = json.loads((stage / "kernel-metadata.json").read_text())
+            self.assertEqual(metadata["enable_gpu"], "true")
 
     def test_readiness_rejects_manifest_mismatch_on_staged_validation(self):
         with tempfile.TemporaryDirectory() as tmp:

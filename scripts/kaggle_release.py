@@ -63,6 +63,21 @@ EXPLORATORY_COMPARISON_CONFIG_VALUE = {
     },
     "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
 }
+EXPLORATORY_ITERATION_2_CONFIG_VALUE = {
+    "task": "exploratory_a2c_reward_scale_followup", "algorithm": "a2c",
+    "variants": ["E", "F"], "episodes_per_variant_seed": 512,
+    "seeds": [9483004, 9483005, 9483006], "training_jobs": 6,
+    "comparison_eval_seed": 9483999, "comparison_episodes_per_family": 3,
+    "max_training_jobs": 24, "cumulative_jobs_before": 12,
+    "max_devices": 2, "locked_test_access": False,
+    "variant_config": {
+        "E": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+              "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+        "F": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+              "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
+    },
+    "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
+}
 READINESS_DIAGNOSTIC_TASKS = frozenset({"checkpoint_recovery", "t4x2_path_smoke"})
 READINESS_CONFIG_KEYS = frozenset({
     "task", "max_updates", "max_episodes", "max_devices", "locked_test_access",
@@ -337,6 +352,10 @@ def authorize_mode(mode: str, manifest: dict[str, Any], approval: Any = None, *,
     if normalized == "EXPLORATORY_COMPARISON":
         if config != EXPLORATORY_COMPARISON_CONFIG_VALUE or not isinstance(manifest, dict):
             raise ReleaseError("EXPLORATORY_COMPARISON requires the exact bounded A-D nonformal config")
+        return normalized
+    if normalized == "EXPLORATORY_ITERATION_2":
+        if config != EXPLORATORY_ITERATION_2_CONFIG_VALUE or not isinstance(manifest, dict):
+            raise ReleaseError("EXPLORATORY_ITERATION_2 requires the exact bounded E/F reward-scale config")
         return normalized
     if normalized in {"EXPERIMENT", "FULL_VALIDATION"}:
         if config is not None:

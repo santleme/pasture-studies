@@ -25,7 +25,7 @@ if str(ROOT) not in sys.path:
     # imports used by the READINESS and EXPLORATORY gates.
     sys.path.insert(0, str(ROOT))
 NOTEBOOK = ROOT / "notebooks" / "pasture_studies_kaggle.ipynb"
-MODES = {"PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON"}
+MODES = {"PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"}
 T4X2_SHAPE = "NvidiaTeslaT4"
 RELEASE_MANIFEST = "release-manifest.json"
 DEPLOYMENT_CONFIG = "pasture-deployment.json"
@@ -55,6 +55,21 @@ EXPLORATORY_COMPARISON_CONFIG_VALUE = {
         "C": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
               "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
         "D": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
+              "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
+    },
+    "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
+}
+EXPLORATORY_ITERATION_2_CONFIG_VALUE = {
+    "task": "exploratory_a2c_reward_scale_followup", "algorithm": "a2c",
+    "variants": ["E", "F"], "episodes_per_variant_seed": 512,
+    "seeds": [9483004, 9483005, 9483006], "training_jobs": 6,
+    "comparison_eval_seed": 9483999, "comparison_episodes_per_family": 3,
+    "max_training_jobs": 24, "cumulative_jobs_before": 12,
+    "max_devices": 2, "locked_test_access": False,
+    "variant_config": {
+        "E": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+              "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+        "F": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
               "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
     },
     "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
@@ -265,7 +280,7 @@ def prepare(folder: Path, owner: str, *, mode: str = "SMOKE", gpu: bool = False)
     _ensure_detached_paths_available(folder)
     if mode == "READINESS":
         raise DeploymentError("READINESS staging requires --runtime-profile; use prepare-release")
-    if mode in {"EXPLORATORY", "EXPLORATORY_COMPARISON"}:
+    if mode in {"EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"}:
         raise DeploymentError("Exploratory staging requires --runtime-profile; use a prepare-exploratory command")
     source_bytes = _committed_notebook_bytes(source_commit)
     source_sha = hashlib.sha256(source_bytes).hexdigest()
@@ -286,9 +301,12 @@ def _write_staging(folder: Path, owner: str, deployment: dict) -> Path:
     target.write_text(json.dumps(metadata_for(owner, mode=deployment["mode"], gpu=gpu), indent=2) + "\n")
     if deployment["mode"] == "READINESS":
         _write_new_file(readiness_config_path(folder), (json.dumps(READINESS_CONFIG_VALUE, sort_keys=True, indent=2) + "\n").encode())
-    if deployment["mode"] in {"EXPLORATORY", "EXPLORATORY_COMPARISON"}:
-        exploratory_config = (EXPLORATORY_CONFIG_VALUE if deployment["mode"] == "EXPLORATORY"
-                              else EXPLORATORY_COMPARISON_CONFIG_VALUE)
+    if deployment["mode"] in {"EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"}:
+        exploratory_config = {
+            "EXPLORATORY": EXPLORATORY_CONFIG_VALUE,
+            "EXPLORATORY_COMPARISON": EXPLORATORY_COMPARISON_CONFIG_VALUE,
+            "EXPLORATORY_ITERATION_2": EXPLORATORY_ITERATION_2_CONFIG_VALUE,
+        }[deployment["mode"]]
         _write_new_file(exploratory_config_path(folder),
                         (json.dumps(exploratory_config, sort_keys=True, indent=2) + "\n").encode())
     return target
@@ -325,7 +343,8 @@ def prepare_release(folder: Path, owner: str, *, runtime_profile_path: Path,
 
 
 def prepare_exploratory(folder: Path, owner: str, *, runtime_profile_path: Path,
-                        gpu: bool = True, comparison: bool = False) -> Path:
+                        gpu: bool = True, comparison: bool = False,
+                        iteration_2: bool = False) -> Path:
     """Stage a fixed-budget nonformal A2C run or paired variant comparison."""
     try:
         runtime_profile = json.loads(runtime_profile_path.read_text())
@@ -346,8 +365,15 @@ def prepare_exploratory(folder: Path, owner: str, *, runtime_profile_path: Path,
         folder.mkdir(parents=True)
     _ensure_detached_paths_available(folder)
     source_bytes = _committed_notebook_bytes(source_commit)
-    mode = "EXPLORATORY_COMPARISON" if comparison else "EXPLORATORY"
-    exploratory_config = EXPLORATORY_COMPARISON_CONFIG_VALUE if comparison else EXPLORATORY_CONFIG_VALUE
+    if comparison and iteration_2:
+        raise DeploymentError("Only one exploratory comparison mode may be staged")
+    mode = ("EXPLORATORY_ITERATION_2" if iteration_2 else
+            "EXPLORATORY_COMPARISON" if comparison else "EXPLORATORY")
+    exploratory_config = {
+        "EXPLORATORY": EXPLORATORY_CONFIG_VALUE,
+        "EXPLORATORY_COMPARISON": EXPLORATORY_COMPARISON_CONFIG_VALUE,
+        "EXPLORATORY_ITERATION_2": EXPLORATORY_ITERATION_2_CONFIG_VALUE,
+    }[mode]
     deployment = {"schema_version": 1, "mode": mode, "source_commit": source_commit,
                   "source_notebook_sha256": hashlib.sha256(source_bytes).hexdigest(),
                   "readiness_config": None, "exploratory_config": exploratory_config,
@@ -386,7 +412,7 @@ def bind_release(folder: Path, release_manifest: Path) -> str:
     except (OSError, json.JSONDecodeError) as exc:
         raise DeploymentError("Readiness staging metadata/config is missing or malformed") from exc
     notebook = folder / metadata.get("code_file", "")
-    if (config.get("mode") not in {"READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON"} or metadata.get("enable_gpu") != "true"
+    if (config.get("mode") not in {"READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"} or metadata.get("enable_gpu") != "true"
             or not notebook.is_file() or notebook.is_symlink()):
         raise DeploymentError("Release manifests may only bind a GPU READINESS/EXPLORATORY staging folder")
     manifest_sha = _manifest_digest(release_manifest, staged_notebook=notebook)
@@ -620,10 +646,11 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
     expected_staged = _stage_notebook_bytes(committed_source, expected_embedded)
     if notebook_path.read_bytes() != expected_staged:
         raise DeploymentError("Staged notebook differs from the exact committed source plus approved config injection")
-    if mode in {"READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON"}:
+    if mode in {"READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"}:
         expected_config = (READINESS_CONFIG_VALUE if mode == "READINESS" else
                            EXPLORATORY_CONFIG_VALUE if mode == "EXPLORATORY" else
-                           EXPLORATORY_COMPARISON_CONFIG_VALUE)
+                           EXPLORATORY_COMPARISON_CONFIG_VALUE if mode == "EXPLORATORY_COMPARISON" else
+                           EXPLORATORY_ITERATION_2_CONFIG_VALUE)
         config_field = "readiness_config" if mode == "READINESS" else "exploratory_config"
         other_field = "exploratory_config" if mode == "READINESS" else "readiness_config"
         if (metadata.get("enable_gpu") != "true" or config.get(config_field) != expected_config
@@ -647,7 +674,7 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
             raise DeploymentError("Staged release manifest does not bind the exact notebook bytes")
         if config.get(config_field) != expected_config:
             raise DeploymentError(f"{mode} config differs from the fixed allowlisted workload")
-        if mode in {"EXPLORATORY", "EXPLORATORY_COMPARISON"}:
+        if mode in {"EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"}:
             from scripts.kaggle_release import authorize_mode
             authorize_mode(mode, manifest, config=expected_config)
     elif config.get("release_manifest_sha256"):
@@ -819,6 +846,11 @@ def main(argv: list[str] | None = None) -> int:
     prep_comparison.add_argument("--path", type=Path, required=True)
     prep_comparison.add_argument("--owner", required=True)
     prep_comparison.add_argument("--runtime-profile", type=Path, required=True)
+    prep_iteration = sub.add_parser("prepare-exploratory-iteration-2",
+                                    help="Stage a six-run, nonformal state-reward-scale follow-up")
+    prep_iteration.add_argument("--path", type=Path, required=True)
+    prep_iteration.add_argument("--owner", required=True)
+    prep_iteration.add_argument("--runtime-profile", type=Path, required=True)
     bind = sub.add_parser("bind-release")
     bind.add_argument("--path", type=Path, required=True)
     bind.add_argument("--manifest", type=Path, required=True)
@@ -862,6 +894,9 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "prepare-exploratory-comparison":
             print(prepare_exploratory(args.path, args.owner, runtime_profile_path=args.runtime_profile,
                                       comparison=True))
+        elif args.command == "prepare-exploratory-iteration-2":
+            print(prepare_exploratory(args.path, args.owner, runtime_profile_path=args.runtime_profile,
+                                      iteration_2=True))
         elif args.command == "bind-release":
             print(json.dumps({"release_manifest_sha256": bind_release(args.path, args.manifest)}, indent=2))
         elif args.command == "publish":

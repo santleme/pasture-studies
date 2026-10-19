@@ -34,6 +34,21 @@ class ExploratoryBatchCliTests(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 trainer.main()
 
+    def test_iteration_two_is_six_matched_runs_at_fivefold_state_reward_scale(self):
+        specs = trainer.exploratory_iteration_2_specs()
+        self.assertEqual(len(specs), 6)
+        self.assertEqual({spec["variant"] for spec in specs}, {"E", "F"})
+        self.assertEqual({spec["seed"] for spec in specs}, set(trainer.EXPLORATORY_ITERATION_2_SEEDS))
+        self.assertEqual({spec["episodes"] for spec in specs}, {512})
+        self.assertEqual({spec["state_reward_scale"] for spec in specs}, {0.5})
+        for config in (kaggle_deploy.EXPLORATORY_ITERATION_2_CONFIG_VALUE,
+                       kaggle_release.EXPLORATORY_ITERATION_2_CONFIG_VALUE):
+            self.assertEqual(config["variant_config"], trainer.EXPLORATORY_ITERATION_2_VARIANTS)
+            self.assertEqual(config["seeds"], list(trainer.EXPLORATORY_ITERATION_2_SEEDS))
+            self.assertEqual(config["training_jobs"], 6)
+            self.assertEqual(config["cumulative_jobs_before"] + config["training_jobs"], 18)
+            self.assertEqual(config["max_training_jobs"], 24)
+
     def test_release_config_binds_trainer_variants_seeds_and_total_job_cap(self):
         for config in (kaggle_deploy.EXPLORATORY_COMPARISON_CONFIG_VALUE,
                        kaggle_release.EXPLORATORY_COMPARISON_CONFIG_VALUE):
@@ -77,9 +92,16 @@ class ExploratoryBatchCliTests(unittest.TestCase):
         self.assertNotIn("--locked-test", comparison)
         self.assertIn("evaluation_summary_sha256", comparison)
         self.assertIn("evaluation_plot_sha256", comparison)
+        iteration = next(code for code in code_cells if 'if MODE == "EXPLORATORY_ITERATION_2":' in code)
+        self.assertIn("--exploratory-iteration-2", iteration)
+        self.assertIn("six-run", "".join(notebook["cells"][0]["source"]))
+        self.assertIn("9483999", iteration)
 
     def test_single_run_and_batch_flags_cannot_be_combined(self):
         with patch("sys.argv", ["train_torch_mvp1", "--exploratory-a2c", "--exploratory-batch"]):
+            with self.assertRaises(SystemExit):
+                trainer.main()
+        with patch("sys.argv", ["train_torch_mvp1", "--exploratory-batch", "--exploratory-iteration-2"]):
             with self.assertRaises(SystemExit):
                 trainer.main()
 
