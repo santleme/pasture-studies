@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 from unittest.mock import patch
 
+from scripts import kaggle_deploy, kaggle_release
 from validation import train_torch_mvp1 as trainer
 
 
@@ -30,6 +31,15 @@ class ExploratoryBatchCliTests(unittest.TestCase):
                                 "--device", "cuda", "--episodes", "513"]):
             with self.assertRaises(SystemExit):
                 trainer.main()
+
+    def test_release_config_binds_trainer_variants_seeds_and_total_job_cap(self):
+        for config in (kaggle_deploy.EXPLORATORY_COMPARISON_CONFIG_VALUE,
+                       kaggle_release.EXPLORATORY_COMPARISON_CONFIG_VALUE):
+            self.assertEqual(config["variant_config"], trainer.EXPLORATORY_BATCH_VARIANTS)
+            self.assertEqual(config["seeds"], list(trainer.EXPLORATORY_BATCH_SEEDS))
+            self.assertEqual(config["episodes_per_variant_seed"], trainer.EXPLORATORY_BATCH_EPISODES)
+            self.assertEqual(config["training_jobs"] * config["calibration_passes"],
+                             config["max_training_jobs"])
 
     def test_single_run_and_batch_flags_cannot_be_combined(self):
         with patch("sys.argv", ["train_torch_mvp1", "--exploratory-a2c", "--exploratory-batch"]):
