@@ -192,7 +192,11 @@ def compare( manifest_path: str | Path, *, eval_seed: int, output: str | Path,
             evaluate(entry["generation"], algorithm="a2c", seed=seed, eval_seed=eval_seed,
                      output=report_path, episodes_per_family=episodes_per_family, device=device)
             report = json.loads(report_path.read_text())
-            if report.get("split_seed", {}).get("evaluation_root_seed") != eval_seed:
+            # ``evaluate_torch_mvp1`` writes this field as ``seed_split``;
+            # checking the legacy/nonexistent ``split_seed`` key made every
+            # otherwise valid common-world evaluation fail after its first
+            # checkpoint had completed.
+            if report.get("seed_split", {}).get("evaluation_root_seed") != eval_seed:
                 raise ValueError("underlying evaluation report did not preserve the shared evaluation root seed")
             reports.append(report)
             per_checkpoint.append({"condition": condition, "training_seed": seed,

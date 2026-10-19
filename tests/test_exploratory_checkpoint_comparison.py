@@ -116,7 +116,7 @@ class ExploratoryCheckpointComparisonTests(unittest.TestCase):
                                  "invalid_actions": 0})
                 Path(output).parent.mkdir(parents=True, exist_ok=True)
                 Path(output).write_text(json.dumps({
-                    "split_seed": {"evaluation_root_seed": eval_seed},
+                    "seed_split": {"evaluation_root_seed": eval_seed},
                     "generation_manifest_sha256": "a" * 64,
                     "runs": runs,
                     "cognition_influence": {"contrasts": {}},
