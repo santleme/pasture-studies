@@ -14,13 +14,13 @@ class ExploratoryBatchCliTests(unittest.TestCase):
         self.assertEqual({spec["seed"] for spec in specs}, set(trainer.EXPLORATORY_BATCH_SEEDS))
         self.assertEqual({spec["episodes"] for spec in specs}, {512})
         expected = {
-            "A": ("original", False, 0.0),
-            "B": ("original", True, 0.01),
-            "C": ("state_aware", False, 0.0),
-            "D": ("state_aware", True, 0.01),
+            "A": ("original", 0.1, False, 0.0),
+            "B": ("original", 0.1, True, 0.01),
+            "C": ("state_aware", 0.1, False, 0.0),
+            "D": ("state_aware", 0.1, True, 0.01),
         }
         for spec in specs:
-            self.assertEqual((spec["reward_variant"], spec["normalize_advantage"],
+            self.assertEqual((spec["reward_variant"], spec["state_reward_scale"], spec["normalize_advantage"],
                               spec["entropy_coefficient"]), expected[spec["variant"]])
         for variant in expected:
             self.assertEqual(sum(spec["variant"] == variant for spec in specs), 3)
