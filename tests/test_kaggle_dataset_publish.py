@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 
 from scripts.kaggle_dataset_publish import command_for, publish
-from validation.pasture_studies_dataset import generate_bundle
+from tests.fixtures.pasture_dataset import write_frozen_dataset_bundle
 
 
 class KaggleDatasetPublishTests(unittest.TestCase):
@@ -18,10 +18,9 @@ class KaggleDatasetPublishTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "version operation"):
             command_for("version", path)
 
-    def test_default_is_verified_dry_run_and_never_calls_kaggle(self):
+    def test_default_is_verified_dry_run_using_frozen_bundle(self):
         with tempfile.TemporaryDirectory() as directory:
-            package = Path(directory) / "data"
-            generate_bundle(package, root_seeds=[71001], episodes_per_root=1, license_name="CC0-1.0")
+            package = write_frozen_dataset_bundle(Path(directory) / "fixture")
             with patch("scripts.kaggle_dataset_publish.subprocess.run") as run:
                 result = publish(package, operation="create")
                 version_result = publish(package, operation="version", message="v2 refresh")

@@ -1,0 +1,21 @@
+name: Safe test suites
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements.txt pytest
+      - name: Static gate before either test runner
+        run: python -m scripts.check_standard_test_safety
+      - name: unittest suite (guarded wrapper)
+        run: python -m scripts.run_standard_tests unittest
+      - name: pytest suite (guarded plugin and wrapper)
+        run: python -m scripts.run_standard_tests pytest

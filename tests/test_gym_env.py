@@ -71,17 +71,14 @@ class PastureGymEnvTests(unittest.TestCase):
         self.assertEqual(env._simulation.world, before)
         env.close()
 
-    def test_sb3_ppo_smoke_for_single_and_five_controlled_animals(self):
-        from stable_baselines3 import PPO
+    def test_sb3_env_contract_for_single_and_five_controlled_animals(self):
         from stable_baselines3.common.env_checker import check_env
 
         for count in (1, 5):
             env = PastureEnv(controlled_animals=count, horizon=4)
             check_env(env, warn=True)
-            model = PPO("MlpPolicy", env, n_steps=4, batch_size=4, n_epochs=1, seed=12, device="cpu", verbose=0)
-            model.learn(total_timesteps=8)
             observation, _ = env.reset(seed=23)
-            action, _ = model.predict(observation, deterministic=True)
+            action = env.action_space.sample()
             self.assertTrue(env.action_space.contains(action))
             _, reward, terminated, truncated, info = env.step(action)
             self.assertTrue(np.isfinite(reward))

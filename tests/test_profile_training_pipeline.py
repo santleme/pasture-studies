@@ -36,7 +36,11 @@ class TrainingPipelineProfileTests(unittest.TestCase):
             self.assertTrue(report["source_sha256"])
             self.assertNotIn("scalar-versus-batched CPU collection", report["coverage_and_limits"]["not_measured"])
             self.assertIn("multi-world-batched CPU collection", report["coverage_and_limits"]["comparison_note"])
-            self.assertTrue(report["collector_comparison"]["parity_pass"])
+            comparison = report["collector_comparison"]
+            if torch is None:
+                self.assertEqual(comparison["status"], "unavailable")
+            else:
+                self.assertTrue(comparison["parity_pass"])
             self.assertFalse(list(Path(directory).glob("*.policy-*.npz")))
 
     def test_profile_rejects_nonpositive_workload(self):

@@ -1,20 +1,19 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import importlib.util
 import numpy as np
+import pytest
 from unittest.mock import patch
 
-from validation.dagger_generalization import (
-    ACTION_LIST, GeneralizationCloner, GeneralizationEnv, TEST_DOMAINS, TRAIN_PROFILE,
-    _ordered_navigation_outcomes,
-    domain_for,
-    train_generalized_dagger,
-    train_ppo_finetune,
-)
 from farm_sim.model import Action
+
+pytestmark = pytest.mark.skipif(importlib.util.find_spec("torch") is None,
+                                reason="optional PyTorch dependency is not installed")
 
 
 def test_train_environment_profiles_do_not_include_unseen_test_values():
+    from validation.dagger_generalization import TEST_DOMAINS, TRAIN_PROFILE, domain_for
     trained = set(TRAIN_PROFILE)
     for name in ("layout_reference", "layout_shift", "supply_shift",
                  "regrowth_shift", "combined_unseen"):
@@ -27,6 +26,7 @@ def test_train_environment_profiles_do_not_include_unseen_test_values():
 
 
 def test_layout_shift_is_seeded_and_changes_resource_positions_only():
+    from validation.dagger_generalization import GeneralizationEnv
     first = GeneralizationEnv(agents=1, seed=7, profile="layout_shift", observation="domain")
     second = GeneralizationEnv(agents=1, seed=7, profile="layout_shift", observation="domain")
     other = GeneralizationEnv(agents=1, seed=7, profile="layout_shift", observation="domain")
@@ -46,6 +46,7 @@ def test_layout_shift_is_seeded_and_changes_resource_positions_only():
 
 
 def test_domain_and_history_observations_fit_declared_space_for_both_scales():
+    from validation.dagger_generalization import GeneralizationEnv
     for agents in (1, 5):
         env = GeneralizationEnv(agents=agents, seed=11, profile="combined_unseen",
                                 observation="history_domain")
@@ -63,6 +64,7 @@ def test_domain_and_history_observations_fit_declared_space_for_both_scales():
 
 
 def test_due_regrowth_is_observable_before_the_next_action_without_transition_change():
+    from validation.dagger_generalization import GeneralizationEnv
     env = GeneralizationEnv(agents=1, seed=11, profile="nominal", observation="domain")
     obs, _ = env.reset(seed=411)
     patch = env.sim.world.forage[0]
@@ -75,17 +77,16 @@ def test_due_regrowth_is_observable_before_the_next_action_without_transition_ch
     env.close()
 
 
-def test_joint_policy_cloner_returns_five_coordinated_actions():
+def test_untrained_joint_policy_cloner_returns_five_coordinated_actions():
+    from validation.dagger_generalization import GeneralizationCloner
     model = GeneralizationCloner(35, seed=19, agents=5, architecture="joint")
-    x = np.zeros((8, 175), dtype=np.float32)
-    y = np.zeros((8, 5), dtype=np.int64)
-    model.fit(x, y, epochs=1)
     action, _ = model.predict(np.zeros(175, dtype=np.float32))
     assert action.shape == (5,)
     assert np.all((action >= 0) & (action < 6))
 
 
 def test_ordered_navigation_preview_matches_simulator_resource_commits():
+    from validation.dagger_generalization import ACTION_LIST, GeneralizationEnv, _ordered_navigation_outcomes
     env = GeneralizationEnv(agents=5, seed=29, profile="combined_unseen",
                             observation="history_domain")
     env.reset(seed=522)
@@ -102,6 +103,7 @@ def test_ordered_navigation_preview_matches_simulator_resource_commits():
 
 
 def test_direct_dagger_and_ppo_training_helpers_are_kaggle_only():
+    from validation.dagger_generalization import train_generalized_dagger, train_ppo_finetune
     with patch("farm_sim.execution_policy.is_kaggle_runtime", return_value=False), \
             patch("validation.dagger_generalization.collect_domain_data") as collect:
         try:

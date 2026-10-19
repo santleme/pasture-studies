@@ -1,9 +1,13 @@
 import numpy as np
+import importlib.util
+import pytest
 
-from validation.sb3_pilot import EPISODE_TICKS, PastureSB3Env
+pytestmark = pytest.mark.skipif(importlib.util.find_spec("gymnasium") is None,
+                                reason="optional Gymnasium dependency is not installed")
 
 
 def test_single_agent_wrapper_is_gymnasium_compatible_and_episode_is_fixed_horizon():
+    from validation.sb3_pilot import EPISODE_TICKS, PastureSB3Env
     env = PastureSB3Env(agents=1, seed=13)
     obs, info = env.reset(seed=13)
     assert env.observation_space.contains(obs)
@@ -25,6 +29,7 @@ def test_single_agent_wrapper_is_gymnasium_compatible_and_episode_is_fixed_horiz
 
 
 def test_five_agent_joint_wrapper_emits_one_action_per_agent_from_snapshot():
+    from validation.sb3_pilot import PastureSB3Env
     env = PastureSB3Env(agents=5, seed=19)
     obs, _ = env.reset(seed=19)
     assert env.observation_space.contains(obs)

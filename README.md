@@ -35,7 +35,21 @@ Open <http://127.0.0.1:8000/>. The server binds to loopback only and requires th
 Run the test suite:
 
 ```sh
-.venv/bin/python -m unittest discover -s tests -v
+.venv/bin/python -m scripts.run_standard_tests unittest
+.venv/bin/python -m scripts.run_standard_tests pytest
+```
+
+Both default runners execute the static test-safety gate before collection or
+execution. Default tests use frozen fixtures/mocks for training, serialization,
+and dataset contracts; they do not update policy weights or generate DAgger
+trajectories. Tests that deliberately perform policy or optimizer training are
+isolated under `tests/opt_in_training/` and are excluded from default discovery.
+They can only be requested through the dedicated runner, which requires both
+`PASTURE_RUN_OPT_IN_TRAINING_TESTS=1` and a verified Kaggle runtime:
+
+```sh
+PASTURE_RUN_OPT_IN_TRAINING_TESTS=1 .venv/bin/python -m scripts.run_opt_in_training_tests unittest
+PASTURE_RUN_OPT_IN_TRAINING_TESTS=1 .venv/bin/python -m scripts.run_opt_in_training_tests pytest
 ```
 
 ## Training and benchmark execution boundary

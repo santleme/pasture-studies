@@ -19,21 +19,21 @@ import unittest
 from unittest.mock import patch
 import zipfile
 
-import nbformat
-from jupyter_client import KernelManager
-from jupyter_client.kernelspec import KernelSpec
-from nbclient import NotebookClient
-
 from scripts import kaggle_deploy as deploy
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK_PATH = ROOT / "notebooks/pasture_studies_kaggle.ipynb"
-NOTEBOOK = nbformat.read(NOTEBOOK_PATH, as_version=4)
+NOTEBOOK = json.loads(NOTEBOOK_PATH.read_text())
+
+
+def _code_sources(notebook):
+    return ["".join(cell.get("source", [])) for cell in notebook.get("cells", [])
+            if cell.get("cell_type") == "code"]
 
 
 class KaggleNotebookReadinessTests(unittest.TestCase):
     def test_launcher_does_not_accept_env_claims_and_hard_blocks_experiments(self):
-        source = "\n".join(cell.source for cell in NOTEBOOK.cells)
+        source = "\n".join(_code_sources(NOTEBOOK))
         self.assertNotIn("PASTURE_NOTEBOOK_REVISION", source)
         self.assertNotIn("PASTURE_NOTEBOOK_CONTENT_SHA256", source)
         self.assertIn('if MODE in {"EXPERIMENT", "FULL_VALIDATION"}', source)
@@ -43,7 +43,7 @@ class KaggleNotebookReadinessTests(unittest.TestCase):
         self.assertNotIn("locked_test_seed", source)
 
     def test_readiness_has_bounded_recovery_ddp_and_no_evaluation(self):
-        source = "\n".join(cell.source for cell in NOTEBOOK.cells)
+        source = "\n".join(_code_sources(NOTEBOOK))
         for required in ("--readiness-ddp", "--nproc_per_node=2", "--max-updates", "--resume", "latest",
                         "diagnostic_seed = 37331", "evaluation_performed", "locked_split_accessed",
                         "cuda_device_index", "_is_complete_generation"):
@@ -119,6 +119,11 @@ raise SystemExit('unexpected git wrapper args: ' + repr(args))
                 "CUDA_VISIBLE_DEVICES": "", "MPLBACKEND": "Agg"}
             kernels = tmp / "jupyter/kernels/pasture-test"
             kernels.mkdir(parents=True)
+            from jupyter_client import KernelManager
+            from jupyter_client.kernelspec import KernelSpec
+            import nbformat
+            from nbclient import NotebookClient
+
             (kernels / "kernel.json").write_text(KernelSpec(
                 argv=[os.sys.executable, "-m", "ipykernel_launcher", "-f", "{connection_file}"],
                 display_name="Pasture smoke isolated", language="python").to_json())

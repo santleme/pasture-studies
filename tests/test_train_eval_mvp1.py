@@ -2,6 +2,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 
@@ -14,6 +15,21 @@ from validation.train_eval_mvp1 import (
     softmax_logits, task_cases, verify_locked_cohort, verify_prelock_attestation,
     write_prelock_attestation,
 )
+
+
+def _frozen_manifest_fixture():
+    families = ("primary_starter_14x10", "wide_grid_20x14", "resource_scarce_relocated")
+    return {
+        "experiment_conditions": {"confirmatory_learning_conditions": [{"id": "encoder_a"}, {"id": "encoder_b"}]},
+        "seed_protocol": {
+            "locked_test_world_seeds_by_family": {
+                family: list(range(20_001 + index * 100, 20_031 + index * 100))
+                for index, family in enumerate(families)
+            },
+            "encoder_training_world_seeds": list(range(10_001, 10_011)),
+            "training_checkpoint_seed_ids": [11_001, 11_002],
+        },
+    }
 
 
 class TrainingEvaluationHarnessTests(unittest.TestCase):
@@ -54,7 +70,7 @@ class TrainingEvaluationHarnessTests(unittest.TestCase):
         self.assertEqual(a["world_seed_count"], 2)
 
     def test_preregistered_locked_world_sets_have_30_per_family(self):
-        manifest = json.loads(Path(".omx/research/mvp1-remediation-baseline/experiment-manifest.json").read_text())
+        manifest = _frozen_manifest_fixture()
         worlds = manifest["seed_protocol"]["locked_test_world_seeds_by_family"]
         self.assertEqual(set(worlds), {"primary_starter_14x10", "wide_grid_20x14", "resource_scarce_relocated"})
         self.assertTrue(all(len(seed_ids) == 30 for seed_ids in worlds.values()))
@@ -75,7 +91,12 @@ class TrainingEvaluationHarnessTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             output = Path(directory) / "cohort"
             output.mkdir()
-            manifest = json.loads(Path(".omx/research/mvp1-remediation-baseline/experiment-manifest.json").read_text())
+            manifest = _frozen_manifest_fixture()
+            manifest_path = Path(directory) / "experiment-manifest.json"
+            manifest_path.write_text(json.dumps(manifest, sort_keys=True) + "\n")
+            patcher = patch("validation.train_eval_mvp1.MANIFEST", manifest_path)
+            patcher.start()
+            self.addCleanup(patcher.stop)
             conditions = [x["id"] for x in manifest["experiment_conditions"]["confirmatory_learning_conditions"]]
             seeds = manifest["seed_protocol"]["training_checkpoint_seed_ids"]
             allowlist = {}; hashes = {}; training = {}

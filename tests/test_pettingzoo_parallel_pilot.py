@@ -2,16 +2,24 @@ from dataclasses import replace
 
 import numpy as np
 import pytest
+import importlib.util
 
-pytest.importorskip("pettingzoo")
-pytest.importorskip("gymnasium")
+pytestmark = pytest.mark.skipif(
+    importlib.util.find_spec("pettingzoo") is None or importlib.util.find_spec("gymnasium") is None,
+    reason="optional PettingZoo/Gymnasium dependencies are not installed",
+)
 
 from farm_sim.model import Action, Position, ResourcePatch
 from farm_sim.simulation import make_world
-from validation.pettingzoo_parallel_pilot import ACTION_LIST, AGENT_IDS, PastureParallelEnv
+
+
+def _pilot_api():
+    from validation.pettingzoo_parallel_pilot import ACTION_LIST, AGENT_IDS, PastureParallelEnv
+    return ACTION_LIST, AGENT_IDS, PastureParallelEnv
 
 
 def test_parallel_api_smoke_and_fixed_seed_reset_are_reproducible():
+    _, AGENT_IDS, PastureParallelEnv = _pilot_api()
     from pettingzoo.test import parallel_api_test
 
     env = PastureParallelEnv(seed=23, max_cycles=8)
@@ -26,6 +34,7 @@ def test_parallel_api_smoke_and_fixed_seed_reset_are_reproducible():
 
 
 def test_actions_are_collected_from_one_snapshot_then_resources_commit_in_id_order():
+    ACTION_LIST, AGENT_IDS, PastureParallelEnv = _pilot_api()
     env = PastureParallelEnv(seed=2, max_cycles=4)
     env.reset(seed=2)
     world = make_world(2)
@@ -64,6 +73,7 @@ def test_actions_are_collected_from_one_snapshot_then_resources_commit_in_id_ord
 
 
 def test_invalid_or_incomplete_action_batch_does_not_advance_simulation():
+    ACTION_LIST, AGENT_IDS, PastureParallelEnv = _pilot_api()
     env = PastureParallelEnv(seed=5)
     before = env.sim.world
     with pytest.raises(ValueError, match="exactly one action"):

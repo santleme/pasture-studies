@@ -56,8 +56,22 @@ class KaggleDeployTests(unittest.TestCase):
         self.assertIn('reserved evaluation artifacts', code)
 
     def test_direct_cli_imports_release_gate_from_repository_root(self):
+        import shutil
+
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
+            source = root / "source-checkout"
+            (source / "scripts").mkdir(parents=True)
+            (source / "notebooks").mkdir()
+            (source / ".gitignore").write_text("__pycache__/\n*.py[cod]\n")
+            shutil.copy2(deploy.ROOT / "scripts/kaggle_deploy.py", source / "scripts/kaggle_deploy.py")
+            shutil.copy2(deploy.ROOT / "scripts/kaggle_release.py", source / "scripts/kaggle_release.py")
+            shutil.copy2(deploy.NOTEBOOK, source / "notebooks/pasture_studies_kaggle.ipynb")
+            subprocess.run(["git", "init", "-q", str(source)], check=True)
+            subprocess.run(["git", "-C", str(source), "config", "user.email", "tests@example.invalid"], check=True)
+            subprocess.run(["git", "-C", str(source), "config", "user.name", "Test Fixture"], check=True)
+            subprocess.run(["git", "-C", str(source), "add", "scripts", "notebooks", ".gitignore"], check=True)
+            subprocess.run(["git", "-C", str(source), "commit", "-qm", "frozen source fixture"], check=True)
             runtime = root / "runtime.json"
             runtime.write_text(json.dumps({
                 "python": "3.13.15", "numpy": "2.1.3", "pytorch": "2.11.0+cu128",
@@ -65,7 +79,7 @@ class KaggleDeployTests(unittest.TestCase):
                 "gpu_names": ["Tesla T4", "Tesla T4"],
             }))
             result = subprocess.run(
-                [sys.executable, str(deploy.ROOT / "scripts/kaggle_deploy.py"),
+                [sys.executable, str(source / "scripts/kaggle_deploy.py"),
                  "prepare-exploratory", "--path", str(root / "stage"),
                  "--owner", "sample_user", "--runtime-profile", str(runtime)],
                 cwd=root, capture_output=True, text=True, check=False,
