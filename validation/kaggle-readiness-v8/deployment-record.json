@@ -1,0 +1,31 @@
+{
+  "gpu_required": true,
+  "mode": "READINESS",
+  "notebook_sha256": "a6e7df9797a786fe71e350f14b683722c4d62423ee9117d206eda6009c233c42",
+  "readiness_config": {
+    "benchmark_eligible": false,
+    "checkpoint_promotion": false,
+    "locked_test_access": false,
+    "max_devices": 2,
+    "max_episodes": 32,
+    "max_updates": 2,
+    "outcome_analysis": false,
+    "task": "checkpoint_recovery"
+  },
+  "release_manifest_sha256": "4c85eb477139951b9d4b77b9498cf2d3023f00865da752e18323b68b13e013db",
+  "runtime_profile": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "gpu_count": 2,
+    "gpu_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "numpy": "2.1.3",
+    "python": "3.13.15",
+    "pytorch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "source_commit": "fc0b9e594ff7e2caa0aca94e6321b5a9b98ac2b9",
+  "source_notebook_sha256": "d216d933bfde053e30c52797d3463863928c70d8fa4618ce10d2bf11efe34993"
+}

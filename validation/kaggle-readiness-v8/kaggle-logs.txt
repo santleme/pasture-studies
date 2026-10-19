@@ -1,0 +1,160 @@
+[{"stream_name":"stderr","time":7.665071727,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.665119613,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.665123837,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.665126296,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":8.280178436,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.280204489,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.280209544,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.280213646,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":9.411250231,"data":"Mode: READINESS run_id: readiness-8ae01edfc92a47c8b1bb41c0e87d9d37 source SHA: fc0b9e594ff7e2caa0aca94e6321b5a9b98ac2b9\n"}
+,{"stream_name":"stdout","time":9.411274260999999,"data":"Python: 3.13.15 (main, Aug  6 2026, 11:06:22) [GCC 13.3.0] platform: Linux-6.18.48+-x86_64-with-glibc2.39\n"}
+,{"stream_name":"stderr","time":9.450843012,"data":"Cloning into '/kaggle/working/pasture-source-fc0b9e594ff7'...\n"}
+,{"stream_name":"stdout","time":9.611791132,"data":"$ git clone --no-checkout --no-tags https://github.com/santleme/pasture-studies.git /kaggle/working/pasture-source-fc0b9e594ff7\n"}
+,{"stream_name":"stderr","time":9.65328499,"data":"Cloning into '/kaggle/working/pasture-source-fc0b9e594ff7'...\n"}
+,{"stream_name":"stderr","time":9.653302269,"data":"\n"}
+,{"stream_name":"stderr","time":9.653309729,"data":"Cloning into '/kaggle/working/pasture-source-fc0b9e594ff7'...\n"}
+,{"stream_name":"stdout","time":13.732992922,"data":"$ git -C /kaggle/working/pasture-source-fc0b9e594ff7 fetch --depth 1 origin fc0b9e594ff7e2caa0aca94e6321b5a9b98ac2b9\n"}
+,{"stream_name":"stderr","time":13.76252514,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":13.762541193,"data":" * branch            fc0b9e594ff7e2caa0aca94e6321b5a9b98ac2b9 -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":13.965896597,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":13.965923654000001,"data":" * branch            fc0b9e594ff7e2caa0aca94e6321b5a9b98ac2b9 -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":13.965928485,"data":"\n"}
+,{"stream_name":"stderr","time":13.96593209,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":13.96594173,"data":" * branch            fc0b9e594ff7e2caa0aca94e6321b5a9b98ac2b9 -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stdout","time":13.967717134,"data":"$ git -C /kaggle/working/pasture-source-fc0b9e594ff7 checkout --detach FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":14.041569014,"data":"HEAD is now at fc0b9e5 Harden Kaggle version verification\n"}
+,{"stream_name":"stderr","time":16.534640239,"data":"HEAD is now at fc0b9e5 Harden Kaggle version verification\n"}
+,{"stream_name":"stderr","time":16.534669677,"data":"\n"}
+,{"stream_name":"stderr","time":16.534674099,"data":"HEAD is now at fc0b9e5 Harden Kaggle version verification\n"}
+,{"stream_name":"stdout","time":21.946714513,"data":"Observed runtime: {\"cuda_available\": true, \"cuda_runtime\": \"12.8\", \"gpu_count\": 2, \"gpu_names\": [\"Tesla T4\", \"Tesla T4\"], \"numpy\": \"2.1.3\", \"python\": \"3.13.15\", \"pytorch\": \"2.11.0+cu128\"}\n"}
+,{"stream_name":"stdout","time":21.946765736,"data":"Historical scientific dependency pins (unchanged):\n"}
+,{"stream_name":"stdout","time":21.946771648,"data":" # Optional training stack; never install this into the web/runtime requirements.\n"}
+,{"stream_name":"stdout","time":21.946775367,"data":"numpy==1.26.4\n"}
+,{"stream_name":"stdout","time":21.946778503,"data":"torch==2.14.0\n"}
+,{"stream_name":"stdout","time":21.946783143,"data":"\n"}
+,{"stream_name":"stdout","time":23.073803834,"data":"CUDA forward/backward: PASS ['Tesla T4', 'Tesla T4']\n"}
+,{"stream_name":"stdout","time":23.274428424,"data":"$ /usr/bin/python3 -m torch.distributed.run --standalone --nproc_per_node=2 -m validation.train_torch_mvp1 --readiness-ddp --algorithm a2c --device cuda --seed 37331 --episodes 32 --checkpoint-every 1 --output /kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37/readiness-ddp --max-updates 1\n"}
+,{"stream_name":"stderr","time":24.848284624,"data":"\n"}
+,{"stream_name":"stderr","time":24.848311726,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":24.848316011,"data":"Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. \n"}
+,{"stream_name":"stderr","time":24.848319951,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":25.050551813,"data":"\n"}
+,{"stream_name":"stderr","time":25.050576067,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":25.0505808,"data":"Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. \n"}
+,{"stream_name":"stderr","time":25.050585273,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":25.050588701,"data":"\n"}
+,{"stream_name":"stderr","time":25.050591789,"data":"\n"}
+,{"stream_name":"stderr","time":25.050596658,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":25.050603885,"data":"Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. \n"}
+,{"stream_name":"stderr","time":25.050606914,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":36.116596004,"data":"/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.\n"}
+,{"stream_name":"stderr","time":36.116625239,"data":"  return func(*args, **kwargs)\n"}
+,{"stream_name":"stdout","time":36.119102664,"data":"{\n"}
+,{"stream_name":"stdout","time":36.119122163,"data":"  \"readiness_only\": true,\n"}
+,{"stream_name":"stdout","time":36.119127903,"data":"  \"algorithm\": \"a2c\",\n"}
+,{"stream_name":"stdout","time":36.119133195,"data":"  \"checkpoint\": \"/kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37/readiness-ddp/readiness-only/a2c/LATEST\",\n"}
+,{"stream_name":"stdout","time":36.119150665,"data":"  \"evidence\": \"/kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37/readiness-ddp/readiness-only/a2c/readiness-evidence.json\",\n"}
+,{"stream_name":"stdout","time":36.119156484,"data":"  \"updates\": 1,\n"}
+,{"stream_name":"stdout","time":36.119160877,"data":"  \"episode_cursor\": 16,\n"}
+,{"stream_name":"stdout","time":36.119175141,"data":"  \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":36.119179225,"data":"}\n"}
+,{"stream_name":"stderr","time":36.320064092,"data":"/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.\n"}
+,{"stream_name":"stderr","time":36.320094161,"data":"  return func(*args, **kwargs)\n"}
+,{"stream_name":"stderr","time":36.320098594,"data":"\n"}
+,{"stream_name":"stderr","time":36.320101803,"data":"/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.\n"}
+,{"stream_name":"stderr","time":36.320105517,"data":"  return func(*args, **kwargs)\n"}
+,{"stream_name":"stdout","time":36.321962862,"data":"{\n"}
+,{"stream_name":"stdout","time":36.321986489,"data":"  \"readiness_only\": true,\n"}
+,{"stream_name":"stdout","time":36.321991616,"data":"  \"algorithm\": \"a2c\",\n"}
+,{"stream_name":"stdout","time":36.321995329,"data":"  \"checkpoint\": \"/kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37/readiness-ddp/readiness-only/a2c/LATEST\",\n"}
+,{"stream_name":"stdout","time":36.321999394,"data":"  \"evidence\": \"/kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37/readiness-ddp/readiness-only/a2c/readiness-evidence.json\",\n"}
+,{"stream_name":"stdout","time":36.322003022,"data":"  \"updates\": 1,\n"}
+,{"stream_name":"stdout","time":36.322006332,"data":"  \"episode_cursor\": 16,\n"}
+,{"stream_name":"stdout","time":36.322009684,"data":"  \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":36.322012989,"data":"}\n"}
+,{"stream_name":"stdout","time":40.773777321,"data":"$ /usr/bin/python3 -m torch.distributed.run --standalone --nproc_per_node=2 -m validation.train_torch_mvp1 --readiness-ddp --algorithm a2c --device cuda --seed 37331 --episodes 32 --checkpoint-every 1 --output /kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37/readiness-ddp --resume latest --max-updates 1\n"}
+,{"stream_name":"stderr","time":42.263149663,"data":"\n"}
+,{"stream_name":"stderr","time":42.263171276,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":42.263174989,"data":"Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. \n"}
+,{"stream_name":"stderr","time":42.263178486,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":42.465273742,"data":"\n"}
+,{"stream_name":"stderr","time":42.465302026,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":42.465307716,"data":"Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. \n"}
+,{"stream_name":"stderr","time":42.465312836,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":42.46531702,"data":"\n"}
+,{"stream_name":"stderr","time":42.46532095,"data":"\n"}
+,{"stream_name":"stderr","time":42.465326735,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":42.465370158,"data":"Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. \n"}
+,{"stream_name":"stderr","time":42.465391752,"data":"*****************************************\n"}
+,{"stream_name":"stderr","time":48.360959965,"data":"/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.\n"}
+,{"stream_name":"stderr","time":48.360987514,"data":"  return func(*args, **kwargs)\n"}
+,{"stream_name":"stdout","time":48.362043882,"data":"{\n"}
+,{"stream_name":"stdout","time":48.362064483,"data":"  \"readiness_only\": true,\n"}
+,{"stream_name":"stdout","time":48.362070761,"data":"  \"algorithm\": \"a2c\",\n"}
+,{"stream_name":"stdout","time":48.362076432,"data":"  \"checkpoint\": \"/kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37/readiness-ddp/readiness-only/a2c/LATEST\",\n"}
+,{"stream_name":"stdout","time":48.362082156,"data":"  \"evidence\": \"/kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37/readiness-ddp/readiness-only/a2c/readiness-evidence.json\",\n"}
+,{"stream_name":"stdout","time":48.362087338,"data":"  \"updates\": 2,\n"}
+,{"stream_name":"stdout","time":48.362092078,"data":"  \"episode_cursor\": 32,\n"}
+,{"stream_name":"stdout","time":48.362097031,"data":"  \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":48.362101881,"data":"}\n"}
+,{"stream_name":"stderr","time":48.564051563,"data":"/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.\n"}
+,{"stream_name":"stderr","time":48.564087036,"data":"  return func(*args, **kwargs)\n"}
+,{"stream_name":"stderr","time":48.564091282,"data":"\n"}
+,{"stream_name":"stderr","time":48.564094927,"data":"/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.\n"}
+,{"stream_name":"stderr","time":48.564154967,"data":"  return func(*args, **kwargs)\n"}
+,{"stream_name":"stdout","time":48.565317491,"data":"{\n"}
+,{"stream_name":"stdout","time":48.565351434,"data":"  \"readiness_only\": true,\n"}
+,{"stream_name":"stdout","time":48.565357895,"data":"  \"algorithm\": \"a2c\",\n"}
+,{"stream_name":"stdout","time":48.565361821,"data":"  \"checkpoint\": \"/kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37/readiness-ddp/readiness-only/a2c/LATEST\",\n"}
+,{"stream_name":"stdout","time":48.565366079,"data":"  \"evidence\": \"/kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37/readiness-ddp/readiness-only/a2c/readiness-evidence.json\",\n"}
+,{"stream_name":"stdout","time":48.565369758,"data":"  \"updates\": 2,\n"}
+,{"stream_name":"stdout","time":48.56537284,"data":"  \"episode_cursor\": 32,\n"}
+,{"stream_name":"stdout","time":48.565376369,"data":"  \"benchmark_eligible\": false\n"}
+,{"stream_name":"stdout","time":48.565379813,"data":"}\n"}
+,{"stream_name":"stdout","time":49.83123217,"data":"{\n"}
+,{"stream_name":"stdout","time":49.831264134,"data":"  \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":49.831267824,"data":"  \"checkpoint_generations\": [\n"}
+,{"stream_name":"stdout","time":49.83127026,"data":"    \"generation-00000001\",\n"}
+,{"stream_name":"stdout","time":49.831272647,"data":"    \"generation-00000002\"\n"}
+,{"stream_name":"stdout","time":49.831274881,"data":"  ],\n"}
+,{"stream_name":"stdout","time":49.831284809,"data":"  \"cuda_forward_backward\": \"PASS\",\n"}
+,{"stream_name":"stdout","time":49.831287305000004,"data":"  \"diagnostic_seed\": 37331,\n"}
+,{"stream_name":"stdout","time":49.831290038,"data":"  \"elapsed_seconds_diagnostic_only\": 26.73427176475525,\n"}
+,{"stream_name":"stdout","time":49.831292313,"data":"  \"evaluation_performed\": false,\n"}
+,{"stream_name":"stdout","time":49.831294519,"data":"  \"gpu_rank_indices\": [\n"}
+,{"stream_name":"stdout","time":49.831296778,"data":"    0,\n"}
+,{"stream_name":"stdout","time":49.831298867,"data":"    1\n"}
+,{"stream_name":"stdout","time":49.831300938,"data":"  ],\n"}
+,{"stream_name":"stdout","time":49.831303164,"data":"  \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":49.831305355,"data":"  \"mode\": \"READINESS\",\n"}
+,{"stream_name":"stdout","time":49.831307621,"data":"  \"notebook_sha256\": \"d216d933bfde053e30c52797d3463863928c70d8fa4618ce10d2bf11efe34993\",\n"}
+,{"stream_name":"stdout","time":49.831323284,"data":"  \"release_manifest_sha256\": null,\n"}
+,{"stream_name":"stdout","time":49.831327411,"data":"  \"resumed_from_generation\": \"generation-00000001\",\n"}
+,{"stream_name":"stdout","time":49.831331224,"data":"  \"run_id\": \"readiness-8ae01edfc92a47c8b1bb41c0e87d9d37\",\n"}
+,{"stream_name":"stdout","time":49.831335296,"data":"  \"runtime\": {\n"}
+,{"stream_name":"stdout","time":49.83135374,"data":"    \"cuda_available\": true,\n"}
+,{"stream_name":"stdout","time":49.83135775,"data":"    \"cuda_runtime\": \"12.8\",\n"}
+,{"stream_name":"stdout","time":49.831361735,"data":"    \"gpu_count\": 2,\n"}
+,{"stream_name":"stdout","time":49.831365554,"data":"    \"gpu_names\": [\n"}
+,{"stream_name":"stdout","time":49.831368747,"data":"      \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":49.831372061,"data":"      \"Tesla T4\"\n"}
+,{"stream_name":"stdout","time":49.831375288,"data":"    ],\n"}
+,{"stream_name":"stdout","time":49.831378483,"data":"    \"numpy\": \"2.1.3\",\n"}
+,{"stream_name":"stdout","time":49.831381709,"data":"    \"python\": \"3.13.15\",\n"}
+,{"stream_name":"stdout","time":49.831385001,"data":"    \"pytorch\": \"2.11.0+cu128\"\n"}
+,{"stream_name":"stdout","time":49.831388476,"data":"  },\n"}
+,{"stream_name":"stdout","time":49.831395522,"data":"  \"source_commit\": \"fc0b9e594ff7e2caa0aca94e6321b5a9b98ac2b9\",\n"}
+,{"stream_name":"stdout","time":49.831398206,"data":"  \"updates\": 2\n"}
+,{"stream_name":"stdout","time":49.831400389,"data":"}\n"}
+,{"stream_name":"stdout","time":49.856162997,"data":"Artifact directory: /kaggle/working/pasture-release-readiness-8ae01edfc92a47c8b1bb41c0e87d9d37\n"}
+,{"stream_name":"stdout","time":49.856186561,"data":"Artifact manifest entries: 7\n"}
+,{"stream_name":"stdout","time":49.856191269,"data":"ZIP SHA-256: 0892f16ee045d45c8cf07e2e78e4f297a903acaef932a30e0b9294e821c2332f\n"}
+,{"stream_name":"stderr","time":52.81571338,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":52.815755672,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":52.975149428,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":52.975185136,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":53.701481557,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":53.78004816,"data":"[NbConvertApp] Writing 28914 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":56.212367339,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":56.760588441,"data":"[NbConvertApp] Writing 342839 bytes to __results__.html\n"}
+]

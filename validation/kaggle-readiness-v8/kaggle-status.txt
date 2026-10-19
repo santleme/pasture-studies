@@ -1,0 +1,1 @@
+pascalcoimbra/pasture-studies/8 has status "KernelWorkerStatus.COMPLETE"

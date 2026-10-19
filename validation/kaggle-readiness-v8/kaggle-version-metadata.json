@@ -1,0 +1,11 @@
+{
+  "kernel": "pascalcoimbra/pasture-studies",
+  "version_label_requested": "v8",
+  "current_version_number": 8,
+  "private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "language": "python",
+  "kernel_type": "notebook"
+}

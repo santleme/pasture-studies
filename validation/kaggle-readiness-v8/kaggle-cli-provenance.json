@@ -1,0 +1,8 @@
+{
+  "cli_version_reported": "2.2.4",
+  "source_commit": "6894864ff4095cf98e9e36d3a694ff5fc9ba3818",
+  "source_origin": "https://github.com/Kaggle/kaggle-cli.git",
+  "versioned_pull_fix": "Kaggle/kaggle-cli PR #1201, merged to main; source uses version_label=vN and upstream PR reports live API validation",
+  "isolated_executable": "$HOME/.cache/pasture-kaggle-cli/venv-6894864ff4095cf98e9e36d3a694ff5fc9ba3818/bin/kaggle",
+  "no_run_help_advertised": true
+}

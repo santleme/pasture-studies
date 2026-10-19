@@ -1,0 +1,59 @@
+{
+  "benchmark_eligible": false,
+  "files": [
+    {
+      "path": "readiness-ddp/readiness-only/a2c/LATEST",
+      "sha256": "85d625a0123db36cb6f5c5bbb5599f9eaa8d7bb8dd6aa207f53a11eb864de3dc",
+      "size_bytes": 20
+    },
+    {
+      "path": "readiness-ddp/readiness-only/a2c/generation-00000001/manifest.json",
+      "sha256": "172c1cda22832f07cf64fae8604a96b132112324c480fc6bcf51ccc173d9192b",
+      "size_bytes": 485
+    },
+    {
+      "path": "readiness-ddp/readiness-only/a2c/generation-00000001/training.pt",
+      "sha256": "a663ef490e5ae4d200ad358d93dba7fb6da68e2de22172021151e329963bd90c",
+      "size_bytes": 18873
+    },
+    {
+      "path": "readiness-ddp/readiness-only/a2c/generation-00000002/manifest.json",
+      "sha256": "31236fbe83afffdb489a42c89edef8c9f8fc4e8ef8f100012d1eb84251be1f6e",
+      "size_bytes": 485
+    },
+    {
+      "path": "readiness-ddp/readiness-only/a2c/generation-00000002/training.pt",
+      "sha256": "33f76e93205bc382181e56438cc87cdeea16d8659cc7a454708352cab81fc25e",
+      "size_bytes": 18937
+    },
+    {
+      "path": "readiness-ddp/readiness-only/a2c/readiness-evidence.json",
+      "sha256": "b2bbf59768c76c1b09b8729e593e62f7c45d9049b7cc02467df8d8571098fe2a",
+      "size_bytes": 3549
+    },
+    {
+      "path": "readiness-report.json",
+      "sha256": "17de69a9e2b7f337e485d420d2886733c098d608a9d03cf64da63c7b095b96b7",
+      "size_bytes": 923
+    }
+  ],
+  "locked_outcomes_accessed": false,
+  "mode": "READINESS",
+  "notebook_sha256": "d216d933bfde053e30c52797d3463863928c70d8fa4618ce10d2bf11efe34993",
+  "release_manifest_sha256": null,
+  "run_id": "readiness-8ae01edfc92a47c8b1bb41c0e87d9d37",
+  "runtime": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "gpu_count": 2,
+    "gpu_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "numpy": "2.1.3",
+    "python": "3.13.15",
+    "pytorch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "source_commit": "fc0b9e594ff7e2caa0aca94e6321b5a9b98ac2b9"
+}

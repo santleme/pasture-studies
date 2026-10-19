@@ -1,0 +1,20 @@
+{
+  "algorithm": "a2c",
+  "config": {
+    "algorithm": "a2c",
+    "batch_episodes": 16,
+    "device_class": "cuda",
+    "episodes": 32,
+    "evaluation": false,
+    "locked_split_access": false,
+    "metrics_promotion": false,
+    "protocol": "readiness-ddp-v1",
+    "seed": 37331,
+    "updates": 2,
+    "world_size": 2
+  },
+  "format_version": 1,
+  "generation": 1,
+  "state_file": "training.pt",
+  "state_sha256": "a663ef490e5ae4d200ad358d93dba7fb6da68e2de22172021151e329963bd90c"
+}

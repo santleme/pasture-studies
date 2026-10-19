@@ -140,6 +140,36 @@ class KaggleDeployTests(unittest.TestCase):
                 with self.assertRaises(deploy.DeploymentError):
                     deploy.bind_release(stage, release)
 
+    def test_bind_release_refuses_symlinked_detached_evidence_paths(self):
+        for symlink_kind in ("deployment", "release_manifest"):
+            with self.subTest(path=symlink_kind), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                runtime = {"python": "3.13.15", "numpy": "2.1.3", "pytorch": "2.11.0+cu128",
+                    "cuda_runtime": "12.8", "cuda_available": True, "gpu_count": 2,
+                    "gpu_names": ["Tesla T4", "Tesla T4"]}
+                runtime_path = root / "runtime.json"
+                runtime_path.write_text(json.dumps(runtime))
+                stage = root / "stage"
+                with patch.object(deploy, "_source_commit", return_value="a" * 40):
+                    deploy.prepare_release(stage, "sample_user", runtime_profile_path=runtime_path)
+                notebook = stage / deploy.NOTEBOOK.name
+                config = json.loads(deploy.deployment_record_path(stage).read_text())
+                manifest = {"source": {"commit_sha": "a" * 40}, "notebook": {
+                    "source_sha256": config["source_notebook_sha256"],
+                    "staged_sha256": hashlib.sha256(notebook.read_bytes()).hexdigest()}}
+                release = root / "release.json"
+                release.write_text(json.dumps(manifest))
+                victim = root / "victim.json"
+                victim.write_text("safe")
+                evidence_path = (deploy.deployment_record_path(stage) if symlink_kind == "deployment"
+                                 else deploy.detached_manifest_path(stage))
+                evidence_path.unlink(missing_ok=True)
+                evidence_path.symlink_to(victim)
+                with patch.object(deploy, "_manifest_digest", return_value="f" * 64):
+                    with self.assertRaises(deploy.DeploymentError):
+                        deploy.bind_release(stage, release)
+                self.assertEqual(victim.read_text(), "safe")
+
     def test_prepare_rejects_stale_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             stage = Path(tmp) / "stage"
@@ -161,26 +191,23 @@ class KaggleDeployTests(unittest.TestCase):
         self.assertEqual(run_mock.call_count, 2)
         self.assertEqual(run_mock.call_args_list[-1].args[0], ["kaggle", "kernels", "push", "--help"])
 
-    @patch.object(deploy, "write_publication_attestation", return_value=Path("attestation.json"))
+    @patch.object(deploy, "write_publication_attestation", return_value={"exact_match": True, "revision": 5})
     @patch.object(deploy, "check_cli", return_value=("9.0.0", "--no-run"))
-    @patch.object(deploy, "pull_and_compare", return_value={"exact_match": True, "revision": 5})
     @patch.object(deploy, "run")
-    def test_publish_no_run_then_numeric_remote_revision_compare(self, run_mock, compare_mock, cli_mock, attest_mock):
+    def test_publish_no_run_then_numeric_remote_revision_attestation(self, run_mock, cli_mock, attest_mock):
         run_mock.return_value = result("Kernel version 5 successfully saved without running. See https://www.kaggle.com/code/sample_user/pasture-studies")
         with tempfile.TemporaryDirectory() as tmp, patch.object(deploy, "_source_commit", return_value="a" * 40):
             stage = Path(tmp) / "stage"
             deploy.prepare(stage, "sample_user")
             result_doc = deploy.publish(stage)
             self.assertTrue(result_doc["exact_match"])
-            compare_mock.assert_called_once_with(stage, "sample_user/pasture-studies", 5)
-            attest_mock.assert_called_once()
+            attest_mock.assert_called_once_with(stage, 5, cli_version="9.0.0")
         self.assertEqual(run_mock.call_args.args[0][-1], "--no-run")
 
-    @patch.object(deploy, "write_publication_attestation", return_value=Path("attestation.json"))
+    @patch.object(deploy, "write_publication_attestation", return_value={"exact_match": True, "revision": 5})
     @patch.object(deploy, "check_cli", return_value=("2.2.4", "help"))
-    @patch.object(deploy, "pull_and_compare", return_value={"exact_match": True, "revision": 5})
     @patch.object(deploy, "run")
-    def test_execute_requires_separate_gpu_consent_and_source_mode(self, run_mock, compare_mock, cli_mock, attest_mock):
+    def test_execute_requires_separate_gpu_consent_and_source_mode(self, run_mock, cli_mock, attest_mock):
         run_mock.return_value = result("Kernel version 5 successfully pushed")
         with tempfile.TemporaryDirectory() as tmp, patch.object(deploy, "_source_commit", return_value="a" * 40):
             stage = Path(tmp) / "stage"
@@ -191,7 +218,7 @@ class KaggleDeployTests(unittest.TestCase):
                 deploy.execute(stage, mode="SMOKE", confirm_execution=True)
             deploy.execute(stage, mode="SMOKE", confirm_execution=True, confirm_gpu=True)
             self.assertEqual(run_mock.call_args.args[0][-2:], ["--accelerator", "NvidiaTeslaT4"])
-            compare_mock.assert_called_once_with(stage, "sample_user/pasture-studies", 5)
+            attest_mock.assert_called_once_with(stage, 5, cli_version="2.2.4")
 
     def test_revision_is_taken_from_exact_numeric_kaggle_push_output(self):
         self.assertEqual(deploy.revision_from_push_output("Kernel version 7 successfully pushed. Please check progress"), 7)
@@ -257,25 +284,68 @@ class KaggleDeployTests(unittest.TestCase):
             stage = parent / "staging"
             deploy.prepare(stage, "sample_user", mode="PREFLIGHT")
             config = json.loads(deploy.deployment_record_path(stage).read_text())
-            evidence = {"exact_match": True, "revision": 12, "source_commit": "a" * 40,
-                "notebook_sha256": config["notebook_sha256"], "remote_notebook_sha256": "c" * 64,
-                "notebook_content_sha256": "d" * 64, "remote_notebook_content_sha256": "d" * 64,
-                "raw_bytes_identical": False, "source_cells_sha256": "b" * 64}
-            attestation = deploy.write_publication_attestation(stage, evidence, cli_version="2.2.4")
+            def fake_run(args):
+                target = Path(args[args.index("--path") + 1]) / deploy.NOTEBOOK.name
+                target.write_bytes((stage / deploy.NOTEBOOK.name).read_bytes())
+                return result("pulled")
+            with patch.object(deploy, "run", side_effect=fake_run):
+                evidence = deploy.write_publication_attestation(stage, 12, cli_version="2.2.4")
+            attestation = Path(evidence["attestation_path"])
             self.assertEqual(attestation, parent / "staging-publication-attestation.json")
             self.assertFalse(attestation.parent == stage)
             record = json.loads(attestation.read_text())
             self.assertEqual(record["kernel_version"], 12)
             self.assertEqual(record["source_commit"], "a" * 40)
             self.assertEqual(record["staged_notebook_sha256"], config["notebook_sha256"])
-            self.assertEqual(record["remote_notebook_sha256"], "c" * 64)
-            self.assertEqual(record["canonical_notebook_content_sha256"], "d" * 64)
-            self.assertFalse(record["raw_notebook_bytes_identical"])
+            self.assertEqual(record["remote_notebook_sha256"], config["notebook_sha256"])
+            self.assertEqual(record["canonical_notebook_content_sha256"], evidence["notebook_content_sha256"])
+            self.assertTrue(record["raw_notebook_bytes_identical"])
             self.assertTrue(record["canonical_content_match"])
             self.assertNotIn("key", record)
-            evidence["remote_notebook_content_sha256"] = "e" * 64
-            with self.assertRaisesRegex(deploy.DeploymentError, "exact source-bound"):
-                deploy.write_publication_attestation(stage, evidence, cli_version="2.2.4")
+    def test_attestation_rejects_fabricated_evidence_and_staging_tampering(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp) / "stage"
+            deploy.prepare(stage, "sample_user", mode="PREFLIGHT")
+            with self.assertRaisesRegex(deploy.DeploymentError, "positive numeric version"):
+                deploy.write_publication_attestation(stage, 0, cli_version="2.2.4")
+            def fake_run(args):
+                target = Path(args[args.index("--path") + 1]) / deploy.NOTEBOOK.name
+                target.write_bytes((stage / deploy.NOTEBOOK.name).read_bytes())
+                return result("pulled")
+            with patch.object(deploy, "run", side_effect=fake_run):
+                deploy.write_publication_attestation(stage, 12, cli_version="2.2.4")
+            notebook = stage / deploy.NOTEBOOK.name
+            notebook.write_bytes(notebook.read_bytes() + b" ")
+            with patch.object(deploy, "run", side_effect=fake_run):
+                with self.assertRaisesRegex(deploy.DeploymentError, "exact staged notebook bytes"):
+                    deploy.write_publication_attestation(stage, 12, cli_version="2.2.4")
+
+    def test_attestation_never_follows_or_overwrites_existing_symlink(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            stage = parent / "stage"
+            deploy.prepare(stage, "sample_user", mode="PREFLIGHT")
+            victim = parent / "victim.txt"
+            victim.write_text("safe")
+            output = parent / "stage-publication-attestation.json"
+            output.symlink_to(victim)
+            def fake_run(args):
+                target = Path(args[args.index("--path") + 1]) / deploy.NOTEBOOK.name
+                target.write_bytes((stage / deploy.NOTEBOOK.name).read_bytes())
+                return result("pulled")
+            with patch.object(deploy, "run", side_effect=fake_run):
+                with self.assertRaisesRegex(deploy.DeploymentError, "Refusing to overwrite"):
+                    deploy.write_publication_attestation(stage, 12, cli_version="2.2.4")
+            self.assertEqual(victim.read_text(), "safe")
+
+    def test_notebook_hashing_rejects_duplicate_json_object_keys(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            notebook = Path(tmp) / "ambiguous.ipynb"
+            notebook.write_text('{"cells":[{"cell_type":"code","source":"tampered","source":"safe"}]}')
+            with self.assertRaisesRegex(deploy.DeploymentError, "ambiguous JSON"):
+                deploy._notebook_content_digest(notebook)
+            with self.assertRaisesRegex(deploy.DeploymentError, "ambiguous JSON"):
+                deploy._notebook_source_digest(notebook)
 
     @patch.object(deploy, "pull_and_compare", return_value={"exact_match": True,
         "source_cells_sha256": "b" * 64, "remote_notebook_sha256": "c" * 64})
@@ -297,6 +367,23 @@ class KaggleDeployTests(unittest.TestCase):
                 deploy.write_deployment_record(record, kernel="sample_user/pasture-studies", version="2.2.4",
                     kernel_version="latest", source_commit=deploy._source_commit(), mode="PREFLIGHT",
                     metadata_path=stage / "kernel-metadata.json")
+
+    def test_deployment_record_refuses_symlink_output(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            stage = root / "stage"
+            deploy.prepare(stage, "sample_user", mode="PREFLIGHT")
+            victim = root / "victim.json"
+            victim.write_text("safe")
+            output = root / "record.json"
+            output.symlink_to(victim)
+            with patch.object(deploy, "pull_and_compare") as compare_mock:
+                with self.assertRaisesRegex(deploy.DeploymentError, "must not be a symlink"):
+                    deploy.write_deployment_record(output, kernel="sample_user/pasture-studies", version="2.2.4",
+                        kernel_version="7", source_commit=deploy._source_commit(), mode="PREFLIGHT",
+                        metadata_path=stage / "kernel-metadata.json")
+            compare_mock.assert_not_called()
+            self.assertEqual(victim.read_text(), "safe")
 
     def test_artifact_manifest_hash_size_path_safety(self):
         with tempfile.TemporaryDirectory() as tmp:

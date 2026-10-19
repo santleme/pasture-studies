@@ -1,0 +1,10 @@
+{
+  "benchmark_eligible": false,
+  "checkpoint_promotion": false,
+  "locked_test_access": false,
+  "max_devices": 2,
+  "max_episodes": 32,
+  "max_updates": 2,
+  "outcome_analysis": false,
+  "task": "checkpoint_recovery"
+}

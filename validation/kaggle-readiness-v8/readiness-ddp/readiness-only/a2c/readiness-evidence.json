@@ -1,0 +1,117 @@
+{
+  "algorithm": "a2c",
+  "benchmark_eligible": false,
+  "episode_seed_derivation": "sha256(root,train-world,episode-index)",
+  "episodes": 32,
+  "evaluation_performed": false,
+  "locked_split_accessed": false,
+  "protocol": "readiness-ddp-v1",
+  "seed": 37331,
+  "updates": [
+    {
+      "benchmark_eligible": false,
+      "checkpoint_generation": "generation-00000001",
+      "checkpoint_manifest_sha256": "172c1cda22832f07cf64fae8604a96b132112324c480fc6bcf51ccc173d9192b",
+      "diagnostic_reward_sum_not_evaluation": -153.97549295425415,
+      "episode_ids_by_rank": [
+        {
+          "cuda_device_index": 0,
+          "cuda_device_name": "Tesla T4",
+          "device": "cuda:0",
+          "episode_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "gradient_finite": true,
+          "gradient_norm": 2.6388981342315674,
+          "model_digest": "53d79d1e1f9c6255228dba689fce639367a257ae77e8fe9744e032912f7beaf2",
+          "optimizer_step_changed_model": true,
+          "rank": 0
+        },
+        {
+          "cuda_device_index": 1,
+          "cuda_device_name": "Tesla T4",
+          "device": "cuda:1",
+          "episode_ids": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "gradient_finite": true,
+          "gradient_norm": 2.6388981342315674,
+          "model_digest": "53d79d1e1f9c6255228dba689fce639367a257ae77e8fe9744e032912f7beaf2",
+          "optimizer_step_changed_model": true,
+          "rank": 1
+        }
+      ],
+      "global_episode_count": 16,
+      "model_digest": "53d79d1e1f9c6255228dba689fce639367a257ae77e8fe9744e032912f7beaf2",
+      "training_state_sha256": "a663ef490e5ae4d200ad358d93dba7fb6da68e2de22172021151e329963bd90c",
+      "update": 1
+    },
+    {
+      "benchmark_eligible": false,
+      "checkpoint_generation": "generation-00000002",
+      "checkpoint_manifest_sha256": "31236fbe83afffdb489a42c89edef8c9f8fc4e8ef8f100012d1eb84251be1f6e",
+      "diagnostic_reward_sum_not_evaluation": -142.91080141067505,
+      "episode_ids_by_rank": [
+        {
+          "cuda_device_index": 0,
+          "cuda_device_name": "Tesla T4",
+          "device": "cuda:0",
+          "episode_ids": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "gradient_finite": true,
+          "gradient_norm": 2.5636417865753174,
+          "model_digest": "823fbb25a66c2b1eebb19aa516435c71188fc2a0dc28bb31189752a3d0d537e4",
+          "optimizer_step_changed_model": true,
+          "rank": 0
+        },
+        {
+          "cuda_device_index": 1,
+          "cuda_device_name": "Tesla T4",
+          "device": "cuda:1",
+          "episode_ids": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "gradient_finite": true,
+          "gradient_norm": 2.5636417865753174,
+          "model_digest": "823fbb25a66c2b1eebb19aa516435c71188fc2a0dc28bb31189752a3d0d537e4",
+          "optimizer_step_changed_model": true,
+          "rank": 1
+        }
+      ],
+      "global_episode_count": 16,
+      "model_digest": "823fbb25a66c2b1eebb19aa516435c71188fc2a0dc28bb31189752a3d0d537e4",
+      "training_state_sha256": "33f76e93205bc382181e56438cc87cdeea16d8659cc7a454708352cab81fc25e",
+      "update": 2
+    }
+  ],
+  "world_size": 2
+}

@@ -1,0 +1,16 @@
+{
+  "canonical_content_match": true,
+  "canonical_notebook_content_sha256": "ac89a049d13d099b87067be30272dc7b2c3e673f2afd262fdb9988c76c83671d",
+  "kaggle_cli_version": "2.2.4",
+  "kernel": "pascalcoimbra/pasture-studies",
+  "kernel_version": 8,
+  "mode": "READINESS",
+  "notebook_source_cells_sha256": "75fd535c8ae8dba865d527aa19d234592b9e0b122070db388f68c50b3a420204",
+  "raw_notebook_bytes_identical": false,
+  "recorded_at_utc": "2026-10-18T23:52:39.762614+00:00",
+  "release_manifest_sha256": "4c85eb477139951b9d4b77b9498cf2d3023f00865da752e18323b68b13e013db",
+  "remote_notebook_sha256": "ac89a049d13d099b87067be30272dc7b2c3e673f2afd262fdb9988c76c83671d",
+  "schema_version": 1,
+  "source_commit": "fc0b9e594ff7e2caa0aca94e6321b5a9b98ac2b9",
+  "staged_notebook_sha256": "a6e7df9797a786fe71e350f14b683722c4d62423ee9117d206eda6009c233c42"
+}

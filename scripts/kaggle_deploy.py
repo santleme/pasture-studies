@@ -10,6 +10,7 @@ import argparse
 import ast
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
@@ -29,6 +30,60 @@ READINESS_CONFIG_VALUE = {
     "max_devices": 2, "locked_test_access": False, "outcome_analysis": False,
     "benchmark_eligible": False, "checkpoint_promotion": False,
 }
+def _strict_notebook_json(path: Path) -> dict:
+    def reject_duplicate_keys(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"duplicate JSON key: {key}")
+            result[key] = value
+        return result
+
+    try:
+        value = json.loads(path.read_text(), object_pairs_hook=reject_duplicate_keys,
+                           parse_constant=lambda constant: (_ for _ in ()).throw(ValueError(constant)))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+        raise DeploymentError("Kaggle notebook is unreadable or has ambiguous JSON") from exc
+    if not isinstance(value, dict):
+        raise DeploymentError("Kaggle notebook must contain a JSON object")
+    return value
+
+
+def _write_new_file(path: Path, payload: bytes, *, mode: int = 0o600) -> None:
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    try:
+        fd = os.open(path, flags, mode)
+    except FileExistsError as exc:
+        raise DeploymentError(f"Refusing to overwrite existing evidence path: {path.name}") from exc
+    with os.fdopen(fd, "wb") as stream:
+        stream.write(payload)
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def _atomic_replace_file(path: Path, payload: bytes, *, mode: int = 0o600) -> None:
+    """Replace a file atomically without following a raced final-component symlink."""
+    fd, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    temporary = Path(temporary_name)
+    try:
+        os.fchmod(fd, mode)
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+        directory_fd = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    finally:
+        try:
+            temporary.unlink()
+        except FileNotFoundError:
+            pass
 
 
 def deployment_record_path(folder: Path) -> Path:
@@ -191,11 +246,11 @@ def _write_staging(folder: Path, owner: str, deployment: dict) -> Path:
     staged_bytes = _stage_notebook_bytes(_committed_notebook_bytes(deployment["source_commit"]), deployment)
     (folder / NOTEBOOK.name).write_bytes(staged_bytes)
     staged_hash = hashlib.sha256(staged_bytes).hexdigest()
-    deployment_record_path(folder).write_text(json.dumps({**deployment, "notebook_sha256": staged_hash}, sort_keys=True, indent=2) + "\n")
+    _write_new_file(deployment_record_path(folder), (json.dumps({**deployment, "notebook_sha256": staged_hash}, sort_keys=True, indent=2) + "\n").encode())
     target = folder / "kernel-metadata.json"
     target.write_text(json.dumps(metadata_for(owner, mode=deployment["mode"], gpu=gpu), indent=2) + "\n")
     if deployment["mode"] == "READINESS":
-        readiness_config_path(folder).write_text(json.dumps(READINESS_CONFIG_VALUE, sort_keys=True, indent=2) + "\n")
+        _write_new_file(readiness_config_path(folder), (json.dumps(READINESS_CONFIG_VALUE, sort_keys=True, indent=2) + "\n").encode())
     return target
 
 
@@ -245,6 +300,11 @@ def bind_release(folder: Path, release_manifest: Path) -> str:
         raise DeploymentError("Staging folder must be a real directory")
     metadata_path = folder / "kernel-metadata.json"
     config_path = deployment_record_path(folder)
+    manifest_output = detached_manifest_path(folder)
+    if config_path.is_symlink():
+        raise DeploymentError("Deployment config path must not be a symlink")
+    if manifest_output.exists() or manifest_output.is_symlink():
+        raise DeploymentError("Detached release-manifest path already exists")
     try:
         metadata = json.loads(metadata_path.read_text())
         config = json.loads(config_path.read_text())
@@ -262,8 +322,8 @@ def bind_release(folder: Path, release_manifest: Path) -> str:
             or staged.get("source_sha256") != config.get("source_notebook_sha256")):
         raise DeploymentError("Release manifest does not bind the exact source and staged notebook")
     config["release_manifest_sha256"] = manifest_sha
-    config_path.write_text(json.dumps(config, sort_keys=True, indent=2) + "\n")
-    detached_manifest_path(folder).write_bytes(release_manifest.read_bytes())
+    _atomic_replace_file(config_path, (json.dumps(config, sort_keys=True, indent=2) + "\n").encode())
+    _write_new_file(manifest_output, release_manifest.read_bytes())
     validate_staging_folder(folder)
     return manifest_sha
 
@@ -279,9 +339,7 @@ def publish(folder: Path) -> None:
     result = run(["kaggle", "kernels", "push", "--path", str(folder), "--no-run"])
     metadata, _ = validate_staging_folder(folder)
     revision = revision_from_push_output(result.stdout)
-    evidence = pull_and_compare(folder, metadata["id"], revision)
-    evidence["attestation_path"] = str(write_publication_attestation(folder, evidence, cli_version=version))
-    return evidence
+    return write_publication_attestation(folder, revision, cli_version=version)
 
 
 def revision_from_push_output(output: str) -> int:
@@ -300,10 +358,7 @@ def revision_from_push_output(output: str) -> int:
 
 
 def _notebook_source_digest(path: Path) -> str:
-    try:
-        notebook = json.loads(path.read_text())
-    except (OSError, json.JSONDecodeError) as exc:
-        raise DeploymentError("Pulled Kaggle notebook is unreadable") from exc
+    notebook = _strict_notebook_json(path)
     sources = []
     for cell in notebook.get("cells", []):
         source = cell.get("source", "")
@@ -313,10 +368,7 @@ def _notebook_source_digest(path: Path) -> str:
 
 def _notebook_content_digest(path: Path) -> str:
     """Hash all notebook content after normalizing API source list/string encoding."""
-    try:
-        notebook = json.loads(path.read_text())
-    except (OSError, json.JSONDecodeError) as exc:
-        raise DeploymentError("Kaggle notebook content is unreadable") from exc
+    notebook = _strict_notebook_json(path)
     if not isinstance(notebook, dict) or not isinstance(notebook.get("cells"), list):
         raise DeploymentError("Kaggle notebook has no valid cell collection")
     for cell in notebook["cells"]:
@@ -378,14 +430,23 @@ def pull_and_compare(folder: Path, kernel: str, revision: int) -> dict:
             "exact_match": True}
 
 
-def write_publication_attestation(folder: Path, evidence: dict, *, cli_version: str) -> Path:
-    """Persist detached, credential-free evidence after exact-version pull comparison."""
-    config = json.loads(deployment_record_path(folder).read_text())
+def write_publication_attestation(folder: Path, revision: int, *, cli_version: str) -> dict:
+    """Pull the exact numeric revision, compare it, then persist the attestation."""
     metadata = json.loads((folder / "kernel-metadata.json").read_text())
+    evidence = pull_and_compare(folder, metadata["id"], revision)
+    config = json.loads(deployment_record_path(folder).read_text())
+    _, staged_notebook = validate_staging_folder(folder)
+    local_raw = hashlib.sha256(staged_notebook.read_bytes()).hexdigest()
+    local_content = _notebook_content_digest(staged_notebook)
+    local_cells = _notebook_source_digest(staged_notebook)
     raw_hashes_match = evidence.get("remote_notebook_sha256") == evidence.get("notebook_sha256")
     if (evidence.get("exact_match") is not True
+            or evidence.get("kernel") != metadata.get("id")
             or evidence.get("source_commit") != config.get("source_commit")
             or evidence.get("notebook_sha256") != config.get("notebook_sha256")
+            or evidence.get("notebook_sha256") != local_raw
+            or evidence.get("notebook_content_sha256") != local_content
+            or evidence.get("source_cells_sha256") != local_cells
             or evidence.get("notebook_content_sha256") != evidence.get("remote_notebook_content_sha256")
             or evidence.get("raw_bytes_identical") is not raw_hashes_match
             or not isinstance(evidence.get("revision"), int) or evidence["revision"] <= 0
@@ -407,8 +468,11 @@ def write_publication_attestation(folder: Path, evidence: dict, *, cli_version: 
         "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
     }
     output = folder.parent / f"{folder.name}-publication-attestation.json"
-    output.write_text(json.dumps(record, sort_keys=True, indent=2) + "\n")
-    return output
+    payload = (json.dumps(record, sort_keys=True, indent=2) + "\n").encode("utf-8")
+    _write_new_file(output, payload)
+    result = dict(evidence)
+    result["attestation_path"] = str(output)
+    return result
 
 
 
@@ -540,9 +604,7 @@ def execute(folder: Path, *, mode: str, confirm_execution: bool, confirm_gpu: bo
     result = run(args)
     revision = revision_from_push_output(result.stdout)
     version, _ = check_cli()
-    evidence = pull_and_compare(folder, metadata["id"], revision)
-    evidence["attestation_path"] = str(write_publication_attestation(folder, evidence, cli_version=version))
-    return evidence
+    return write_publication_attestation(folder, revision, cli_version=version)
 
 
 def retrieve(kind: str, kernel: str, destination: Path | None = None) -> str:
@@ -604,6 +666,8 @@ def verify_manifest(manifest_path: Path, artifact_root: Path) -> list[str]:
 
 def write_deployment_record(path: Path, *, kernel: str, version: str, source_commit: str,
                             kernel_version: str, mode: str, metadata_path: Path) -> None:
+    if path.is_symlink():
+        raise DeploymentError("Deployment record output path must not be a symlink")
     validate_mode(mode)
     if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
         raise DeploymentError("source_commit must be a full 40-character Git SHA-1")
@@ -638,7 +702,7 @@ def write_deployment_record(path: Path, *, kernel: str, version: str, source_com
         "remote_exact_content_match": remote["exact_match"],
         "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
     }
-    path.write_text(json.dumps(record, indent=2) + "\n")
+    _atomic_replace_file(path, (json.dumps(record, indent=2) + "\n").encode())
 
 
 def preflight() -> dict:
