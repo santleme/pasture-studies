@@ -1,0 +1,38 @@
+{
+  "claimTokenSha256": "15f21c3b97bf9ed915eb1486d548936f724ac642b9dbe154a4d3f2cef8458bab",
+  "summary": "Added descriptive aggregate reporting for paired neural-policy evaluations, with matched baseline deltas and novel-family generalization summaries; documents validation-only workflow and locked-test boundary.",
+  "taskId": "3",
+  "teamName": "implement-the-pasture-98bb716e",
+  "unverified": [
+    "Python type-check/lint not run: mypy, ruff, and pycodestyle are unavailable.",
+    "PyTorch evaluator end-to-end tests skipped because optional PyTorch is not installed.",
+    "Full suite is not green for the environment/pre-existing failures listed above."
+  ],
+  "verification": [
+    {
+      "command": "python3 -m py_compile validation/summarize_neural_benchmark.py tests/test_neural_benchmark_summary.py",
+      "output": "Both files compiled successfully.",
+      "result": "passed"
+    },
+    {
+      "command": "python3 -m unittest tests.test_neural_benchmark_summary -v",
+      "output": "Ran 2 tests; OK. Covers paired aggregates, baseline deltas, generalization gap, locked-test rejection, incomplete pairs and duplicates.",
+      "result": "passed"
+    },
+    {
+      "command": "python3 validation/summarize_neural_benchmark.py --input <synthetic fixture> --output <temp summary>",
+      "output": "CLI emitted summary with 4 families and validation split; output assertions passed.",
+      "result": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "output": "No whitespace errors.",
+      "result": "passed"
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -v",
+      "output": "174 tests: 50 skipped because optional dependencies are absent; 4 errors (missing jupyter_client, absent ignored .omx/research fixture, and profile report KeyError parity_pass) plus 1 preregistration failure because worktree parent path itself contains .omx and the test guard rejects all paths containing that component.",
+      "result": "failed"
+    }
+  ]
+}

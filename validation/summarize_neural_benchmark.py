@@ -84,7 +84,7 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
             }
         paired_deltas = {}
         for comparator in POLICIES[1:]:
-            differences = [float(indexed[(family, seed, "trained")] ["total_reward"])
+            differences = [float(indexed[(family, seed, "trained")]["total_reward"])
                            - float(indexed[(family, seed, comparator)]["total_reward"])
                            for f, seed in worlds if f == family]
             paired_deltas[f"trained_minus_{comparator}"] = {
