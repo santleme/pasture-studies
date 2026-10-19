@@ -28,7 +28,9 @@ class AdditionalExecutionEntrypointTests(unittest.TestCase):
             self.assert_local_full_job_denied(
                 [sys.executable, "-m", "validation.evaluate_torch_mvp1",
                  "--generation", str(Path(directory) / "missing-generation"),
-                 "--algorithm", "a2c", "--seed", "11", "--output", str(output)],
+                 "--algorithm", "a2c", "--seed", "11",
+                 "--seed-manifest", str(ROOT / "validation/kaggle-mvp1/preregistration.json"),
+                 "--output", str(output)],
                 output,
             )
 
