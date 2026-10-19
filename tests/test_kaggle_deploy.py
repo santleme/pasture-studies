@@ -48,6 +48,11 @@ class KaggleDeployTests(unittest.TestCase):
         )
         self.assertIn('metrics_path = exploratory_root / "exploratory-only" / "metrics.jsonl"', code)
         self.assertNotIn('metrics_path = learner_dir / "metrics.jsonl"', code)
+        self.assertIn('"--filter=blob:none"', code)
+        self.assertIn('"sparse-checkout"', code)
+        self.assertIn('"/validation/train_torch_mvp1.py"', code)
+        self.assertIn('"/farm_sim/"', code)
+        self.assertIn('reserved evaluation artifacts', code)
 
     def test_direct_cli_imports_release_gate_from_repository_root(self):
         with tempfile.TemporaryDirectory() as tmp:
