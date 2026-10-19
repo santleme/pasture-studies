@@ -1,0 +1,123 @@
+{
+  "approval": {
+    "explicit_user_authorization_for_outcomes": false,
+    "independent_review": "PENDING",
+    "locked_test_access_authorized": false,
+    "mvp2_started": false,
+    "pilot_authorized": false,
+    "training_outcomes_authorized": false
+  },
+  "candidate_id": "pasture-torch-experimental-analysis-v2-candidate",
+  "candidate_sha256": "0f19a1f709ab7e66cdac089ce4acf90b51318f3a42162423c9e895e5e166b3cb",
+  "formal_dependency_baseline": {
+    "path": "requirements-training.txt",
+    "pins": [
+      "numpy==1.26.4",
+      "torch==2.14.0"
+    ],
+    "role": "historical scientific baseline; unchanged and not installed into observed Kaggle Python 3.13 runtime",
+    "sha256": "72b6709bb5d0e72fd99cddf5a11e125136e943d82f563dc7c74e5f0c3aeeeca1"
+  },
+  "historical_protocol": {
+    "acceptance_thresholds_sha256": "579b892266b4638f8bd78d893f2a852e0a519b422567ac71dd3789128fb867f3",
+    "historical_failure_evidence_mutated": false,
+    "manifest_sha256": "484d57b94b288f903766870767e547081c5f2df70dec5fb8dce92c8e31edc270",
+    "preregistration_file_sha256": "6836018714dd53a0723c4be404025e58e5f5c7f1531f436d51f21c2c235ca471",
+    "protocol_id": "pasture-torch-mvp1-preregistered-v1",
+    "rewards_changed": false,
+    "seed_splits_sha256": "5aebbcdd9976d78392fbe8ce0346ab453649dd373e3101e38648304e47dc73ef",
+    "thresholds_changed": false,
+    "training_config_sha256": "1d2ed7bfdaf94fda8eb1ac0b673db7d088557351eaa206729417f625076bb289"
+  },
+  "implementation_delta": {
+    "locked_payloads_read": false,
+    "new_components": [
+      "plan-only precision-pilot schedule/source validator plus synthetic-only sample-SD test helper; production execution and artifact writing remain disabled",
+      "crossed checkpoint-by-world bootstrap and Holm utilities with fail-closed resolution handling",
+      "cohort analysis for exact nine utility and four cognition tests plus descriptive diagnostics",
+      "fail-closed cohort loader that authenticates/audits before payload reads and verifies post-evaluation artifact bytes; current v1 freeze/trusted-root blockers remain",
+      "post-evaluation hash-chained audit records bind serialized locked evaluator artifacts to authorization, checkpoint, source analysis, and access record",
+      "separately versioned v2 precision-pilot finalizer rejecting caller SDs and requiring approved signed authorization, independent run attestation, exact source/release/runtime/schedule bindings, masked recomputation, and pre-read audit; production trust remains disabled"
+    ],
+    "no_real_outcomes_generated": true,
+    "no_training_performed": true
+  },
+  "kaggle_baseline": {
+    "kernel": "pascalcoimbra/pasture-studies",
+    "mode": "READINESS",
+    "notebook_content_sha256": "ac89a049d13d099b87067be30272dc7b2c3e673f2afd262fdb9988c76c83671d",
+    "notebook_source_cells_sha256": "75fd535c8ae8dba865d527aa19d234592b9e0b122070db388f68c50b3a420204",
+    "private": true,
+    "publication_attestation_sha256": "63a1c922730e88cc9477d592c90d416372214bc511d4e09a04e3a6c90e15ab2f",
+    "publication_version": 8,
+    "release_manifest_sha256": "4c85eb477139951b9d4b77b9498cf2d3023f00865da752e18323b68b13e013db",
+    "remote_notebook_sha256": "ac89a049d13d099b87067be30272dc7b2c3e673f2afd262fdb9988c76c83671d",
+    "source_commit_sha": "fc0b9e594ff7e2caa0aca94e6321b5a9b98ac2b9",
+    "staged_notebook_sha256": "a6e7df9797a786fe71e350f14b683722c4d62423ee9117d206eda6009c233c42",
+    "status": "COMPLETE"
+  },
+  "proposed_analysis_config": {
+    "bootstrap_method": "paired two-way crossed checkpoint × world resampling",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20261018,
+    "status": "draft; must be reviewed and frozen before any locked outcomes; not an acceptance-threshold change"
+  },
+  "provenance": {
+    "base_source_commit_sha": "8fd332d5dc5780897a3abcf3b4abf4568a0f4946",
+    "base_worktree_clean": false,
+    "note": "Draft source hashes rebound during integration to the merged local implementation. This is not a release commit; independent review and signed approval remain absent, and no execution is authorized.",
+    "source_set_sha256": "161caa01b52e153ffc640fb3d60b163b9ba12590c4bc26f997245979f31496c1",
+    "source_sha256": {
+      "docs/kaggle-training.md": "6fac5a5520f6a31ace9f5af66f5f974058f9f2fc6c292531835f9721084ba5c9",
+      "farm_sim/memory.py": "61d860b3ed9730a1867145205a2cd24f08cbf0de13f24067447e2c5c4e97c217",
+      "farm_sim/model.py": "ac45c70d24a1bc6786deb1706318914d22d77ab4e63dc56e8dc1fcf3afbfbfb3",
+      "farm_sim/navigation.py": "00d3980ffb49d4db0e0d238a7b2a5c3da11c720f90a415deeaa083ea901ee332",
+      "farm_sim/perception.py": "fd066429ba010d2e29e02c07199d626aa0d923f1758121336e67a29d1191bf10",
+      "farm_sim/physiology.py": "a87e37413b218fea76e672964c861083a8f8196e1f95081ef078cf7381aec5b7",
+      "farm_sim/policy.py": "194523eccb4e04e8b5a4086370093365d0f6cbc737e023de56d904e9a3959a63",
+      "farm_sim/simulation.py": "24906e568c69b64296558a360f63a3cf51ef181471c17e1ab452d176e03a5c88",
+      "farm_sim/torch_checkpoint.py": "f1c3ac8d1b8141fa6cb6a4aa82171aa6eb7d804cf93a41447e39ab74ca8aabe4",
+      "farm_sim/torch_training.py": "b7f97174a8edaad4453b81bc7da271f48c57b049d0c0c84007501864a297435c",
+      "notebooks/pasture_studies_kaggle.ipynb": "0d3215a07b9dde1ef54be3ca8353cfa4d7b9c03f3ea758cc246d8ec1003c65a2",
+      "requirements-training.txt": "72b6709bb5d0e72fd99cddf5a11e125136e943d82f563dc7c74e5f0c3aeeeca1",
+      "tests/test_torch_cohort_analysis.py": "acbafd1aa82387c2c336213be0a10c6462a6af2e1414dc5eed0c4eeb167b987b",
+      "tests/test_torch_evaluation.py": "0ad3c66ba5e9a64a5673c8793f8c5f4aae40d6a2e876116a6a31e28269c8b26d",
+      "tests/test_torch_locked_statistics.py": "2d6ab58c5372891c5398ac12b7e131198055d1c54df9fd3adf3bae1030f09be2",
+      "tests/test_torch_precision_pilot.py": "a500879bb7b530cdd15a8a5fc3a3e7aa0c5da30336d5e22d01d2b6920f399ab9",
+      "tests/test_torch_precision_pilot_v2.py": "c0f1bf16483d1619b90f11b317e127a8bb9ad84789608b6801f38c71cf14b593",
+      "tests/test_torch_release_candidate.py": "f61816f2cfaebeb5b40b61d26f85b491f6da56817963839e0748c635ca68dd2d",
+      "validation/KAGGLE_EXPERIMENTAL_RELEASE_FOLLOWUP_REPORT.md": "9bd681657eda3a47229c633df4164ecd396f82c5e1a11aa5772ecd5269f39785",
+      "validation/analyze_torch_cohort.py": "d6dec4a9c2bfeaade599b9c4d8e3550cff2599eb869fc97731882ff049f84c43",
+      "validation/benchmark_torch_fixed_corpus.py": "ddccef6467479f9afaf9dd9319e8da910e59c2927a4ba6e46a3c8f01b0126c5a",
+      "validation/evaluate_torch_mvp1.py": "ad7c1ff4e30e8b36af67e622cc7769dc710821a6fa3cbec42ee13e2963bb1eee",
+      "validation/finalize_precision_pilot_v2.py": "98a7a1e4aed363fcf967b2152c9913f46e73ed84c392154880ca0cbdc30a1e59",
+      "validation/preregister_torch_mvp1.py": "16752d8fad6fd97befdaace7a7c45776fb3b02d94f86a03275675abfb82a617d",
+      "validation/run_torch_precision_pilot.py": "cbe1d518dc68abfdd33d722eef8181f5fa074cf509c16d52c50be4fb47d30075",
+      "validation/torch_locked_statistics.py": "b7e198b46e20a8a37ed3b8f22292cefa8d86c72b27075e80c621faa2419fe187",
+      "validation/train_torch_mvp1.py": "43c4d812919730775bcebff7647598fcaf1ddc9219eeb9352936e957006ecbf2"
+    }
+  },
+  "release_eligible": false,
+  "runtime_profile_observed": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "gpu_count": 2,
+    "gpu_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "numpy": "2.1.3",
+    "python": "3.13.15",
+    "pytorch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "status": "DRAFT_REVIEW_REQUIRED_NO_OUTCOMES",
+  "unresolved_release_gates": [
+    "new implementation source is not in an approved clean source commit or Kaggle notebook publication",
+    "historical v1 preregistration and finalizer do not bind the new pilot/statistics/cohort sources or verify the output-sidecar chain; do not use v1 finalizer for real pilot outputs",
+    "cohort loader cannot authorize: trusted signer allowlist empty; v1 freeze omits new analysis hashes and validation-selected cognition arm",
+    "Kaggle checkpoint recovery after kernel/session loss is unverified",
+    "full matched training, held-out outcomes, locked analysis, CUDA performance gates remain unrun",
+    "independent review and explicit authorization are pending"
+  ]
+}

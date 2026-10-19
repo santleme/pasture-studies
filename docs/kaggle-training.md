@@ -225,3 +225,37 @@ python3 scripts/kaggle_deploy.py execute \
 Iteration-2 outputs are E/F-only; create a combined A-F checkpoint manifest from the verified A-D and E/F final generations and pass it to `validation.compare_exploratory_checkpoints` with the same `9483999` evaluation root to produce a fully common-world six-condition report. Never copy any formal/locked artifacts into this exploratory directory.
 
 If a run is interrupted, the trainer commits a checkpoint generation after each update and resumes from the per-job `LATEST` pointer when the same output directory is rerun. Kaggle output retrieval and the run manifest must be checked before attempting recovery. Count every started policy attempt against the 24-job ceiling. If the failed kernel does not expose its `/kaggle/working` checkpoint outputs, do not claim cross-session resume; report the external limitation and avoid re-running the entire suite if it would exceed the cap.
+
+
+## Experimental-analysis candidate (not approved for execution)
+
+`validation/protocols/pasture-study-analysis-v2-candidate.json` is a draft source-hash binding for the new masked-pilot/statistics/cohort-analysis code. Its canonical SHA-256 is stored in the file; it binds the current implementation sources and the prior Kaggle v8 notebook attestation, but marks the worktree dirty and is **not** a final clean-commit release manifest. Its authorization flags are all false. It does not modify `validation/kaggle-mvp1/preregistration.json`, the frozen acceptance thresholds, reward definitions, or historical failure evidence.
+
+The new components are:
+
+- `validation/run_torch_precision_pilot.py`: validates source-pin inclusion and prints an outcome-free schedule for source-bound manifests. It has no production episode execution or artifact-writing path; its only sample-SD helper is synthetic-test-only. Its command-line `--execute` path deliberately fails closed while the separately versioned candidate lacks independent approval and signed authorization. `--plan-only` does not run episodes.
+- `validation/finalize_precision_pilot_v2.py`: the separate v2 finalizer accepts a distinct signed protocol-review approval, signed outcome authorization, independent run attestation, exact raw cell results, release binding, and pending manifest—not caller-supplied SDs. It verifies the exact allowlisted key bytes (without reopening the source path), fingerprints canonical DER key identity so PEM re-encoding cannot disguise signer reuse, requires three distinct signer keys, and uses a code-pinned audit-store path rather than a caller-selected path to prevent trivial authorization replay. That path still must be provisioned on independently protected durable append-only storage; the hash chain alone cannot prevent truncation or replacement. All three code-pinned trust-root allowlists remain empty; the draft candidate is unapproved, so production finalization remains unavailable. Synthetic Ed25519 fixtures test synthetic results only.
+- `validation/torch_locked_statistics.py`: deterministic two-way crossed checkpoint × world bootstrap, centered one-sided bootstrap p-values, Holm step-down adjustment, and Holm-inverted lower bounds. If no Holm-adjusted rejection is possible at the available bootstrap resolution, the lower bound is `null`, not an artificial exact bound.
+- `validation/analyze_torch_cohort.py`: pure analysis of supplied evaluator documents, validates paired cohort completeness and explicit source/checkpoint/selection/audit bindings, enforces the nine utility and four cognition hypotheses, and retains descriptive action-collapse, invalid-action, reward-trajectory, navigation, physiology, and resource diagnostics. Its guarded loader authenticates and audits before reading outcome files, then verifies exact file bytes against post-evaluation audit digests; it still fails closed for the current v1 freeze and empty trusted-root allowlist.
+
+Synthetic-only implementation tests:
+
+```bash
+.venv/bin/python -m unittest \
+  tests.test_torch_precision_pilot \
+  tests.test_torch_locked_statistics \
+  tests.test_torch_cohort_analysis \
+  tests.test_torch_release_candidate -v
+```
+
+The current historical v1 preregistration does not source-bind the new runner, statistical helpers, or cohort analyzer. Therefore this plan-only command is expected to reject v1 rather than permit execution:
+
+```bash
+sha256sum validation/kaggle-mvp1/preregistration.json
+.venv/bin/python validation/run_torch_precision_pilot.py \
+  --manifest validation/kaggle-mvp1/preregistration.json \
+  --manifest-sha256 <exact-file-sha256> \
+  --output /tmp/pasture-masked-pilot.json --plan-only
+```
+
+Do not regenerate or overwrite the historical v1 attestation to make this command pass. The v2 finalizer is also not authorized for production use: its signer allowlists are empty, the current candidate is unapproved, the v2 production pilot executor is intentionally absent, and the audit chain needs protected storage against replacement. Until independent protocol review, explicit governance authorization, a clean source commit, signed release and run attestation, and durable audit storage exist, keep pilot execution, full `EXPERIMENT`, `FULL_VALIDATION`, held-out scientific evaluation, and locked analysis unavailable. There is intentionally no Kaggle GPU execution command for those modes in this candidate; the existing commands above only publish/run PREFLIGHT, SMOKE, or READINESS.

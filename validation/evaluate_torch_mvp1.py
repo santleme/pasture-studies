@@ -605,8 +605,31 @@ def evaluate(generation: str | Path, *, algorithm: str, seed: int, eval_seed: in
     output_path = Path(output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n")
+    artifact_audit_hash = None
+    if split_name == "locked_test":
+        # Bind the exact serialized evaluator output after it has been written.
+        # The pre-evaluation access record alone is not evidence that a later
+        # file at this path is the one produced by this evaluation.
+        artifact_audit_hash = append_locked_access_audit(access_audit_path, {
+            "schema_version": 1,
+            "request_identity": request_identity or uuid.uuid4().hex,
+            "recorded_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "action": "locked_test_evaluation_artifact_committed",
+            "authorization_id": locked_binding["authorization_id"],
+            "authorization_sha256": locked_binding["authorization_sha256"],
+            "trusted_root_sha256": locked_binding["trusted_root_sha256"],
+            "preregistration_manifest_sha256": manifest_doc["manifest_sha256"],
+            "selected_checkpoint_key": f"{algorithm}:{seed}",
+            "selected_checkpoint_sha256": locked_binding["checkpoint_binding"]["checkpoint_sha256"],
+            "selected_checkpoint_manifest_sha256": locked_binding["checkpoint_binding"]["checkpoint_manifest_sha256"],
+            "analysis_sha256": locked_binding["checkpoint_binding"]["analysis_sha256"],
+            "evaluation_artifact_sha256": sha_file(output_path),
+            "evaluation_artifact_name": output_path.name,
+            "evaluation_access_record_sha256": locked_binding["access_audit_record_sha256"],
+        })
     return {"output": str(output_path), "episodes": len(rows), "cognition_channels": list(doc["cognition_influence"]["contrasts"]),
-            "report_sha256": sha_file(output_path), "gpu_device": str(device)}
+            "report_sha256": sha_file(output_path), "artifact_audit_record_sha256": artifact_audit_hash,
+            "gpu_device": str(device)}
 
 
 def main(argv=None):

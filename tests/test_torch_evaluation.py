@@ -356,7 +356,7 @@ class TorchEvaluationTests(unittest.TestCase):
                          authorization_root_path=public_key, access_audit_path=audit_path,
                          request_identity="request-123")
             audit_rows = [json.loads(line) for line in audit_path.read_text().splitlines()]
-            self.assertEqual(len(audit_rows), 1)
+            self.assertEqual(len(audit_rows), 2)
             record = audit_rows[0]
             self.assertEqual(record["previous_record_sha256"], "0" * 64)
             body = {key: value for key, value in record.items() if key != "record_sha256"}
@@ -364,6 +364,12 @@ class TorchEvaluationTests(unittest.TestCase):
                 json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest())
             self.assertEqual(record["authorization_sha256"], sha_file(auth_path))
             self.assertEqual(record["trusted_root_sha256"], sha_file(public_key))
+            artifact_record = audit_rows[1]
+            self.assertEqual(artifact_record["action"], "locked_test_evaluation_artifact_committed")
+            self.assertEqual(artifact_record["evaluation_access_record_sha256"], record["record_sha256"])
+            self.assertEqual(artifact_record["evaluation_artifact_sha256"],
+                             sha_file(root / "authorized-eval.json"))
+            self.assertEqual(artifact_record["previous_record_sha256"], record["record_sha256"])
 
             with patch("validation.evaluate_torch_mvp1.TRUSTED_AUTHORIZATION_ROOT_SHA256",
                        frozenset({sha_file(public_key)})), \
