@@ -53,4 +53,4 @@ This is an exploratory software run only: no baseline comparison, causal interve
 
 ## Local regression verification
 
-After the run implementation and evidence were committed, the full local suite passed: `174 passed, 2 skipped, 146 subtests passed` (`pytest -q`, 82.29 s). The local CUDA environment is CPU-only; this result does not include a local GPU benchmark. The final work is on public branch `exploratory-a2c`; latest report/evidence commit: `cb026b3a0755b36671ec7d4bf2de4bc660bfaf63`.
+After the run implementation and evidence were committed, the full local suite passed: `174 passed, 2 skipped, 146 subtests passed` (`pytest -q`, 82.29 s). The local CUDA environment is CPU-only; this result does not include a local GPU benchmark. The report is on the public branch `exploratory-a2c`; the Kaggle training itself remains pinned to source commit `73e4ae05af06e14cc27901a54d0c2b652c1a73b7`.
