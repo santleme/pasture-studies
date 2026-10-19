@@ -40,12 +40,12 @@ Run the test suite:
 
 ## Training and benchmark execution boundary
 
-The simulator can also be exposed as a Gymnasium task without changing its runtime dependencies or transition logic. Install the separate optional stack and run a reproducible one-cow pilot followed by a joint five-cow PPO run; the command evaluates both against seeded random actions and writes models plus a comparison report under `artifacts/sb3-ppo/`:
+The simulator can also be exposed as a Gymnasium task without changing its runtime dependencies or transition logic. Full PPO training and evaluation are Kaggle-only. On a local development machine, `--smoke` runs a fixed 128-timestep, one-evaluation-episode check; without `--smoke` the command fails closed unless it detects the Kaggle runtime:
 
 ```sh
 python3 -m venv .venv-rl
 .venv-rl/bin/python -m pip install -r requirements-rl.txt
-.venv-rl/bin/python scripts/train_sb3_ppo.py --seed 11 --timesteps 50000 --evaluation-episodes 20
+.venv-rl/bin/python -m scripts.train_sb3_ppo --smoke
 ```
 
 The one-animal mode controls cow-1 and holds the other four to `walk`; joint mode controls all five with a shared policy and mean per-cow simulator reward. The 72-tick boundary is an artificial Gymnasium truncation, not a biological terminal state. This is an optional research comparison, does not replace the shipped NumPy checkpoint, and must not be interpreted as cattle validation. PettingZoo/TorchRL are not needed for this single-agent/joint-action interface.
