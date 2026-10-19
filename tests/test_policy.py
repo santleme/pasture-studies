@@ -3,7 +3,6 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
 
 import numpy as np
 
@@ -69,10 +68,7 @@ class PolicyTests(unittest.TestCase):
 
     def test_five_seed_empirical_learning_and_counterfactual_thresholds(self):
         with tempfile.TemporaryDirectory() as directory:
-            # This is a test fixture for the fixed training protocol; production
-            # CLI execution is separately required to run in Kaggle.
-            with patch("farm_sim.training.require_kaggle_for_full_workload"):
-                report = train_suite(directory)
+            report = train_suite(directory)
             self.assertEqual(report["algorithm"], ALGORITHM_DESCRIPTION)
             aggregate = report["aggregate"]
             self.assertEqual(report["training_seeds"], list(TRAINING_SEEDS))
