@@ -1,0 +1,4 @@
+# Optional Gymnasium/SB3 comparison stack for the local research pilot only.
+-r requirements-training.txt
+gymnasium==1.2.3
+stable-baselines3==2.7.1

@@ -90,6 +90,17 @@ class PastureGymEnvTests(unittest.TestCase):
             self.assertEqual(info["tick"], 1)
             env.close()
 
+    def test_training_cli_random_evaluation_supports_single_and_joint_modes(self):
+        from scripts.train_sb3_ppo import _evaluate
+
+        for joint in (False, True):
+            result = _evaluate(None, joint=joint, seed=17, episodes=1)
+            self.assertEqual(len(result["episode_returns"]), 1)
+            self.assertEqual(set(result["mean_return_by_animal"]), {f"cow-{i}" for i in range(1, 6)})
+            if not joint:
+                self.assertEqual(result["mean_return_by_animal"]["cow-1"], result["mean_return"])
+                self.assertEqual([result["mean_return_by_animal"][f"cow-{i}"] for i in range(2, 6)], [0.0] * 4)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -11,7 +11,11 @@ PastureEnv = None
 
 
 def _evaluate(model, *, joint: bool, seed: int, episodes: int) -> dict:
-    env = PastureEnv(joint=joint)
+    controlled_animals = 5 if joint else 1
+    env_class = PastureEnv
+    if env_class is None:
+        from farm_sim.gym_env import PastureEnv as env_class
+    env = env_class(controlled_animals=controlled_animals)
     returns = []
     per_animal = {f"cow-{index}": [] for index in range(1, 6)}
     for episode in range(episodes):
@@ -24,8 +28,8 @@ def _evaluate(model, *, joint: bool, seed: int, episodes: int) -> dict:
             action = env.action_space.sample() if model is None else model.predict(observation, deterministic=True)[0]
             observation, reward, terminated, truncated, info = env.step(action)
             total += reward
-            for animal, animal_reward in info["individual_rewards"].items():
-                animal_totals[animal] += animal_reward
+            for index, animal_reward in enumerate(info["individual_rewards"], start=1):
+                animal_totals[f"cow-{index}"] += animal_reward
             done = terminated or truncated
         returns.append(total)
         for animal, value in animal_totals.items():
@@ -66,7 +70,7 @@ def main() -> None:
               "timesteps_per_mode": args.timesteps, "evaluation_episodes": args.evaluation_episodes,
               "environment": "PastureEnv; synthetic physiology/rewards; no biological claim", "modes": {}}
     for mode, joint in (("one-animal", False), ("five-animal-joint", True)):
-        env = PastureEnv(joint=joint)
+        env = PastureEnv(controlled_animals=5 if joint else 1)
         env.reset(seed=args.seed)
         model = PPO("MlpPolicy", env, seed=args.seed, device="cpu", verbose=0)
         model.learn(total_timesteps=args.timesteps)

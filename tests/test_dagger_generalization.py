@@ -4,9 +4,11 @@ from dataclasses import replace
 import numpy as np
 
 from validation.dagger_generalization import (
-    GeneralizationCloner, GeneralizationEnv, TEST_DOMAINS, TRAIN_PROFILE,
+    ACTION_LIST, GeneralizationCloner, GeneralizationEnv, TEST_DOMAINS, TRAIN_PROFILE,
+    _ordered_navigation_outcomes,
     domain_for,
 )
+from farm_sim.model import Action
 
 
 def test_train_environment_profiles_do_not_include_unseen_test_values():
@@ -78,3 +80,19 @@ def test_joint_policy_cloner_returns_five_coordinated_actions():
     action, _ = model.predict(np.zeros(175, dtype=np.float32))
     assert action.shape == (5,)
     assert np.all((action >= 0) & (action < 6))
+
+
+def test_ordered_navigation_preview_matches_simulator_resource_commits():
+    env = GeneralizationEnv(agents=5, seed=29, profile="combined_unseen",
+                            observation="history_domain")
+    env.reset(seed=522)
+    actions = np.asarray([ACTION_LIST.index(Action.GRAZE)] * 5)
+    before = {name: row["forage_success"] for name, row in env.agent_behavior.items()}
+    expected = _ordered_navigation_outcomes(env.sim.world, actions)
+    env.step(actions)
+    actual_successes = sum(
+        env.agent_behavior[name]["forage_success"] - before[name]
+        for name in before)
+    assert actual_successes == sum(outcome == "success" for outcome in expected.values())
+    assert set(expected) == {f"cow-{i}" for i in range(1, 6)}
+    env.close()

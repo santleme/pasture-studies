@@ -317,6 +317,7 @@ def evaluate_domain(policy, *, agents, seeds, domain, observation="history_domai
                             refresh_observation=refresh_observation)
     teacher = BehaviorTeacher(env)
     episodes, disagreement = [], []
+    action_counts = {action.value: 0 for action in ACTION_LIST}
     failure_buckets = {"target_resource_unavailable": 0, "resource_not_visible": 0,
                        "high_need_action_disagreement": 0, "other_action_disagreement": 0,
                        "student_teacher_decisions": 0}
@@ -330,6 +331,8 @@ def evaluate_domain(policy, *, agents, seeds, domain, observation="history_domai
             model_obs = _mask_observation(obs, env, ablation)
             action = (labels.copy() if policy is None else np.asarray(
                 policy.predict(model_obs, deterministic=True)[0], dtype=np.int64).reshape(agents))
+            for action_index in action:
+                action_counts[ACTION_LIST[int(action_index)].value] += 1
             before_food = {k: v["forage_success"] for k, v in env.agent_behavior.items()}
             before_water = {k: v["water_success"] for k, v in env.agent_behavior.items()}
             world_before = env.sim.world
@@ -393,6 +396,9 @@ def evaluate_domain(policy, *, agents, seeds, domain, observation="history_domai
             "scenario": {"forage_sites": forage, "water_sites": water,
                          "regrowth_ticks": regrowth, "random_layout": random_layout},
             "per_agent_mean": metrics, "episodes": episodes,
+            "action_distribution": {
+                name: count / max(1, sum(action_counts.values()))
+                for name, count in action_counts.items()},
             "teacher_disagreement_rate": len(disagreement) / max(1, failure_buckets["student_teacher_decisions"]),
             "disagreement_examples": disagreement[:100], "causal_buckets": failure_buckets,
             "intervention": ablation}

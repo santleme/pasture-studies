@@ -1,0 +1,4 @@
+# Optional PettingZoo API/seed pilot only; no training stack required.
+pettingzoo==1.25.0
+gymnasium==1.2.3
+numpy==1.26.4
