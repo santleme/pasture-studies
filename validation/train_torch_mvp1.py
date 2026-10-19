@@ -36,17 +36,19 @@ EXPLORATORY_A2C_EPISODES = 256
 EXPLORATORY_A2C_EVAL_EPISODES = 5
 EXPLORATORY_BATCH_EPISODES = 512
 EXPLORATORY_BATCH_EVAL_EPISODES = 5
+EXPLORATORY_BATCH_STATE_REWARD_SCALE = 0.1
+EXPLORATORY_BATCH_DISCOUNT_FACTOR = 0.99
 EXPLORATORY_BATCH_SEEDS = (9483001, 9483002, 9483003)
 EXPLORATORY_BATCH_MAX_JOBS = 24
 EXPLORATORY_BATCH_VARIANTS = {
     "A": {"reward_variant": "original", "state_reward_scale": 0.1,
-          "normalize_advantage": False, "entropy_coefficient": 0.0},
+          "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 0.99},
     "B": {"reward_variant": "original", "state_reward_scale": 0.1,
-          "normalize_advantage": True, "entropy_coefficient": 0.01},
+          "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 0.99},
     "C": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
-          "normalize_advantage": False, "entropy_coefficient": 0.0},
+          "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 0.99},
     "D": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
-          "normalize_advantage": True, "entropy_coefficient": 0.01},
+          "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 0.99},
 }
 
 
@@ -55,6 +57,59 @@ def exploratory_batch_specs() -> list[dict]:
     return [{"variant": variant, **EXPLORATORY_BATCH_VARIANTS[variant], "seed": seed,
              "episodes": EXPLORATORY_BATCH_EPISODES}
             for variant in EXPLORATORY_BATCH_VARIANTS for seed in EXPLORATORY_BATCH_SEEDS]
+
+
+def profile_exploratory_step(*, device: str, output: Path, repeats: int = 2) -> dict:
+    """Measure one real 16-episode rollout/forward/backward batch; never step/save."""
+    torch = require_torch()
+    if device not in {"cpu", "cuda:0", "cuda:1"}:
+        raise ValueError("calibration device must be cpu, cuda:0, or cuda:1")
+    if device.startswith("cuda") and (not torch.cuda.is_available()
+            or int(device.split(":")[1]) >= torch.cuda.device_count()):
+        raise RuntimeError(f"calibration device {device} is unavailable")
+    if repeats not in {1, 2}:
+        raise ValueError("calibration uses one or two complete episode batches")
+    torch_device = torch.device(device)
+    model = ActorCritic(value_head=True, seed=EXPLORATORY_BATCH_SEEDS[0], dtype=torch.float32).to(torch_device)
+    model.eval()
+    rows = []
+    for repeat in range(repeats):
+        root_seed = EXPLORATORY_BATCH_SEEDS[0]
+        specs = [(derive_seed(root_seed, "profile-world", i), i) for i in range(BATCH_EPISODES)]
+        start = time.perf_counter()
+        trajectories = collect_episodes_batch(model, specs, root_seed=root_seed)
+        if device.startswith("cuda"):
+            torch.cuda.synchronize(device)
+        rollout_seconds = time.perf_counter() - start
+        start = time.perf_counter()
+        loss, stats = calculate_exploratory_loss(model, trajectories, "a2c",
+            reward_variant="original", state_reward_scale=EXPLORATORY_BATCH_STATE_REWARD_SCALE,
+            entropy_coefficient=0.0, normalize_advantage=False)
+        loss.backward()
+        if device.startswith("cuda"):
+            torch.cuda.synchronize(device)
+        forward_backward_seconds = time.perf_counter() - start
+        rows.append({"repeat": repeat, "episodes": BATCH_EPISODES,
+                     "decisions": BATCH_EPISODES * ROLLOUT_TICKS * 5,
+                     "rollout_seconds": rollout_seconds,
+                     "forward_backward_seconds": forward_backward_seconds,
+                     "batch_seconds": rollout_seconds + forward_backward_seconds,
+                     "mean_environment_reward": float(sum(x.rewards.sum() for x in trajectories)
+                                                       / BATCH_EPISODES),
+                     "mean_training_target_return_to_go": stats["mean_return_to_go"],
+                     "optimizer_step": False, "checkpoint_write": False})
+        model.zero_grad(set_to_none=True)
+    report = {"schema_version": 1, "profile": "exploratory-real-rollout-forward-backward-v1",
+              "device": str(torch_device), "torch_version": torch.__version__,
+              "episodes_per_batch": BATCH_EPISODES, "ticks_per_episode": ROLLOUT_TICKS,
+              "animals_per_episode": 5, "repeat_count": repeats,
+              "timing_scope": "simulator collection incl. policy inference; then loss forward/backward",
+              "learning_update": False, "optimizer_step": False, "checkpoint_write": False,
+              "formal_eligible": False, "benchmark_eligible": False, "locked_outcomes_accessed": False,
+              "rows": rows, "total_seconds": sum(row["batch_seconds"] for row in rows)}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report, sort_keys=True, indent=2) + "\n")
+    return report
 
 
 def _sha(path: Path) -> str:
@@ -355,7 +410,7 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                     eval_only: bool = False, allow_execution_migration: bool = False, exploratory: bool = False,
                     exploratory_variant: str | None = None, reward_variant: str = "original",
                     state_reward_scale: float = 0.1, normalize_advantage: bool = False,
-                    entropy_coefficient: float = 0.0) -> dict:
+                    entropy_coefficient: float = 0.0, discount_factor: float = 0.99) -> dict:
     torch = require_torch()
     device = resolve_device(device)
     set_deterministic(seed, device)
@@ -412,7 +467,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
     if exploratory_variant is not None:
         config.update({"reward_variant": reward_variant, "state_reward_scale": float(state_reward_scale),
                        "normalize_advantage": bool(normalize_advantage),
-                       "entropy_coefficient": float(entropy_coefficient)})
+                       "entropy_coefficient": float(entropy_coefficient),
+                       "discount_factor": float(discount_factor)})
     if resume:
         restored = load_generation(resume if resume != "latest" else run_dir, model=train_model,
                                    optimizer=optimizer, map_location=device,
@@ -451,7 +507,7 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                 previous_return_sum=state["baseline_return_sum"],
                 previous_return_count=state["baseline_return_count"],
                 reward_variant=reward_variant, state_reward_scale=state_reward_scale,
-                normalize_advantage=normalize_advantage,
+                normalize_advantage=normalize_advantage, discount_factor=discount_factor,
                 entropy_coefficient=entropy_coefficient)
         else:
             loss, stats = calculate_loss(train_model, trajectories, algorithm,
@@ -618,6 +674,8 @@ def run_exploratory_batch(*, output: Path, device: str, shard_index: int = 0,
         raise ValueError("exploratory comparison requires an explicit cpu or cuda device")
     if shard_count not in {1, 2} or not 0 <= shard_index < shard_count:
         raise ValueError("exploratory comparison supports one or two valid worker shards")
+    if shard_count == 2 and device != "cuda":
+        raise ValueError("two-worker exploratory comparison shards require CUDA")
     if int(os.environ.get("WORLD_SIZE", "1")) != 1:
         raise ValueError("exploratory comparison uses independent single-process jobs, not DDP")
     selected = specs[shard_index::shard_count]
@@ -660,6 +718,11 @@ def main(argv=None):
                    help="separate, fixed-budget nonformal A2C learning run (256 episodes, CUDA, 5 exploratory rollouts)")
     p.add_argument("--exploratory-batch", action="store_true",
                    help="fixed A-D x 3-seed nonformal comparison (512 episodes per job); separate from --exploratory-a2c")
+    p.add_argument("--profile-only", action="store_true",
+                   help="performance-only real 16-episode calibration; no optimizer step or checkpoint")
+    p.add_argument("--profile-device", choices=("cpu", "cuda:0", "cuda:1"), default=None)
+    p.add_argument("--profile-output", type=Path, default=None)
+    p.add_argument("--profile-repeats", type=int, default=2)
     p.add_argument("--batch-shard-index", type=int, default=0,
                    help=argparse.SUPPRESS)
     p.add_argument("--batch-shard-count", type=int, default=1,
@@ -684,6 +747,18 @@ def main(argv=None):
         p.error("--smoke and --smoke-update are mutually exclusive")
     if args.exploratory_a2c and args.exploratory_batch:
         p.error("--exploratory-a2c and --exploratory-batch are separate fixed protocols")
+    if args.profile_only:
+        if (args.profile_device is None or args.profile_output is None or args.exploratory_a2c
+                or args.exploratory_batch or args.smoke or args.smoke_update or args.readiness_ddp
+                or args.resume is not None or args.max_updates is not None):
+            p.error("--profile-only requires --profile-device and --profile-output, and cannot train/resume")
+        try:
+            result = profile_exploratory_step(device=args.profile_device, output=args.profile_output,
+                                               repeats=args.profile_repeats)
+        except (RuntimeError, ValueError) as exc:
+            p.error(str(exc))
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return
     if args.exploratory_a2c:
         if (args.algorithm != "a2c" or args.device != "cuda" or args.mode != "train"
                 or args.seed != EXPLORATORY_A2C_SEED or args.episodes != EXPLORATORY_A2C_EPISODES
