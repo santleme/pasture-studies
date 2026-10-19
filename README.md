@@ -40,7 +40,15 @@ Run the test suite:
 
 ## Training and benchmark execution boundary
 
-Do not launch the full local `farm_sim.training` pipeline or Stable-Baselines3 PPO training command from this checkout. Full training (including DAgger/PPO/A2C), mass trajectory generation, and extensive benchmarks are Kaggle-only. Local mode is limited to development, lightweight tests, and explicit smoke diagnostics. The Kaggle release workflow also fails closed for experimental/full-validation execution until independently trusted authorization is available; a Kaggle requirement does not itself grant authorization. See [Kaggle training](docs/kaggle-training.md) for the current approved bounded workflow and restrictions.
+The simulator can also be exposed as a Gymnasium task without changing its runtime dependencies or transition logic. Full PPO training and evaluation are Kaggle-only. On a local development machine, `--smoke` runs a fixed 128-timestep, one-evaluation-episode check; without `--smoke` the command fails closed unless it detects the Kaggle runtime:
+
+```sh
+python3 -m venv .venv-rl
+.venv-rl/bin/python -m pip install -r requirements-rl.txt
+.venv-rl/bin/python -m scripts.train_sb3_ppo --smoke
+```
+
+The one-animal mode controls cow-1 and holds the other four to `walk`; joint mode controls all five with a shared policy and mean per-cow simulator reward. The 72-tick boundary is an artificial Gymnasium truncation, not a biological terminal state. This is an optional research comparison, does not replace the shipped NumPy checkpoint, and must not be interpreted as cattle validation. PettingZoo/TorchRL are not needed for this single-agent/joint-action interface.
 
 ## Use the simulation
 

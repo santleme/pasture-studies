@@ -577,7 +577,7 @@ def main():
     parser.add_argument("--family-limit",type=int,default=None,help="engineering smoke only; not valid for acceptance")
     parser.add_argument("--world-limit",type=int,default=None,help="engineering smoke only; not valid for acceptance")
     args=parser.parse_args()
-    smoke = args.phase in ("evaluate", "locked") and args.family_limit is not None and args.world_limit is not None
+    smoke = args.phase == "evaluate" and args.family_limit is not None and args.world_limit is not None
     if smoke and (args.family_limit <= 0 or args.world_limit <= 0 or args.family_limit > 1 or args.world_limit > 1):
         parser.error("local validation smoke is limited to one family and one world")
     try:

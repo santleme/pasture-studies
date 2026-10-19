@@ -12,19 +12,23 @@ FULL_VALIDATION absent independent trusted approval.
 
 ## Generate and package a dataset
 
-The full PyTorch fixed-corpus workload remains available separately; the dataset
-release command below builds three local artifact families using the frozen
-training seed split. It defaults to one world per training root (use
-`--episodes-per-root` to select a bounded number of preregistered training
-worlds):
+The full PyTorch fixed-corpus workload and full DAgger trajectory generation
+are Kaggle-only. Local development may use the explicit one-root, one-episode
+dataset smoke below; without `--smoke`, `build` fails closed outside Kaggle.
+`verify` remains available locally:
 
 ```bash
 python -m validation.pasture_studies_dataset build \
+  --smoke \
   --output /tmp/pasture-kaggle-dataset --data-version v1 \
   --dataset-id <owner>/<slug> --title "Pasture Studies training data" \
   --license <license-you-have-rights-to-apply>
 python -m validation.pasture_studies_dataset verify --bundle /tmp/pasture-kaggle-dataset
 ```
+
+The local smoke is intentionally limited to one preregistered training root
+and one episode. Run full generation in the Kaggle runtime; use
+`--episodes-per-root` there to select preregistered training volume.
 
 The package contains `procedural-worlds.jsonl`, `oracle-trajectories.jsonl`,
 `dagger-trajectories.jsonl`, Kaggle metadata, and a versioned checksum manifest.
