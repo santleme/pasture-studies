@@ -96,6 +96,8 @@ class ExploratoryBatchCliTests(unittest.TestCase):
         self.assertIn("--exploratory-iteration-2", iteration)
         self.assertIn("six-run", "".join(notebook["cells"][0]["source"]))
         self.assertIn("9483999", iteration)
+        self.assertIn('"training_validation_test_disjoint_check"', iteration)
+        self.assertNotIn('report.get("formal_eligible")', iteration)
 
     def test_single_run_and_batch_flags_cannot_be_combined(self):
         with patch("sys.argv", ["train_torch_mvp1", "--exploratory-a2c", "--exploratory-batch"]):
