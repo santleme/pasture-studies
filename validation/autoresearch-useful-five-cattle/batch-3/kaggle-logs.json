@@ -1,0 +1,545 @@
+[{"stream_name":"stderr","time":6.298667326,"data":"/usr/local/lib/python3.13/dist-packages/nbformat/validator.py:434: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.\n"}
+,{"stream_name":"stderr","time":6.298708331,"data":"  _validate(nbdict, ref, version, version_minor, relax_add_props)\n"}
+,{"stream_name":"stderr","time":7.241986138,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.242018344,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.242021912,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.242024435,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":7.852310897,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.85233256,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.852335891,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.852338491,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":8.997119932,"data":"Mode: AUTORESEARCH_BATCH_3 run_id: autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19 source SHA: 4ed0c9e478e66aadc0111da80a9bee413ed4040c\n"}
+,{"stream_name":"stdout","time":8.997173827,"data":"Python: 3.13.15 (main, Aug  6 2026, 11:06:22) [GCC 13.3.0] platform: Linux-6.18.48+-x86_64-with-glibc2.39\n"}
+,{"stream_name":"stderr","time":9.041925791,"data":"Cloning into '/kaggle/working/pasture-source-4ed0c9e478e6'...\n"}
+,{"stream_name":"stdout","time":9.197751677,"data":"$ git clone --filter=blob:none --no-checkout --no-tags https://github.com/santleme/pasture-studies.git /kaggle/working/pasture-source-4ed0c9e478e6\n"}
+,{"stream_name":"stderr","time":9.244454178,"data":"Cloning into '/kaggle/working/pasture-source-4ed0c9e478e6'...\n"}
+,{"stream_name":"stderr","time":9.24447399,"data":"\n"}
+,{"stream_name":"stderr","time":9.244479525,"data":"Cloning into '/kaggle/working/pasture-source-4ed0c9e478e6'...\n"}
+,{"stream_name":"stdout","time":9.897873737,"data":"$ git -C /kaggle/working/pasture-source-4ed0c9e478e6 fetch --depth 1 --filter=blob:none origin 4ed0c9e478e66aadc0111da80a9bee413ed4040c\n"}
+,{"stream_name":"stderr","time":9.944579356,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":9.944597854,"data":" * branch            4ed0c9e478e66aadc0111da80a9bee413ed4040c -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":10.146815047,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":10.146841902,"data":" * branch            4ed0c9e478e66aadc0111da80a9bee413ed4040c -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":10.146847846,"data":"\n"}
+,{"stream_name":"stderr","time":10.146851468,"data":"From https://github.com/santleme/pasture-studies\n"}
+,{"stream_name":"stderr","time":10.146855135,"data":" * branch            4ed0c9e478e66aadc0111da80a9bee413ed4040c -\u003e FETCH_HEAD\n"}
+,{"stream_name":"stdout","time":10.152885965,"data":"$ git -C /kaggle/working/pasture-source-4ed0c9e478e6 sparse-checkout init --no-cone\n"}
+,{"stream_name":"stdout","time":10.152904738,"data":"$ git -C /kaggle/working/pasture-source-4ed0c9e478e6 sparse-checkout set --no-cone /farm_sim/ /validation/train_torch_mvp1.py /validation/profile_torch_training.py /validation/evaluate_torch_mvp1.py /validation/compare_exploratory_checkpoints.py /validation/run_autoresearch_training.py /scripts/kaggle_release.py /requirements-training.txt /notebooks/pasture_studies_kaggle.ipynb\n"}
+,{"stream_name":"stdout","time":10.152933582,"data":"$ git -C /kaggle/working/pasture-source-4ed0c9e478e6 checkout --detach FETCH_HEAD\n"}
+,{"stream_name":"stderr","time":10.28681084,"data":"HEAD is now at 4ed0c9e Document the outcome-aware Kaggle cohort\n"}
+,{"stream_name":"stderr","time":12.41570004,"data":"HEAD is now at 4ed0c9e Document the outcome-aware Kaggle cohort\n"}
+,{"stream_name":"stderr","time":12.415733074,"data":"\n"}
+,{"stream_name":"stderr","time":12.415737333,"data":"HEAD is now at 4ed0c9e Document the outcome-aware Kaggle cohort\n"}
+,{"stream_name":"stdout","time":17.220094652,"data":"Observed runtime: {\"cuda_available\": true, \"cuda_runtime\": \"12.8\", \"gpu_count\": 2, \"gpu_names\": [\"Tesla T4\", \"Tesla T4\"], \"numpy\": \"2.1.3\", \"python\": \"3.13.15\", \"pytorch\": \"2.11.0+cu128\"}\n"}
+,{"stream_name":"stdout","time":17.220127435,"data":"Historical scientific dependency pins (unchanged):\n"}
+,{"stream_name":"stdout","time":17.220131188,"data":" # Optional training stack; never install this into the web/runtime requirements.\n"}
+,{"stream_name":"stdout","time":17.220134475,"data":"numpy==1.26.4\n"}
+,{"stream_name":"stdout","time":17.220167427,"data":"torch==2.14.0\n"}
+,{"stream_name":"stdout","time":17.220171817,"data":"\n"}
+,{"stream_name":"stdout","time":18.202429008,"data":"CUDA forward/backward: PASS ['Tesla T4', 'Tesla T4']\n"}
+,{"stream_name":"stdout","time":18.402420894,"data":"$ /usr/bin/python3 -m validation.train_torch_mvp1 --profile-only --profile-device cpu --profile-output /kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19/autoresearch/batch-3/calibration/profile-cpu.json --profile-repeats 1\n"}
+,{"stream_name":"stdout","time":23.536339352,"data":"{\n"}
+,{"stream_name":"stdout","time":23.536370124,"data":"  \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":23.536375382,"data":"  \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":23.536379665,"data":"  \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":23.536383504,"data":"  \"device\": \"cpu\",\n"}
+,{"stream_name":"stdout","time":23.536387089,"data":"  \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":23.53639067,"data":"  \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":23.536394191,"data":"  \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":23.536398002,"data":"  \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":23.536401637,"data":"  \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":23.536405616,"data":"  \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":23.536409285,"data":"  \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":23.536412874,"data":"  \"rows\": [\n"}
+,{"stream_name":"stdout","time":23.536416683,"data":"    {\n"}
+,{"stream_name":"stdout","time":23.536420591,"data":"      \"batch_seconds\": 3.5169140940000148,\n"}
+,{"stream_name":"stdout","time":23.536424602,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":23.536428754,"data":"      \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":23.536432718,"data":"      \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":23.536436568,"data":"      \"forward_backward_seconds\": 0.12606098899999552,\n"}
+,{"stream_name":"stdout","time":23.536450818,"data":"      \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":23.536455154,"data":"      \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":23.536459305,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":23.536462945,"data":"      \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":23.536466654,"data":"      \"rollout_seconds\": 3.3908531050000192\n"}
+,{"stream_name":"stdout","time":23.536470358,"data":"    }\n"}
+,{"stream_name":"stdout","time":23.536473878,"data":"  ],\n"}
+,{"stream_name":"stdout","time":23.53647813,"data":"  \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":23.536482709,"data":"  \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":23.536487028,"data":"  \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":23.5364914,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":23.536495937,"data":"  \"total_seconds\": 3.5169140940000148\n"}
+,{"stream_name":"stdout","time":23.536500143,"data":"}\n"}
+,{"stream_name":"stdout","time":23.738819781,"data":"{\n"}
+,{"stream_name":"stdout","time":23.73885493,"data":"  \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":23.738858213,"data":"  \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":23.7388607,"data":"  \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":23.738863159,"data":"  \"device\": \"cpu\",\n"}
+,{"stream_name":"stdout","time":23.738865591,"data":"  \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":23.738867923,"data":"  \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":23.73887024,"data":"  \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":23.738872794,"data":"  \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":23.738875126,"data":"  \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":23.738877413,"data":"  \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":23.738879898,"data":"  \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":23.738882278,"data":"  \"rows\": [\n"}
+,{"stream_name":"stdout","time":23.73888458,"data":"    {\n"}
+,{"stream_name":"stdout","time":23.738886816,"data":"      \"batch_seconds\": 3.5169140940000148,\n"}
+,{"stream_name":"stdout","time":23.738889242,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":23.738891635,"data":"      \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":23.738893942,"data":"      \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":23.738896253,"data":"      \"forward_backward_seconds\": 0.12606098899999552,\n"}
+,{"stream_name":"stdout","time":23.738898637,"data":"      \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":23.738901125,"data":"      \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":23.738903497,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":23.738905837,"data":"      \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":23.738908129,"data":"      \"rollout_seconds\": 3.3908531050000192\n"}
+,{"stream_name":"stdout","time":23.738910496,"data":"    }\n"}
+,{"stream_name":"stdout","time":23.738913415,"data":"  ],\n"}
+,{"stream_name":"stdout","time":23.738926573,"data":"  \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":23.738929023,"data":"  \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":23.738931374,"data":"  \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":23.738933902,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":23.738936299,"data":"  \"total_seconds\": 3.5169140940000148\n"}
+,{"stream_name":"stdout","time":23.738938682,"data":"}\n"}
+,{"stream_name":"stdout","time":26.234574282,"data":"$ /usr/bin/python3 -m validation.train_torch_mvp1 --profile-only --profile-device cuda:0 --profile-output /kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19/autoresearch/batch-3/calibration/profile-cuda-0.json --profile-repeats 1\n"}
+,{"stream_name":"stdout","time":31.629722205,"data":"{\n"}
+,{"stream_name":"stdout","time":31.629756147,"data":"  \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":31.629760574,"data":"  \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":31.629762951,"data":"  \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":31.629765306,"data":"  \"device\": \"cuda:0\",\n"}
+,{"stream_name":"stdout","time":31.629767644,"data":"  \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":31.629769974,"data":"  \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":31.629772562,"data":"  \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":31.629775849,"data":"  \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":31.629779454,"data":"  \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":31.629782267,"data":"  \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":31.629784626,"data":"  \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":31.629786856,"data":"  \"rows\": [\n"}
+,{"stream_name":"stdout","time":31.629788991,"data":"    {\n"}
+,{"stream_name":"stdout","time":31.629791287,"data":"      \"batch_seconds\": 3.6963561029999994,\n"}
+,{"stream_name":"stdout","time":31.629793526,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":31.629795728,"data":"      \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":31.629797887,"data":"      \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":31.629800054,"data":"      \"forward_backward_seconds\": 0.2859342399999889,\n"}
+,{"stream_name":"stdout","time":31.629802316,"data":"      \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":31.6298046,"data":"      \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":31.629806837,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":31.62980897,"data":"      \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":31.62981112,"data":"      \"rollout_seconds\": 3.4104218630000105\n"}
+,{"stream_name":"stdout","time":31.629813372,"data":"    }\n"}
+,{"stream_name":"stdout","time":31.629815418,"data":"  ],\n"}
+,{"stream_name":"stdout","time":31.629817464,"data":"  \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":31.629819596,"data":"  \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":31.629821877,"data":"  \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":31.629824254,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":31.629826569,"data":"  \"total_seconds\": 3.6963561029999994\n"}
+,{"stream_name":"stdout","time":31.629837642,"data":"}\n"}
+,{"stream_name":"stdout","time":31.832015528,"data":"{\n"}
+,{"stream_name":"stdout","time":31.832046665,"data":"  \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":31.832051035,"data":"  \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":31.832054865,"data":"  \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":31.832058461,"data":"  \"device\": \"cuda:0\",\n"}
+,{"stream_name":"stdout","time":31.832077235,"data":"  \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":31.832080873,"data":"  \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":31.832084495,"data":"  \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":31.83208794,"data":"  \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":31.832091471,"data":"  \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":31.832094731,"data":"  \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":31.83209836,"data":"  \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":31.83210177,"data":"  \"rows\": [\n"}
+,{"stream_name":"stdout","time":31.832105138,"data":"    {\n"}
+,{"stream_name":"stdout","time":31.832108485,"data":"      \"batch_seconds\": 3.6963561029999994,\n"}
+,{"stream_name":"stdout","time":31.832111779999998,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":31.832115258,"data":"      \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":31.832118701,"data":"      \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":31.832122091,"data":"      \"forward_backward_seconds\": 0.2859342399999889,\n"}
+,{"stream_name":"stdout","time":31.832125528,"data":"      \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":31.832128888,"data":"      \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":31.832132406,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":31.832135781,"data":"      \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":31.832149596,"data":"      \"rollout_seconds\": 3.4104218630000105\n"}
+,{"stream_name":"stdout","time":31.832153711,"data":"    }\n"}
+,{"stream_name":"stdout","time":31.83215918,"data":"  ],\n"}
+,{"stream_name":"stdout","time":31.832163071,"data":"  \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":31.832166231,"data":"  \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":31.832169739,"data":"  \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":31.832173483,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":31.832176956,"data":"  \"total_seconds\": 3.6963561029999994\n"}
+,{"stream_name":"stdout","time":31.83218034,"data":"}\n"}
+,{"stream_name":"stdout","time":32.325075861,"data":"$ /usr/bin/python3 -m validation.train_torch_mvp1 --profile-only --profile-device cuda:1 --profile-output /kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19/autoresearch/batch-3/calibration/profile-cuda-1.json --profile-repeats 1\n"}
+,{"stream_name":"stdout","time":37.66097293,"data":"{\n"}
+,{"stream_name":"stdout","time":37.661002549,"data":"  \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":37.661007816,"data":"  \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":37.661012548,"data":"  \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":37.661028579,"data":"  \"device\": \"cuda:1\",\n"}
+,{"stream_name":"stdout","time":37.661032497,"data":"  \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":37.661036055,"data":"  \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":37.661039664,"data":"  \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":37.661043118,"data":"  \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":37.661048528,"data":"  \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":37.661055735,"data":"  \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":37.661058645,"data":"  \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":37.661060981,"data":"  \"rows\": [\n"}
+,{"stream_name":"stdout","time":37.66106328,"data":"    {\n"}
+,{"stream_name":"stdout","time":37.661065528,"data":"      \"batch_seconds\": 3.6434776460000364,\n"}
+,{"stream_name":"stdout","time":37.661068007,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":37.661070373,"data":"      \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":37.661072652,"data":"      \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":37.661074991,"data":"      \"forward_backward_seconds\": 0.22178407000001243,\n"}
+,{"stream_name":"stdout","time":37.661077467,"data":"      \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":37.661079933,"data":"      \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":37.661082344,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":37.661084727,"data":"      \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":37.661087123,"data":"      \"rollout_seconds\": 3.421693576000024\n"}
+,{"stream_name":"stdout","time":37.661090605,"data":"    }\n"}
+,{"stream_name":"stdout","time":37.661106805,"data":"  ],\n"}
+,{"stream_name":"stdout","time":37.661110939,"data":"  \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":37.661114997,"data":"  \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":37.661119264999996,"data":"  \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":37.661123567,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":37.661127145,"data":"  \"total_seconds\": 3.6434776460000364\n"}
+,{"stream_name":"stdout","time":37.661130693,"data":"}\n"}
+,{"stream_name":"stdout","time":37.86344891,"data":"{\n"}
+,{"stream_name":"stdout","time":37.863481536,"data":"  \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":37.86348629,"data":"  \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":37.863490024,"data":"  \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":37.863493654,"data":"  \"device\": \"cuda:1\",\n"}
+,{"stream_name":"stdout","time":37.863497679,"data":"  \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":37.863501423,"data":"  \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":37.863506794,"data":"  \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":37.863514854,"data":"  \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":37.863517798,"data":"  \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":37.86352012,"data":"  \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":37.863522792,"data":"  \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":37.863536724,"data":"  \"rows\": [\n"}
+,{"stream_name":"stdout","time":37.863539128,"data":"    {\n"}
+,{"stream_name":"stdout","time":37.863541375,"data":"      \"batch_seconds\": 3.6434776460000364,\n"}
+,{"stream_name":"stdout","time":37.863543761,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":37.863546144,"data":"      \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":37.863548433,"data":"      \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":37.863550752,"data":"      \"forward_backward_seconds\": 0.22178407000001243,\n"}
+,{"stream_name":"stdout","time":37.863553112,"data":"      \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":37.863555538,"data":"      \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":37.86355793,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":37.863560214,"data":"      \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":37.863562871,"data":"      \"rollout_seconds\": 3.421693576000024\n"}
+,{"stream_name":"stdout","time":37.863584102,"data":"    }\n"}
+,{"stream_name":"stdout","time":37.863586429,"data":"  ],\n"}
+,{"stream_name":"stdout","time":37.863588649,"data":"  \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":37.863590935,"data":"  \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":37.863593381,"data":"  \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":37.863596044,"data":"  \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":37.863598422,"data":"  \"total_seconds\": 3.6434776460000364\n"}
+,{"stream_name":"stdout","time":37.863600778,"data":"}\n"}
+,{"stream_name":"stdout","time":487.008765184,"data":"{\n"}
+,{"stream_name":"stdout","time":487.00880723,"data":"  \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.008814216,"data":"  \"calibration\": {\n"}
+,{"stream_name":"stdout","time":487.008819233,"data":"    \"cpu\": {\n"}
+,{"stream_name":"stdout","time":487.008823681,"data":"      \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":487.008828266,"data":"      \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.008832795,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":487.008837206,"data":"      \"device\": \"cpu\",\n"}
+,{"stream_name":"stdout","time":487.00884159,"data":"      \"elapsed_wall_seconds\": 7.688560120999995,\n"}
+,{"stream_name":"stdout","time":487.008846076,"data":"      \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":487.008850496,"data":"      \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.008854916,"data":"      \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":487.008861226,"data":"      \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":487.008869106,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":487.008872227,"data":"      \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":487.008875392,"data":"      \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":487.008878558,"data":"      \"rows\": [\n"}
+,{"stream_name":"stdout","time":487.008894814,"data":"        {\n"}
+,{"stream_name":"stdout","time":487.008900391,"data":"          \"batch_seconds\": 3.5169140940000148,\n"}
+,{"stream_name":"stdout","time":487.008905694,"data":"          \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":487.008922824,"data":"          \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":487.008926624,"data":"          \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":487.008930124,"data":"          \"forward_backward_seconds\": 0.12606098899999552,\n"}
+,{"stream_name":"stdout","time":487.008933818,"data":"          \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":487.008937529,"data":"          \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":487.008941226,"data":"          \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":487.008944731,"data":"          \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":487.00894818,"data":"          \"rollout_seconds\": 3.3908531050000192\n"}
+,{"stream_name":"stdout","time":487.008951797,"data":"        }\n"}
+,{"stream_name":"stdout","time":487.008955284,"data":"      ],\n"}
+,{"stream_name":"stdout","time":487.008958705,"data":"      \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":487.008962198,"data":"      \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":487.00896593,"data":"      \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":487.008975752,"data":"      \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":487.008979137,"data":"      \"total_seconds\": 3.5169140940000148\n"}
+,{"stream_name":"stdout","time":487.00899387,"data":"    },\n"}
+,{"stream_name":"stdout","time":487.008998026,"data":"    \"cuda:0\": {\n"}
+,{"stream_name":"stdout","time":487.009002127,"data":"      \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":487.009006469,"data":"      \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.009010594,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":487.009014057,"data":"      \"device\": \"cuda:0\",\n"}
+,{"stream_name":"stdout","time":487.009017616,"data":"      \"elapsed_wall_seconds\": 6.09098073200002,\n"}
+,{"stream_name":"stdout","time":487.009023792,"data":"      \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":487.009027316,"data":"      \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.009030763,"data":"      \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":487.00903428,"data":"      \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":487.009037721,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":487.009041214,"data":"      \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":487.009044794,"data":"      \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":487.009048309,"data":"      \"rows\": [\n"}
+,{"stream_name":"stdout","time":487.009051647,"data":"        {\n"}
+,{"stream_name":"stdout","time":487.009055034,"data":"          \"batch_seconds\": 3.6963561029999994,\n"}
+,{"stream_name":"stdout","time":487.009058576,"data":"          \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":487.009062932,"data":"          \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":487.00907277,"data":"          \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":487.009076273,"data":"          \"forward_backward_seconds\": 0.2859342399999889,\n"}
+,{"stream_name":"stdout","time":487.009090482,"data":"          \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":487.009094988,"data":"          \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":487.009103296,"data":"          \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":487.00910942,"data":"          \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":487.009113342,"data":"          \"rollout_seconds\": 3.4104218630000105\n"}
+,{"stream_name":"stdout","time":487.009116924,"data":"        }\n"}
+,{"stream_name":"stdout","time":487.009120229,"data":"      ],\n"}
+,{"stream_name":"stdout","time":487.009123642,"data":"      \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":487.00912718,"data":"      \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":487.009130782,"data":"      \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":487.00913454,"data":"      \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":487.00913815,"data":"      \"total_seconds\": 3.6963561029999994\n"}
+,{"stream_name":"stdout","time":487.009142206,"data":"    },\n"}
+,{"stream_name":"stdout","time":487.009160705,"data":"    \"cuda:1\": {\n"}
+,{"stream_name":"stdout","time":487.00916711,"data":"      \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":487.009170785,"data":"      \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.009174957,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":487.009179136,"data":"      \"device\": \"cuda:1\",\n"}
+,{"stream_name":"stdout","time":487.009182795,"data":"      \"elapsed_wall_seconds\": 6.015809599000022,\n"}
+,{"stream_name":"stdout","time":487.009186373,"data":"      \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":487.009189806,"data":"      \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.009193306,"data":"      \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":487.009196858,"data":"      \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":487.009200301,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":487.009203872,"data":"      \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":487.009207573,"data":"      \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":487.009211027,"data":"      \"rows\": [\n"}
+,{"stream_name":"stdout","time":487.00921452,"data":"        {\n"}
+,{"stream_name":"stdout","time":487.009217836,"data":"          \"batch_seconds\": 3.6434776460000364,\n"}
+,{"stream_name":"stdout","time":487.009221318,"data":"          \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":487.00922473,"data":"          \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":487.009228144,"data":"          \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":487.009232282,"data":"          \"forward_backward_seconds\": 0.22178407000001243,\n"}
+,{"stream_name":"stdout","time":487.009236864,"data":"          \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":487.009241498,"data":"          \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":487.009246764,"data":"          \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":487.009250346,"data":"          \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":487.00925387,"data":"          \"rollout_seconds\": 3.421693576000024\n"}
+,{"stream_name":"stdout","time":487.009257434,"data":"        }\n"}
+,{"stream_name":"stdout","time":487.009260837,"data":"      ],\n"}
+,{"stream_name":"stdout","time":487.009267603,"data":"      \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":487.009271136,"data":"      \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":487.009274662,"data":"      \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":487.009278434,"data":"      \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":487.009282024,"data":"      \"total_seconds\": 3.6434776460000364\n"}
+,{"stream_name":"stdout","time":487.009285503,"data":"    },\n"}
+,{"stream_name":"stdout","time":487.009288863,"data":"    \"dual-0\": {\n"}
+,{"stream_name":"stdout","time":487.009292257,"data":"      \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":487.00930497,"data":"      \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.009312055,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":487.009327642,"data":"      \"device\": \"cuda:0\",\n"}
+,{"stream_name":"stdout","time":487.009331782,"data":"      \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":487.00933591,"data":"      \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.009339794,"data":"      \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":487.009343991,"data":"      \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":487.009347851,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":487.00935139,"data":"      \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":487.009355019,"data":"      \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":487.009358468,"data":"      \"rows\": [\n"}
+,{"stream_name":"stdout","time":487.009361886,"data":"        {\n"}
+,{"stream_name":"stdout","time":487.009365244,"data":"          \"batch_seconds\": 3.8589158210000107,\n"}
+,{"stream_name":"stdout","time":487.009368805,"data":"          \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":487.009372229,"data":"          \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":487.009376272,"data":"          \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":487.009380759,"data":"          \"forward_backward_seconds\": 0.22718648099998973,\n"}
+,{"stream_name":"stdout","time":487.009384374,"data":"          \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":487.009388132,"data":"          \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":487.009391806,"data":"          \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":487.009395336,"data":"          \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":487.009398823,"data":"          \"rollout_seconds\": 3.631729340000021\n"}
+,{"stream_name":"stdout","time":487.009420208,"data":"        }\n"}
+,{"stream_name":"stdout","time":487.009434575,"data":"      ],\n"}
+,{"stream_name":"stdout","time":487.009438345,"data":"      \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":487.009442413,"data":"      \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":487.009445837,"data":"      \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":487.009450271,"data":"      \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":487.009453682,"data":"      \"total_seconds\": 3.8589158210000107\n"}
+,{"stream_name":"stdout","time":487.009456985,"data":"    },\n"}
+,{"stream_name":"stdout","time":487.009463732,"data":"    \"dual-1\": {\n"}
+,{"stream_name":"stdout","time":487.009466988,"data":"      \"animals_per_episode\": 5,\n"}
+,{"stream_name":"stdout","time":487.009470337,"data":"      \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.009473613,"data":"      \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":487.009476883,"data":"      \"device\": \"cuda:0\",\n"}
+,{"stream_name":"stdout","time":487.009480134,"data":"      \"episodes_per_batch\": 16,\n"}
+,{"stream_name":"stdout","time":487.009483403,"data":"      \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.00948661,"data":"      \"learning_update\": false,\n"}
+,{"stream_name":"stdout","time":487.00948984,"data":"      \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":487.009493162,"data":"      \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":487.00949645,"data":"      \"profile\": \"exploratory-real-rollout-forward-backward-v1\",\n"}
+,{"stream_name":"stdout","time":487.009499847,"data":"      \"repeat_count\": 1,\n"}
+,{"stream_name":"stdout","time":487.00950358,"data":"      \"rows\": [\n"}
+,{"stream_name":"stdout","time":487.00951168,"data":"        {\n"}
+,{"stream_name":"stdout","time":487.009514483,"data":"          \"batch_seconds\": 3.7894203509999898,\n"}
+,{"stream_name":"stdout","time":487.009517557,"data":"          \"checkpoint_write\": false,\n"}
+,{"stream_name":"stdout","time":487.009530913,"data":"          \"decisions\": 5760,\n"}
+,{"stream_name":"stdout","time":487.009534989,"data":"          \"episodes\": 16,\n"}
+,{"stream_name":"stdout","time":487.009538964,"data":"          \"forward_backward_seconds\": 0.22728963299999805,\n"}
+,{"stream_name":"stdout","time":487.00954369,"data":"          \"mean_environment_reward\": -7.209957599639893,\n"}
+,{"stream_name":"stdout","time":487.009547597,"data":"          \"mean_training_target_return_to_go\": -0.7273591756820679,\n"}
+,{"stream_name":"stdout","time":487.009550973,"data":"          \"optimizer_step\": false,\n"}
+,{"stream_name":"stdout","time":487.009554246,"data":"          \"repeat\": 0,\n"}
+,{"stream_name":"stdout","time":487.009557468,"data":"          \"rollout_seconds\": 3.5621307179999917\n"}
+,{"stream_name":"stdout","time":487.009560822,"data":"        }\n"}
+,{"stream_name":"stdout","time":487.009563886,"data":"      ],\n"}
+,{"stream_name":"stdout","time":487.009566962,"data":"      \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":487.00957021,"data":"      \"ticks_per_episode\": 72,\n"}
+,{"stream_name":"stdout","time":487.00957354,"data":"      \"timing_scope\": \"simulator collection incl. policy inference; then loss forward/backward\",\n"}
+,{"stream_name":"stdout","time":487.009577048,"data":"      \"torch_version\": \"2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":487.009580398,"data":"      \"total_seconds\": 3.7894203509999898\n"}
+,{"stream_name":"stdout","time":487.00958379,"data":"    }\n"}
+,{"stream_name":"stdout","time":487.009586952,"data":"  },\n"}
+,{"stream_name":"stdout","time":487.009591307,"data":"  \"candidate_manifest\": \"/kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19/autoresearch/batch-3/training/autoresearch-candidate-manifest.json\",\n"}
+,{"stream_name":"stdout","time":487.009595188,"data":"  \"candidate_manifest_sha256\": \"f408b2daf255cf939818fe83e1d45fa7088e3f58577cae1e98aa24421111bb49\",\n"}
+,{"stream_name":"stdout","time":487.009599654,"data":"  \"claim_boundary\": \"Kaggle exploratory training only; evaluation/acceptance is run locally on new shared worlds using unchanged original reward. No biological validation or GPU speedup claim.\",\n"}
+,{"stream_name":"stdout","time":487.009612833,"data":"  \"config\": {\n"}
+,{"stream_name":"stdout","time":487.009626489,"data":"    \"algorithm\": \"a2c\",\n"}
+,{"stream_name":"stdout","time":487.009630465,"data":"    \"batch\": 3,\n"}
+,{"stream_name":"stdout","time":487.009634382,"data":"    \"benchmark_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.00963835,"data":"    \"checkpoint_promotion\": false,\n"}
+,{"stream_name":"stdout","time":487.009642065,"data":"    \"comparison_episodes_per_family\": 3,\n"}
+,{"stream_name":"stdout","time":487.00964536,"data":"    \"cumulative_jobs_before\": 12,\n"}
+,{"stream_name":"stdout","time":487.009648627,"data":"    \"episodes_per_variant_seed\": 512,\n"}
+,{"stream_name":"stdout","time":487.009651947,"data":"    \"evaluation_root_seed\": 9486999,\n"}
+,{"stream_name":"stdout","time":487.009655262,"data":"    \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.009658505,"data":"    \"locked_test_access\": false,\n"}
+,{"stream_name":"stdout","time":487.009661722,"data":"    \"max_additional_training_jobs\": 24,\n"}
+,{"stream_name":"stdout","time":487.009665062,"data":"    \"perception_mode\": \"path-aware-v2\",\n"}
+,{"stream_name":"stdout","time":487.009668465,"data":"    \"protocol\": \"autoresearch-outcome-aware-v1\",\n"}
+,{"stream_name":"stdout","time":487.009671884,"data":"    \"resource_profile\": \"resource-rich-v1\",\n"}
+,{"stream_name":"stdout","time":487.009675365,"data":"    \"seeds\": [\n"}
+,{"stream_name":"stdout","time":487.00967852,"data":"      9484201,\n"}
+,{"stream_name":"stdout","time":487.009681688,"data":"      9484202,\n"}
+,{"stream_name":"stdout","time":487.009684874,"data":"      9484203\n"}
+,{"stream_name":"stdout","time":487.009688058,"data":"    ],\n"}
+,{"stream_name":"stdout","time":487.009691191,"data":"    \"task\": \"autoresearch_outcome_aware_recovery\",\n"}
+,{"stream_name":"stdout","time":487.009696253,"data":"    \"training_jobs\": 6,\n"}
+,{"stream_name":"stdout","time":487.009703141,"data":"    \"variant_config\": {\n"}
+,{"stream_name":"stdout","time":487.009705561,"data":"      \"K\": {\n"}
+,{"stream_name":"stdout","time":487.009719495,"data":"        \"discount_factor\": 1.0,\n"}
+,{"stream_name":"stdout","time":487.009723431,"data":"        \"entropy_coefficient\": 0.0,\n"}
+,{"stream_name":"stdout","time":487.009727451,"data":"        \"normalize_advantage\": false,\n"}
+,{"stream_name":"stdout","time":487.009731422,"data":"        \"reward_variant\": \"outcome_aware\",\n"}
+,{"stream_name":"stdout","time":487.009735437,"data":"        \"state_reward_scale\": 0.5\n"}
+,{"stream_name":"stdout","time":487.009738777,"data":"      },\n"}
+,{"stream_name":"stdout","time":487.00974188,"data":"      \"L\": {\n"}
+,{"stream_name":"stdout","time":487.009745048,"data":"        \"discount_factor\": 1.0,\n"}
+,{"stream_name":"stdout","time":487.009748298,"data":"        \"entropy_coefficient\": 0.01,\n"}
+,{"stream_name":"stdout","time":487.009751582,"data":"        \"normalize_advantage\": true,\n"}
+,{"stream_name":"stdout","time":487.00975493,"data":"        \"reward_variant\": \"outcome_aware\",\n"}
+,{"stream_name":"stdout","time":487.009758222,"data":"        \"state_reward_scale\": 0.5\n"}
+,{"stream_name":"stdout","time":487.009761632,"data":"      }\n"}
+,{"stream_name":"stdout","time":487.00976475,"data":"    },\n"}
+,{"stream_name":"stdout","time":487.009767813,"data":"    \"variants\": [\n"}
+,{"stream_name":"stdout","time":487.009771013,"data":"      \"K\",\n"}
+,{"stream_name":"stdout","time":487.009777676,"data":"      \"L\"\n"}
+,{"stream_name":"stdout","time":487.009780898,"data":"    ]\n"}
+,{"stream_name":"stdout","time":487.009784092,"data":"  },\n"}
+,{"stream_name":"stdout","time":487.009787376,"data":"  \"cuda_forward_backward\": \"PASS\",\n"}
+,{"stream_name":"stdout","time":487.00979694,"data":"  \"cumulative_jobs_after\": 18,\n"}
+,{"stream_name":"stdout","time":487.009799792,"data":"  \"cumulative_jobs_before\": 12,\n"}
+,{"stream_name":"stdout","time":487.0098128,"data":"  \"dual_gpu_makespan_seconds\": 6.598582770999997,\n"}
+,{"stream_name":"stdout","time":487.009816774,"data":"  \"dual_vs_best_single_throughput_ratio\": 1.823364139778258,\n"}
+,{"stream_name":"stdout","time":487.009820681,"data":"  \"formal_eligible\": false,\n"}
+,{"stream_name":"stdout","time":487.009824476,"data":"  \"gpu_names\": [\n"}
+,{"stream_name":"stdout","time":487.00982837,"data":"    \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":487.009832016,"data":"    \"Tesla T4\"\n"}
+,{"stream_name":"stdout","time":487.009835215,"data":"  ],\n"}
+,{"stream_name":"stdout","time":487.009838353,"data":"  \"job_checks\": [\n"}
+,{"stream_name":"stdout","time":487.009841596,"data":"    {\n"}
+,{"stream_name":"stdout","time":487.00984475,"data":"      \"inference_export\": \"/kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19/autoresearch/batch-3/training/variant-K/seed-9484201/a2c/torch-a2c-seed-9484201.npz\",\n"}
+,{"stream_name":"stdout","time":487.009848635,"data":"      \"inference_sha256\": \"1b128a0fe9352c89b574295dc8b6fdd8bf446c8966e7a44f82f82120821f9c10\",\n"}
+,{"stream_name":"stdout","time":487.009852173,"data":"      \"latest_generation\": \"generation-00000032\",\n"}
+,{"stream_name":"stdout","time":487.009855608,"data":"      \"seed\": 9484201,\n"}
+,{"stream_name":"stdout","time":487.009858891,"data":"      \"updates\": 32,\n"}
+,{"stream_name":"stdout","time":487.009862093,"data":"      \"variant\": \"K\"\n"}
+,{"stream_name":"stdout","time":487.00986542,"data":"    },\n"}
+,{"stream_name":"stdout","time":487.009868477,"data":"    {\n"}
+,{"stream_name":"stdout","time":487.009872112,"data":"      \"inference_export\": \"/kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19/autoresearch/batch-3/training/variant-K/seed-9484202/a2c/torch-a2c-seed-9484202.npz\",\n"}
+,{"stream_name":"stdout","time":487.009876015,"data":"      \"inference_sha256\": \"6876ffe8aafa5e62c21e01deaaa7de55e7d0424d9557a3615884104dcc761fdf\",\n"}
+,{"stream_name":"stdout","time":487.009879452,"data":"      \"latest_generation\": \"generation-00000032\",\n"}
+,{"stream_name":"stdout","time":487.009882897,"data":"      \"seed\": 9484202,\n"}
+,{"stream_name":"stdout","time":487.009890842,"data":"      \"updates\": 32,\n"}
+,{"stream_name":"stdout","time":487.009893588,"data":"      \"variant\": \"K\"\n"}
+,{"stream_name":"stdout","time":487.009896342,"data":"    },\n"}
+,{"stream_name":"stdout","time":487.009909681,"data":"    {\n"}
+,{"stream_name":"stdout","time":487.009913745,"data":"      \"inference_export\": \"/kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19/autoresearch/batch-3/training/variant-K/seed-9484203/a2c/torch-a2c-seed-9484203.npz\",\n"}
+,{"stream_name":"stdout","time":487.00991834,"data":"      \"inference_sha256\": \"d0eec9b10a68365988c672d9693e8d94cc0127b60fc17d461f20abcd1807050e\",\n"}
+,{"stream_name":"stdout","time":487.009922563,"data":"      \"latest_generation\": \"generation-00000032\",\n"}
+,{"stream_name":"stdout","time":487.009926416,"data":"      \"seed\": 9484203,\n"}
+,{"stream_name":"stdout","time":487.00993267,"data":"      \"updates\": 32,\n"}
+,{"stream_name":"stdout","time":487.009935998,"data":"      \"variant\": \"K\"\n"}
+,{"stream_name":"stdout","time":487.009939242,"data":"    },\n"}
+,{"stream_name":"stdout","time":487.009942358,"data":"    {\n"}
+,{"stream_name":"stdout","time":487.009945525,"data":"      \"inference_export\": \"/kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19/autoresearch/batch-3/training/variant-L/seed-9484201/a2c/torch-a2c-seed-9484201.npz\",\n"}
+,{"stream_name":"stdout","time":487.00994931,"data":"      \"inference_sha256\": \"81499b38eb8198647b1fefa56a2699c8d0e9aae16981d9a67f7d9dc6039e4b04\",\n"}
+,{"stream_name":"stdout","time":487.0099528,"data":"      \"latest_generation\": \"generation-00000032\",\n"}
+,{"stream_name":"stdout","time":487.009956263,"data":"      \"seed\": 9484201,\n"}
+,{"stream_name":"stdout","time":487.009959538,"data":"      \"updates\": 32,\n"}
+,{"stream_name":"stdout","time":487.009962727,"data":"      \"variant\": \"L\"\n"}
+,{"stream_name":"stdout","time":487.00996593,"data":"    },\n"}
+,{"stream_name":"stdout","time":487.009969033,"data":"    {\n"}
+,{"stream_name":"stdout","time":487.009972206,"data":"      \"inference_export\": \"/kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19/autoresearch/batch-3/training/variant-L/seed-9484202/a2c/torch-a2c-seed-9484202.npz\",\n"}
+,{"stream_name":"stdout","time":487.009975981,"data":"      \"inference_sha256\": \"75cfee0b6fac75245609e8d8a3b4332550316b13539a23b3c88452a7fa86716a\",\n"}
+,{"stream_name":"stdout","time":487.009981137,"data":"      \"latest_generation\": \"generation-00000032\",\n"}
+,{"stream_name":"stdout","time":487.00998753,"data":"      \"seed\": 9484202,\n"}
+,{"stream_name":"stdout","time":487.009989878,"data":"      \"updates\": 32,\n"}
+,{"stream_name":"stdout","time":487.010003003,"data":"      \"variant\": \"L\"\n"}
+,{"stream_name":"stdout","time":487.010006848,"data":"    },\n"}
+,{"stream_name":"stdout","time":487.010010522,"data":"    {\n"}
+,{"stream_name":"stdout","time":487.010014147,"data":"      \"inference_export\": \"/kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19/autoresearch/batch-3/training/variant-L/seed-9484203/a2c/torch-a2c-seed-9484203.npz\",\n"}
+,{"stream_name":"stdout","time":487.010018948,"data":"      \"inference_sha256\": \"d7dff74a8247f99db6c6d23c24340dcc690fcf12cddfe377fab88723d1f96672\",\n"}
+,{"stream_name":"stdout","time":487.010022582,"data":"      \"latest_generation\": \"generation-00000032\",\n"}
+,{"stream_name":"stdout","time":487.010025982,"data":"      \"seed\": 9484203,\n"}
+,{"stream_name":"stdout","time":487.010029225,"data":"      \"updates\": 32,\n"}
+,{"stream_name":"stdout","time":487.01003242,"data":"      \"variant\": \"L\"\n"}
+,{"stream_name":"stdout","time":487.010035662,"data":"    }\n"}
+,{"stream_name":"stdout","time":487.01003876,"data":"  ],\n"}
+,{"stream_name":"stdout","time":487.010042427,"data":"  \"jobs_completed\": 6,\n"}
+,{"stream_name":"stdout","time":487.010045731,"data":"  \"jobs_started\": 6,\n"}
+,{"stream_name":"stdout","time":487.010048979,"data":"  \"locked_outcomes_accessed\": false,\n"}
+,{"stream_name":"stdout","time":487.010052293,"data":"  \"max_additional_training_jobs\": 24,\n"}
+,{"stream_name":"stdout","time":487.010055585,"data":"  \"mode\": \"AUTORESEARCH_BATCH_3\",\n"}
+,{"stream_name":"stdout","time":487.010058935,"data":"  \"notebook_sha256\": \"d7968243c16da0a3f44fc4317f96537c7c4fb2e2916f19a008fdbb1a5a6ca23e\",\n"}
+,{"stream_name":"stdout","time":487.010062385,"data":"  \"protocol\": \"autoresearch-outcome-aware-v1\",\n"}
+,{"stream_name":"stdout","time":487.01006874,"data":"  \"runtime\": {\n"}
+,{"stream_name":"stdout","time":487.01007204,"data":"    \"cuda_available\": true,\n"}
+,{"stream_name":"stdout","time":487.010076978,"data":"    \"cuda_runtime\": \"12.8\",\n"}
+,{"stream_name":"stdout","time":487.010083007,"data":"    \"gpu_count\": 2,\n"}
+,{"stream_name":"stdout","time":487.010085558,"data":"    \"gpu_names\": [\n"}
+,{"stream_name":"stdout","time":487.010099131,"data":"      \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":487.0101029,"data":"      \"Tesla T4\"\n"}
+,{"stream_name":"stdout","time":487.010106842,"data":"    ],\n"}
+,{"stream_name":"stdout","time":487.010110282,"data":"    \"numpy\": \"2.1.3\",\n"}
+,{"stream_name":"stdout","time":487.010113999,"data":"    \"python\": \"3.13.15\",\n"}
+,{"stream_name":"stdout","time":487.010117342,"data":"    \"pytorch\": \"2.11.0+cu128\"\n"}
+,{"stream_name":"stdout","time":487.010120683,"data":"  },\n"}
+,{"stream_name":"stdout","time":487.010123768,"data":"  \"schema_version\": 1,\n"}
+,{"stream_name":"stdout","time":487.01012701,"data":"  \"selected_schedule\": \"two-independent-T4-jobs\",\n"}
+,{"stream_name":"stdout","time":487.010130364,"data":"  \"selected_single_device\": \"cuda:1\",\n"}
+,{"stream_name":"stdout","time":487.010133667,"data":"  \"source_commit\": \"4ed0c9e478e66aadc0111da80a9bee413ed4040c\",\n"}
+,{"stream_name":"stdout","time":487.010137125,"data":"  \"training_wall_seconds\": 442.218203716\n"}
+,{"stream_name":"stdout","time":487.01014116,"data":"}\n"}
+,{"stream_name":"stdout","time":487.48538095,"data":"Artifact directory: /kaggle/working/pasture-release-autoresearch_batch_3-a1f599d384a848b3b4d44ffc93deeb19\n"}
+,{"stream_name":"stdout","time":487.485409371,"data":"Artifact manifest entries: 433\n"}
+,{"stream_name":"stdout","time":487.48541353,"data":"ZIP SHA-256: d975d92151e17e180e0e6b952683f43fad4e39f2ea7eb409664db53b9a98a53c\n"}
+,{"stream_name":"stderr","time":490.615391759,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":490.615438217,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":490.806595603,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":490.80661798,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":491.61897866,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":491.699673682,"data":"[NbConvertApp] Writing 89161 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":494.093319057,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":494.783489216,"data":"[NbConvertApp] Writing 511432 bytes to __results__.html\n"}
+]
+

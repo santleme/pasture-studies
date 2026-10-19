@@ -1,0 +1,2192 @@
+{
+  "benchmark_eligible": false,
+  "exploratory_only": true,
+  "files": [
+    {
+      "path": "autoresearch/batch-4/autoresearch-training-report.json",
+      "sha256": "a13e5f5950a35e2b1c51a44d1e179bddaffdeae500e2e4edc1cc7ba20c6f004a",
+      "size_bytes": 10971
+    },
+    {
+      "path": "autoresearch/batch-4/calibration/profile-cpu.json",
+      "sha256": "96ac2cf1b2b3cf3517a2465edf0614bc0ca77491725625bc57f6b7f03aa1750e",
+      "size_bytes": 974
+    },
+    {
+      "path": "autoresearch/batch-4/calibration/profile-cuda-0.json",
+      "sha256": "f37f7d170232c7e8de612ec223492b07fd4efb4f3c6d192021c9979b1b103447",
+      "size_bytes": 976
+    },
+    {
+      "path": "autoresearch/batch-4/calibration/profile-cuda-1.json",
+      "sha256": "955834892b45c3ab54f0769e90ecc706363c912b5389057e836fc5d0e41a0ce0",
+      "size_bytes": 977
+    },
+    {
+      "path": "autoresearch/batch-4/calibration/profile-dual-0.json",
+      "sha256": "b7e1a519653109c258d58f3aa457863e31b948ea9ee45e06a1f3271a66bcc3ec",
+      "size_bytes": 975
+    },
+    {
+      "path": "autoresearch/batch-4/calibration/profile-dual-0.log",
+      "sha256": "b7e1a519653109c258d58f3aa457863e31b948ea9ee45e06a1f3271a66bcc3ec",
+      "size_bytes": 975
+    },
+    {
+      "path": "autoresearch/batch-4/calibration/profile-dual-1.json",
+      "sha256": "baf16e02e43d39f4de6671dce2f260997cf02dcfc459cf93765224bc219233bb",
+      "size_bytes": 976
+    },
+    {
+      "path": "autoresearch/batch-4/calibration/profile-dual-1.log",
+      "sha256": "baf16e02e43d39f4de6671dce2f260997cf02dcfc459cf93765224bc219233bb",
+      "size_bytes": 976
+    },
+    {
+      "path": "autoresearch/batch-4/training/autoresearch-batch-4-shard-0-of-2.json",
+      "sha256": "5438c94566d7e101d4c42258f807a9398b33a80a671d72cbc9c37b5bdbe036a7",
+      "size_bytes": 4330
+    },
+    {
+      "path": "autoresearch/batch-4/training/autoresearch-batch-4-shard-1-of-2.json",
+      "sha256": "569d76b31e1909dfe79a81e6d4f93fdf1709e596bec9108bc73ff822a7ba27a1",
+      "size_bytes": 4330
+    },
+    {
+      "path": "autoresearch/batch-4/training/autoresearch-candidate-manifest.json",
+      "sha256": "7a071dedd0e691602eff9bdcbad0de62ecdcd2cdfece18d98584061a83ba25be",
+      "size_bytes": 1593
+    },
+    {
+      "path": "autoresearch/batch-4/training/batch-4-M-seed-9484301-run.json",
+      "sha256": "ffb41826c47db99f8b91aea0ce5d7af97687591e69e0f63153a48c3ed6a08fba",
+      "size_bytes": 1055
+    },
+    {
+      "path": "autoresearch/batch-4/training/batch-4-M-seed-9484302-run.json",
+      "sha256": "906a0d82c982e3e9e8d2a878333353399159442e9f3cf44f78416d9268aec7ca",
+      "size_bytes": 1055
+    },
+    {
+      "path": "autoresearch/batch-4/training/batch-4-M-seed-9484303-run.json",
+      "sha256": "7bad1dc29e7c0f8b27849188925d589c93e6c30c97956cefc7e38ffaf8905242",
+      "size_bytes": 1055
+    },
+    {
+      "path": "autoresearch/batch-4/training/batch-4-N-seed-9484301-run.json",
+      "sha256": "fc43c619455ca268b4e69dea3c7b01aa62b579ed4d21fde56704fe43f30d6a81",
+      "size_bytes": 1054
+    },
+    {
+      "path": "autoresearch/batch-4/training/batch-4-N-seed-9484302-run.json",
+      "sha256": "badec6292d4c1dfb0bf693b7743031ddf3b2cb10e1872f51e8cfdcd13a1cc92c",
+      "size_bytes": 1053
+    },
+    {
+      "path": "autoresearch/batch-4/training/batch-4-N-seed-9484303-run.json",
+      "sha256": "8e883dd6d47f1f2b558aebc8e350d8c90cbb4360d0b6cdb07fbc0d6757356531",
+      "size_bytes": 1055
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/LATEST",
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7",
+      "size_bytes": 20
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/evaluation.json",
+      "sha256": "6a02fe59d1dfaab359c898b2a45b8b00fd07cadb0f905562de53c85d724dea60",
+      "size_bytes": 23558
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000001/manifest.json",
+      "sha256": "8003d2c6e2ecda69d262ba22e839510618e56e42cd8334131e3f0a8cfdfd8b82",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000001/training.pt",
+      "sha256": "7597e2b08960e218f9cae47ffefc3b423ff04fab5b56409b929dc871e0537091",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000002/manifest.json",
+      "sha256": "903c6a7ae3438acdc228df3ccfd959795272a8f9111128e258d9ffc48f8e1aa3",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000002/training.pt",
+      "sha256": "82f4fb92ff2b4cfc2c20e8af9b044b956207a9a7e2f2220f43e5e78f1bc77cdf",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000003/manifest.json",
+      "sha256": "fc72e8d178c5656b563b64fa388356b70804fbf4689c33e2051db5c9bccccc22",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000003/training.pt",
+      "sha256": "2fd2321445fb5cff3b0ab364da352e6844eab2ec6e200afca825038131c9df6e",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000004/manifest.json",
+      "sha256": "dd52763ba6ee577e82b15f66715b7caa51168ef4c715024b39a99bf27a8be065",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000004/training.pt",
+      "sha256": "b55dd8fb69f545ae879d9370182eaf39d241e6610e8753afe7bfec46b843ca7b",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000005/manifest.json",
+      "sha256": "909d85e4a77749c5fd192b68cbc6e32b84df381c80580750baebdbb329be849e",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000005/training.pt",
+      "sha256": "620a80544ef7713962097158bc47d46c3fde4dafc4ed26d00d8693ef53b1ff3d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000006/manifest.json",
+      "sha256": "caaa5a16774de96369bfc96f32c0b0654cb38a87cd5970b197ba0d271bf0e764",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000006/training.pt",
+      "sha256": "0e6bc6d87ca7e06daa91d81f1a08469b7a94a2732957dac9e5ce1e091fd93f5d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000007/manifest.json",
+      "sha256": "8285ddd75939232807687d542f39fbd7460ae13f01411d7476fb33519379d010",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000007/training.pt",
+      "sha256": "62758b6ee6319632a6a12980161e8f25e7ce09d90b592cfabccebe7de3576e7f",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000008/manifest.json",
+      "sha256": "e6c0ba84055258d87a9f2406efd912198e2000c6725899e18b68df9dc6100e83",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000008/training.pt",
+      "sha256": "4d8178ab5663a46393618d291a8c147b84ed5164c5145a6c473fd2a33d35b9b2",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000009/manifest.json",
+      "sha256": "c1926360be61f4f63316bd84a50f295d74eefa17388834ed786921c67f6ebe8a",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000009/training.pt",
+      "sha256": "e195c9554bff7c37144bee85d28a36ea25c4e0504ab745f394b3caeebee26c48",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000010/manifest.json",
+      "sha256": "eea4b0cf986a05ad915ffe6019e5fbfab918619e647ac470851e867840239f55",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000010/training.pt",
+      "sha256": "c0f9e9000d41869442444d66aae7539e5d774948e371472a723ec6f959152f7d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000011/manifest.json",
+      "sha256": "0b5e4f5b86f318912dea6c6cfa35fb3561d9435e2f3746cf448336a7edf606b4",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000011/training.pt",
+      "sha256": "2ef1442c5cb3297c7dbba82db218c2d1444d57a563670b7947e8916cd2dd1aee",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000012/manifest.json",
+      "sha256": "1654c0f643a2c88a9f86ea7ffa031b76c04dfda967daf49f56b69eef411643a9",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000012/training.pt",
+      "sha256": "a69bd98f61488f81e49c87809c26de69c9cbc172d677a6b5fb38d840654dbb8f",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000013/manifest.json",
+      "sha256": "3a63ddb648e3d79341f107889891640325949d99808f5ff1bbe2a98cf34531b2",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000013/training.pt",
+      "sha256": "8ec62f13e8759e6a5b73c0102af83635f5cbcc76a762581cf2e143eafd709ad1",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000014/manifest.json",
+      "sha256": "1c6885b6446a1104be1f5e1f04fa10a31d9d8b8809b963f08314ba642e6345c1",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000014/training.pt",
+      "sha256": "67dcd7abc42ecd7801c724cd57efb0d978cfeb1cd316b3d6fa2cef8c6c29decb",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000015/manifest.json",
+      "sha256": "bc6ad99021f445b5dbdd3a6885e5494b7f7fb1b35b8ff59f56bd4c5a70d90194",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000015/training.pt",
+      "sha256": "4063566662cbea1df1c266da347c1fe20146c43a20149dbbf1cd26beaec4fdb1",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000016/manifest.json",
+      "sha256": "f83d65c32a4c5bfcf182ea23075a39557831dcf64eb82baade38acad3647a99b",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000016/training.pt",
+      "sha256": "8c6c1cfe3ff213c68474d26e2ba250edf750767841ba275cab2073e46df66176",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000017/manifest.json",
+      "sha256": "ca638a0c1ed0b7845ba655019212052212778f64d3dce62f108f0afba1cb5f19",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000017/training.pt",
+      "sha256": "cbf7e1cf5334f560a82ab139da31730440681bde7df644c08900c27802e46ac5",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000018/manifest.json",
+      "sha256": "613c288e5cac578781409b72ca60fc5ef2aaf8d7a4eed91ad1485e73f43eb995",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000018/training.pt",
+      "sha256": "6b2601ef735a526a9c7320ae4a58bf673019dcb6344c7899257f1d52425d4c1b",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000019/manifest.json",
+      "sha256": "8f0ed8a8d0e4e8cb6ba306c65ccfa60fc321cf2818110e721fe96e941f51e27f",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000019/training.pt",
+      "sha256": "0151284182f83104d033b95e336d3c3a3424feda161a6eb126e196a7d2694676",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000020/manifest.json",
+      "sha256": "ca98ee17ca470c557bcd0b299edcb2baa219047a10a90c44facfcfca060ab8bc",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000020/training.pt",
+      "sha256": "901ba5e45e6445a7aab37f0b4b91ef929790569e3cd23238501faed022f5f99a",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000021/manifest.json",
+      "sha256": "0e690dca9328b0ad4e5517899cab792151771224e858e5b93590411525d8a90a",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000021/training.pt",
+      "sha256": "bc4f9e0aee0d97e2f47cdcb10a0a21811b2ccfde203032c8df7b94ff8e97ff5d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000022/manifest.json",
+      "sha256": "a2f30248344099ea48a1a2224683eba9318f11917b6244b02587155609fe98da",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000022/training.pt",
+      "sha256": "aa72554d3017dbc4ceb823948ff03b13d6c1e75ed2bd25d27dd1d6030dd58a09",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000023/manifest.json",
+      "sha256": "37bf227b150f7375e966340144542ad21c7e52c3d063da5d5b6bbe94f3abbb56",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000023/training.pt",
+      "sha256": "2e7782096ed5e48cff5f951fad8d999ee9ab1703992fe9a3b7a9b655097641f6",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000024/manifest.json",
+      "sha256": "5068dc117350e8984ef6ed581cfb0b821ccbf71b1842320f860013dc96170979",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000024/training.pt",
+      "sha256": "7791df02d622f6514fa69a1b9f123bdb81f878c4aea02755d306317f963c98a5",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000025/manifest.json",
+      "sha256": "4a041cb2c00488ec1dc58f677169388fbed6e13b891c925e9151254be3336ec5",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000025/training.pt",
+      "sha256": "0d84f805b614cb3dc5f7d9afab63822d32e21918f59a9757756fed8d2d8368ad",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000026/manifest.json",
+      "sha256": "ed3333de69c4591da18719ce699df7625f3d66d524a3479cc3a69e4c8e38634c",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000026/training.pt",
+      "sha256": "e8a8c6351a5bcd5458a1ed4b113aa60bc04e362683da33e3cc3ff402668a8cfd",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000027/manifest.json",
+      "sha256": "c5aaa2e08d0078493e53fa84e04bafcb38c81081de12c16c130dd51835125ab0",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000027/training.pt",
+      "sha256": "54f7fa0a03ea312a5abdb1055afff5dc9850d5f32eeb1065631b7aa21a61a666",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000028/manifest.json",
+      "sha256": "04488cddbde95158886da65d9fd28c92a85d1a6341273c4323f29767760e69cb",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000028/training.pt",
+      "sha256": "67635a7a1cd751d6938f796539fcf39e834ade6d095560bc92e950d9891e56ea",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000029/manifest.json",
+      "sha256": "2b88221beef147b6554cc8eee1cda50ad078012f0c53b3bf7fad4c1845cac109",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000029/training.pt",
+      "sha256": "12013a5f33542d1803d894a6d9b4ccdce9ac2e482e98494608039fd722ce1be5",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000030/manifest.json",
+      "sha256": "2796ffc15ded3c7e1681f39fe60a65fdd4cf1a2ef024f39d9cb8c4d8abaf78c3",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000030/training.pt",
+      "sha256": "558e38b62534650d25ae1be7a4a8a28c30bcdf2be7661d729556bec8e8ce2e66",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000031/manifest.json",
+      "sha256": "a0f1c03e22e6be979f8a96995f83a26d617a5cc0de1ac0ff413ab57cba522686",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000031/training.pt",
+      "sha256": "46fe8cdf7b63ed39cb067f28f1dddf74b02ca90a865870b5171b0e26a163514a",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000032/manifest.json",
+      "sha256": "e195c88803b91fd3179b355ba9e37609dfb2933d78f89afabfff5fab70ee13ae",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/generation-00000032/training.pt",
+      "sha256": "eaa32e937a32b2b6f73ed6c8d055e34e605c614bcc74cc226950d356147fede5",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/torch-a2c-seed-9484301.json",
+      "sha256": "d92c0b7305f08c312c145611774f99120f4369e3f4aa68efb8106c54c76287dc",
+      "size_bytes": 4836
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/torch-a2c-seed-9484301.npz",
+      "sha256": "471f09414c0a651d647bcbc3124fc597b33e92a75cf610fb9c1079cf359a1c1b",
+      "size_bytes": 4895
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484301/metrics.jsonl",
+      "sha256": "7f995d1ce932611ca006dd0127fe39d2f208b5e5062de683f13fdcb335303c87",
+      "size_bytes": 59944
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/LATEST",
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7",
+      "size_bytes": 20
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/evaluation.json",
+      "sha256": "e3715cea8761f27b39e2ee29ca79f2a36c63c704809cdc74724e7a2c59f34a47",
+      "size_bytes": 24287
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000001/manifest.json",
+      "sha256": "33da3cf8a12eac0c01090131a46659a8371a971a69175d6fe04bf2e105951694",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000001/training.pt",
+      "sha256": "f97d73cdd6308587b7815752594faf4392423490b3b703eced1ad3044eb8e318",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000002/manifest.json",
+      "sha256": "14575c4284e0a4471183aea0cbd7f0a733dd771dc6787abd17cf68cdbe4727bb",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000002/training.pt",
+      "sha256": "cacd96bb97975c77b9c879f6f4a29c7a7db1c7466ca764d822ccb12aad5b5fc2",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000003/manifest.json",
+      "sha256": "86391a325435bbd4de48949cb5c778782a449d58ef6887dd002099d521ef82b2",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000003/training.pt",
+      "sha256": "e829ae7b829b36ba21412d302bf85012de1f4f07601c28292c1caf50c01b532f",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000004/manifest.json",
+      "sha256": "bcf559140c83fc61c9e5bd38a3f94f7b06a9c20241152f37f7dbf4fbd4705506",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000004/training.pt",
+      "sha256": "96711ee7175ba0412c3155331e487957bf635a1068869c9c83d27dfb81c8ce53",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000005/manifest.json",
+      "sha256": "a2d13ae3fed1cf4cb4cfdfb0804448f7a8635e0fd3703a1ec8d5e1dfae82b551",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000005/training.pt",
+      "sha256": "55f8be034a41020350d0dbaa0e8ba3f674b2371e5f6f1991a6544a63e1ece9c8",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000006/manifest.json",
+      "sha256": "bc13443b30b65b76863b1ba2ed03266f1d79814846fe29aebabfc8ccacaaabc4",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000006/training.pt",
+      "sha256": "6f1b53a3f155f8210509e45ac7d7bf410a52d7af427a2a4664135b61b83f443f",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000007/manifest.json",
+      "sha256": "9c48f603d35ae113081d52b5d4b9942760f8b4596af47c81b42b7ee52aaae623",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000007/training.pt",
+      "sha256": "53e8f8ffe4876a03eb9f80f85d90b64e89f00c66efd2cbb4b4246ad4eef363ca",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000008/manifest.json",
+      "sha256": "cd54ddd8f2edc449c3144ddd6b11e2bba9dd13a2ffbcda0e6406e3f51b5dfcce",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000008/training.pt",
+      "sha256": "60bfb84dbf549482d56a4ad60b70bade10c35fc7db2d7853f4d06f049b7ac50c",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000009/manifest.json",
+      "sha256": "69bf3a7aba21c4cd36aa7f911bf4718cdd94cb18458ba70c80c39ebc9d196d15",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000009/training.pt",
+      "sha256": "6fa225d3b0812c48a01a49d3cedc933d27514930370b4ab892864a4e0e3024bb",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000010/manifest.json",
+      "sha256": "b31938d2881feb94baf030a9d2730fb33496801cd539ac8789030cfa3fc64990",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000010/training.pt",
+      "sha256": "3991a86555a2391d89a44427ee242f89c9f46adbe6a31c2b094f38b511f7d84b",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000011/manifest.json",
+      "sha256": "c63aa48eae6c62263f3e4f2e0284b9647a4e1f07249437af50312a8faffd90d3",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000011/training.pt",
+      "sha256": "865e6c8fe1f9361fd124c2047209fa24f8522a9dc3d9c5a5f5da88644105dbc9",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000012/manifest.json",
+      "sha256": "20576871d401c84b791373f1520a202357df9e0e1aafbf97fed65316b389ea2e",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000012/training.pt",
+      "sha256": "2cdde98bcee3a773f5e6a81fc58957c53390395602625001f4ccbe752db3e0f7",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000013/manifest.json",
+      "sha256": "522f859d2897bb04662d9aa08fa419bf5c47d471d7013acf8e3a788c7071fadd",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000013/training.pt",
+      "sha256": "443c7db77d12343d5e26e9a96086de6b65bce367cf84c7cbeaf45266cf03ea70",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000014/manifest.json",
+      "sha256": "2f56bf948d9e12da392e83494f1a2a4f263adc65f55bf915e9dfdfc7026e9caa",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000014/training.pt",
+      "sha256": "b07eab3ad0f15864e144310e786f15f152c94e346d39b89dd4e86e103cee907d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000015/manifest.json",
+      "sha256": "560707a390d6e5653d25b16bc1da435ae83bece6069bf397b32ebfe43d60c1b7",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000015/training.pt",
+      "sha256": "afcaec4d6855b58fd356e8be4e4c9a17688a77265af18e6147e3b307581346b0",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000016/manifest.json",
+      "sha256": "27893b32387b215cec1b67f371b86c992162cff165fb39b88d60d6f105dfa6af",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000016/training.pt",
+      "sha256": "cf440a5da459046d62440a7007b450b0446dfe5487157c75752d92985062d60d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000017/manifest.json",
+      "sha256": "fe7b872ff9ed6a6bc007af4828216de4bebd07666047b6073ec4ccdf8e2bb2e4",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000017/training.pt",
+      "sha256": "802d9f88b690a6cbd21dd19665269b85e5be0c37a821ea186c7918f654a29e47",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000018/manifest.json",
+      "sha256": "8bfffc68a2aa608533ed0b3f810620c457358c0cee68185d110a7f640470bb37",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000018/training.pt",
+      "sha256": "658de71dcf47c14cb26488b544949cb4955dac1c41091eb347b5ec5223af6693",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000019/manifest.json",
+      "sha256": "6559503e0ab6c9a4d2861de06e40005f80ef7d926a2114782f2e36665d79b3d9",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000019/training.pt",
+      "sha256": "5bcde031d35fd4cd72fc4ede0ccffd61a434635f9a88bf82cdf5bd49ef65516f",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000020/manifest.json",
+      "sha256": "34972e0ad55f832804398067ff77a461a7c053c554013634f231088010ba4b96",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000020/training.pt",
+      "sha256": "a057810610e73cabf3bbabc239f032df149419b6e2e4f3fd676977b4bfe4fdff",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000021/manifest.json",
+      "sha256": "1c782c67a177aacd2f3d272764153529f4bef8f145f128facfeb5a774c575c40",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000021/training.pt",
+      "sha256": "c7b2ce309b4cb5665710c9aec4ae99f3cbaee9dcd8017d3e952f3f1b8e64b7d1",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000022/manifest.json",
+      "sha256": "cdbb8773d760a26435aa61a7e45fbbf5ce252bdf3e7ace11e0a7999f973e6610",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000022/training.pt",
+      "sha256": "bc1f961b9c65ab4ac33e0663786468379f3db7331add7a0a3b785cf8d5873bb3",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000023/manifest.json",
+      "sha256": "cae32e7985e8aaa14091519c0eaa3325da9424105a2a553215ce69619d45fdcc",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000023/training.pt",
+      "sha256": "d7599a217835b0f378a255b9c5f188826f42a3d41c3f519d518627646eb50a8b",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000024/manifest.json",
+      "sha256": "6d7f6f9de674b46e842690ce3f9387ce5b71b3aad00214f543c0c2fcf259ca02",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000024/training.pt",
+      "sha256": "bd6622d77d69255c3325754b2e897f47ba65b5a48179f24cf04a1ddd4f000355",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000025/manifest.json",
+      "sha256": "a5eb6cbd023a44ea7ea0a96623b3f9376e718e0aee754fa5696b59cbc53e7103",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000025/training.pt",
+      "sha256": "12ffaa63d8b5689430c26e57074617fd3597c1b7665d4bf993ed806597167138",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000026/manifest.json",
+      "sha256": "86666f6d97d578d55f0f594662a767a0bb248760ce0cfd6221a1559866f01fd8",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000026/training.pt",
+      "sha256": "b45490d772a9aed7a98a2c90673e71e86c42d4b9a1681d29648b0718ff9f3980",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000027/manifest.json",
+      "sha256": "c2474770244013aeba5ddeb78a6f463d6a3cbde291f514f2544d3a2150d87796",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000027/training.pt",
+      "sha256": "25b4e1c764f019cb407263f1e958c560bb4a13f18fd32178487b14a4793c5f63",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000028/manifest.json",
+      "sha256": "7bb2b7c721b3e07a506c96db2e832305d2a2e2d2aa8d2d6bb5e610b67f5d68b6",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000028/training.pt",
+      "sha256": "da00849af6e5ad16b60d0725c871c73fab429c5f49a4dff1a5750d8a3ec087bc",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000029/manifest.json",
+      "sha256": "11a388194f7f7d073868ef802fb1fb8d1dc3141c54831f615ebf624b4cc41bd5",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000029/training.pt",
+      "sha256": "468de1a5fa2395c1d8b4fb573785c5e6196a03e975f39adb53d7e4e7e496f369",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000030/manifest.json",
+      "sha256": "9138aa512ef1054c96d1fb0b727e489e17a5fcf95b2cdaebc066779d8f734fcb",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000030/training.pt",
+      "sha256": "ee37f0e95d36a4dcb5f34338566ae4a3449c8a49e2adfd3f7d2d64aeef6ef1fb",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000031/manifest.json",
+      "sha256": "d7fc54fe51072c3ab17ea4bafd9906b24a1fdfcf24c03d448dad31549966d2ca",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000031/training.pt",
+      "sha256": "f13b6d95eb353639ebcac374dd9b28df942ea1e4926ff4606ee9e6733232284a",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000032/manifest.json",
+      "sha256": "f0504022c43cb9311d959fd369aa3fc7b9a2887d871aab797e0509bb1a8df108",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/generation-00000032/training.pt",
+      "sha256": "88f84e956aa2782ba6455d2258e7a5303630146788d260a0775be2069e44d3d6",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/torch-a2c-seed-9484302.json",
+      "sha256": "be259ab1a937024f2eca220abb8cba97b8989b82eae03ac127a79c2d84099bff",
+      "size_bytes": 4836
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/torch-a2c-seed-9484302.npz",
+      "sha256": "6e2d5849e4f88a27af78c5d5b44757fdbb7149b50ade7faf25649862f81b9187",
+      "size_bytes": 4887
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484302/metrics.jsonl",
+      "sha256": "e2e391b4f731876b91b770d1d75dd4526f4dab3916ddc44b27d7e0dc2ae69d2e",
+      "size_bytes": 60080
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/LATEST",
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7",
+      "size_bytes": 20
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/evaluation.json",
+      "sha256": "8afca87260809555f6d1d978116869b4a33c1ce6f571ac24c624dbe829e1251c",
+      "size_bytes": 23846
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000001/manifest.json",
+      "sha256": "07329a448a9cf1d5803dadaee64e7447ad33e5700fb683683fbd4af5a8142731",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000001/training.pt",
+      "sha256": "fc7234ac2dfdd31787e206e17e017a9a1c37fc1b6cb6530d0c395376177333ba",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000002/manifest.json",
+      "sha256": "8e0d5484de1a4c3231b1038a48a46161e95eb2f9af4bda0c430e78cb6a17207c",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000002/training.pt",
+      "sha256": "3815aa693f9cbcc458928b06b5038fd947577a7373e61d110c2e0a431ddea9c8",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000003/manifest.json",
+      "sha256": "5b1d494ffeffc7807a8c8b1889457eec18eb36d319566b8a776992cf13509858",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000003/training.pt",
+      "sha256": "19fdfd4e139c838e76472c72bad5d8db4d517e32bed00c41fbc4f4be3afa6c35",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000004/manifest.json",
+      "sha256": "4543c7e098b7d7799fba7a7f1a662f1e3305b91a5c2d42c4bd566d657413d5e2",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000004/training.pt",
+      "sha256": "edea4e2a2cc7210faedd106dcefc08a75a3df8fa1c9a5c183a934cb003cf9aa1",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000005/manifest.json",
+      "sha256": "7ffe0cc55bb8d4407e6b86d21ec1b2fe07c7dadda1913795013725746a61ae64",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000005/training.pt",
+      "sha256": "d6b28b8628d61ffa00c42ba3d93ef50875bdc1201894d0ab9c9529847e54ed82",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000006/manifest.json",
+      "sha256": "d28d5c8a3ddb0029ead148c6c695242665327a6a91a04a1ab6281fce9f14d8e6",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000006/training.pt",
+      "sha256": "f5817f2cda74a16249281844b4347156f46ea3d5c7fe7f2cb5f4f4bca16770fc",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000007/manifest.json",
+      "sha256": "0518659bea198bab950797b71e4fb9d3422ee4355f79e7c978d4faabb14c7bc4",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000007/training.pt",
+      "sha256": "c6a21fe04ae6344a37bcca408f4fc5f8ffb8a15505fd79e49774d79837a57d18",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000008/manifest.json",
+      "sha256": "d421e5a1c8599db175521596c0d1254af7ecf265c32fc4a62d15fa4a44662ee8",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000008/training.pt",
+      "sha256": "b6adc0c2f0eb79d86e1e48d3d8428adda77f9201a70be6e9113d2f467e3d7986",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000009/manifest.json",
+      "sha256": "602ff39bbcc22e230a9dcf74b4cea6fd1da15cb4713eaa3cef6c215127741367",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000009/training.pt",
+      "sha256": "33367efb9fa5b6ccf4e950ef6326d5f88298229d31a1fa09ba518e3acd51fa73",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000010/manifest.json",
+      "sha256": "e48b16f82e89de1c6327908f1ecdf81ee3094d2218c6fdd3a4caeed26e5c9717",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000010/training.pt",
+      "sha256": "e91720be6f6b05f71760e6e90c42c745523b9b964ed9693443a2b9cb9531c92a",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000011/manifest.json",
+      "sha256": "32718934027f2ae83490c2f7ecaf4c78d54a4c13595ee07bf8b3cd12b7bb5670",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000011/training.pt",
+      "sha256": "311669ad25785c05ae8bd51235fff043283b075e3541d57a7ab941f9ae221adb",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000012/manifest.json",
+      "sha256": "e622cc15540c8ebe41b4a77723e78d6565b5c7edd57e595e491b7825fa4afeb4",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000012/training.pt",
+      "sha256": "a94a083e8ee02274580b1c06191a2fc3de1533a441ba376a344cc2a6f7fd4f7d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000013/manifest.json",
+      "sha256": "7686846500e45eecadeed6e45e1787dfea16a74aed65b37f65db9dd9372f4ad4",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000013/training.pt",
+      "sha256": "b5d7bc4c5154068c356e3bc70cdc25b434b957552849d266c9df94be7038a42c",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000014/manifest.json",
+      "sha256": "9ebe3b66bc62e19422025b4373be9f4572fecf39bacac81cd9733fa143831169",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000014/training.pt",
+      "sha256": "001ae73fe3d04179db2ac6a71ec7f0b1853fb048bf12a769795c3df89c43b2c3",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000015/manifest.json",
+      "sha256": "d8fb9883cb35693023772a43a7cb4611bd57c7db793f0ca71bae49213e5a67e2",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000015/training.pt",
+      "sha256": "7d55d55b7735998b93ac5005993624eb861789df70d578673315198e65a02ccc",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000016/manifest.json",
+      "sha256": "d7bb1debd24ea13fafe08abe1979b7f0d9026a99db993d99eb1e6ad2de4c60ec",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000016/training.pt",
+      "sha256": "66df0035752f5be8aa8d0d6b054447190286fef7839472f442d27d517a644877",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000017/manifest.json",
+      "sha256": "1c5e3a74d6cab835e0572b687a2a565380b7f8be2020564e0147b2438800b5e5",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000017/training.pt",
+      "sha256": "b01e8e4135729f55c306f77a729490d3a09c9d8ef62ab66bdeb220db61696ff1",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000018/manifest.json",
+      "sha256": "dc50740a90450ded47dd12444980d5c177f48183f3cc3a4818b92ea7f1fd4bb2",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000018/training.pt",
+      "sha256": "0f689c4297475ca6aacac539ef37af0e79931fa9ba218a691ce577fa96acf507",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000019/manifest.json",
+      "sha256": "1431eca71e0fd80c8e297e082fcdbf2a36d5e4a79d2f76daab3b490b9d18aa8d",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000019/training.pt",
+      "sha256": "0bdc65ae77ad37032db24c7dbba0b69b09ec95f77352a779191a6aed61b8ca38",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000020/manifest.json",
+      "sha256": "b2ae848c9c26691677d797f1a008ebd9fd5f5882960789c3416ff05523499375",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000020/training.pt",
+      "sha256": "cbe19a7035e1fb781c72e722d75ef3d55dc32bdaffe59d95e2585e0ba9a91566",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000021/manifest.json",
+      "sha256": "d7b2ccd33eda87e4f4cc67d3b09223a288c183581fcd545af291bbbba5bace23",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000021/training.pt",
+      "sha256": "62bec24d58f07c95ecfdc88232163c59d3f1fc96efc1f6e77a662abbcc144248",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000022/manifest.json",
+      "sha256": "d9fda4d2920748bd66002e642c4c34c637f941ccd747bc634ee30ad44b85429b",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000022/training.pt",
+      "sha256": "5418835211a90c8b1ab9cea229341133e46284460d8af3d023e04e72077faca7",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000023/manifest.json",
+      "sha256": "5f91cdd8b7c492c51a1632b17e2e7fa144eb6dedc53b9f215e9adec274bbdaa5",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000023/training.pt",
+      "sha256": "85308c305a594875ce1dc3936170bfc58b39f2d53304008b04dd4bc89f9a7635",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000024/manifest.json",
+      "sha256": "ec658bcd0123f49f0d5ca60cc5f7d3c64919504e64842342df6c51d0bee3c617",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000024/training.pt",
+      "sha256": "11ed1b581c0217d07ddbe1ca2fe451f994fa9294fdd24b4e0c5690edaaed21b5",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000025/manifest.json",
+      "sha256": "29f7a69286ae4686be87ddb6891145d93ef306016cb36df458937e1a6deef94a",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000025/training.pt",
+      "sha256": "e95edb7056cef2dd28592ca2f58146ede67811d286babdfc59f18b4b1c100741",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000026/manifest.json",
+      "sha256": "251f3491382f5fc908b7317f290e05c0263adce70d65e9020c2771fee82fccaf",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000026/training.pt",
+      "sha256": "52af3f2337d0f065f0d06c56fc25078f6123cdee576b1e48e4714345399c58a7",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000027/manifest.json",
+      "sha256": "6b24e6c4abba50eaeea52bcba65b5acea30c05a53fd6af8c4a2e8f22f8184134",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000027/training.pt",
+      "sha256": "f9e96d4c8bf6eedd2906430dd98feb94524c43dc0f64acae5584f2a28c20f696",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000028/manifest.json",
+      "sha256": "be923f5aaa07672baf12a3cdc5469a9f9ffb262ee54cec7f2033738a16389a7c",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000028/training.pt",
+      "sha256": "5046c303c5f07bacbb1eeef67d5e17792d143c72aeca784a9b0780ac70761acd",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000029/manifest.json",
+      "sha256": "6df83a65a86c5e8e4e61076cd00fc56266f5a4fa206b770b6b3cf33d638d1af7",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000029/training.pt",
+      "sha256": "685915c322c7a054d18e9c78a26aaa97f544d0fcdf344b26240bd556c38e4930",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000030/manifest.json",
+      "sha256": "8928921d241dc712c4e1e2f9e24ddd7dcbb59391b6c6566f6f4b6b9d459cf4b1",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000030/training.pt",
+      "sha256": "04bef5a178740b21b518bcd77ecb884b9d9172da323986ad768914b02363a5cc",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000031/manifest.json",
+      "sha256": "e14fccf2c7238a38402b07f6b3e6f228b181c02277ca7cb9f00ae900167f2bd9",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000031/training.pt",
+      "sha256": "15e0b414227cca869cf8532312171ecb8b837005fe87506e2eb4efc498ac2884",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000032/manifest.json",
+      "sha256": "e9f10b93eb0f9113776eb38f14a026183dfd1169c8c7cae8abf3665fcbfb0f1d",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/generation-00000032/training.pt",
+      "sha256": "3599a6780c05e0817e25bd1efeba2d990d94a6f781d4d4b89d4469cf31880dc1",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/torch-a2c-seed-9484303.json",
+      "sha256": "82fbaf80f3d2ccc7185371b25c2fae5df564b4da624a018be43ec89e2346cc95",
+      "size_bytes": 4836
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/torch-a2c-seed-9484303.npz",
+      "sha256": "adc79071ee083d79bb705a888cb1f806e97bd20e478077dd33f16a8d9740233e",
+      "size_bytes": 4885
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-M/seed-9484303/metrics.jsonl",
+      "sha256": "d04b22ef833af8e2b0f35727b2bce23de2af9df69edb46cc08b430c8d99e5511",
+      "size_bytes": 60038
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/LATEST",
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7",
+      "size_bytes": 20
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/evaluation.json",
+      "sha256": "84211c25404dcf5f0e72b8c24af1d1dfcd69e63f921b6ab9d1ce0b4be059c282",
+      "size_bytes": 23571
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000001/manifest.json",
+      "sha256": "4ba91b0f4d37e617fb654a8f806e410e34eb84a674a1e06b0b14f367f2eda827",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000001/training.pt",
+      "sha256": "d6278b5b7299ec6e0c6d06d801a28732f22e681b5ce1c341255db86f75171915",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000002/manifest.json",
+      "sha256": "a811a6f722b20bca090e59545e2b1302fc147ff7bdb7de9495dc45a421090a09",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000002/training.pt",
+      "sha256": "82d40db2c6c146a3254eeac58b54acfb7d8473484301f5e69729647e8d458371",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000003/manifest.json",
+      "sha256": "48525a8c0e87724d70a888139815380285b4576de4573c40333c626932edcc72",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000003/training.pt",
+      "sha256": "5a96d9c2a56df1e23f917479417474abba87b89d262bee5e02d2ee0c4473d5b2",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000004/manifest.json",
+      "sha256": "b73e87a071a3e213912e865e227d0f349d12264e55b4c52bea8b034dbbf3eeeb",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000004/training.pt",
+      "sha256": "92a023b3335bbad3f777705be2da3e5ed29edeecd15284d4eb3f5df11e1fc728",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000005/manifest.json",
+      "sha256": "d0a711458917e699ce45b4275adb6a37b93818762fb42b0cc121d618dfd2ca21",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000005/training.pt",
+      "sha256": "31d7e17e1a3d1b86e76496da56b695df8e9b0964104e3e9acd592b67d6648262",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000006/manifest.json",
+      "sha256": "be84adbfb737646ad27eff376ee2ac11a6733b3dae38f5e018cbff1d637b53c7",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000006/training.pt",
+      "sha256": "ea243323f87ee46b5510852d1c4892b8d2f859e97a9e011403ca6138f3a2c6b5",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000007/manifest.json",
+      "sha256": "45ed31f5ecbc10d6f0e061aaea8b724baad73372760b327f2b689d9289fc4f3a",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000007/training.pt",
+      "sha256": "dc0724da0da973a3cc64a31f8cfc28c14d93534302e454cb6cd156b393f46e96",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000008/manifest.json",
+      "sha256": "9cc4cf0a2256f4d162c860075563c1da04750a1268fe552c7ecc27422c0ef51e",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000008/training.pt",
+      "sha256": "9c2956f07d1d0d0780217a6f362b52641a35ec17a2eb521b6d223fe61ced1491",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000009/manifest.json",
+      "sha256": "5ab939014bc55de450dd477558adec9bdf86e1ff2387bb384ef8889e02dbaea3",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000009/training.pt",
+      "sha256": "8a291d7410d194d164081337dabdb8541b8b1d0164d27d7012ac3416ac185f86",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000010/manifest.json",
+      "sha256": "dd242a9cd31ce13b971ed368cf530f084731d8bb588a3b4e006f72cbdf45258a",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000010/training.pt",
+      "sha256": "c8d4f9e0d026d6f030e25bafc88913abf23c92d2ed78b3dc49aa53918d6ec873",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000011/manifest.json",
+      "sha256": "81c7d7b026bbba5169c657c3624b2bf624f0cb4d62644c76b09abfb2a1d041f3",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000011/training.pt",
+      "sha256": "a3bb9e6ee6a027d671014a64d92af4c62483efa6570fe2e5be5941772d293be2",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000012/manifest.json",
+      "sha256": "00a037af8ddb83037054e313a47a91b2e5b49ad7c5162d9f823766ec9332cdd2",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000012/training.pt",
+      "sha256": "d95d4d80a51bc60ba25bbb6826f373b7e9ad1ccb3eba7a2f5fd6ae6bf6280191",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000013/manifest.json",
+      "sha256": "0e7c366607ca1d8ab1196f0765e1de5b857d4b819f6232f952db4d4be90e7714",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000013/training.pt",
+      "sha256": "7018f294b5ad87f125c027c07eec0d5bd76eadac2607a7214ee0af51132252ce",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000014/manifest.json",
+      "sha256": "a6ba175df8d5b1bfee6f6f163821dcb02a131532bbda873ed79109f5bb37a2df",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000014/training.pt",
+      "sha256": "ce1f631e0b66086f44d004056e368e903a5ced51af504361ce3825e9b9f459bf",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000015/manifest.json",
+      "sha256": "73519b72b012a528c85054a02a17b88fa3d9e2e9b1437d400ddc13beca1f24ea",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000015/training.pt",
+      "sha256": "369889ca5903d01301015d35d06f75d5135656d6be9e45970ef3bea79ed53db8",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000016/manifest.json",
+      "sha256": "ac25da5bd31ec78a03410c6f2d1808913d2ffba67732870ae463915c4f40085c",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000016/training.pt",
+      "sha256": "71e847533e4aa7d958fdf4ddc60725a0952467cd1d4dbf28c9ccc661db415644",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000017/manifest.json",
+      "sha256": "a3147e8e39ee24bf62c95a7239ff3613dbd83a7d64deaef02d7b0864373c03b6",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000017/training.pt",
+      "sha256": "ce289c1e1a663abc7fc24128a74fdc88d41de4caf8051cc0633ddf862ba6349b",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000018/manifest.json",
+      "sha256": "735c0f1b1789443b76c80190f07487dae684205dd0a0cc56f87ba5e2a7397138",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000018/training.pt",
+      "sha256": "e26819295364391124fb0dcd8f53e357bbc159996a2a642b62b02e2eb8e6ab1d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000019/manifest.json",
+      "sha256": "6fe5e7ea5bbfd6b4c5cab50fe677eee6512fd7b6a750bacf4a18e0db0bd909fb",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000019/training.pt",
+      "sha256": "b9e14f145296f4bd487ed464aed7a6fe0e6f894468f2d491b3ea469a7d6617ca",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000020/manifest.json",
+      "sha256": "90565509cb828b07ba525b315f58b1db3d4d76452ff9294c0728a9bdff8002a2",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000020/training.pt",
+      "sha256": "2bcdf4c2a18c1f8c4d1be43bc6e30dbd189f6a344f29fa09f898bb0c110c0caa",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000021/manifest.json",
+      "sha256": "9ab00c46ad51e831395bd16186aa315c0a44aad48c39dd506e960691787c794b",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000021/training.pt",
+      "sha256": "b4bc31199f547c68d677aab9132d9ffd23df823c8bc19f80888b5d8e6ac5ad1e",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000022/manifest.json",
+      "sha256": "8207ea86d547d976beaa7ab21ad92c8864be635bf172e5ed9c9fe5e966f492ea",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000022/training.pt",
+      "sha256": "214d30cd393eea985301343db3e066272c7462a37de3b729af16a821fa7ae507",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000023/manifest.json",
+      "sha256": "0db82ddda1d5a3b35484313ce5d6e0eb1e488565313757c72f4b7fb8a1b11701",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000023/training.pt",
+      "sha256": "88c84c373d5190f41e43f33503bca97bd696fee57cb22de590c465c7dc54966f",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000024/manifest.json",
+      "sha256": "a667e939549a23cb9aa8cbb9a4ddf8a6cc5c5ed43b437685df1f3ecca3be39d3",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000024/training.pt",
+      "sha256": "80b23383929a46385ac52a36b6e6d5fa3ec9d7975a2ba2a0c13821fac67b4f98",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000025/manifest.json",
+      "sha256": "c298abb2b4d24bd5b23ac37e2750bfc7dd93d5db1bf5580148f1c953b97fb6dd",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000025/training.pt",
+      "sha256": "f63a99f7b423b5b4b79b0d4705085ecedd8b6a8ba40ce78da71e8fdd3cbb3305",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000026/manifest.json",
+      "sha256": "d4554b9a1c06b1ef4b55e7bffd65b07a4acd2b17b082086ec7d69320a9804b9a",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000026/training.pt",
+      "sha256": "7d42a88e987cb69e97775cf6b59f4bb9b901aa3b532f287a77dde356afa18444",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000027/manifest.json",
+      "sha256": "5822bd74e521ae5013016a56aaba45df9805feffb83fcab0db5167224a40e081",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000027/training.pt",
+      "sha256": "cbe509bc9ae7f778c3ab60fc004f841f55553d7b2e116752751708f4973d37ca",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000028/manifest.json",
+      "sha256": "5778826a66c825fd6a012e7cc9fee971f519f22091807480f8319cbdae85547e",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000028/training.pt",
+      "sha256": "094e4a9c29293467d2f99f976b5e56f9a9bf1e03b557a5dbdbcada4c25518c26",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000029/manifest.json",
+      "sha256": "cd16bba2dcf681c98bcd7635c7c6c9c2406452208c091c3058fd2449fa4eabd2",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000029/training.pt",
+      "sha256": "5f93a51939ab651937e503e4648f41de52176642cbd3ec85079c5ca0e6c188dd",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000030/manifest.json",
+      "sha256": "09528842191aa89191c4f5ec1b5c64f412de6ae6abbec27fabfd91ea641c07a8",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000030/training.pt",
+      "sha256": "f554cbd25b464f13e9ccf1a70e5c1755782ae68571dbc16e7d79e7e757c02026",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000031/manifest.json",
+      "sha256": "5b770da35e2d947da6b9826c55df1c00ff3ad20888633c4d98e70bdbe09386fc",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000031/training.pt",
+      "sha256": "e9023ae7e387fb18ec3d81293b60aed742aac105cec269966c3071c1e946bbca",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000032/manifest.json",
+      "sha256": "93f3857569d05c09b71fb14cbbd3a7bbcb5a167bef7863e2c351fa3da932ec0b",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/generation-00000032/training.pt",
+      "sha256": "6d79e7f8979793ee84c01f42d4fafe0a0ec1d484c23568d376407286b34cdbf9",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/torch-a2c-seed-9484301.json",
+      "sha256": "1c390e04499d75eccea795551c1397769c433c7a7a844a6f72b074749f3ae295",
+      "size_bytes": 4836
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/torch-a2c-seed-9484301.npz",
+      "sha256": "43a5e169aa36e715975b0dad538f4c84bf083207652fcf3741f03ea7dd0c3be5",
+      "size_bytes": 4896
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484301/metrics.jsonl",
+      "sha256": "df889d834b0c48b5ff3c96ec571216d42f779b9bad32fff94e0d8a32562a070e",
+      "size_bytes": 60102
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/LATEST",
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7",
+      "size_bytes": 20
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/evaluation.json",
+      "sha256": "ddde14d75893a313e3099a3e96c9eb5787c1b0090ec69b4d5951a53055cb3d2f",
+      "size_bytes": 24235
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000001/manifest.json",
+      "sha256": "9a5ddd14a441dc18cfa031d881f22f52b0914a302c6c398494747525ea00e411",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000001/training.pt",
+      "sha256": "c506199548c46e2e7d3019766d39116dbbfc50c08a7cbf0046ac336126d65b83",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000002/manifest.json",
+      "sha256": "ce2b0f180fffb3b2257e594c15d91127c9606f119e213e9fa0a34c025b68c589",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000002/training.pt",
+      "sha256": "2010e97d7e41162b4d6e5c5273b12b4ce93639e1963d899eb2ca0a07819622f0",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000003/manifest.json",
+      "sha256": "da29d0a51db591bf6fe7530171edccf0015026653e5ffa25629b28e3171c3b8a",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000003/training.pt",
+      "sha256": "51a2d7b59e8083bc13991d01746cc0acff524c83f50bd7e2fdd354003d2b269c",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000004/manifest.json",
+      "sha256": "d3d3a9ff708ee8de1813beb2ad05947ed24230ebe84e15049ce6ba0b87d7eedc",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000004/training.pt",
+      "sha256": "528c6ea49dd8c95173dde0c63badff7b6155325121ea1f5dc643e181bc347991",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000005/manifest.json",
+      "sha256": "cb2ad223638e66c50290384affea92dc2896d29b8d4d13655902799d143a6b00",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000005/training.pt",
+      "sha256": "36a0346822819f7d96a439854f30dd81f857673691857a07f11ef72d93daadfa",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000006/manifest.json",
+      "sha256": "4c0ae9fc2eacc37525ab024e975fe3f1767e23810071aaa587158bfc03f43e7d",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000006/training.pt",
+      "sha256": "51c340b5422fef7132e1a77240d1f9ad66546ad97aa50b70d20659bcce755f2d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000007/manifest.json",
+      "sha256": "ae59076658613c87c54454fdda6f62e48373c1bd3e87d3c96e14364582af4ea7",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000007/training.pt",
+      "sha256": "faf847cc6113512c8b0db63540b80c2f359f9603aaff6c36e54314dd5d47b5df",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000008/manifest.json",
+      "sha256": "be10c08976a646f886836af9d3f42d2a0c70781927ecc86b7831eaaab82b034d",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000008/training.pt",
+      "sha256": "f55a89c7cbc7480438329ed44097410803ff03c8c5dbe3d2cea01122d333eff9",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000009/manifest.json",
+      "sha256": "56f52a11640a3f0f5ff9aa04ee0855c8ca5806158bb88db781f12d35cee0a86f",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000009/training.pt",
+      "sha256": "d373636274d2d023e5e1cb602771765abb1d95cd6249ec9c3fe12aacf8ac1c94",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000010/manifest.json",
+      "sha256": "4656842f5fd2b82c0acb7e23a09fb0c73d4014767e9930832e4bb02f9951ef9b",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000010/training.pt",
+      "sha256": "432e32bc41f05f1b318532f30d9cf4a758581c85ac5d1162742e8ed4ab539fe0",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000011/manifest.json",
+      "sha256": "49445307398febe7eb1f9104939cb189c56e1fc3ef1859d726bd0ca860c254c3",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000011/training.pt",
+      "sha256": "1b1c94bbb1f34ec688f492f1c0acd521b0983b7ed99abd7b99ce229328c115f0",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000012/manifest.json",
+      "sha256": "c00deb45f53ebf80af1e99bd0b633b43b7fd29cba10a3ddc82ef9d9284091881",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000012/training.pt",
+      "sha256": "c05af8076b2a0bd1b8f2e6d2fc57779aec563a7f9f7595aef4dfb9fffab28219",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000013/manifest.json",
+      "sha256": "a3151d3d21d399ae80cbc8759ca6778777722c4412e59bc7bab409ca78987920",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000013/training.pt",
+      "sha256": "828f6f52e281eead30d51b59dd69a3ecb60d4f7d9cfbb16751313720a7f47f78",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000014/manifest.json",
+      "sha256": "fa4b1ab41a86b45ddd208f8d35a52bb882eafec8379f8214045e129f135e9954",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000014/training.pt",
+      "sha256": "b148d9237b8f641cdb0f2c21ab8ad55943e6baa25c337ce0fc2649a6f4cabe56",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000015/manifest.json",
+      "sha256": "e06b78c12a7d154bc99126da155f8ddb05b4d77701fe79434848b4545f8befaa",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000015/training.pt",
+      "sha256": "273d32b2226e363ff3b2a173f80ce8e8dd10f0bd6ad3164c247e057dfc50f8db",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000016/manifest.json",
+      "sha256": "85b00f0349bb63979480b615f881760feceeabaaca98dd3c63ae71c7faeca49c",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000016/training.pt",
+      "sha256": "3680d24423682d0d12caa7f515c180415009ed0b06cb6f6ead72e7c28be42429",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000017/manifest.json",
+      "sha256": "5c5cc286849e7b5803006c4b5aea6c326456156300b1ac5a6a59d6204a4009c4",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000017/training.pt",
+      "sha256": "871beca7378862dc8e19fb398f2ed1e86bbad41e0dece89e9e1e3cddddfd9a0d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000018/manifest.json",
+      "sha256": "5633e86bb8d585cf00c921fa758a839dc9ad426800a3dfef670b625202bbd5bf",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000018/training.pt",
+      "sha256": "4d9c2e9cc0edb43362ef7f5f2e8995fe2471893c171b98827e341c3599d1c00f",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000019/manifest.json",
+      "sha256": "25fb688958ce86ae1d25ddc9066f3befe93cdc0c6210d19d0653f7fa16113d69",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000019/training.pt",
+      "sha256": "4b1c7dbcafe91283a459f6a33dbfe78539b78b7b549a2bbdfb626421eaf8e627",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000020/manifest.json",
+      "sha256": "53f72296346df1078c2c4265b36ee6b9438ae5fe30e9d69fc5e865b81d4fc313",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000020/training.pt",
+      "sha256": "e3ce806b979ea27645480a2f05b1f03c6f1c739c3f6773e42409b24ddc105eed",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000021/manifest.json",
+      "sha256": "cad74f21276f523bae16dfdd9d17fd5a5a0a4af6c87d6d9bec8f7738890043de",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000021/training.pt",
+      "sha256": "38e1caf892535a3787e26c006a0a02f011937c46b192b275cbbb618243d57b58",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000022/manifest.json",
+      "sha256": "827943fde65f92d40e681b51900c586ea6aee22aa5ba5821bb1f9e229c2d1d90",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000022/training.pt",
+      "sha256": "9b999c1271dbcd701dea3c6584284d6b3f785d61c281f148ee45768ffc00b65d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000023/manifest.json",
+      "sha256": "f05d623c6088c3fb2c4b2f66cfc4b6d469595261e1699d9062aa0c48c0e916c4",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000023/training.pt",
+      "sha256": "bdd366bad2fc28e86683caab7f0a5ef59dd71fb75d8ca1b4bf142ef0597faa7c",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000024/manifest.json",
+      "sha256": "c7fe8ce2164f0ba4e64b6676e82e255de94aa76689808ce8a1c1d53dff1be847",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000024/training.pt",
+      "sha256": "38908767e18cc4db557417eca671fff627ab1409fb0f1d11bffddad1b30b29e5",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000025/manifest.json",
+      "sha256": "72dbfa5cf483ad4d77019407981a244b0099780f3ddcb614e7319a6306ec83ca",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000025/training.pt",
+      "sha256": "997af5e67a4f30e1d004b9ca334ba7f344c2eef2b923edc6fdba6dc5abdbfd64",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000026/manifest.json",
+      "sha256": "cfba43446a25d64f385410e8061a90974f8f64e75971e7af3feda78c58495323",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000026/training.pt",
+      "sha256": "bb44cd68907d99233212e9b5ef4f498ab138b170271455bac612b14589635028",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000027/manifest.json",
+      "sha256": "012e1c02a36c774b608fb4216b00f44612e3d5b1822d17a1053f2a9486a7cbc2",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000027/training.pt",
+      "sha256": "c7868c3399d9b3f096f8c30ea7390f0b745eb271b6e29da043988045421219bf",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000028/manifest.json",
+      "sha256": "96e6e800f4de8ca5cdb17b259dcf071972e25ae3b39e24717426a116bee73789",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000028/training.pt",
+      "sha256": "adf158693b5796436cd31696e0a7a8b6f03832ca3680db58625c21ea75d494f2",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000029/manifest.json",
+      "sha256": "f24445fb2da57959869e124ebf359975bffa63755e246b93610bfb1882a78303",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000029/training.pt",
+      "sha256": "b68a777f6a70fdd63be814b89963c9fbb6d85a5b9ff8dcabb2953b891c94c887",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000030/manifest.json",
+      "sha256": "7bb7f96b854c94d57aeaae5d39a5a9a566df678ebc436745ce20d579a8c9967e",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000030/training.pt",
+      "sha256": "d784147589775f81b8019478fd7c046d5f06195459fca860b1ef5da528276d3c",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000031/manifest.json",
+      "sha256": "3d797548a8fc0cb25488cb54279ad3bf2a1aa792607638aaf9b30f7ffcf832d5",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000031/training.pt",
+      "sha256": "1e9d081df24353c0d431969c7983b775fd92a5a8c14748989dfe6d5a6aab8eb5",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000032/manifest.json",
+      "sha256": "246c9e52363daa9f8aac9ebe8e93861732a3ab13d964c2cac980a6d69ce41548",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/generation-00000032/training.pt",
+      "sha256": "60a6daa847ae44385d525fcd5bffcdc0903cfe0b6e1b65dfb75c6aaeed31c0fa",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/torch-a2c-seed-9484302.json",
+      "sha256": "a35943ff6e736db24f6294c5dbf766cae7c22c233ebde2df7b6df3fedebae902",
+      "size_bytes": 4836
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/torch-a2c-seed-9484302.npz",
+      "sha256": "b76da359030e8c39b572db7e640b1f597e5bae9f3df547ae50191e6c339a03fa",
+      "size_bytes": 4890
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484302/metrics.jsonl",
+      "sha256": "b68b28d83f5edf59c7bc4900ccc8c3a45dc4bbc9a7c798b642f3382ce43859c7",
+      "size_bytes": 60178
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/LATEST",
+      "sha256": "dc63c817d2741f3a5f9e13ab463cdda8cff615e7909141596b95c70537886ed7",
+      "size_bytes": 20
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/evaluation.json",
+      "sha256": "4bf0a2b92969f70b5f1f719c4e929dc27ed3923e195fc938fd114c9e2a5d3d5f",
+      "size_bytes": 23846
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000001/manifest.json",
+      "sha256": "265160318436ebbb539098005e0274db9a90753ec8366f23ab9b5a6a3b1d3a46",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000001/training.pt",
+      "sha256": "c239b4e03d168836711be6cb162d63fbdfc37bbcad0a2d8dae01359e36cf784c",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000002/manifest.json",
+      "sha256": "a334032f9f752abb64333ea538fc24eba9c79959c592843e477e718f08f7fbb4",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000002/training.pt",
+      "sha256": "6c5a8a61b42eb2d774f79df23db5a04b3ba7994073c844e906b4df68e03a1a85",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000003/manifest.json",
+      "sha256": "8fb78f943f4d2a5f39b23bb903d32ae1e49aae7d33a66527e73e3b8a4912b9b5",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000003/training.pt",
+      "sha256": "854b42b3487218f9aec6996656f61850559f29f02fe1d065e91583b1a635ba2b",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000004/manifest.json",
+      "sha256": "c84665f08598c970239eb6f6ed6f4c847664119747701ab2710c2f0013d67d54",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000004/training.pt",
+      "sha256": "3529f7fc0c4315bde23bd36e38698610dbda8117d997d1900ef2888dca322393",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000005/manifest.json",
+      "sha256": "9a70d9dc828140e53a0b6425f132ae7753ed5f04f2a65fd59e89bd4dadbb1ffd",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000005/training.pt",
+      "sha256": "083bccba89d2da822a3b0247a0b7e4f770ce7dc0c272f7f435ff9ce2b4061356",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000006/manifest.json",
+      "sha256": "87daa326c9979328b5bcf586184e3be3eda27080b0d0a9ada018be015daa9ec4",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000006/training.pt",
+      "sha256": "cff5ca01d3127b4fd3a2b877a9d20bb312af88a31c019407f30df6278701ff00",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000007/manifest.json",
+      "sha256": "d808d8f9ec2bace0f2beb7c9e608fb62359dcf8a1c485e9cb49fb7fb5b65ff5c",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000007/training.pt",
+      "sha256": "67183ac485dff3ea31dc5c17657aca1c5308d63003fdfcccee7cf230d395582e",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000008/manifest.json",
+      "sha256": "6f5379962023aca85da3c8678537475b5172b18ab0b67e0fe429050f9cb7d71e",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000008/training.pt",
+      "sha256": "23669b3cd1f03d50d9ca134d21776a8cac0950eea6007c6699d4979b58227cec",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000009/manifest.json",
+      "sha256": "4d4a0836c0767db3a5d3b8edad53bef3d4863b17a31bbf894920185781105e09",
+      "size_bytes": 3530
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000009/training.pt",
+      "sha256": "492da6d84e3a3de3eb62cb1c1d651cc9023625b5693552adf0ae22b895049afe",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000010/manifest.json",
+      "sha256": "401639100e5831e22f7a15b18d2224b8138043da19e19e327bb078a9e59b4f9f",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000010/training.pt",
+      "sha256": "3b9f2beabf5fcecd63eda4572b8b216c31c2b0420af1e7c72eaa71e9377c45bd",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000011/manifest.json",
+      "sha256": "10fd48419b0961093aa0f65b78a97229a99dd4aea8da1304ea4dc9f9943747a0",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000011/training.pt",
+      "sha256": "01e284875049e7322ff36120958bc0e4ec5bb3a818e1dade0e23127dc9c17e74",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000012/manifest.json",
+      "sha256": "e9d85d513a50310603ae6e773bda0b8e0075899b9feb682280124af4464acade",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000012/training.pt",
+      "sha256": "77488986035632cc787d1c661d241221d0772f7aa09118b20b31d58a4f260448",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000013/manifest.json",
+      "sha256": "498e48d1cadf64f4fd805e6e243b56f23ed31f3901edcedf48303b172239ff9a",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000013/training.pt",
+      "sha256": "77562c64ef17a21fc7f78c9785af502671e2f400578315db07c90d7681714fe0",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000014/manifest.json",
+      "sha256": "94f8bc19fea72806e0d697ef7346427cccc2a1a58896068c21a8a56d6b83f1c9",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000014/training.pt",
+      "sha256": "6825d215ec5c146530b73f54d7d0d13f0631401faa93f4f45851eec52787a5e4",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000015/manifest.json",
+      "sha256": "35614d1e3de97a0c31858556ee29be1bbc7a8dfecb7f7f7c4cf3baa7283e8116",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000015/training.pt",
+      "sha256": "67bcac1f3a23d98ba8f1d6bae4325417098f9228a405bf3d89aedea8857e0c34",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000016/manifest.json",
+      "sha256": "7cb0cb0dc5b855fc224a7c85c777e8d0f181ebc7e65ea119e9e291c29381d804",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000016/training.pt",
+      "sha256": "8e28ceb4ae804479ebea7c47e43f84aea92d31a1bd8f90a9a0dc66c20965d197",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000017/manifest.json",
+      "sha256": "ff7b400e8f96d9905b074ed49902b05f9dbb182a8227950df8bbd6d5271c13a0",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000017/training.pt",
+      "sha256": "60d13eb79a86d9e3b46dac99cfbf6056116003f12fc3e89767802492a154230e",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000018/manifest.json",
+      "sha256": "4f3d938c7793e24d27a836dd766edfbcfe46be52272983d9e45cc77684d6f6b8",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000018/training.pt",
+      "sha256": "1b179f1154d20de7560d60446d93a0c2a355566f751e59b04ba986d24dd6984c",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000019/manifest.json",
+      "sha256": "8bbe2746969f1de08d1b35f7edaa3ccd8934f4ae19dbd62d55c38a6ba69685e2",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000019/training.pt",
+      "sha256": "682f88494fac7126cf6c8a35dde85df5e31f79b32e278feac48716eb296de3fc",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000020/manifest.json",
+      "sha256": "c913364183f39d6c1c639196b3b99053fd0ebdcebe3f04f9c51ab6c4364193df",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000020/training.pt",
+      "sha256": "645300363258fb4282e9963aa6f12404db197de2f2637d7f23ddda88fb4f32a6",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000021/manifest.json",
+      "sha256": "3348411a8e8bb41b7eb2d14d856702208d3c03b7613e5fdecd9dbfe3a65dac4f",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000021/training.pt",
+      "sha256": "472da5173a4193a538b2fadb01acc57a1af008ffdd9f520b13e6bbd7b4aec1fe",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000022/manifest.json",
+      "sha256": "1561b019064845de8a30d751101ff639518d1069d51e432221bd01a8de48e8f3",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000022/training.pt",
+      "sha256": "e0923247533673b687c492f64f564b0682debff9af126977795ce61d7690c75d",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000023/manifest.json",
+      "sha256": "c677ed35c84f113fd78ecfe43f2ab994e7ef9ce7ac1f291f2ed757e3325de66a",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000023/training.pt",
+      "sha256": "57aeebab453d3d844eb99c1ec6c4881ee3eccefef2c846a50d73a7e921d8fef4",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000024/manifest.json",
+      "sha256": "b297d0133eebf621f87e82fa0814706e36c1a781d10fe4f6282e19efba70ecf5",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000024/training.pt",
+      "sha256": "d7930af01ed4f224235fa9bd0de2b71e4350de9bc1a2b774dd366726a05e0364",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000025/manifest.json",
+      "sha256": "fbf398182a2f83195c5e94537a6c7d16b40b881619b38764db3908a4a287d546",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000025/training.pt",
+      "sha256": "97e7e5bdcf45a99caaeeb0be8cec0a1e3ff60f453fd72c0d7211341902261f14",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000026/manifest.json",
+      "sha256": "68ea1538d80f8ba0f807e32368db232784843084a44ac39026f06d474a9aad15",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000026/training.pt",
+      "sha256": "6b66022d3400021171e442e0ef30477078ca6149ee20caca7e3b92cec9228d57",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000027/manifest.json",
+      "sha256": "07b9ed0fad3d10a40e918801c7028b7549b48c25d672760ee7ad0e10e3558e45",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000027/training.pt",
+      "sha256": "898e0a87751c7c37f0a84b177e16fb28d91e524db4950f325e70d9ea58f7a4f2",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000028/manifest.json",
+      "sha256": "70282d750777d94e8e7a96a2a3b16653d7384d40d47fbf91636441d32010bf90",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000028/training.pt",
+      "sha256": "ce55868ee611fa4e3ed7f5fad12c930f6a7775aa3017209400a174fcde4cd4c8",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000029/manifest.json",
+      "sha256": "7368f2a9a917b531bc0d74ceb52d77c944760938c1b7425e9760b470804676d9",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000029/training.pt",
+      "sha256": "76f5d57b32b8b597bc84ab1715f1c238f83effeee73c05eb0e466eaf0c75ea5b",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000030/manifest.json",
+      "sha256": "4fc325ff1705874653e0c3493ceb8c1bcfd015d20efb98df13f70c03e412e9ef",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000030/training.pt",
+      "sha256": "82b4ac5f93d23746807b9e67a64a64290d89c9e7d592a36a83ddab92b454c2ac",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000031/manifest.json",
+      "sha256": "3772696e160c9cc993598bb7851c394d7dd50d349d27b230fa83fa353dd7aa61",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000031/training.pt",
+      "sha256": "10a8a178de7b2100923862ce95c009ddab8bccbb77975a9b8d714e09ef88fc4f",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000032/manifest.json",
+      "sha256": "0fa446acaf003fb1fff79486156edb6080b06481a51212be62b3a3847c5189e3",
+      "size_bytes": 3531
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/generation-00000032/training.pt",
+      "sha256": "5ea907948cd92d0af215628b444df881657383d933e6a1ce79627e20e551f70a",
+      "size_bytes": 32245
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/torch-a2c-seed-9484303.json",
+      "sha256": "0c9a4b50ea03280bcfc12f768cfe69272dd7643bcec5ee3c1053e047331a6fd7",
+      "size_bytes": 4836
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/torch-a2c-seed-9484303.npz",
+      "sha256": "3b511d9b11219d79f74d040feabf4173de356d3f80d3c04b0e0359ffd6371c82",
+      "size_bytes": 4888
+    },
+    {
+      "path": "autoresearch/batch-4/training/variant-N/seed-9484303/metrics.jsonl",
+      "sha256": "0780650c8094ef50f55c4a25adfacdc23a92c691fcaf2cd9218cfbeeddf73c21",
+      "size_bytes": 60228
+    },
+    {
+      "path": "autoresearch/batch-4/training-worker-0.log",
+      "sha256": "62e86684530c901657dfd830501d6a04b6fc0efeef25ac3eaa1a32c7203a9e79",
+      "size_bytes": 4506
+    },
+    {
+      "path": "autoresearch/batch-4/training-worker-1.log",
+      "sha256": "99e16b7d6404496e924bf733a1ea867c81f26e5d52a6db7f3de24c1cd24b681f",
+      "size_bytes": 4506
+    }
+  ],
+  "formal_eligible": false,
+  "locked_outcomes_accessed": false,
+  "locked_test_access": false,
+  "mode": "AUTORESEARCH_BATCH_4",
+  "notebook_sha256": "0d3215a07b9dde1ef54be3ca8353cfa4d7b9c03f3ea758cc246d8ec1003c65a2",
+  "release_manifest_sha256": null,
+  "run_id": "autoresearch_batch_4-4aa0441761844272986f6ade83834591",
+  "runtime": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "gpu_count": 2,
+    "gpu_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "numpy": "2.1.3",
+    "python": "3.13.15",
+    "pytorch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "source_commit": "3372ed7b1452a0fb92165b15c33092f6049625b2"
+}

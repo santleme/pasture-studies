@@ -1,0 +1,65 @@
+{
+  "exploratory_config": {
+    "algorithm": "a2c",
+    "batch": 1,
+    "benchmark_eligible": false,
+    "checkpoint_promotion": false,
+    "comparison_episodes_per_family": 3,
+    "cumulative_jobs_before": 0,
+    "episodes_per_variant_seed": 512,
+    "evaluation_root_seed": 9484999,
+    "formal_eligible": false,
+    "locked_test_access": false,
+    "max_additional_training_jobs": 24,
+    "perception_mode": "path-aware-v2",
+    "protocol": "autoresearch-world-perception-v1",
+    "resource_profile": "resource-rich-v1",
+    "seeds": [
+      9484101,
+      9484102,
+      9484103
+    ],
+    "task": "autoresearch_resource_perception_batch",
+    "training_jobs": 6,
+    "variant_config": {
+      "G": {
+        "discount_factor": 1.0,
+        "entropy_coefficient": 0.0,
+        "normalize_advantage": false,
+        "reward_variant": "original",
+        "state_reward_scale": 0.0
+      },
+      "H": {
+        "discount_factor": 1.0,
+        "entropy_coefficient": 0.01,
+        "normalize_advantage": true,
+        "reward_variant": "original",
+        "state_reward_scale": 0.0
+      }
+    },
+    "variants": [
+      "G",
+      "H"
+    ]
+  },
+  "gpu_required": true,
+  "mode": "AUTORESEARCH_BATCH_1",
+  "notebook_sha256": "f2d14fc7a875680c2ce9860fcb293d24a79819458b838ce38a99cae7f2b71007",
+  "readiness_config": null,
+  "release_manifest_sha256": "978f5ac07e60ff92665643f15168d2644dfad54afd9490daa9ce1fa5ed6a7b98",
+  "runtime_profile": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "gpu_count": 2,
+    "gpu_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "numpy": "2.1.3",
+    "python": "3.13.15",
+    "pytorch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "source_commit": "4adfdd0ffcc97159868e73f02341634208a4521e",
+  "source_notebook_sha256": "81da2686aa6316e5cfd6874ef219df739178be5da06d2d6a86d9ffe9d14bd020"
+}

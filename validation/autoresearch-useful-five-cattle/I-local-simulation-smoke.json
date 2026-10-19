@@ -1,0 +1,66 @@
+{
+  "variant": "I",
+  "seed": 9484104,
+  "checkpoint": "/tmp/pasture-autoresearch-evidence/batch-2/kaggle-artifacts/autoresearch/batch-2/training/variant-I/seed-9484104/a2c/torch-a2c-seed-9484104.npz",
+  "checkpoint_sha256": "2faaa35c34f4eb9ce6e1fb6efe1c071810ed4b040ef41972817daeb2dda9931f",
+  "perception_mode": "path-aware-v2",
+  "ticks": 72,
+  "animal_count": 5,
+  "action_counts": {
+    "graze": 349,
+    "herd_interact": 6,
+    "drink": 5
+  },
+  "final_animals": [
+    {
+      "id": "cow-1",
+      "position": [
+        3,
+        7
+      ],
+      "hunger": 1.0,
+      "thirst": 1.0,
+      "action": "graze"
+    },
+    {
+      "id": "cow-2",
+      "position": [
+        7,
+        5
+      ],
+      "hunger": 1.0,
+      "thirst": 1.0,
+      "action": "graze"
+    },
+    {
+      "id": "cow-3",
+      "position": [
+        9,
+        4
+      ],
+      "hunger": 1.0,
+      "thirst": 1.0,
+      "action": "graze"
+    },
+    {
+      "id": "cow-4",
+      "position": [
+        11,
+        5
+      ],
+      "hunger": 1.0,
+      "thirst": 1.0,
+      "action": "graze"
+    },
+    {
+      "id": "cow-5",
+      "position": [
+        5,
+        1
+      ],
+      "hunger": 1.0,
+      "thirst": 1.0,
+      "action": "graze"
+    }
+  ]
+}

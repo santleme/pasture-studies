@@ -1,0 +1,430 @@
+{
+  "acceptance_validators": [
+    {
+      "candidate": "G",
+      "failed_gates": {
+        "final_hunger": false,
+        "final_thirst": true,
+        "forage_successes_per_episode": false,
+        "invalid_actions": true,
+        "navigation_failures_per_episode": null,
+        "original_return_per_episode": true,
+        "water_successes_per_episode": false
+      },
+      "passed": false,
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/final-evaluation/validators/candidate-G.json",
+      "sha256": "41fc2342e32d711070c23c8903441d19af18b71fd14509426ef59350a148d022",
+      "status": "failed"
+    },
+    {
+      "candidate": "H",
+      "failed_gates": {
+        "final_hunger": false,
+        "final_thirst": true,
+        "forage_successes_per_episode": false,
+        "invalid_actions": true,
+        "navigation_failures_per_episode": null,
+        "original_return_per_episode": true,
+        "water_successes_per_episode": false
+      },
+      "passed": false,
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/final-evaluation/validators/candidate-H.json",
+      "sha256": "6eb7ab2e75c2acff4d42a575e641c3e347c3ee3bc6c7aa895ed248038f704cda",
+      "status": "failed"
+    },
+    {
+      "candidate": "I",
+      "failed_gates": {
+        "final_hunger": false,
+        "final_thirst": true,
+        "forage_successes_per_episode": false,
+        "invalid_actions": true,
+        "navigation_failures_per_episode": null,
+        "original_return_per_episode": false,
+        "water_successes_per_episode": false
+      },
+      "passed": false,
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/final-evaluation/validators/candidate-I.json",
+      "sha256": "87ca7184f2a2c2f5daae663121ac8304aa0edf10fca069df4cb11a398047a733",
+      "status": "failed"
+    },
+    {
+      "candidate": "J",
+      "failed_gates": {
+        "final_hunger": false,
+        "final_thirst": true,
+        "forage_successes_per_episode": false,
+        "invalid_actions": true,
+        "navigation_failures_per_episode": null,
+        "original_return_per_episode": false,
+        "water_successes_per_episode": false
+      },
+      "passed": false,
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/final-evaluation/validators/candidate-J.json",
+      "sha256": "766d1431151ac8c39d989e6105d168313f742c29496e009fa608c98cb39c8492",
+      "status": "failed"
+    },
+    {
+      "candidate": "K",
+      "failed_gates": {
+        "final_hunger": false,
+        "final_thirst": true,
+        "forage_successes_per_episode": false,
+        "invalid_actions": true,
+        "navigation_failures_per_episode": null,
+        "original_return_per_episode": true,
+        "water_successes_per_episode": false
+      },
+      "passed": false,
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/final-evaluation/validators/candidate-K.json",
+      "sha256": "7e962ccf6a942205693a162fa0d69f029690a02d144a0b573fb3a4c67bcb673a",
+      "status": "failed"
+    },
+    {
+      "candidate": "L",
+      "failed_gates": {
+        "final_hunger": false,
+        "final_thirst": true,
+        "forage_successes_per_episode": false,
+        "invalid_actions": true,
+        "navigation_failures_per_episode": null,
+        "original_return_per_episode": true,
+        "water_successes_per_episode": false
+      },
+      "passed": false,
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/final-evaluation/validators/candidate-L.json",
+      "sha256": "a366bf34e4d43446420b30f69625e83d7d62c8935db8ed61a22ac75f835431c2",
+      "status": "failed"
+    },
+    {
+      "candidate": "M",
+      "failed_gates": {
+        "final_hunger": false,
+        "final_thirst": true,
+        "forage_successes_per_episode": false,
+        "invalid_actions": true,
+        "navigation_failures_per_episode": null,
+        "original_return_per_episode": false,
+        "water_successes_per_episode": false
+      },
+      "passed": false,
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/final-evaluation/validators/candidate-M.json",
+      "sha256": "a95e5be646caedb5dbd297745995a68860fead3efb38e42195075d990ce56d1d",
+      "status": "failed"
+    },
+    {
+      "candidate": "N",
+      "failed_gates": {
+        "final_hunger": false,
+        "final_thirst": true,
+        "forage_successes_per_episode": false,
+        "invalid_actions": true,
+        "navigation_failures_per_episode": null,
+        "original_return_per_episode": false,
+        "water_successes_per_episode": false
+      },
+      "passed": false,
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/final-evaluation/validators/candidate-N.json",
+      "sha256": "d6e493a03789d48cf708eecdd1884a9f838eb61db412a703488f71a8c5c8eb48",
+      "status": "failed"
+    }
+  ],
+  "batches": [
+    {
+      "archive_bytes": 5052721,
+      "archive_entries": 434,
+      "archive_sha256": "1ba8e7bc1587978075c9ecd7c3c071169720c99f02091e60554bb6a81de0e161",
+      "batch": 1,
+      "jobs_completed": 6,
+      "jobs_started": 6,
+      "kaggle_kernel": "pascalcoimbra/pasture-studies",
+      "kernel_version": 15,
+      "manifest_files_verified": 433,
+      "manifest_sha256": "1209000734ae48e2e3289df2a2dd74d93cc72da2539e4ceed29b11c652c0f345",
+      "source_commit": "4adfdd0ffcc97159868e73f02341634208a4521e",
+      "training_report_sha256": "ae3e0a56443b945893297d0136872fbe7faaab5a516745882e3d54c9755ccddc"
+    },
+    {
+      "archive_bytes": 5054100,
+      "archive_entries": 434,
+      "archive_sha256": "b8d81160a232cf5603b2542933c181324cf567152e446e90393a0899fe95348b",
+      "batch": 2,
+      "jobs_completed": 6,
+      "jobs_started": 6,
+      "kaggle_kernel": "pascalcoimbra/pasture-studies",
+      "kernel_version": 17,
+      "manifest_files_verified": 433,
+      "manifest_sha256": "75890c08c171c416021e917d404eba7699a4dfe52ae63987841005d4db31f189",
+      "source_commit": "4adfdd0ffcc97159868e73f02341634208a4521e",
+      "training_report_sha256": "a93a8de4a23941f172bc9d0299a0be326e2afe70d335d30319c343eed28b4545"
+    },
+    {
+      "archive_bytes": 5054130,
+      "archive_entries": 434,
+      "archive_sha256": "d975d92151e17e180e0e6b952683f43fad4e39f2ea7eb409664db53b9a98a53c",
+      "batch": 3,
+      "jobs_completed": 6,
+      "jobs_started": 6,
+      "kaggle_kernel": "pascalcoimbra/pasture-studies",
+      "kernel_version": 19,
+      "manifest_files_verified": 433,
+      "manifest_sha256": "5bcf0878d5ba850d993fef5267a8f3e33a10521d1e13d00919f65e54f55810dd",
+      "source_commit": "4ed0c9e478e66aadc0111da80a9bee413ed4040c",
+      "training_report_sha256": "a2e3b32628c28444202737a1e95bd69952e8d3b85025c8f8ed70b463fe294da7"
+    },
+    {
+      "archive_bytes": 5055317,
+      "archive_entries": 434,
+      "archive_sha256": "d498953ff1e63793c0db14b8324ec80c267cfd62a3a512bf4f3148f656a9f54e",
+      "batch": 4,
+      "jobs_completed": 6,
+      "jobs_started": 6,
+      "kaggle_kernel": "pascalcoimbra/pasture-studies",
+      "kernel_version": 21,
+      "manifest_files_verified": 433,
+      "manifest_sha256": "42934cc3417080c15c793fd47821b0823ac1add3db46dd6a69616e74804f3e5f",
+      "source_commit": "3372ed7b1452a0fb92165b15c33092f6049625b2",
+      "training_report_sha256": "a13e5f5950a35e2b1c51a44d1e179bddaffdeae500e2e4edc1cc7ba20c6f004a"
+    }
+  ],
+  "checkpoint_exports": [
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-1/pasture-artifacts.zip",
+      "batch": 1,
+      "path_in_archive": "autoresearch/batch-1/training/variant-G/seed-9484101/a2c/torch-a2c-seed-9484101.npz",
+      "sha256": "d33bcabcf3385fd8c573db9945bd22c77981deac41da0f6e2d9e4a759ad8f05a",
+      "size_bytes": 4884
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-1/pasture-artifacts.zip",
+      "batch": 1,
+      "path_in_archive": "autoresearch/batch-1/training/variant-G/seed-9484102/a2c/torch-a2c-seed-9484102.npz",
+      "sha256": "646eabc0968fb8082f7adc3a0701b157fb447de7fb845a769e53f4009e48b23a",
+      "size_bytes": 4893
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-1/pasture-artifacts.zip",
+      "batch": 1,
+      "path_in_archive": "autoresearch/batch-1/training/variant-G/seed-9484103/a2c/torch-a2c-seed-9484103.npz",
+      "sha256": "e8497d7ef972d923575a83daa1ade0b5907179723f4f4dad5bfcf003fdfe671c",
+      "size_bytes": 4878
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-1/pasture-artifacts.zip",
+      "batch": 1,
+      "path_in_archive": "autoresearch/batch-1/training/variant-H/seed-9484101/a2c/torch-a2c-seed-9484101.npz",
+      "sha256": "0ba0c06d478630adda6edd62a424c8bed4e914f27c3a321ceaa7e015e5bae25f",
+      "size_bytes": 4886
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-1/pasture-artifacts.zip",
+      "batch": 1,
+      "path_in_archive": "autoresearch/batch-1/training/variant-H/seed-9484102/a2c/torch-a2c-seed-9484102.npz",
+      "sha256": "b4112d6157ccce1261a0dce126c1e261bc6a833b2cfc2c14055ae1613dceb343",
+      "size_bytes": 4892
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-1/pasture-artifacts.zip",
+      "batch": 1,
+      "path_in_archive": "autoresearch/batch-1/training/variant-H/seed-9484103/a2c/torch-a2c-seed-9484103.npz",
+      "sha256": "0f6c0a0bd990a4a2f3b6533f6d918521ecc8376b9857f1239ef673e7b0710a28",
+      "size_bytes": 4886
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-2/pasture-artifacts.zip",
+      "batch": 2,
+      "path_in_archive": "autoresearch/batch-2/training/variant-I/seed-9484104/a2c/torch-a2c-seed-9484104.npz",
+      "sha256": "2faaa35c34f4eb9ce6e1fb6efe1c071810ed4b040ef41972817daeb2dda9931f",
+      "size_bytes": 4893
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-2/pasture-artifacts.zip",
+      "batch": 2,
+      "path_in_archive": "autoresearch/batch-2/training/variant-I/seed-9484105/a2c/torch-a2c-seed-9484105.npz",
+      "sha256": "40aa69d3d565c1ad73f779567ad333c328c8dfa2bbdc462f1f35ae5721626036",
+      "size_bytes": 4884
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-2/pasture-artifacts.zip",
+      "batch": 2,
+      "path_in_archive": "autoresearch/batch-2/training/variant-I/seed-9484106/a2c/torch-a2c-seed-9484106.npz",
+      "sha256": "9cf790855e48f9b134c5a34b399c9c055624704fa306ad8d880c55cfe9255641",
+      "size_bytes": 4889
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-2/pasture-artifacts.zip",
+      "batch": 2,
+      "path_in_archive": "autoresearch/batch-2/training/variant-J/seed-9484104/a2c/torch-a2c-seed-9484104.npz",
+      "sha256": "12bd7036b3ce38cbf73ecfe5d5585cdf64dc1bfa612bf20386a61a35d54bedf9",
+      "size_bytes": 4862
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-2/pasture-artifacts.zip",
+      "batch": 2,
+      "path_in_archive": "autoresearch/batch-2/training/variant-J/seed-9484105/a2c/torch-a2c-seed-9484105.npz",
+      "sha256": "72790f59da7ccb46955c9dda16a12a4d9c2b1bb2a32bf24855ef27cfaf42f894",
+      "size_bytes": 4867
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-2/pasture-artifacts.zip",
+      "batch": 2,
+      "path_in_archive": "autoresearch/batch-2/training/variant-J/seed-9484106/a2c/torch-a2c-seed-9484106.npz",
+      "sha256": "05d2267c6936aa46babf5c4c87c0e906590eaa84902f8dba8f824ab770dec5e9",
+      "size_bytes": 4867
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-3/pasture-artifacts.zip",
+      "batch": 3,
+      "path_in_archive": "autoresearch/batch-3/training/variant-K/seed-9484201/a2c/torch-a2c-seed-9484201.npz",
+      "sha256": "1b128a0fe9352c89b574295dc8b6fdd8bf446c8966e7a44f82f82120821f9c10",
+      "size_bytes": 4876
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-3/pasture-artifacts.zip",
+      "batch": 3,
+      "path_in_archive": "autoresearch/batch-3/training/variant-K/seed-9484202/a2c/torch-a2c-seed-9484202.npz",
+      "sha256": "6876ffe8aafa5e62c21e01deaaa7de55e7d0424d9557a3615884104dcc761fdf",
+      "size_bytes": 4906
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-3/pasture-artifacts.zip",
+      "batch": 3,
+      "path_in_archive": "autoresearch/batch-3/training/variant-K/seed-9484203/a2c/torch-a2c-seed-9484203.npz",
+      "sha256": "d0eec9b10a68365988c672d9693e8d94cc0127b60fc17d461f20abcd1807050e",
+      "size_bytes": 4892
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-3/pasture-artifacts.zip",
+      "batch": 3,
+      "path_in_archive": "autoresearch/batch-3/training/variant-L/seed-9484201/a2c/torch-a2c-seed-9484201.npz",
+      "sha256": "81499b38eb8198647b1fefa56a2699c8d0e9aae16981d9a67f7d9dc6039e4b04",
+      "size_bytes": 4888
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-3/pasture-artifacts.zip",
+      "batch": 3,
+      "path_in_archive": "autoresearch/batch-3/training/variant-L/seed-9484202/a2c/torch-a2c-seed-9484202.npz",
+      "sha256": "75cfee0b6fac75245609e8d8a3b4332550316b13539a23b3c88452a7fa86716a",
+      "size_bytes": 4900
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-3/pasture-artifacts.zip",
+      "batch": 3,
+      "path_in_archive": "autoresearch/batch-3/training/variant-L/seed-9484203/a2c/torch-a2c-seed-9484203.npz",
+      "sha256": "d7dff74a8247f99db6c6d23c24340dcc690fcf12cddfe377fab88723d1f96672",
+      "size_bytes": 4903
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-4/pasture-artifacts.zip",
+      "batch": 4,
+      "path_in_archive": "autoresearch/batch-4/training/variant-M/seed-9484301/a2c/torch-a2c-seed-9484301.npz",
+      "sha256": "471f09414c0a651d647bcbc3124fc597b33e92a75cf610fb9c1079cf359a1c1b",
+      "size_bytes": 4895
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-4/pasture-artifacts.zip",
+      "batch": 4,
+      "path_in_archive": "autoresearch/batch-4/training/variant-M/seed-9484302/a2c/torch-a2c-seed-9484302.npz",
+      "sha256": "6e2d5849e4f88a27af78c5d5b44757fdbb7149b50ade7faf25649862f81b9187",
+      "size_bytes": 4887
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-4/pasture-artifacts.zip",
+      "batch": 4,
+      "path_in_archive": "autoresearch/batch-4/training/variant-M/seed-9484303/a2c/torch-a2c-seed-9484303.npz",
+      "sha256": "adc79071ee083d79bb705a888cb1f806e97bd20e478077dd33f16a8d9740233e",
+      "size_bytes": 4885
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-4/pasture-artifacts.zip",
+      "batch": 4,
+      "path_in_archive": "autoresearch/batch-4/training/variant-N/seed-9484301/a2c/torch-a2c-seed-9484301.npz",
+      "sha256": "43a5e169aa36e715975b0dad538f4c84bf083207652fcf3741f03ea7dd0c3be5",
+      "size_bytes": 4896
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-4/pasture-artifacts.zip",
+      "batch": 4,
+      "path_in_archive": "autoresearch/batch-4/training/variant-N/seed-9484302/a2c/torch-a2c-seed-9484302.npz",
+      "sha256": "b76da359030e8c39b572db7e640b1f597e5bae9f3df547ae50191e6c339a03fa",
+      "size_bytes": 4890
+    },
+    {
+      "archive": "validation/autoresearch-useful-five-cattle/batch-4/pasture-artifacts.zip",
+      "batch": 4,
+      "path_in_archive": "autoresearch/batch-4/training/variant-N/seed-9484303/a2c/torch-a2c-seed-9484303.npz",
+      "sha256": "3b511d9b11219d79f74d040feabf4173de356d3f80d3c04b0e0359ffd6371c82",
+      "size_bytes": 4888
+    }
+  ],
+  "deliverables": {
+    "final-report.md": {
+      "sha256": "9ee382f290c29ba8e41770b1b3fe6d9f43476ce31277400a0208d5ca489f44ad",
+      "size_bytes": 11370
+    }
+  },
+  "direct_nonaccepted_exports": [
+    {
+      "path": "validation/autoresearch-useful-five-cattle/nonaccepted-candidates/README.md",
+      "sha256": "f5c9c2fddea72ee6833e6cef0f46bc7f2a7e88531d26c4e9c08d5844b8860783",
+      "size_bytes": 1042
+    },
+    {
+      "path": "validation/autoresearch-useful-five-cattle/nonaccepted-candidates/forage-oriented-I-seed-9484104.json",
+      "sha256": "7c0f7a86efa38ef74e20ee6eaff6989ae8573a491598efd30e5e331fa1ca5dd0",
+      "size_bytes": 4837
+    },
+    {
+      "path": "validation/autoresearch-useful-five-cattle/nonaccepted-candidates/forage-oriented-I-seed-9484104.npz",
+      "sha256": "2faaa35c34f4eb9ce6e1fb6efe1c071810ed4b040ef41972817daeb2dda9931f",
+      "size_bytes": 4893
+    },
+    {
+      "path": "validation/autoresearch-useful-five-cattle/nonaccepted-candidates/water-near-reference-J-seed-9484105.json",
+      "sha256": "41c251fc6b8db98fdc40d3b2d8242cbbfee78fc774e5e55ade2dc49ad5219206",
+      "size_bytes": 4837
+    },
+    {
+      "path": "validation/autoresearch-useful-five-cattle/nonaccepted-candidates/water-near-reference-J-seed-9484105.npz",
+      "sha256": "72790f59da7ccb46955c9dda16a12a4d9c2b1bb2a32bf24855ef27cfaf42f894",
+      "size_bytes": 4867
+    }
+  ],
+  "evaluations": [
+    {
+      "compressed_bytes": 762353,
+      "compressed_sha256": "10049ad7b2604c6def1216f939766f7cba6fa29e5a86a3dde5e4a772b743bbbf",
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/combined-evaluation/autoresearch-comparison.json.gz",
+      "uncompressed_bytes": 6827337,
+      "uncompressed_sha256": "4aea84f3896fa144851097716145d75ebcec0612765743e791ec1e946d5b5882"
+    },
+    {
+      "compressed_bytes": 908305,
+      "compressed_sha256": "f48869315ad48f8925e5a2609e1c17f78fd19a9aef8b32ceb26ac60a89adb848",
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/combined-evaluation-v3/autoresearch-comparison.json.gz",
+      "uncompressed_bytes": 8175181,
+      "uncompressed_sha256": "9d7e206f5183cfc6820a3237e8828ecf89831775fb2889585638864929dd8a17"
+    },
+    {
+      "compressed_bytes": 1063353,
+      "compressed_sha256": "9aa629c19ce5aaa84870995e8ad4a38bcce1c51dde0ba14552c9a75e1927c326",
+      "path": "validation/autoresearch-useful-five-cattle/evaluations/final-evaluation/autoresearch-comparison.json.gz",
+      "uncompressed_bytes": 9588186,
+      "uncompressed_sha256": "1461126a5c0365466e3252bbfe8bc6be29810198848cadc3b60eea65fd4f6e5d"
+    }
+  ],
+  "evidence_only": true,
+  "local_simulation_smoke": [
+    {
+      "path": "validation/autoresearch-useful-five-cattle/I-local-simulation-smoke.json",
+      "sha256": "8d6bed5df52e0d3c863f46b73f7f9918127e549b0f320d905c53b6e224a31cf4",
+      "size_bytes": 1226
+    },
+    {
+      "path": "validation/autoresearch-useful-five-cattle/J-local-simulation-smoke.json",
+      "sha256": "2619c591d24220b4532115204dc0f7241958687bd7e1780c2fa2da0699ffa4b4",
+      "size_bytes": 1269
+    }
+  ],
+  "schema_version": 1
+}
