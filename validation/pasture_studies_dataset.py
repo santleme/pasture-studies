@@ -208,9 +208,19 @@ def verify_bundle(directory: str | Path, *, verify_sources: bool = True) -> dict
     # locked seed values into a public training-only dataset.
     if "preregistration_manifest_sha256" not in manifest:
         raise ValueError("dataset bundle lacks preregistration provenance")
-    heldout_hash = manifest.get("heldout_world_ids_sha256")
-    if not isinstance(heldout_hash, str) or len(heldout_hash) != 64:
-        raise ValueError("dataset bundle has an invalid held-out audit hash")
+    preregistration = json.loads(Path(OUTPUT_PATH).read_text())
+    verify_manifest(preregistration, verify_current_sources=False)
+    if preregistration.get("manifest_sha256") != manifest["preregistration_manifest_sha256"]:
+        raise ValueError("dataset was generated from a different preregistration manifest")
+    heldout = _heldout_seeds(preregistration)
+    if manifest.get("heldout_world_ids_sha256") != canonical_sha(sorted(heldout)):
+        raise ValueError("dataset held-out split audit does not match current preregistration")
+    if set(manifest.get("world_ids", [])) & heldout:
+        raise ValueError("dataset world IDs overlap preregistered held-out splits")
+    approved_training_worlds = {int(seed) for rows in preregistration["seed_splits"]["training_world_seeds_by_root"].values()
+                                for seed in rows}
+    if not set(manifest.get("training_world_ids", [])) <= approved_training_worlds:
+        raise ValueError("dataset training world IDs are not in the preregistered training split")
     for name in DATA_FILES:
         with (root / name).open() as stream:
             for line in stream:
