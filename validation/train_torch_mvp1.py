@@ -468,7 +468,10 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
         config.update({"reward_variant": reward_variant, "state_reward_scale": float(state_reward_scale),
                        "normalize_advantage": bool(normalize_advantage),
                        "entropy_coefficient": float(entropy_coefficient),
-                       "discount_factor": float(discount_factor)})
+                       "discount_factor": float(discount_factor),
+                       "evaluation_episodes": int(eval_count),
+                       "evaluation_seed_derivation": "sha256(root,eval-world,index)",
+                       "paired_training_seed_set": list(EXPLORATORY_BATCH_SEEDS)})
     if resume:
         restored = load_generation(resume if resume != "latest" else run_dir, model=train_model,
                                    optimizer=optimizer, map_location=device,

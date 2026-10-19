@@ -38,6 +38,7 @@ class ExploratoryBatchCliTests(unittest.TestCase):
             self.assertEqual(config["variant_config"], trainer.EXPLORATORY_BATCH_VARIANTS)
             self.assertEqual(config["seeds"], list(trainer.EXPLORATORY_BATCH_SEEDS))
             self.assertEqual(config["episodes_per_variant_seed"], trainer.EXPLORATORY_BATCH_EPISODES)
+            self.assertEqual(config["evaluation_episodes"], trainer.EXPLORATORY_BATCH_EVAL_EPISODES)
             self.assertEqual(config["training_jobs"], 12)
             self.assertEqual(config["max_training_jobs"], 24)
 
