@@ -64,6 +64,7 @@ def main():
                 initial_episodes=args.initial_episodes, rounds=args.rounds,
                 episodes_per_round=args.episodes_per_round,
                 training_profile=profile, architecture=architecture,
+                smoke=args.smoke,
             )
             domains = {}
             for domain in TEST_DOMAINS:

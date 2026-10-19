@@ -7,13 +7,6 @@ from pathlib import Path
 import sys
 
 
-ROOT = Path(__file__).resolve().parents[1]
-EVIDENCE = ROOT / ".omx/specs/autoresearch-pasture-rl"
-SINGLE = EVIDENCE / "dagger-single-lastaction-five-seeds.json"
-FIVE = EVIDENCE / "dagger-expanded-five-seeds.json"
-FIVE_BASELINE = EVIDENCE / "dagger-five-lastaction-five-seeds.json"
-
-
 def load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -57,13 +50,15 @@ def controlled_mean(eval_data, agents):
     }
 
 
-def validate(result_path: Path) -> dict:
+def validate(result_path: Path, *, single_path: Path, five_path: Path,
+             five_baseline_path: Path) -> dict:
     result = load(result_path)
     assert result["status"] == "passed" and result["passed"] is True
     assert result["terminal_reason"] == "measured_improvement"
     assert Path(result["report"]).is_file(), "research report is missing"
 
-    single, five, five_baseline = load(SINGLE), load(FIVE), load(FIVE_BASELINE)
+    single, five, five_baseline = (
+        load(single_path), load(five_path), load(five_baseline_path))
     check_teacher(single, 1)
     check_teacher(five, 5)
     assert single["training_seeds"] == [1, 2, 3, 4, 5]
@@ -152,9 +147,16 @@ def validate(result_path: Path) -> dict:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--artifact", type=Path, required=True)
+    parser.add_argument("--single", type=Path, required=True,
+                        help="single-animal DAgger result JSON")
+    parser.add_argument("--five", type=Path, required=True,
+                        help="five-animal DAgger result JSON")
+    parser.add_argument("--five-baseline", type=Path, required=True,
+                        help="five-animal random/teacher baseline result JSON")
     args = parser.parse_args()
     try:
-        report = validate(args.artifact)
+        report = validate(args.artifact, single_path=args.single, five_path=args.five,
+                          five_baseline_path=args.five_baseline)
     except (AssertionError, KeyError, ValueError, OSError, json.JSONDecodeError) as exc:
         print(json.dumps({"status": "failed", "error": str(exc)}, indent=2))
         return 1

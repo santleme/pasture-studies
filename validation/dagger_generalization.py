@@ -16,6 +16,7 @@ from gymnasium import spaces
 
 from farm_sim.model import Position, ResourcePatch, Action
 from farm_sim.navigation import navigate
+from farm_sim.execution_policy import require_kaggle_for_full_workload
 from validation.renewable_rl import (
     ACTION_LIST, BehaviorTeacher, RenewablePastureEnv, collect_teacher_data,
 )
@@ -223,7 +224,11 @@ def collect_domain_data(*, agents, seed, episodes, profile, observation,
 
 def train_generalized_dagger(*, agents, seed, observation="history_domain",
                              initial_episodes=40, rounds=6, episodes_per_round=20,
-                             training_profile="randomized_train", architecture=None):
+                             training_profile="randomized_train", architecture=None,
+                             smoke=False):
+    if smoke and (initial_episodes, rounds, episodes_per_round) != (1, 1, 1):
+        raise ValueError("local DAgger smoke is fixed to one initial episode, one round, and one episode per round")
+    require_kaggle_for_full_workload("DAgger generalization training", smoke=smoke)
     x, y = collect_domain_data(agents=agents, seed=10_000 + seed,
                                episodes=initial_episodes, profile=training_profile,
                                observation=observation, joint=architecture == "joint")
@@ -416,6 +421,7 @@ def run_observation_ablation(policy, *, agents, seeds, domains, observation="his
 def train_ppo_finetune(*, agents, seed, total_timesteps, observation="domain",
                        warm_start=None, reward_mode="balanced_events"):
     """PPO comparator with a topology-checked one-animal imitation warm start."""
+    require_kaggle_for_full_workload("DAgger PPO fine-tuning")
     from stable_baselines3 import PPO
 
     class TrainEnv(GeneralizationEnv):

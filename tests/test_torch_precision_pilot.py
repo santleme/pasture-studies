@@ -55,6 +55,20 @@ class TorchPrecisionPilotTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "requires the pending"):
                     pilot.load_pending_manifest(path, digest)
 
+    def test_manifest_is_hashed_and_parsed_from_one_byte_read(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "pending.json"
+            manifest = fixture_manifest()
+            payload = json.dumps(manifest).encode()
+            path.write_bytes(payload)
+            with patch.object(Path, "read_bytes", autospec=True,
+                              side_effect=lambda instance: payload) as read_bytes, \
+                    patch.object(Path, "read_text", side_effect=AssertionError("must not reopen")), \
+                    patch.object(pilot, "verify_manifest"):
+                loaded = pilot.load_pending_manifest(path, hashlib.sha256(payload).hexdigest())
+            self.assertEqual(loaded, manifest)
+            read_bytes.assert_called_once_with(path)
+
     def test_run_emits_only_masked_statistics_and_separate_provenance(self):
         totals = {family: [1.0, 2.0, 4.0] for family in pilot.FAMILIES}
         summary = pilot._synthetic_sd_summary_for_test(totals)

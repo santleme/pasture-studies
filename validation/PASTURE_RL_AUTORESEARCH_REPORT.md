@@ -77,7 +77,11 @@ Não descartei nem reclassifiquei esse fracasso. Ampliei o treino conjunto e ref
 ```sh
 .venv/bin/python -m pytest -q tests/test_renewable_rl.py tests/test_sb3_pilot.py
 .venv/bin/python -m pytest -q
-.venv/bin/python -m validation.autoresearch_gate --artifact .omx/specs/autoresearch-pasture-rl/result.json
+.venv/bin/python -m validation.autoresearch_gate \
+  --single <single-animal-result.json> \
+  --five <five-animal-result.json> \
+  --five-baseline <five-animal-baseline-result.json> \
+  --artifact /tmp/pasture-autoresearch-gate-result.json
 ```
 
 O teste do wrapper cobre isolamento do cenário, teto-oráculo com 1 e 5 animais, espaço de observação e adaptadores BC/PPO. O gate automático também confere fontes de resultados, cinco sementes por escala, cinco mundos retidos, checks individuais e comparação com random.

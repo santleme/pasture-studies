@@ -2,11 +2,14 @@ from __future__ import annotations
 
 from dataclasses import replace
 import numpy as np
+from unittest.mock import patch
 
 from validation.dagger_generalization import (
     ACTION_LIST, GeneralizationCloner, GeneralizationEnv, TEST_DOMAINS, TRAIN_PROFILE,
     _ordered_navigation_outcomes,
     domain_for,
+    train_generalized_dagger,
+    train_ppo_finetune,
 )
 from farm_sim.model import Action
 
@@ -96,3 +99,22 @@ def test_ordered_navigation_preview_matches_simulator_resource_commits():
     assert actual_successes == sum(outcome == "success" for outcome in expected.values())
     assert set(expected) == {f"cow-{i}" for i in range(1, 6)}
     env.close()
+
+
+def test_direct_dagger_and_ppo_training_helpers_are_kaggle_only():
+    with patch("farm_sim.execution_policy.is_kaggle_runtime", return_value=False), \
+            patch("validation.dagger_generalization.collect_domain_data") as collect:
+        try:
+            train_generalized_dagger(agents=1, seed=7)
+        except RuntimeError as exc:
+            assert "Kaggle-only" in str(exc)
+        else:
+            raise AssertionError("direct DAgger training must be denied outside Kaggle")
+        collect.assert_not_called()
+
+        try:
+            train_ppo_finetune(agents=1, seed=7, total_timesteps=8)
+        except RuntimeError as exc:
+            assert "Kaggle-only" in str(exc)
+        else:
+            raise AssertionError("direct PPO fine-tuning must be denied outside Kaggle")

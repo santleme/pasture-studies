@@ -61,12 +61,16 @@ def load_pending_manifest(path: str | Path, expected_file_sha256: str) -> dict[s
         raise FileNotFoundError(f"pending preregistration manifest not found: {manifest_path}")
     if len(expected_file_sha256) != 64 or any(c not in "0123456789abcdef" for c in expected_file_sha256):
         raise ValueError("--manifest-sha256 must be a lowercase 64-character SHA-256")
-    actual_file_sha256 = file_sha256(manifest_path)
+    try:
+        manifest_bytes = manifest_path.read_bytes()
+    except OSError as exc:
+        raise ValueError("pending preregistration could not be read") from exc
+    actual_file_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
     if actual_file_sha256 != expected_file_sha256:
         raise ValueError("pending preregistration file SHA-256 does not match --manifest-sha256")
     try:
-        manifest = json.loads(manifest_path.read_text())
-    except (OSError, json.JSONDecodeError) as exc:
+        manifest = json.loads(manifest_bytes)
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise ValueError("pending preregistration is not valid JSON") from exc
     if manifest.get("status") != "PRE_OUTCOME_PREREGISTRATION_PENDING_PILOT_DELTA0":
         raise ValueError("precision pilot requires the pending pre-outcome preregistration")

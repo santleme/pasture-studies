@@ -168,3 +168,30 @@ work remain intact.
 The integration branch tip after this audit is recorded by `git log`; it remains
 local-only. No push, main merge, worktree cleanup, stash operation, or training
 run was authorized or performed apart from the disclosed test-smoke deviation.
+
+### Independent review follow-up
+
+The post-integration independent review identified two medium verification issues
+and one Kaggle boundary gap. They were corrected before delivery:
+
+- Direct calls to `train_generalized_dagger()` and `train_ppo_finetune()` now
+  enforce the Kaggle location policy. The only local DAgger escape is an
+  explicit one-initial-episode / one-round / one-episode smoke envelope; the
+  study CLI passes its already-validated smoke flag through. A direct-call test
+  proves both full-training APIs deny before data collection or PPO import.
+- The precision-pilot manifest loader now reads bytes once, validates the hash
+  and parses those same bytes; it no longer reopens the file after validation.
+- The autoresearch and generalization gates now require caller-supplied evidence
+  paths instead of depending on ignored `.omx/specs/` files. Their CLI `--help`
+  checks show the inputs as explicit required parameters; no private OMX
+  evidence was copied into source.
+- The draft candidate hashes were rebound after the precision-loader change;
+  current candidate hash is `cdac0c33439a293c72e31142b79f3fe7f402ca6af8203823af6e31766a9b8196`.
+  Its authorization booleans remain false.
+
+After these fixes, `compileall` passed, the focused non-training unit suite
+passed **55 tests**, and the three targeted review-regression pytest cases passed.
+The broad smoke test that was accidentally invoked earlier remains the only
+reported deviation; no later check ran an optimizer or training/data-generation
+loop. Review findings will be marked resolved only after both independent lanes
+review this corrected tip.

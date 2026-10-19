@@ -8,7 +8,6 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / ".omx/specs/autoresearch-dagger-generalization/paired-instrumented-five-seeds.json"
 REPORT = ROOT / "validation/DAGGER_GENERALIZATION_REPORT.md"
 DOMAINS = ("nominal", "layout_reference", "layout_shift", "supply_shift",
            "regrowth_shift", "combined_unseen")
@@ -19,8 +18,8 @@ def _mean(rows, key):
     return float(np.mean([row[key] for row in rows]))
 
 
-def validate() -> dict:
-    data = json.loads(DATA.read_text())
+def validate(data_path: Path) -> dict:
+    data = json.loads(data_path.read_text())
     runs = data["paired_runs"]
     assert len(runs) == 5 and len(data["evaluation_seeds"]) == 5
     assert data["agents"] == 5
@@ -103,16 +102,18 @@ def validate() -> dict:
                     "improved at least three of four combined-domain behavior metrics; "
                     "the preregistered 4/5 robustness gate is not met."),
         "report_artifact_path": "validation/DAGGER_GENERALIZATION_REPORT.md",
-        "data_artifact_path": ".omx/specs/autoresearch-dagger-generalization/paired-instrumented-five-seeds.json",
+        "data_artifact_path": str(data_path),
         "metrics": metrics,
     }
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data", type=Path, required=True,
+                        help="paired five-seed DAgger evaluation JSON")
     parser.add_argument("--artifact", type=Path, required=True)
     args = parser.parse_args()
-    result = validate()
+    result = validate(args.data)
     args.artifact.parent.mkdir(parents=True, exist_ok=True)
     args.artifact.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))

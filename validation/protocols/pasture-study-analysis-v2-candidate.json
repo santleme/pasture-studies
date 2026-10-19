@@ -8,7 +8,7 @@
     "training_outcomes_authorized": false
   },
   "candidate_id": "pasture-torch-experimental-analysis-v2-candidate",
-  "candidate_sha256": "0f19a1f709ab7e66cdac089ce4acf90b51318f3a42162423c9e895e5e166b3cb",
+  "candidate_sha256": "cdac0c33439a293c72e31142b79f3fe7f402ca6af8203823af6e31766a9b8196",
   "formal_dependency_baseline": {
     "path": "requirements-training.txt",
     "pins": [
@@ -66,7 +66,7 @@
     "base_source_commit_sha": "8fd332d5dc5780897a3abcf3b4abf4568a0f4946",
     "base_worktree_clean": false,
     "note": "Draft source hashes rebound during integration to the merged local implementation. This is not a release commit; independent review and signed approval remain absent, and no execution is authorized.",
-    "source_set_sha256": "161caa01b52e153ffc640fb3d60b163b9ba12590c4bc26f997245979f31496c1",
+    "source_set_sha256": "b82c5c0a28b043140052fce65959513238de8cf4316cbff6b48108146c1330d0",
     "source_sha256": {
       "docs/kaggle-training.md": "6fac5a5520f6a31ace9f5af66f5f974058f9f2fc6c292531835f9721084ba5c9",
       "farm_sim/memory.py": "61d860b3ed9730a1867145205a2cd24f08cbf0de13f24067447e2c5c4e97c217",
@@ -83,7 +83,7 @@
       "tests/test_torch_cohort_analysis.py": "acbafd1aa82387c2c336213be0a10c6462a6af2e1414dc5eed0c4eeb167b987b",
       "tests/test_torch_evaluation.py": "0ad3c66ba5e9a64a5673c8793f8c5f4aae40d6a2e876116a6a31e28269c8b26d",
       "tests/test_torch_locked_statistics.py": "2d6ab58c5372891c5398ac12b7e131198055d1c54df9fd3adf3bae1030f09be2",
-      "tests/test_torch_precision_pilot.py": "a500879bb7b530cdd15a8a5fc3a3e7aa0c5da30336d5e22d01d2b6920f399ab9",
+      "tests/test_torch_precision_pilot.py": "76d264f73526a9e8967f58c8828e6ae2ad4f5258cfe83263ec922cfe1ed18f9a",
       "tests/test_torch_precision_pilot_v2.py": "c0f1bf16483d1619b90f11b317e127a8bb9ad84789608b6801f38c71cf14b593",
       "tests/test_torch_release_candidate.py": "f61816f2cfaebeb5b40b61d26f85b491f6da56817963839e0748c635ca68dd2d",
       "validation/KAGGLE_EXPERIMENTAL_RELEASE_FOLLOWUP_REPORT.md": "9bd681657eda3a47229c633df4164ecd396f82c5e1a11aa5772ecd5269f39785",
@@ -92,7 +92,7 @@
       "validation/evaluate_torch_mvp1.py": "ad7c1ff4e30e8b36af67e622cc7769dc710821a6fa3cbec42ee13e2963bb1eee",
       "validation/finalize_precision_pilot_v2.py": "98a7a1e4aed363fcf967b2152c9913f46e73ed84c392154880ca0cbdc30a1e59",
       "validation/preregister_torch_mvp1.py": "16752d8fad6fd97befdaace7a7c45776fb3b02d94f86a03275675abfb82a617d",
-      "validation/run_torch_precision_pilot.py": "cbe1d518dc68abfdd33d722eef8181f5fa074cf509c16d52c50be4fb47d30075",
+      "validation/run_torch_precision_pilot.py": "8e2b49eddd5657b73a5821603a3460b701a42e99ae28e32f7d3f29c5e79bd0b6",
       "validation/torch_locked_statistics.py": "b7e198b46e20a8a37ed3b8f22292cefa8d86c72b27075e80c621faa2419fe187",
       "validation/train_torch_mvp1.py": "43c4d812919730775bcebff7647598fcaf1ddc9219eeb9352936e957006ecbf2"
     }
