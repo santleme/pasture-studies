@@ -40,6 +40,9 @@ class ExecutionPolicyTests(unittest.TestCase):
                  "--output", str(output), "--license", "CC0-1.0"],
                 [sys.executable, "-m", "validation.benchmark_torch_fixed_corpus", "generate-corpus",
                  "--seed", "11", "--output", str(output)],
+                [sys.executable, "-m", "validation.profile_torch_training", "--output", str(output)],
+                [sys.executable, "-m", "validation.profile_training_pipeline", "--output", str(output)],
+                [sys.executable, "-m", "validation.train_eval_mvp1", "--output", str(output)],
                 [sys.executable, "-m", "validation.train_torch_mvp1", "--readiness-ddp",
                  "--algorithm", "a2c", "--device", "cuda", "--output", str(output)],
             ]
