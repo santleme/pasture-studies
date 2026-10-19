@@ -57,10 +57,10 @@ class PastureStudiesArtifactsTests(unittest.TestCase):
             source = root / "corpus.npz"
             source.write_bytes(b"test archive")
             source.with_suffix(".json").write_text("{}\n")
-            arrays = {"world_ids": np.arange(20).reshape(10, 2)}
+            arrays = {"world_ids": np.arange(2780).reshape(10, 278)}
             config = {"smoke_mode": False,
                       "split": "training-only fixed workload; never held-out; stale off-policy compute replay",
-                      "partition_count": 10, "episodes_per_partition": 2,
+                      "partition_count": 10, "episodes_per_partition": 278,
                       "corpus_sha256": "f" * 64}
             output = root / "release"
             with patch("validation.package_torch_corpus.load_corpus", return_value=(arrays, config)):
