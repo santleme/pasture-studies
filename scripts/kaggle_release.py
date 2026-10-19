@@ -23,7 +23,7 @@ PREREGISTRATION = Path("validation/kaggle-mvp1/preregistration.json")
 RUNTIME_PROTOCOL_CANDIDATE = Path("validation/protocols/pasture-experiment-runtime-v2-candidate.json")
 NOTEBOOK = Path("notebooks/pasture_studies_kaggle.ipynb")
 ENGINE_SOURCE_PATHS = (
-    "farm_sim/torch_training.py", "farm_sim/torch_checkpoint.py", "farm_sim/simulation.py",
+    "farm_sim/torch_training.py", "farm_sim/exploratory_learning.py", "farm_sim/torch_checkpoint.py", "farm_sim/simulation.py",
     "farm_sim/model.py", "farm_sim/navigation.py", "farm_sim/perception.py",
     "farm_sim/memory.py", "farm_sim/physiology.py", "farm_sim/policy.py",
     "validation/train_torch_mvp1.py", "validation/evaluate_torch_mvp1.py",
@@ -47,8 +47,18 @@ EXPLORATORY_CONFIG_VALUE = {
 EXPLORATORY_COMPARISON_CONFIG_VALUE = {
     "task": "exploratory_a2c_variant_comparison", "algorithm": "a2c",
     "variants": ["A", "B", "C", "D"], "episodes_per_variant_seed": 512,
-    "seeds": [9483001, 9483002, 9483003], "training_jobs": 24,
+    "seeds": [9483001, 9483002, 9483003], "training_jobs": 12,
     "max_training_jobs": 24, "max_devices": 2, "locked_test_access": False,
+    "variant_config": {
+        "A": {"reward_variant": "original", "state_reward_scale": 0.1,
+              "normalize_advantage": False, "entropy_coefficient": 0.0},
+        "B": {"reward_variant": "original", "state_reward_scale": 0.1,
+              "normalize_advantage": True, "entropy_coefficient": 0.01},
+        "C": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
+              "normalize_advantage": False, "entropy_coefficient": 0.0},
+        "D": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
+              "normalize_advantage": True, "entropy_coefficient": 0.01},
+    },
     "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
 }
 READINESS_DIAGNOSTIC_TASKS = frozenset({"checkpoint_recovery", "t4x2_path_smoke"})

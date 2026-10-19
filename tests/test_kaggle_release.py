@@ -161,6 +161,12 @@ class KaggleReleaseTests(unittest.TestCase):
         self.assertEqual(release.authorize_mode("PREFLIGHT", manifest), "PREFLIGHT")
         self.assertEqual(release.authorize_mode("EXPLORATORY", manifest,
                          config=release.EXPLORATORY_CONFIG_VALUE), "EXPLORATORY")
+        self.assertEqual(release.authorize_mode("EXPLORATORY_COMPARISON", manifest,
+                         config=release.EXPLORATORY_COMPARISON_CONFIG_VALUE), "EXPLORATORY_COMPARISON")
+        bad_comparison = dict(release.EXPLORATORY_COMPARISON_CONFIG_VALUE)
+        bad_comparison["training_jobs"] += 1
+        with self.assertRaisesRegex(release.ReleaseError, "exact bounded A-D"):
+            release.authorize_mode("EXPLORATORY_COMPARISON", manifest, config=bad_comparison)
         for key in ("episodes", "seed", "locked_test_access", "formal_eligible"):
             bad = dict(release.EXPLORATORY_CONFIG_VALUE)
             bad[key] = not bad[key] if isinstance(bad[key], bool) else bad[key] + 1

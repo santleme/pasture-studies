@@ -14,6 +14,7 @@ import numpy as np
 
 from farm_sim.model import Action, FEATURE_NAMES
 from farm_sim.policy import CategoricalPolicy, load_checkpoint
+from farm_sim.exploratory_learning import calculate_exploratory_loss
 from farm_sim.simulation import Simulation, make_world
 from farm_sim.torch_checkpoint import load_generation, resolve_generation, save_generation
 from farm_sim.torch_training import (
@@ -38,10 +39,14 @@ EXPLORATORY_BATCH_EVAL_EPISODES = 5
 EXPLORATORY_BATCH_SEEDS = (9483001, 9483002, 9483003)
 EXPLORATORY_BATCH_MAX_JOBS = 24
 EXPLORATORY_BATCH_VARIANTS = {
-    "A": {"reward_variant": "original", "normalize_advantage": False, "entropy_coefficient": 0.0},
-    "B": {"reward_variant": "original", "normalize_advantage": True, "entropy_coefficient": 0.01},
-    "C": {"reward_variant": "state_aware", "normalize_advantage": False, "entropy_coefficient": 0.0},
-    "D": {"reward_variant": "state_aware", "normalize_advantage": True, "entropy_coefficient": 0.01},
+    "A": {"reward_variant": "original", "state_reward_scale": 0.1,
+          "normalize_advantage": False, "entropy_coefficient": 0.0},
+    "B": {"reward_variant": "original", "state_reward_scale": 0.1,
+          "normalize_advantage": True, "entropy_coefficient": 0.01},
+    "C": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
+          "normalize_advantage": False, "entropy_coefficient": 0.0},
+    "D": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
+          "normalize_advantage": True, "entropy_coefficient": 0.01},
 }
 
 
@@ -349,7 +354,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                     checkpoint_every: int, smoke: bool = False, max_updates: int | None = None, eval_count: int = 10,
                     eval_only: bool = False, allow_execution_migration: bool = False, exploratory: bool = False,
                     exploratory_variant: str | None = None, reward_variant: str = "original",
-                    normalize_advantage: bool = False, entropy_coefficient: float = 0.0) -> dict:
+                    state_reward_scale: float = 0.1, normalize_advantage: bool = False,
+                    entropy_coefficient: float = 0.0) -> dict:
     torch = require_torch()
     device = resolve_device(device)
     set_deterministic(seed, device)
@@ -384,6 +390,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                     source_root / "farm_sim" / "torch_checkpoint.py", source_root / "requirements-training.txt",
                     *(source_root / "farm_sim" / name for name in
                     ("simulation.py", "model.py", "navigation.py", "perception.py", "memory.py", "physiology.py", "policy.py"))]
+    if exploratory_variant is not None:
+        source_paths.append(source_root / "farm_sim" / "exploratory_learning.py")
     source_hashes = {str(path.relative_to(source_root)): _sha(path) for path in source_paths}
     config = {"version": CONFIG_VERSION, "algorithm": algorithm, "seed": int(seed),
               "source_hashes": source_hashes, "numpy_version": np.__version__,
@@ -391,8 +399,7 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                                 "action_uniform_derivation": "sha256(root,action-uniform,world-seed,episode,tick,animal-index)"},
               "torch_version": torch.__version__, "optimizer": "Adam",
               "reinforce_baseline": "prior_completed_batch_return_to_go_mean",
-              "a2c_targets": "monte_carlo_no_bootstrap_no_gae", "entropy_bonus": float(entropy_coefficient),
-              "reward_variant": reward_variant, "normalize_advantage": bool(normalize_advantage),
+              "a2c_targets": "monte_carlo_no_bootstrap_no_gae", "entropy_bonus": 0.0,
               "episodes": int(episodes), "rollout_ticks": ROLLOUT_TICKS, "batch_episodes": BATCH_EPISODES,
               "lr": LEARNING_RATE, "grad_clip_norm": GRAD_CLIP_NORM,
               "feature_schema": "cattle-observation-v1", "feature_names": list(FEATURE_NAMES),
@@ -402,6 +409,10 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
         config.update({"protocol": "exploratory-comparison-v1" if exploratory_variant else "exploratory-a2c-v1",
                        "exploratory_variant": exploratory_variant, "exploratory_only": True,
                        "formal_eligible": False, "locked_outcomes_accessed": False})
+    if exploratory_variant is not None:
+        config.update({"reward_variant": reward_variant, "state_reward_scale": float(state_reward_scale),
+                       "normalize_advantage": bool(normalize_advantage),
+                       "entropy_coefficient": float(entropy_coefficient)})
     if resume:
         restored = load_generation(resume if resume != "latest" else run_dir, model=train_model,
                                    optimizer=optimizer, map_location=device,
@@ -435,10 +446,17 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
         rollout_seconds = time.perf_counter() - stage_started
         optimizer.zero_grad(set_to_none=True)
         stage_started = time.perf_counter()
-        loss, stats = calculate_loss(train_model, trajectories, algorithm,
-            previous_return_sum=state["baseline_return_sum"], previous_return_count=state["baseline_return_count"],
-            reward_variant=reward_variant, normalize_advantage=normalize_advantage,
-            entropy_coefficient=entropy_coefficient)
+        if exploratory_variant is not None:
+            loss, stats = calculate_exploratory_loss(train_model, trajectories, algorithm,
+                previous_return_sum=state["baseline_return_sum"],
+                previous_return_count=state["baseline_return_count"],
+                reward_variant=reward_variant, state_reward_scale=state_reward_scale,
+                normalize_advantage=normalize_advantage,
+                entropy_coefficient=entropy_coefficient)
+        else:
+            loss, stats = calculate_loss(train_model, trajectories, algorithm,
+                previous_return_sum=state["baseline_return_sum"],
+                previous_return_count=state["baseline_return_count"])
         forward_loss_seconds = time.perf_counter() - stage_started
         assert_finite_training_state(loss, model)
         stage_started = time.perf_counter()
@@ -487,6 +505,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                "transitions": batch_size * ROLLOUT_TICKS * 5, **stats,
                "batch_return": episode_reward_sum / batch_size,
                "mean_trajectory_return": episode_reward_sum / batch_size,
+               "raw_environment_batch_return": episode_reward_sum / batch_size,
+               "training_target_mean_return_to_go": float(stats["mean_return_to_go"]),
                "reward_components": {kind: int(component_counts[i]) for i, kind in enumerate(component_names)},
                "mean_action_probability": {a.value: float(prob_means[i]) for i, a in enumerate(ACTIONS)},
                "batch_action_counts": {a.value: int(action_counts[i]) for i,a in enumerate(ACTIONS)},
@@ -612,6 +632,7 @@ def run_exploratory_batch(*, output: Path, device: str, shard_index: int = 0,
             metrics_path=run_root / "metrics.jsonl", checkpoint_every=1,
             eval_count=EXPLORATORY_BATCH_EVAL_EPISODES, exploratory=True,
             exploratory_variant=spec["variant"], reward_variant=spec["reward_variant"],
+            state_reward_scale=spec["state_reward_scale"],
             normalize_advantage=spec["normalize_advantage"],
             entropy_coefficient=spec["entropy_coefficient"])
         results.append({**spec, **result, "run_root": str(run_root)})
