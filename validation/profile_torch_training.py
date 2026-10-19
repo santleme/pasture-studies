@@ -13,6 +13,8 @@ def sync(torch, device):
 
 
 def benchmark(device: str, *, batches: list[int], warmups: int, iterations: int, repeats: int):
+    lightweight = len(batches) <= 2 and max(batches, default=0) <= 5 and warmups <= 1 and iterations <= 2 and repeats <= 1
+    require_kaggle_for_full_workload("Torch profiling benchmark", smoke=lightweight)
     torch = require_torch()
     result = []
     for batch in batches:

@@ -93,6 +93,7 @@ def _scalar_torch_episode(model, world_seed: int, *, root_seed: int, episode_ind
 def benchmark_collectors(*, seeds: tuple[int, ...] = (51337, 51338, 51339),
                          root_seed: int = 99173, repeats: int = 3, model_seed: int = 29) -> dict:
     """Compare scalar per-animal inference and multi-world batched inference on CPU."""
+    require_kaggle_for_full_workload("collector benchmark", smoke=len(seeds) == 1 and repeats == 1)
     from farm_sim.simulation import Simulation
     from farm_sim.torch_training import ActorCritic, collect_episodes_batch, require_torch
 
@@ -212,6 +213,7 @@ class Timings:
 
 
 def profile(*, seed: int = 51337, ticks: int = 72, repeats: int = 3, output: Path | None = None) -> dict:
+    require_kaggle_for_full_workload("training pipeline profile", smoke=ticks <= 2 and repeats == 1)
     if ticks < 1 or repeats < 1:
         raise ValueError("ticks and repeats must be positive")
     timing = Timings()
@@ -289,7 +291,10 @@ def profile(*, seed: int = 51337, ticks: int = 72, repeats: int = 3, output: Pat
                          "p95_seconds": float(np.percentile(samples, 95))}
     timings.update(timing.summarize())
     try:
-        collector_comparison = benchmark_collectors()
+        if ticks <= 2 and repeats == 1:
+            collector_comparison = benchmark_collectors(seeds=(seed,), repeats=1)
+        else:
+            collector_comparison = benchmark_collectors()
     except RuntimeError as exc:
         collector_comparison = {"status": "unavailable", "reason": str(exc),
                                 "interpretation": "CPU scalar-vs-batched collector timings not measured because optional PyTorch is unavailable."}

@@ -72,6 +72,7 @@ def corpus_config(*, root_seed: int, smoke: bool) -> dict[str, Any]:
 
 def build_corpus(root_seed: int, *, smoke: bool = False) -> tuple[dict[str, np.ndarray], dict[str, Any]]:
     """Collect complete simulator episodes once, outside any timed replay."""
+    require_kaggle_for_full_workload("fixed-corpus generation", smoke=smoke)
     torch = require_torch()
     config = corpus_config(root_seed=root_seed, smoke=smoke)
     n_partitions = config["partition_count"]
@@ -326,6 +327,7 @@ def compare_reports(left: dict[str, Any], right: dict[str, Any]) -> dict[str, An
 
 def run_benchmark(corpus_path: str | Path, *, device: str, repeats: int, seed: int,
                   output: str | Path, smoke: bool = False) -> dict[str, Any]:
+    require_kaggle_for_full_workload("fixed-corpus benchmark", smoke=smoke)
     torch = require_torch()
     arrays, config = load_corpus(corpus_path)
     if bool(config.get("smoke_mode")) != bool(smoke):
