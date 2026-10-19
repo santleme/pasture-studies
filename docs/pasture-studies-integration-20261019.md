@@ -195,3 +195,13 @@ The broad smoke test that was accidentally invoked earlier remains the only
 reported deviation; no later check ran an optimizer or training/data-generation
 loop. Review findings will be marked resolved only after both independent lanes
 review this corrected tip.
+
+Review verdict for the corrected integration: the code-reviewer returned
+**APPROVE** with zero remaining findings; the architect returned **WATCH** only
+because the separate precision/locked-analysis candidate is deliberately not
+release-ready (no trusted signer roots and no independently protected audit
+store). Under the review contract the synthesis is **COMMENT**, not unconditional
+merge approval. This does not block the requested local integration branch, but
+it does block any claim that the v2 pilot/locked-analysis path is ready for
+production or authorized execution. Both lanes reviewed the corrected code tip
+`b87370d`; the final commit after it changes only this audit note.
