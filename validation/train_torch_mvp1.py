@@ -498,7 +498,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
               "actions": [x.value for x in ACTIONS], "dtype": "float32", "amp": False, "tf32": False,
               "world_size": world_size}
     if exploratory:
-        config.update({"protocol": ("autoresearch-world-perception-v1" if exploratory_variant in {"G", "H", "I", "J"}
+        config.update({"protocol": ("autoresearch-outcome-aware-v1" if exploratory_variant in {"K", "L"}
+                                     else "autoresearch-world-perception-v1" if exploratory_variant in {"G", "H", "I", "J"}
                                      else "exploratory-iteration-2-v1" if exploratory_variant in {"E", "F"}
                                      else "exploratory-comparison-v1" if exploratory_variant
                                      else "exploratory-a2c-v1"),

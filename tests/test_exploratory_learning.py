@@ -8,6 +8,7 @@ from farm_sim.exploratory_learning import (
     calculate_exploratory_loss,
     entropy_regularized_actor_loss,
     normalize_advantages,
+    outcome_aware_rewards,
     state_aware_rewards,
 )
 
@@ -33,6 +34,28 @@ class ExploratoryLearningTests(unittest.TestCase):
         np.testing.assert_array_equal(actions, original_actions)
         np.testing.assert_array_equal(rewards, original_rewards)
         np.testing.assert_array_equal(state_aware_rewards(observations, actions, rewards, scale=0), rewards)
+
+    def test_outcome_aware_reward_only_shapes_observed_successful_drive_changes(self):
+        observations = np.zeros((4, len(FEATURE_NAMES)), dtype=np.float32)
+        next_observations = observations.copy()
+        hunger = FEATURE_NAMES.index("hunger")
+        thirst = FEATURE_NAMES.index("thirst")
+        fatigue = FEATURE_NAMES.index("fatigue")
+        observations[:, hunger] = [0.9, 0.9, 0.9, 0.2]
+        next_observations[:, hunger] = [0.7, 0.95, 0.9, 0.2]
+        observations[:, thirst] = [0.8, 0.8, 0.8, 0.8]
+        next_observations[:, thirst] = [0.8, 0.8, 0.5, 0.8]
+        observations[:, fatigue] = [0.9, 0.9, 0.2, 0.2]
+        next_observations[:, fatigue] = [0.9, 0.9, 0.02, 0.02]
+        actions = np.array([list(Action).index(Action.GRAZE), list(Action).index(Action.GRAZE),
+                            list(Action).index(Action.DRINK), list(Action).index(Action.REST)])
+        rewards = np.zeros(4, dtype=np.float32)
+        shaped = outcome_aware_rewards(observations, next_observations, actions, rewards, scale=0.5)
+        self.assertAlmostEqual(float(shaped[0]), 0.1)
+        self.assertEqual(float(shaped[1]), 0.0)
+        self.assertAlmostEqual(float(shaped[2]), 0.15)
+        self.assertEqual(float(shaped[3]), 0.0)
+        np.testing.assert_array_equal(rewards, np.zeros(4, dtype=np.float32))
 
     def test_advantage_and_entropy_helpers_keep_control_defaults(self):
         advantages = np.array([1.0, 2.0, 3.0])

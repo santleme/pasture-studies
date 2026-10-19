@@ -25,6 +25,7 @@ EPISODES = 512
 SEEDS_BY_BATCH = {
     1: (9484101, 9484102, 9484103),
     2: (9484104, 9484105, 9484106),
+    3: (9484201, 9484202, 9484203),
 }
 VARIANTS_BY_BATCH = {
     1: {
@@ -39,16 +40,23 @@ VARIANTS_BY_BATCH = {
         "J": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
               "normalize_advantage": True, "entropy_coefficient": 0.01},
     },
+    3: {
+        "K": {"reward_variant": "outcome_aware", "state_reward_scale": 0.5,
+              "normalize_advantage": False, "entropy_coefficient": 0.0},
+        "L": {"reward_variant": "outcome_aware", "state_reward_scale": 0.5,
+              "normalize_advantage": True, "entropy_coefficient": 0.01},
+    },
 }
 
 
 def batch_specs(batch: int) -> list[dict[str, Any]]:
     if batch not in VARIANTS_BY_BATCH:
-        raise ValueError("only preregistered autoresearch batch 1 or 2 is currently enabled")
+        raise ValueError("only preregistered autoresearch batches 1 through 3 are currently enabled")
     seeds = SEEDS_BY_BATCH[batch]
     return [{"variant": variant, **config, "seed": seed, "episodes": EPISODES,
              "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
-             "protocol": "autoresearch-world-perception-v1"}
+             "protocol": ("autoresearch-outcome-aware-v1" if variant in {"K", "L"}
+                          else "autoresearch-world-perception-v1")}
             for variant, config in VARIANTS_BY_BATCH[batch].items() for seed in seeds]
 
 
@@ -84,7 +92,7 @@ def create_candidate_manifest(*, batch: int, output: Path) -> Path:
         entries.append({"variant": spec["variant"], "seed": spec["seed"],
                         "policy_npz": policy.relative_to(output).as_posix(), "sha256": digest})
     manifest = {"schema_version": 1, "mode": "autoresearch_exploratory",
-                "batch": batch, "protocol": "autoresearch-world-perception-v1",
+                "batch": batch, "protocol": specs[0]["protocol"],
                 "formal_eligible": False, "benchmark_eligible": False,
                 "locked_test_access": False, "locked_outcomes_accessed": False,
                 "candidate_checkpoints": entries}
@@ -146,7 +154,7 @@ def run_batch(*, batch: int, output: Path, device: str, shard_index: int = 0,
                            "error": str(exc), "finished_at_unix": time.time()})
             _atomic_json(ledger_path, record)
             raise
-    summary = {"schema_version": 1, "protocol": "autoresearch-world-perception-v1",
+    summary = {"schema_version": 1, "protocol": specs[0]["protocol"],
                "batch": batch, "exploratory_only": True, "formal_eligible": False,
                "benchmark_eligible": False, "locked_outcomes_accessed": False,
                "locked_test_access": False, "device": device,
@@ -162,7 +170,7 @@ def run_batch(*, batch: int, output: Path, device: str, shard_index: int = 0,
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--batch", type=int, required=True, choices=(1, 2))
+    parser.add_argument("--batch", type=int, required=True, choices=(1, 2, 3))
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", choices=("cpu", "cuda"), required=True)
     parser.add_argument("--shard-index", type=int, default=0)

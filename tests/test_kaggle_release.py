@@ -165,6 +165,15 @@ class KaggleReleaseTests(unittest.TestCase):
                          config=release.EXPLORATORY_COMPARISON_CONFIG_VALUE), "EXPLORATORY_COMPARISON")
         self.assertEqual(release.authorize_mode("EXPLORATORY_ITERATION_2", manifest,
                          config=release.EXPLORATORY_ITERATION_2_CONFIG_VALUE), "EXPLORATORY_ITERATION_2")
+        from scripts import kaggle_deploy
+        self.assertEqual(kaggle_deploy.AUTORESEARCH_BATCH_CONFIGS,
+                         release.AUTORESEARCH_BATCH_CONFIGS)
+        config = release.AUTORESEARCH_BATCH_CONFIGS["AUTORESEARCH_BATCH_3"]
+        self.assertEqual(release.authorize_mode("AUTORESEARCH_BATCH_3", manifest, config=config),
+                         "AUTORESEARCH_BATCH_3")
+        with self.assertRaises(release.ReleaseError):
+            release.authorize_mode("AUTORESEARCH_BATCH_3", manifest,
+                                   config={**config, "training_jobs": 7})
         bad_comparison = dict(release.EXPLORATORY_COMPARISON_CONFIG_VALUE)
         bad_comparison["training_jobs"] += 1
         with self.assertRaisesRegex(release.ReleaseError, "exact bounded A-D"):

@@ -9,15 +9,19 @@ import json
 def test_batch_specs_are_fixed_disjoint_nonformal_cohorts():
     first = batch_specs(1)
     second = batch_specs(2)
-    assert len(first) == len(second) == 6
+    third = batch_specs(3)
+    assert len(first) == len(second) == len(third) == 6
     assert {x["variant"] for x in first} == {"G", "H"}
     assert {x["variant"] for x in second} == {"I", "J"}
     assert {x["seed"] for x in first}.isdisjoint({x["seed"] for x in second})
-    assert all(x["episodes"] == 512 for x in first + second)
-    assert all(x["perception_mode"] == "path-aware-v2" for x in first + second)
-    assert all(x["resource_profile"] == "resource-rich-v1" for x in first + second)
+    assert {x["variant"] for x in third} == {"K", "L"}
+    assert {x["seed"] for x in third}.isdisjoint({x["seed"] for x in first + second})
+    assert all(x["episodes"] == 512 for x in first + second + third)
+    assert all(x["perception_mode"] == "path-aware-v2" for x in first + second + third)
+    assert all(x["resource_profile"] == "resource-rich-v1" for x in first + second + third)
+    assert all(x["reward_variant"] == "outcome_aware" for x in third)
     with pytest.raises(ValueError, match="preregistered"):
-        batch_specs(3)
+        batch_specs(4)
 
 
 def test_runner_shards_jobs_and_records_started_run_before_training(tmp_path: Path):

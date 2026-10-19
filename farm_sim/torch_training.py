@@ -175,6 +175,7 @@ class Trajectory:
     probabilities: np.ndarray | None = None
     event_counts: dict[str, int] | None = None
     invalid_outputs: int = 0
+    next_observations: np.ndarray | None = None  # [ticks, animals, features], post-transition
 
     def returns_to_go(self) -> np.ndarray:
         # Per-animal Monte Carlo return-to-go; no bootstrap or shaping.
@@ -253,6 +254,7 @@ def collect_episodes_batch(model, episodes: Sequence[tuple[int, int]], *, root_s
         worlds.append({"seed": world_seed, "index": episode_index, "sim": Simulation(world, _SamplingPolicy(model, uniforms),
                                                                                       perception_mode=perception_mode),
                        "uniforms": uniforms, "observations": np.empty((ticks, 5, N_INPUTS), np.float32),
+                       "next_observations": np.empty((ticks, 5, N_INPUTS), np.float32),
                        "actions": np.empty((ticks, 5), np.int64), "rewards": np.empty((ticks, 5), np.float32),
                        "probabilities": np.empty((ticks, 5, N_ACTIONS), np.float32)})
     for tick in range(ticks):
@@ -279,6 +281,8 @@ def collect_episodes_batch(model, episodes: Sequence[tuple[int, int]], *, root_s
                 decisions[animal_id] = (PolicyDecision(ACTIONS[action_index], tuple(float(v) for v in p), "torch-sampled-batched"), features)
                 w["probabilities"][tick, animal_position] = p
             w["sim"].step_with_decisions(decisions)
+            next_features = w["sim"].decision_features()
+            w["next_observations"][tick] = np.asarray([features for _, features in next_features], dtype=np.float32)
             for animal_position, animal in enumerate(sorted(w["sim"].world.animals, key=lambda a: a.animal_id)):
                 w["actions"][tick, animal_position] = ACTIONS.index(animal.action)
                 w["rewards"][tick, animal_position] = animal.last_reward
@@ -288,7 +292,7 @@ def collect_episodes_batch(model, episodes: Sequence[tuple[int, int]], *, root_s
         for event in w["sim"].events:
             event_counts[event.kind] = event_counts.get(event.kind, 0) + 1
         result.append(Trajectory(w["observations"], w["actions"], w["rewards"], w["uniforms"], w["seed"],
-                                 w["probabilities"], event_counts, 0))
+                                 w["probabilities"], event_counts, 0, w["next_observations"]))
     return result
 
 

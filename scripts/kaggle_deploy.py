@@ -25,12 +25,12 @@ if str(ROOT) not in sys.path:
     # imports used by the READINESS and EXPLORATORY gates.
     sys.path.insert(0, str(ROOT))
 NOTEBOOK = ROOT / "notebooks" / "pasture_studies_kaggle.ipynb"
-MODES = {"PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2", "AUTORESEARCH_BATCH_1", "AUTORESEARCH_BATCH_2"}
+MODES = {"PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2", "AUTORESEARCH_BATCH_1", "AUTORESEARCH_BATCH_2", "AUTORESEARCH_BATCH_3"}
 T4X2_SHAPE = "NvidiaTeslaT4"
 RELEASE_MANIFEST = "release-manifest.json"
 DEPLOYMENT_CONFIG = "pasture-deployment.json"
 READINESS_CONFIG = "readiness-config.json"
-EXPLORATORY_MODES = {"EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2", "AUTORESEARCH_BATCH_1", "AUTORESEARCH_BATCH_2"}
+EXPLORATORY_MODES = {"EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2", "AUTORESEARCH_BATCH_1", "AUTORESEARCH_BATCH_2", "AUTORESEARCH_BATCH_3"}
 READINESS_CONFIG_VALUE = {
     "task": "checkpoint_recovery", "max_updates": 2, "max_episodes": 32,
     "max_devices": 2, "locked_test_access": False, "outcome_analysis": False,
@@ -102,6 +102,21 @@ AUTORESEARCH_BATCH_CONFIGS = {
             "I": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
                   "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
             "J": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+                  "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0}},
+        "locked_test_access": False, "formal_eligible": False,
+        "benchmark_eligible": False, "checkpoint_promotion": False,
+    },
+    "AUTORESEARCH_BATCH_3": {
+        "task": "autoresearch_outcome_aware_recovery", "protocol": "autoresearch-outcome-aware-v1",
+        "batch": 3, "algorithm": "a2c", "variants": ["K", "L"],
+        "seeds": [9484201, 9484202, 9484203], "episodes_per_variant_seed": 512,
+        "training_jobs": 6, "cumulative_jobs_before": 12, "max_additional_training_jobs": 24,
+        "evaluation_root_seed": 9486999, "comparison_episodes_per_family": 3,
+        "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
+        "variant_config": {
+            "K": {"reward_variant": "outcome_aware", "state_reward_scale": 0.5,
+                  "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+            "L": {"reward_variant": "outcome_aware", "state_reward_scale": 0.5,
                   "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0}},
         "locked_test_access": False, "formal_eligible": False,
         "benchmark_eligible": False, "checkpoint_promotion": False,
@@ -421,7 +436,7 @@ def prepare_autoresearch_batch(folder: Path, owner: str, *, runtime_profile_path
     """Stage one fixed six-run exploratory autoresearch cohort on T4x2."""
     mode = f"AUTORESEARCH_BATCH_{batch}"
     if mode not in AUTORESEARCH_BATCH_CONFIGS:
-        raise DeploymentError("Only the explicitly bounded autoresearch batches 1 and 2 are enabled")
+        raise DeploymentError("Only the explicitly bounded autoresearch batches 1 through 3 are enabled")
     try:
         runtime_profile = json.loads(runtime_profile_path.read_text())
         from scripts.kaggle_release import _validate_runtime
@@ -925,7 +940,7 @@ def main(argv: list[str] | None = None) -> int:
     prep_autoresearch.add_argument("--path", type=Path, required=True)
     prep_autoresearch.add_argument("--owner", required=True)
     prep_autoresearch.add_argument("--runtime-profile", type=Path, required=True)
-    prep_autoresearch.add_argument("--batch", type=int, choices=(1, 2), required=True)
+    prep_autoresearch.add_argument("--batch", type=int, choices=(1, 2, 3), required=True)
     bind = sub.add_parser("bind-release")
     bind.add_argument("--path", type=Path, required=True)
     bind.add_argument("--manifest", type=Path, required=True)

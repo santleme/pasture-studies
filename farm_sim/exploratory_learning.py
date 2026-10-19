@@ -56,6 +56,46 @@ def state_aware_rewards(observations, actions, rewards, *, scale: float = 0.1) -
     return result
 
 
+def outcome_aware_rewards(observations, next_observations, actions, rewards, *, scale: float = 0.1) -> np.ndarray:
+    """Shape only observed drive improvements, never an unverified action intent.
+
+    The before/after physiological feature deltas are emitted by the unchanged
+    simulator transition. Failed, blocked, or merely-en-route resource actions
+    receive no positive shaping. This remains an exploratory training target;
+    candidate selection always uses untouched original simulator rewards.
+    """
+    if not math.isfinite(scale) or scale < 0:
+        raise ValueError("scale must be finite and nonnegative")
+    obs = np.asarray(observations, dtype=np.float32)
+    nxt = np.asarray(next_observations, dtype=np.float32)
+    acts = np.asarray(actions)
+    base = np.asarray(rewards)
+    if obs.shape[-1:] != (len(FEATURE_NAMES),) or nxt.shape != obs.shape:
+        raise ValueError(f"observations and next_observations must end in {len(FEATURE_NAMES)} features and match")
+    if acts.shape != obs.shape[:-1] or base.shape != acts.shape:
+        raise ValueError("actions and rewards must match observation leading dimensions")
+    if not np.isfinite(obs).all() or not np.isfinite(nxt).all() or not np.isfinite(base).all():
+        raise ValueError("observations, next_observations, and rewards must be finite")
+    if np.any(acts < 0) or np.any(acts >= len(Action)):
+        raise ValueError("actions must be valid Action indices")
+    result = base.astype(np.result_type(base.dtype, np.float32), copy=True)
+    for action, drive_name, minimum_need in (
+        (Action.GRAZE, "hunger", 0.0),
+        (Action.DRINK, "thirst", 0.0),
+        (Action.REST, "fatigue", 0.5),
+        (Action.RUMINATE, "hunger", 0.0),
+        (Action.HERD_INTERACT, "social_need", 0.0),
+    ):
+        idx = FEATURE_NAMES.index(drive_name)
+        mask = acts == _ACTION_INDEX[action]
+        if action == Action.REST:
+            mask &= obs[..., idx] >= minimum_need
+        before, after = obs[..., idx], nxt[..., idx]
+        observed_improvement = np.maximum(before - after, 0.0)
+        result[mask] += scale * observed_improvement[mask]
+    return result
+
+
 def normalize_advantages(advantages: Any, *, enabled: bool = False, eps: float = 1e-8):
     """Optionally center/scale a batch of advantages, supporting NumPy or Torch."""
     if not math.isfinite(eps) or eps <= 0:
@@ -101,8 +141,8 @@ def calculate_exploratory_loss(
     t = require_torch()
     if algorithm not in {"reinforce", "a2c"}:
         raise ValueError("algorithm must be reinforce or a2c")
-    if reward_variant not in {"original", "state_aware"}:
-        raise ValueError("reward_variant must be original or state_aware")
+    if reward_variant not in {"original", "state_aware", "outcome_aware"}:
+        raise ValueError("reward_variant must be original, state_aware, or outcome_aware")
     if not math.isfinite(state_reward_scale) or state_reward_scale < 0:
         raise ValueError("state_reward_scale must be finite and nonnegative")
     if not math.isfinite(entropy_coefficient) or entropy_coefficient < 0:
@@ -120,6 +160,11 @@ def calculate_exploratory_loss(
         if reward_variant == "state_aware":
             rewards = state_aware_rewards(trajectory.observations, trajectory.actions, rewards,
                                           scale=state_reward_scale)
+        elif reward_variant == "outcome_aware":
+            if trajectory.next_observations is None:
+                raise ValueError("outcome-aware training requires post-transition observations")
+            rewards = outcome_aware_rewards(trajectory.observations, trajectory.next_observations,
+                                            trajectory.actions, rewards, scale=state_reward_scale)
         if reward_variant == "original":
             return_chunks.append(trajectory.returns_to_go().reshape(-1))
         else:
