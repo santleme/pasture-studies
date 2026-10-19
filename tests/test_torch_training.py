@@ -409,6 +409,37 @@ class TorchTrainingContractTests(unittest.TestCase):
         self.assertIsNone(stats["baseline_used"])
 
     @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
+    def test_optional_state_aware_reward_and_a2c_exploration_preserve_control(self):
+        import torch
+        from farm_sim.torch_training import ActorCritic, Trajectory, calculate_loss
+        model = ActorCritic(seed=41, value_head=True)
+        obs = np.zeros((2, 1, 20), np.float32)
+        obs[0, 0, 2] = 0.0  # REST is poorly matched to low fatigue.
+        obs[1, 0, 2] = 1.0  # REST is well matched to high fatigue.
+        actions = np.full((2, 1), 3, np.int64)  # Action.REST
+        rewards = np.zeros((2, 1), np.float32)
+        traj = Trajectory(obs, actions, rewards, np.zeros_like(rewards), 8)
+
+        control, control_stats = calculate_loss(model, [traj], "a2c")
+        explicit_control, explicit_stats = calculate_loss(
+            model, [traj], "a2c", reward_variant="original", entropy_coefficient=0,
+            normalize_advantage=False)
+        torch.testing.assert_close(control, explicit_control, rtol=0, atol=0)
+        self.assertEqual(control_stats, explicit_stats)
+
+        _, shaped = calculate_loss(model, [traj], "a2c", reward_variant="state_aware")
+        self.assertGreater(shaped["mean_return_to_go"], control_stats["mean_return_to_go"])
+        normalized, normalized_stats = calculate_loss(
+            model, [traj], "a2c", normalize_advantage=True)
+        self.assertTrue(torch.isfinite(normalized))
+        self.assertAlmostEqual(normalized_stats["mean_advantage"], 0.0, places=6)
+        entropy_regularized, entropy_stats = calculate_loss(
+            model, [traj], "a2c", entropy_coefficient=0.2)
+        self.assertAlmostEqual(float(entropy_regularized),
+                               float(control - 0.2 * control_stats["entropy"]), places=6)
+        self.assertEqual(entropy_stats["entropy_coefficient"], 0.2)
+
+    @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
     def test_interrupted_resume_matches_uninterrupted_training(self):
         import tempfile
         import torch
