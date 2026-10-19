@@ -236,7 +236,7 @@ def main() -> None:
     else:
         report = train_suite(args.output)
     print(json.dumps(report, indent=2))
-    if not report["aggregate"]["learning_thresholds_pass"] or not report["aggregate"]["all_counterfactuals_pass"]:
+    if not args.smoke and (not report["aggregate"]["learning_thresholds_pass"] or not report["aggregate"]["all_counterfactuals_pass"]):
         raise SystemExit("policy training plumbing completed, but predeclared learning criteria did not pass")
 
 
