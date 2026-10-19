@@ -218,7 +218,9 @@ class _SamplingPolicy:
 
 
 def collect_episodes_batch(model, episodes: Sequence[tuple[int, int]], *, root_seed: int,
-                           ticks: int = ROLLOUT_TICKS) -> list[Trajectory]:
+                           ticks: int = ROLLOUT_TICKS,
+                           perception_mode: str | None = None,
+                           resource_profile: str = "starter") -> list[Trajectory]:
     """Collect independent worlds with batched policy inference and scalar commits.
 
     ``episodes`` contains ``(world_seed, episode_index)`` pairs. Observations are
@@ -227,7 +229,9 @@ def collect_episodes_batch(model, episodes: Sequence[tuple[int, int]], *, root_s
     through ``Simulation.step_with_decisions``. Counter-derived action uniforms
     make sampling independent of batch order and global RNG state.
     """
-    from .simulation import Simulation, make_world
+    from .simulation import Simulation, make_resource_rich_world, make_world
+    if resource_profile not in {"starter", "resource-rich-v1"}:
+        raise ValueError(f"unknown training resource profile {resource_profile!r}")
     if ticks != ROLLOUT_TICKS:
         raise ValueError("trajectory experiments require complete 72-tick episodes")
     if len({index for _, index in episodes}) != len(episodes):
@@ -236,6 +240,7 @@ def collect_episodes_batch(model, episodes: Sequence[tuple[int, int]], *, root_s
         return []
     t = require_torch()
     inference_model = model.module if hasattr(model, "module") else model
+    perception_mode = perception_mode or getattr(inference_model, "perception_mode", "legacy-v1")
     device = next(inference_model.parameters()).device
     worlds = []
     for world_seed, episode_index in episodes:
@@ -244,7 +249,9 @@ def collect_episodes_batch(model, episodes: Sequence[tuple[int, int]], *, root_s
             for animal in range(5):
                 rng = np.random.default_rng(derive_seed(root_seed, "action-uniform", world_seed, episode_index, tick, animal))
                 uniforms[tick, animal] = rng.random()
-        worlds.append({"seed": world_seed, "index": episode_index, "sim": Simulation(make_world(world_seed), _SamplingPolicy(model, uniforms)),
+        world = make_world(world_seed) if resource_profile == "starter" else make_resource_rich_world(world_seed)
+        worlds.append({"seed": world_seed, "index": episode_index, "sim": Simulation(world, _SamplingPolicy(model, uniforms),
+                                                                                      perception_mode=perception_mode),
                        "uniforms": uniforms, "observations": np.empty((ticks, 5, N_INPUTS), np.float32),
                        "actions": np.empty((ticks, 5), np.int64), "rewards": np.empty((ticks, 5), np.float32),
                        "probabilities": np.empty((ticks, 5, N_ACTIONS), np.float32)})

@@ -440,7 +440,10 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                     eval_only: bool = False, allow_execution_migration: bool = False, exploratory: bool = False,
                     exploratory_variant: str | None = None, reward_variant: str = "original",
                     state_reward_scale: float = 0.1, normalize_advantage: bool = False,
-                    entropy_coefficient: float = 0.0, discount_factor: float = 1.0) -> dict:
+                    entropy_coefficient: float = 0.0, discount_factor: float = 1.0,
+                    perception_mode: str = "legacy-v1",
+                    resource_profile: str = "starter",
+                    paired_seed_set: Sequence[int] | None = None) -> dict:
     torch = require_torch()
     device = resolve_device(device)
     set_deterministic(seed, device)
@@ -457,6 +460,7 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
         if BATCH_EPISODES % world_size or (episodes % BATCH_EPISODES) % world_size:
             raise ValueError("DDP requires equal episode shards in full and tail batches")
     model = ActorCritic(value_head=algorithm == "a2c", seed=seed, dtype=torch.float32).to(device)
+    model.perception_mode = perception_mode
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
     train_model = model
     if distributed:
@@ -488,11 +492,14 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
               "a2c_targets": "monte_carlo_no_bootstrap_no_gae", "entropy_bonus": 0.0,
               "episodes": int(episodes), "rollout_ticks": ROLLOUT_TICKS, "batch_episodes": BATCH_EPISODES,
               "lr": LEARNING_RATE, "grad_clip_norm": GRAD_CLIP_NORM,
-              "feature_schema": "cattle-observation-v1", "feature_names": list(FEATURE_NAMES),
+              "feature_schema": "cattle-observation-v1", "perception_mode": perception_mode,
+              "resource_profile": resource_profile,
+              "feature_names": list(FEATURE_NAMES),
               "actions": [x.value for x in ACTIONS], "dtype": "float32", "amp": False, "tf32": False,
               "world_size": world_size}
     if exploratory:
-        config.update({"protocol": ("exploratory-iteration-2-v1" if exploratory_variant in {"E", "F"}
+        config.update({"protocol": ("autoresearch-world-perception-v1" if exploratory_variant in {"G", "H", "I", "J"}
+                                     else "exploratory-iteration-2-v1" if exploratory_variant in {"E", "F"}
                                      else "exploratory-comparison-v1" if exploratory_variant
                                      else "exploratory-a2c-v1"),
                        "exploratory_variant": exploratory_variant, "exploratory_only": True,
@@ -504,7 +511,7 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                        "discount_factor": float(discount_factor),
                        "evaluation_episodes": int(eval_count),
                        "evaluation_seed_derivation": "sha256(root,eval-world,index)",
-                       "paired_training_seed_set": list(EXPLORATORY_BATCH_SEEDS)})
+                       "paired_training_seed_set": list(paired_seed_set or EXPLORATORY_BATCH_SEEDS)})
     if resume:
         restored = load_generation(resume if resume != "latest" else run_dir, model=train_model,
                                    optimizer=optimizer, map_location=device,
@@ -536,7 +543,9 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
         episode_specs = [(derive_seed(seed, "train-world", ep_index), ep_index) for ep_index in episode_indices]
         batch_started = time.perf_counter()
         stage_started = time.perf_counter()
-        trajectories = collect_episodes_batch(train_model, episode_specs, root_seed=seed)
+        trajectories = collect_episodes_batch(train_model, episode_specs, root_seed=seed,
+                                              perception_mode=perception_mode,
+                                              resource_profile=resource_profile)
         rollout_seconds = time.perf_counter() - stage_started
         optimizer.zero_grad(set_to_none=True)
         stage_started = time.perf_counter()

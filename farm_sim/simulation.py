@@ -13,6 +13,7 @@ from .model import (
 )
 from .navigation import navigate
 from .perception import encode_features, perceive, manhattan
+from .perception import PERCEPTION_MODES
 from .physiology import step_physiology
 
 ANIMAL_COUNT = 5
@@ -59,15 +60,45 @@ def make_world(seed: int = 7, *, width: int = 14, height: int = 10) -> FarmWorld
     return FarmWorld(width, height, animals, forage, water, obstacles, seed=seed)
 
 
+def make_resource_rich_world(seed: int = 7, *, forage_count: int = 8, water_count: int = 5) -> FarmWorld:
+    """Build a nonformal training-distribution variant with finite extra patches.
+
+    The default starter environment and all transition/reward equations remain
+    untouched. This opt-in variant only adds finite forage/water locations so
+    learning rollouts are not dominated by one-time shared-source scarcity.
+    It is not calibrated to cattle or used as the common evaluation task.
+    """
+    if forage_count < 3 or water_count < 1:
+        raise ValueError("resource-rich world must retain at least three forage and one water patch")
+    world = make_world(seed)
+    occupied = (set(world.obstacles) | {a.position for a in world.animals}
+                | {p.position for p in world.forage} | {p.position for p in world.water})
+    cells = [Position(x, y) for y in range(1, world.height - 1)
+             for x in range(1, world.width - 1) if Position(x, y) not in occupied]
+    random.Random(seed ^ 0x5A17C0DE).shuffle(cells)
+    extra_foraging = max(0, forage_count - len(world.forage))
+    extra_watering = max(0, water_count - len(world.water))
+    if extra_foraging + extra_watering > len(cells):
+        raise ValueError("requested resource counts exceed available free cells")
+    added = cells[:extra_foraging + extra_watering]
+    forage = world.forage + tuple(ResourcePatch(position, True) for position in added[:extra_foraging])
+    water = world.water + tuple(ResourcePatch(position, True)
+                                for position in added[extra_foraging:])
+    return replace(world, forage=forage, water=water)
+
+
 class Simulation:
     """Owns logical time and component orchestration; policy is injected, never fallback."""
-    def __init__(self, world: FarmWorld | None, policy: ActionPolicy):
+    def __init__(self, world: FarmWorld | None, policy: ActionPolicy, *, perception_mode: str | None = None):
         if policy is None:
             raise ValueError("A local policy must be injected; no rule fallback is provided")
         self.world = world if world is not None else make_world()
         if len(self.world.animals) != ANIMAL_COUNT:
             raise ValueError(f"simulation requires exactly {ANIMAL_COUNT} animals")
         self.policy = policy
+        self.perception_mode = perception_mode or getattr(policy, "perception_mode", "legacy-v1")
+        if self.perception_mode not in PERCEPTION_MODES:
+            raise ValueError(f"unknown perception mode {self.perception_mode!r}")
         # IDs are assigned before retention trimming; they remain stable and strictly
         # increasing for one reset/replay even after old records are evicted.
         self.events: deque[SimEvent] = deque(maxlen=EVENT_HISTORY_LIMIT)
@@ -114,7 +145,7 @@ class Simulation:
         starting = self.world
         rows = []
         for animal in sorted(starting.animals, key=lambda a: a.animal_id):
-            observation = perceive(starting, animal)
+            observation = perceive(starting, animal, mode=self.perception_mode)
             memories = retrieve(animal.memory, starting.tick)
             features = encode_features(observation, memories, animal, starting.width, starting.height)
             rows.append((animal.animal_id, tuple(features)))
@@ -152,7 +183,7 @@ class Simulation:
             # arbitration is sequential, so another cow's new position cannot leak
             # into this tick's observation.
             if decisions is None:
-                decision_observation = perceive(starting, current)
+                decision_observation = perceive(starting, current, mode=self.perception_mode)
                 memories = retrieve(current.memory, starting.tick)
                 features = encode_features(decision_observation, memories, current, starting.width, starting.height)
                 # Policy contract is pure: only an action and probability vector come back.

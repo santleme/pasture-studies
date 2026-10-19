@@ -30,6 +30,9 @@ ENGINE_SOURCE_PATHS = (
     "validation/benchmark_torch_fixed_corpus.py", "validation/preregister_torch_mvp1.py",
     "validation/profile_torch_training.py", "validation/profile_training_pipeline.py",
     "validation/compare_exploratory_checkpoints.py",
+    "validation/run_autoresearch_training.py", "validation/compare_autoresearch_checkpoints.py",
+    "validation/validate_autoresearch_candidate.py",
+    "validation/protocols/autoresearch-world-perception-v1.json",
     "requirements-training.txt",
 )
 SCHEMA_VERSION = 1
@@ -77,6 +80,38 @@ EXPLORATORY_ITERATION_2_CONFIG_VALUE = {
               "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
     },
     "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
+}
+AUTORESEARCH_BATCH_CONFIGS = {
+    "AUTORESEARCH_BATCH_1": {
+        "task": "autoresearch_resource_perception_batch", "protocol": "autoresearch-world-perception-v1",
+        "batch": 1, "algorithm": "a2c", "variants": ["G", "H"],
+        "seeds": [9484101, 9484102, 9484103], "episodes_per_variant_seed": 512,
+        "training_jobs": 6, "cumulative_jobs_before": 0, "max_additional_training_jobs": 24,
+        "evaluation_root_seed": 9484999, "comparison_episodes_per_family": 3,
+        "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
+        "variant_config": {
+            "G": {"reward_variant": "original", "state_reward_scale": 0.0,
+                  "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+            "H": {"reward_variant": "original", "state_reward_scale": 0.0,
+                  "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0}},
+        "locked_test_access": False, "formal_eligible": False,
+        "benchmark_eligible": False, "checkpoint_promotion": False,
+    },
+    "AUTORESEARCH_BATCH_2": {
+        "task": "autoresearch_resource_perception_batch", "protocol": "autoresearch-world-perception-v1",
+        "batch": 2, "algorithm": "a2c", "variants": ["I", "J"],
+        "seeds": [9484104, 9484105, 9484106], "episodes_per_variant_seed": 512,
+        "training_jobs": 6, "cumulative_jobs_before": 6, "max_additional_training_jobs": 24,
+        "evaluation_root_seed": 9485999, "comparison_episodes_per_family": 3,
+        "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
+        "variant_config": {
+            "I": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+                  "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+            "J": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+                  "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0}},
+        "locked_test_access": False, "formal_eligible": False,
+        "benchmark_eligible": False, "checkpoint_promotion": False,
+    },
 }
 READINESS_DIAGNOSTIC_TASKS = frozenset({"checkpoint_recovery", "t4x2_path_smoke"})
 READINESS_CONFIG_KEYS = frozenset({
@@ -357,6 +392,10 @@ def authorize_mode(mode: str, manifest: dict[str, Any], approval: Any = None, *,
         if config != EXPLORATORY_ITERATION_2_CONFIG_VALUE or not isinstance(manifest, dict):
             raise ReleaseError("EXPLORATORY_ITERATION_2 requires the exact bounded E/F reward-scale config")
         return normalized
+    if normalized in AUTORESEARCH_BATCH_CONFIGS:
+        if config != AUTORESEARCH_BATCH_CONFIGS[normalized] or not isinstance(manifest, dict):
+            raise ReleaseError(f"{normalized} requires its exact fixed-budget nonformal cohort config")
+        return normalized
     if normalized in {"EXPERIMENT", "FULL_VALIDATION"}:
         if config is not None:
             raise ReleaseError("Experimental execution does not accept an unreviewed runtime config")
@@ -415,7 +454,7 @@ def main(argv: list[str] | None = None) -> int:
     verify.add_argument("--staged-notebook", type=Path,
                         help="Exact staged notebook; otherwise the recorded staged path is used")
     gate = commands.add_parser("gate", help="Check mode gate; experimental modes remain denied without trusted signature")
-    gate.add_argument("mode", choices=("PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPERIMENT", "FULL_VALIDATION"))
+    gate.add_argument("mode", choices=("PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2", "AUTORESEARCH_BATCH_1", "AUTORESEARCH_BATCH_2", "EXPERIMENT", "FULL_VALIDATION"))
     gate.add_argument("manifest", type=Path)
     gate.add_argument("--approval", type=Path, help="Separate approval artifact; not trusted without pinned verifier")
     gate.add_argument("--config", type=Path, help="Exact bounded config required for READINESS or EXPLORATORY mode")

@@ -274,6 +274,7 @@ def load_checkpoint_actor(generation: str | Path, algorithm: str, seed: int, dev
     if int(config.get("seed", -1)) != int(seed):
         raise ValueError(f"requested seed {seed} does not match checkpoint config seed {config.get('seed')}")
     model = ActorCritic(value_head=algorithm == "a2c", seed=seed, dtype=torch.float32).to(device)
+    model.perception_mode = config.get("perception_mode", "legacy-v1")
     load_generation(target, model=model, map_location=device, expected_algorithm=algorithm)
     model.eval()
     return model, manifest, target

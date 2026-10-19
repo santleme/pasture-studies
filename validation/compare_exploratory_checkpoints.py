@@ -137,6 +137,14 @@ def _aggregate_policy_rows(reports: list[dict[str, Any]]) -> dict[str, Any]:
             "mean_remaining_resources": {key: _mean([float(row["resource_state"][key]) for row in selected]) for key in selected[0]["resource_state"]},
             "reward_component_counts": {key: sum(int(row["reward_components"][key]["count"]) for row in selected) for key in selected[0]["reward_components"]},
             "invalid_actions": sum(int(row["invalid_actions"]) for row in selected),
+            # Keep true path/arbitration failures separate from a valid action
+            # whose resource is already unavailable. The latter is not a
+            # pathfinding failure and must not be hidden in this counter.
+            "navigation_failure_count": sum(
+                int(row.get("navigation_subreason_counts", {}).get(reason, 0))
+                for row in selected
+                for reason in ("topologically_unreachable", "all_target_cells_occupied", "dynamically_blocked")
+            ),
         }
     return result
 

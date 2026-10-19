@@ -69,6 +69,31 @@ def _in_bounds(world: FarmWorld, p: Position) -> bool:
     return 0 <= p.x < world.width and 0 <= p.y < world.height
 
 
+def static_path_distance(world: FarmWorld, start: Position, target: Position) -> int | None:
+    """Shortest 4-neighbour path length ignoring temporary animal occupancy.
+
+    This is a perception helper only. Actual movement still uses ``navigate``
+    with current occupancy and its reason-coded dynamic diagnostics.
+    """
+    if not _in_bounds(world, start) or not _in_bounds(world, target):
+        return None
+    if start in world.obstacles or target in world.obstacles:
+        return None
+    queue = deque([(start, 0)])
+    seen = {start}
+    while queue:
+        here, distance = queue.popleft()
+        if here == target:
+            return distance
+        for dx, dy in _DIRECTIONS:
+            nxt = Position(here.x + dx, here.y + dy)
+            if not _in_bounds(world, nxt) or nxt in world.obstacles or nxt in seen:
+                continue
+            seen.add(nxt)
+            queue.append((nxt, distance + 1))
+    return None
+
+
 def _path_step(world: FarmWorld, start: Position, target: Position,
                occupied: set[Position]) -> Position | None:
     """Return first legal step on a shortest path, with stable tie-breaking."""

@@ -25,11 +25,12 @@ if str(ROOT) not in sys.path:
     # imports used by the READINESS and EXPLORATORY gates.
     sys.path.insert(0, str(ROOT))
 NOTEBOOK = ROOT / "notebooks" / "pasture_studies_kaggle.ipynb"
-MODES = {"PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"}
+MODES = {"PREFLIGHT", "SMOKE", "READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2", "AUTORESEARCH_BATCH_1", "AUTORESEARCH_BATCH_2"}
 T4X2_SHAPE = "NvidiaTeslaT4"
 RELEASE_MANIFEST = "release-manifest.json"
 DEPLOYMENT_CONFIG = "pasture-deployment.json"
 READINESS_CONFIG = "readiness-config.json"
+EXPLORATORY_MODES = {"EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2", "AUTORESEARCH_BATCH_1", "AUTORESEARCH_BATCH_2"}
 READINESS_CONFIG_VALUE = {
     "task": "checkpoint_recovery", "max_updates": 2, "max_episodes": 32,
     "max_devices": 2, "locked_test_access": False, "outcome_analysis": False,
@@ -73,6 +74,38 @@ EXPLORATORY_ITERATION_2_CONFIG_VALUE = {
               "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
     },
     "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
+}
+AUTORESEARCH_BATCH_CONFIGS = {
+    "AUTORESEARCH_BATCH_1": {
+        "task": "autoresearch_resource_perception_batch", "protocol": "autoresearch-world-perception-v1",
+        "batch": 1, "algorithm": "a2c", "variants": ["G", "H"],
+        "seeds": [9484101, 9484102, 9484103], "episodes_per_variant_seed": 512,
+        "training_jobs": 6, "cumulative_jobs_before": 0, "max_additional_training_jobs": 24,
+        "evaluation_root_seed": 9484999, "comparison_episodes_per_family": 3,
+        "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
+        "variant_config": {
+            "G": {"reward_variant": "original", "state_reward_scale": 0.0,
+                  "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+            "H": {"reward_variant": "original", "state_reward_scale": 0.0,
+                  "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0}},
+        "locked_test_access": False, "formal_eligible": False,
+        "benchmark_eligible": False, "checkpoint_promotion": False,
+    },
+    "AUTORESEARCH_BATCH_2": {
+        "task": "autoresearch_resource_perception_batch", "protocol": "autoresearch-world-perception-v1",
+        "batch": 2, "algorithm": "a2c", "variants": ["I", "J"],
+        "seeds": [9484104, 9484105, 9484106], "episodes_per_variant_seed": 512,
+        "training_jobs": 6, "cumulative_jobs_before": 6, "max_additional_training_jobs": 24,
+        "evaluation_root_seed": 9485999, "comparison_episodes_per_family": 3,
+        "perception_mode": "path-aware-v2", "resource_profile": "resource-rich-v1",
+        "variant_config": {
+            "I": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+                  "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
+            "J": {"reward_variant": "state_aware", "state_reward_scale": 0.5,
+                  "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0}},
+        "locked_test_access": False, "formal_eligible": False,
+        "benchmark_eligible": False, "checkpoint_promotion": False,
+    },
 }
 def _strict_notebook_json(path: Path) -> dict:
     def reject_duplicate_keys(pairs):
@@ -280,7 +313,7 @@ def prepare(folder: Path, owner: str, *, mode: str = "SMOKE", gpu: bool = False)
     _ensure_detached_paths_available(folder)
     if mode == "READINESS":
         raise DeploymentError("READINESS staging requires --runtime-profile; use prepare-release")
-    if mode in {"EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"}:
+    if mode in EXPLORATORY_MODES:
         raise DeploymentError("Exploratory staging requires --runtime-profile; use a prepare-exploratory command")
     source_bytes = _committed_notebook_bytes(source_commit)
     source_sha = hashlib.sha256(source_bytes).hexdigest()
@@ -301,11 +334,12 @@ def _write_staging(folder: Path, owner: str, deployment: dict) -> Path:
     target.write_text(json.dumps(metadata_for(owner, mode=deployment["mode"], gpu=gpu), indent=2) + "\n")
     if deployment["mode"] == "READINESS":
         _write_new_file(readiness_config_path(folder), (json.dumps(READINESS_CONFIG_VALUE, sort_keys=True, indent=2) + "\n").encode())
-    if deployment["mode"] in {"EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"}:
+    if deployment["mode"] in EXPLORATORY_MODES:
         exploratory_config = {
             "EXPLORATORY": EXPLORATORY_CONFIG_VALUE,
             "EXPLORATORY_COMPARISON": EXPLORATORY_COMPARISON_CONFIG_VALUE,
             "EXPLORATORY_ITERATION_2": EXPLORATORY_ITERATION_2_CONFIG_VALUE,
+            **AUTORESEARCH_BATCH_CONFIGS,
         }[deployment["mode"]]
         _write_new_file(exploratory_config_path(folder),
                         (json.dumps(exploratory_config, sort_keys=True, indent=2) + "\n").encode())
@@ -382,6 +416,40 @@ def prepare_exploratory(folder: Path, owner: str, *, runtime_profile_path: Path,
     return _write_staging(folder, owner, deployment)
 
 
+def prepare_autoresearch_batch(folder: Path, owner: str, *, runtime_profile_path: Path,
+                               batch: int, gpu: bool = True) -> Path:
+    """Stage one fixed six-run exploratory autoresearch cohort on T4x2."""
+    mode = f"AUTORESEARCH_BATCH_{batch}"
+    if mode not in AUTORESEARCH_BATCH_CONFIGS:
+        raise DeploymentError("Only the explicitly bounded autoresearch batches 1 and 2 are enabled")
+    try:
+        runtime_profile = json.loads(runtime_profile_path.read_text())
+        from scripts.kaggle_release import _validate_runtime
+        runtime_profile = _validate_runtime(runtime_profile)
+    except Exception as exc:
+        raise DeploymentError("Autoresearch runtime profile is invalid") from exc
+    if (not gpu or not runtime_profile["cuda_available"] or runtime_profile["gpu_count"] != 2
+            or any("T4" not in name for name in runtime_profile["gpu_names"])):
+        raise DeploymentError("Autoresearch batches require the verified T4x2 Kaggle profile")
+    if folder.is_symlink():
+        raise DeploymentError(f"Staging path must not be a symlink: {folder}")
+    source_commit = _source_commit()
+    if folder.exists():
+        if not folder.is_dir() or any(folder.iterdir()):
+            raise DeploymentError(f"Staging directory must be empty to prevent uploading stale files: {folder}")
+    else:
+        folder.mkdir(parents=True)
+    _ensure_detached_paths_available(folder)
+    source_bytes = _committed_notebook_bytes(source_commit)
+    deployment = {"schema_version": 1, "mode": mode, "source_commit": source_commit,
+                  "source_notebook_sha256": hashlib.sha256(source_bytes).hexdigest(),
+                  "readiness_config": None,
+                  "exploratory_config": AUTORESEARCH_BATCH_CONFIGS[mode],
+                  "runtime_profile": runtime_profile, "release_manifest_sha256": None,
+                  "gpu_required": True}
+    return _write_staging(folder, owner, deployment)
+
+
 def _ensure_detached_paths_available(folder: Path) -> None:
     for detached in (deployment_record_path(folder), readiness_config_path(folder),
                      exploratory_config_path(folder),
@@ -412,7 +480,7 @@ def bind_release(folder: Path, release_manifest: Path) -> str:
     except (OSError, json.JSONDecodeError) as exc:
         raise DeploymentError("Readiness staging metadata/config is missing or malformed") from exc
     notebook = folder / metadata.get("code_file", "")
-    if (config.get("mode") not in {"READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"} or metadata.get("enable_gpu") != "true"
+    if (config.get("mode") not in {"READINESS", *EXPLORATORY_MODES} or metadata.get("enable_gpu") != "true"
             or not notebook.is_file() or notebook.is_symlink()):
         raise DeploymentError("Release manifests may only bind a GPU READINESS/EXPLORATORY staging folder")
     manifest_sha = _manifest_digest(release_manifest, staged_notebook=notebook)
@@ -646,11 +714,12 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
     expected_staged = _stage_notebook_bytes(committed_source, expected_embedded)
     if notebook_path.read_bytes() != expected_staged:
         raise DeploymentError("Staged notebook differs from the exact committed source plus approved config injection")
-    if mode in {"READINESS", "EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"}:
+    if mode == "READINESS" or mode in EXPLORATORY_MODES:
         expected_config = (READINESS_CONFIG_VALUE if mode == "READINESS" else
-                           EXPLORATORY_CONFIG_VALUE if mode == "EXPLORATORY" else
-                           EXPLORATORY_COMPARISON_CONFIG_VALUE if mode == "EXPLORATORY_COMPARISON" else
-                           EXPLORATORY_ITERATION_2_CONFIG_VALUE)
+                           {"EXPLORATORY": EXPLORATORY_CONFIG_VALUE,
+                            "EXPLORATORY_COMPARISON": EXPLORATORY_COMPARISON_CONFIG_VALUE,
+                            "EXPLORATORY_ITERATION_2": EXPLORATORY_ITERATION_2_CONFIG_VALUE,
+                            **AUTORESEARCH_BATCH_CONFIGS}[mode])
         config_field = "readiness_config" if mode == "READINESS" else "exploratory_config"
         other_field = "exploratory_config" if mode == "READINESS" else "readiness_config"
         if (metadata.get("enable_gpu") != "true" or config.get(config_field) != expected_config
@@ -674,7 +743,7 @@ def validate_staging_folder(folder: Path) -> tuple[dict, Path]:
             raise DeploymentError("Staged release manifest does not bind the exact notebook bytes")
         if config.get(config_field) != expected_config:
             raise DeploymentError(f"{mode} config differs from the fixed allowlisted workload")
-        if mode in {"EXPLORATORY", "EXPLORATORY_COMPARISON", "EXPLORATORY_ITERATION_2"}:
+        if mode in EXPLORATORY_MODES:
             from scripts.kaggle_release import authorize_mode
             authorize_mode(mode, manifest, config=expected_config)
     elif config.get("release_manifest_sha256"):
@@ -851,6 +920,12 @@ def main(argv: list[str] | None = None) -> int:
     prep_iteration.add_argument("--path", type=Path, required=True)
     prep_iteration.add_argument("--owner", required=True)
     prep_iteration.add_argument("--runtime-profile", type=Path, required=True)
+    prep_autoresearch = sub.add_parser("prepare-autoresearch-batch",
+                                      help="Stage one exact six-job nonformal cognition-recovery cohort")
+    prep_autoresearch.add_argument("--path", type=Path, required=True)
+    prep_autoresearch.add_argument("--owner", required=True)
+    prep_autoresearch.add_argument("--runtime-profile", type=Path, required=True)
+    prep_autoresearch.add_argument("--batch", type=int, choices=(1, 2), required=True)
     bind = sub.add_parser("bind-release")
     bind.add_argument("--path", type=Path, required=True)
     bind.add_argument("--manifest", type=Path, required=True)
@@ -897,6 +972,10 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "prepare-exploratory-iteration-2":
             print(prepare_exploratory(args.path, args.owner, runtime_profile_path=args.runtime_profile,
                                       iteration_2=True))
+        elif args.command == "prepare-autoresearch-batch":
+            print(prepare_autoresearch_batch(args.path, args.owner,
+                                             runtime_profile_path=args.runtime_profile,
+                                             batch=args.batch))
         elif args.command == "bind-release":
             print(json.dumps({"release_manifest_sha256": bind_release(args.path, args.manifest)}, indent=2))
         elif args.command == "publish":

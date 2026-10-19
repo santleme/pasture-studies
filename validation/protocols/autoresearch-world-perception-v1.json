@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "protocol_id": "autoresearch-world-perception-v1",
+  "status": "exploratory_only",
+  "objective": "Test whether target-aware perception and increased finite resource availability during training improve learned resource behavior without sacrificing original-simulator return.",
+  "source_control": {
+    "historical_baseline_commit": "f2ca77b8e5ccf5df2715e72fca4c00dabacd7747",
+    "historical_a_f_evidence_immutable": true,
+    "formal_preregistration_modified": false,
+    "locked_or_reserved_outcomes_accessed": false
+  },
+  "common_evaluation": {
+    "scenario_families": ["starter", "resource_scarce_relocated", "wide", "unseen_corridor"],
+    "ticks_per_episode": 72,
+    "episodes_per_family": 3,
+    "batch_1_root_seed": 9484999,
+    "batch_2_root_seed": 9485999,
+    "reward_source": "unchanged original simulator reward",
+    "reference_cohorts": ["A", "B", "C", "D", "E", "F", "untrained_same_seed", "heuristic_baseline"],
+    "decision_mode": "deterministic local argmax inference",
+    "reserved_data": "not read"
+  },
+  "training": {
+    "algorithm": "A2C",
+    "episodes_per_model": 512,
+    "rollout_ticks": 72,
+    "independent_seed_count_per_variant": 3,
+    "seed_sets": {
+      "batch_1": [9484101, 9484102, 9484103],
+      "batch_2": [9484104, 9484105, 9484106]
+    },
+    "perception_mode": "path-aware-v2",
+    "resource_profile": "resource-rich-v1",
+    "resource_profile_definition": "The existing seeded starter world plus finite additional patch positions (8 forage, 5 water total). No replenishment, reward, physiology or action semantics are changed.",
+    "variants": {
+      "G": {"batch": 1, "reward_variant": "original", "state_reward_scale": 0.0, "normalize_advantage": false, "entropy_coefficient": 0.0},
+      "H": {"batch": 1, "reward_variant": "original", "state_reward_scale": 0.0, "normalize_advantage": true, "entropy_coefficient": 0.01},
+      "I": {"batch": 2, "reward_variant": "state_aware", "state_reward_scale": 0.5, "normalize_advantage": false, "entropy_coefficient": 0.0},
+      "J": {"batch": 2, "reward_variant": "state_aware", "state_reward_scale": 0.5, "normalize_advantage": true, "entropy_coefficient": 0.01}
+    },
+    "training_reward": "Only variants I/J use the separately implemented need-conditioned exploratory shaping. It is not used for scoring, model acceptance, ranking or return reporting.",
+    "training_job_budget": {"additional_jobs_max": 24, "first_two_batches_jobs": 12, "remaining_budget_for_adaptive_followup": 12},
+    "distributed_strategy": "Independent single-process model jobs; no DDP. Select single/dual device schedule only after bounded same-kernel throughput calibration."
+  },
+  "perception_v2": {
+    "distance_semantics": "The distance features ignore depleted patches and use shortest obstacle-aware 4-neighbour path length to visible, available resource targets; legacy-v1 remains the default for historical checkpoints.",
+    "observation_width": 20,
+    "action_set_changed": false,
+    "simulator_reward_changed": false,
+    "physiology_changed": false,
+    "navigation_commit_semantics_changed": false
+  },
+  "acceptance_gate": {
+    "candidate_requires_three_training_seed_checkpoints": true,
+    "must_strictly_exceed_best_reference_for": ["forage_successes_per_episode", "water_successes_per_episode", "mean_original_reward_per_episode"],
+    "must_not_worsen_mean_final_hunger_or_thirst_vs_best_reference": true,
+    "invalid_actions_must_equal_zero": true,
+    "same_new_eval_worlds_for_candidates_and_all_references": true,
+    "no_candidate_selection_by_training_reward": true,
+    "no_cherry_picked_seed_or_checkpoint": true,
+    "biological_validation_claim": false,
+    "formal_or_locked_eligibility": false
+  },
+  "known_design_limits": [
+    "The default simulator has finite, one-use forage and one water patch for five agents; no biological resource renewal model is claimed.",
+    "Reward contains a state-independent positive REST bonus in the historical control; it is preserved for common evaluation.",
+    "Memory is encoded as recent outcome bits and recency, while stored event locations are not features; memory influence remains measured rather than assumed.",
+    "Static path-distance perception ignores dynamic animal occupancy; the navigation layer still reports reason-coded dynamic outcomes."
+  ]
+}
