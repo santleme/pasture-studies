@@ -23,7 +23,7 @@ PREREGISTRATION = Path("validation/kaggle-mvp1/preregistration.json")
 RUNTIME_PROTOCOL_CANDIDATE = Path("validation/protocols/pasture-experiment-runtime-v2-candidate.json")
 NOTEBOOK = Path("notebooks/pasture_studies_kaggle.ipynb")
 ENGINE_SOURCE_PATHS = (
-    "farm_sim/torch_training.py", "farm_sim/torch_checkpoint.py", "farm_sim/simulation.py",
+    "farm_sim/torch_training.py", "farm_sim/exploratory_learning.py", "farm_sim/torch_checkpoint.py", "farm_sim/simulation.py",
     "farm_sim/model.py", "farm_sim/navigation.py", "farm_sim/perception.py",
     "farm_sim/memory.py", "farm_sim/physiology.py", "farm_sim/policy.py",
     "validation/train_torch_mvp1.py", "validation/evaluate_torch_mvp1.py",

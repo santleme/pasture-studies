@@ -14,6 +14,7 @@ import numpy as np
 
 from farm_sim.model import Action, FEATURE_NAMES
 from farm_sim.policy import CategoricalPolicy, load_checkpoint
+from farm_sim.exploratory_learning import calculate_exploratory_loss
 from farm_sim.simulation import Simulation, make_world
 from farm_sim.torch_checkpoint import load_generation, resolve_generation, save_generation
 from farm_sim.torch_training import (
@@ -384,6 +385,8 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                     source_root / "farm_sim" / "torch_checkpoint.py", source_root / "requirements-training.txt",
                     *(source_root / "farm_sim" / name for name in
                     ("simulation.py", "model.py", "navigation.py", "perception.py", "memory.py", "physiology.py", "policy.py"))]
+    if exploratory_variant is not None:
+        source_paths.append(source_root / "farm_sim" / "exploratory_learning.py")
     source_hashes = {str(path.relative_to(source_root)): _sha(path) for path in source_paths}
     config = {"version": CONFIG_VERSION, "algorithm": algorithm, "seed": int(seed),
               "source_hashes": source_hashes, "numpy_version": np.__version__,
@@ -435,10 +438,16 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
         rollout_seconds = time.perf_counter() - stage_started
         optimizer.zero_grad(set_to_none=True)
         stage_started = time.perf_counter()
-        loss, stats = calculate_loss(train_model, trajectories, algorithm,
-            previous_return_sum=state["baseline_return_sum"], previous_return_count=state["baseline_return_count"],
-            reward_variant=reward_variant, normalize_advantage=normalize_advantage,
-            entropy_coefficient=entropy_coefficient)
+        if exploratory_variant is not None:
+            loss, stats = calculate_exploratory_loss(train_model, trajectories, algorithm,
+                previous_return_sum=state["baseline_return_sum"],
+                previous_return_count=state["baseline_return_count"],
+                reward_variant=reward_variant, normalize_advantage=normalize_advantage,
+                entropy_coefficient=entropy_coefficient)
+        else:
+            loss, stats = calculate_loss(train_model, trajectories, algorithm,
+                previous_return_sum=state["baseline_return_sum"],
+                previous_return_count=state["baseline_return_count"])
         forward_loss_seconds = time.perf_counter() - stage_started
         assert_finite_training_state(loss, model)
         stage_started = time.perf_counter()
