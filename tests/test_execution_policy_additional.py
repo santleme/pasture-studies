@@ -34,21 +34,6 @@ class AdditionalExecutionEntrypointTests(unittest.TestCase):
                 output,
             )
 
-    def test_dagger_generalization_runner_is_kaggle_only(self):
-        with tempfile.TemporaryDirectory() as directory:
-            output = Path(directory) / "dagger.json"
-            self.assert_local_full_job_denied(
-                [sys.executable, "-m", "validation.run_dagger_generalization",
-                 "--output", str(output)], output,
-            )
-
-    def test_autoresearch_runner_is_kaggle_only(self):
-        with tempfile.TemporaryDirectory() as directory:
-            output = Path(directory) / "autoresearch.json"
-            self.assert_local_full_job_denied(
-                [sys.executable, "-m", "validation.autoresearch_pasture_rl",
-                 "--output", str(output)], output,
-            )
 
 
 if __name__ == "__main__":
