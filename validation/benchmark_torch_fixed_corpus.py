@@ -328,6 +328,8 @@ def compare_reports(left: dict[str, Any], right: dict[str, Any]) -> dict[str, An
 def run_benchmark(corpus_path: str | Path, *, device: str, repeats: int, seed: int,
                   output: str | Path, smoke: bool = False) -> dict[str, Any]:
     require_kaggle_for_full_workload("fixed-corpus benchmark", smoke=smoke)
+    if smoke and repeats != 1:
+        raise ValueError("local fixed-corpus smoke is limited to exactly one repeat")
     torch = require_torch()
     arrays, config = load_corpus(corpus_path)
     if bool(config.get("smoke_mode")) != bool(smoke):
@@ -394,6 +396,10 @@ def main(argv=None):
         print(json.dumps({"corpus": str(path), "corpus_sha256": config["corpus_sha256"],
                           "episodes": int(arrays["world_ids"].size), "smoke_mode": args.smoke}, indent=2))
     elif args.command == "benchmark":
+        if args.smoke:
+            if args.repeats != 5:
+                parser.error("--smoke uses exactly one benchmark repeat; omit --repeats")
+            args.repeats = 1
         try:
             require_kaggle_for_full_workload("fixed-corpus benchmark", smoke=args.smoke)
         except RuntimeError as exc:

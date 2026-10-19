@@ -241,7 +241,7 @@ class TorchTrainingContractTests(unittest.TestCase):
                                              *args, "--output", str(output)],
                                             capture_output=True, text=True)
                     self.assertNotEqual(result.returncode, 0)
-                    self.assertIn("no independently trusted experimental authorization verifier", result.stderr)
+                    self.assertIn("Kaggle-only", result.stderr)
                     self.assertFalse(output.exists())
 
     @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
@@ -280,7 +280,7 @@ class TorchTrainingContractTests(unittest.TestCase):
             # A normal evaluation invocation must retain the diagnostic-only
             # lineage from the checkpoint rather than promoting it.
             eval_out = output / "smoke"
-            eval_result = subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1",
+            eval_result = subprocess.run([sys.executable, "-m", "validation.train_torch_mvp1", "--smoke",
                 "--mode", "eval", "--algorithm", "reinforce", "--device", "cpu",
                 "--seed", "810001", "--episodes", "16", "--output", str(eval_out),
                 "--resume", str(generation)], check=True, capture_output=True, text=True)

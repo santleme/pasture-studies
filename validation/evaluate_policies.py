@@ -3,6 +3,7 @@
 from __future__ import annotations
 import json
 import math
+import argparse
 from collections import Counter, defaultdict
 from dataclasses import replace
 from pathlib import Path
@@ -16,6 +17,7 @@ import farm_sim.simulation as simulation_module
 from farm_sim.simulation import Simulation, make_world
 from farm_sim.perception import perceive, encode_features
 from farm_sim.memory import retrieve
+from farm_sim.execution_policy import require_kaggle_for_full_workload
 
 TICKS_PER_DAY = 24  # Explicit convention: phase feature has a 24-tick cycle.
 DAYS = 3
@@ -193,6 +195,20 @@ def causal():
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--smoke", action="store_true", help="one-policy, one-world local development smoke")
+    args = parser.parse_args()
+    try:
+        require_kaggle_for_full_workload("MVP1 policy benchmark", smoke=args.smoke)
+    except RuntimeError as exc:
+        parser.error(str(exc))
+    if args.smoke:
+        row = evaluate("trained_seed11", PRIMARY_EVALUATION_SEEDS[0])
+        target = ROOT / ".omx/research/mvp1-policy-evaluation-smoke.json"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps({"scope": "one-world development smoke; not benchmark evidence", "runs": [row]}, indent=2) + "\n")
+        print(json.dumps({"output": str(target.relative_to(ROOT)), "runs": 1, "smoke": True}, indent=2))
+        return
     rows=[evaluate(p,s) for s in PRIMARY_EVALUATION_SEEDS+HELD_OUT_SEEDS for p in POLICIES]
     # Structural stress scenarios are explicitly synthetic and are paired across policies.
     stress_scenarios={"wide_grid_stress":211,"scarce_relocated_resources_stress":307}

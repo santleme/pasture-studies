@@ -213,9 +213,9 @@ class Timings:
 
 
 def profile(*, seed: int = 51337, ticks: int = 72, repeats: int = 3, output: Path | None = None) -> dict:
-    require_kaggle_for_full_workload("training pipeline profile", smoke=ticks <= 2 and repeats == 1)
     if ticks < 1 or repeats < 1:
         raise ValueError("ticks and repeats must be positive")
+    require_kaggle_for_full_workload("training pipeline profile", smoke=ticks <= 2 and repeats == 1)
     timing = Timings()
     patches = {
         "perception": (sim_module, "perceive"),

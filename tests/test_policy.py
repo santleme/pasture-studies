@@ -7,6 +7,7 @@ import unittest
 import numpy as np
 
 from farm_sim.model import Action, FEATURE_NAMES
+from farm_sim.execution_policy import is_kaggle_runtime
 from farm_sim.policy import CategoricalPolicy, CheckpointError, load_checkpoint, save_checkpoint
 from farm_sim.training import (
     ALGORITHM_DESCRIPTION, TRAINING_SEEDS, counterfactual_report, task_cases,
@@ -66,6 +67,7 @@ class PolicyTests(unittest.TestCase):
         self.assertGreater(np.linalg.norm(trained.parameter_vector() - initial.parameter_vector()), 0.0)
         self.assertTrue(np.isfinite(trained.parameter_vector()).all())
 
+    @unittest.skipUnless(is_kaggle_runtime(), "full five-seed policy training is Kaggle-only")
     def test_five_seed_empirical_learning_and_counterfactual_thresholds(self):
         with tempfile.TemporaryDirectory() as directory:
             report = train_suite(directory)

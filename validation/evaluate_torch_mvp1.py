@@ -39,6 +39,7 @@ from farm_sim.perception import encode_features, perceive
 from farm_sim.memory import retrieve
 from farm_sim.torch_checkpoint import load_generation, resolve_generation
 from farm_sim.torch_training import ACTIONS, ActorCritic, derive_seed, require_torch, set_deterministic
+from farm_sim.execution_policy import require_kaggle_for_full_workload
 
 TICKS = 72
 FAMILIES = ("starter", "resource_scarce_relocated", "wide", "unseen_corridor")
@@ -626,9 +627,22 @@ def main(argv=None):
     parser.add_argument("--request-identity", default=None,
                         help="optional caller correlation ID; generated if omitted")
     parser.add_argument("--episodes-per-family", type=int, default=3)
+    parser.add_argument("--smoke", action="store_true",
+                        help="explicit one-episode-per-family local validation smoke; never accesses locked test")
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.smoke:
+        if args.episodes_per_family != 3 or args.split != "validation":
+            parser.error("--smoke fixes one episode per family and permits only the validation split")
+        args.episodes_per_family = 1
+    else:
+        try:
+            require_kaggle_for_full_workload(
+                "locked-test evaluation" if args.split == "locked_test" else "policy evaluation"
+            )
+        except RuntimeError as exc:
+            parser.error(str(exc))
     if args.episodes_per_family <= 0:
         parser.error("--episodes-per-family must be positive")
     print(json.dumps(evaluate(args.generation, algorithm=args.algorithm, seed=args.seed,

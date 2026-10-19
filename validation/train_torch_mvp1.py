@@ -579,14 +579,31 @@ def main(argv=None):
         finally:
             torch.distributed.destroy_process_group()
         return
+    try:
+        require_kaggle_for_full_workload(
+            "A2C/REINFORCE training or evaluation",
+            smoke=args.smoke or args.smoke_update,
+        )
+    except RuntimeError as exc:
+        p.error(str(exc))
     if not args.smoke and not args.smoke_update and args.mode != "eval":
         p.error("ordinary CLI training is disabled: no independently trusted experimental authorization verifier is configured; use the reviewed release workflow after authorization is established")
     if args.smoke:
-        args.algorithm = "both"
-        args.device = "cpu"
-        args.episodes = 2 * BATCH_EPISODES
-        args.checkpoint_every = 1
-        args.output = args.output / "smoke"
+        if args.mode == "eval":
+            if args.algorithm == "both" or args.episodes != BATCH_EPISODES or args.eval_seeds != 10:
+                p.error("smoke evaluation requires one algorithm, one 16-episode batch, and the fixed ten-seed diagnostic schedule")
+            if args.resume is None or args.allow_execution_migration or args.max_updates is not None:
+                p.error("smoke evaluation requires a committed smoke checkpoint and does not accept migration/update overrides")
+        else:
+            if args.mode != "train" or args.resume is not None or args.allow_execution_migration or args.max_updates is not None:
+                p.error("--smoke training is fresh-run only and does not accept resume, migration, or update overrides")
+            args.algorithm = "both"
+            args.device = "cpu"
+            args.episodes = 2 * BATCH_EPISODES
+            args.checkpoint_every = 1
+            args.max_updates = 1
+            args.eval_seeds = 1
+            args.output = args.output / "smoke"
     if args.smoke_update:
         if args.algorithm == "both":
             p.error("--smoke-update requires exactly one --algorithm (reinforce or a2c)")
