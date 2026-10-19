@@ -149,6 +149,9 @@ def generate_bundle(output_dir: str | Path, *, root_seeds: list[int] | None = No
                         "action_labels": [action.value for action in Action]})
                 simulation.step()
 
+    if len(world_ids) != 2 * len(world_rows):
+        raise ValueError("procedural scenario world IDs are not unique")
+
     output = Path(output_dir)
     if output.exists():
         if not output.is_dir() or output.is_symlink() or any(output.iterdir()):
@@ -223,14 +226,24 @@ def verify_bundle(directory: str | Path, *, verify_sources: bool = True) -> dict
                                 for seed in rows}
     if not set(manifest.get("training_world_ids", [])) <= approved_training_worlds:
         raise ValueError("dataset training world IDs are not in the preregistered training split")
+    registered_world_ids = set(manifest.get("world_ids", []))
+    expected_types = {DATA_FILES[0]: "procedural_world", DATA_FILES[1]: "navigation_oracle_route",
+                      DATA_FILES[2]: "dagger_trajectory"}
+    observed_counts = {}
     for name in DATA_FILES:
+        count = 0
         with (root / name).open() as stream:
             for line in stream:
                 if not line.strip():
                     continue
                 row = json.loads(line)
-                if row.get("split") != "training" or int(row.get("world_seed", -1)) not in set(manifest["world_ids"]):
+                if (row.get("split") != "training" or row.get("artifact_type") != expected_types[name]
+                        or int(row.get("world_seed", -1)) not in registered_world_ids):
                     raise ValueError("dataset contains a non-training or unregistered world row")
+                count += 1
+        observed_counts[name] = count
+    if observed_counts != manifest.get("family_counts"):
+        raise ValueError("dataset family counts do not match the manifest")
     metadata = json.loads((root / "dataset-metadata.json").read_text())
     if metadata.get("id") != manifest.get("dataset_id") or len(metadata.get("licenses", [])) != 1:
         raise ValueError("dataset metadata is missing its id or explicit single license")
