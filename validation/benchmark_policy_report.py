@@ -51,6 +51,13 @@ def summarize_evaluation(report: dict[str, Any]) -> dict[str, Any]:
     if any(set(cell) != set(POLICIES) for cell in by_cell.values()):
         raise ValueError("every held-out world must contain all three paired policies")
 
+    declared = split.get("validation_world_seeds")
+    if not isinstance(declared, dict) or not declared:
+        raise ValueError("validation report has no preregistered per-family world schedule")
+    expected_cells = {(family, int(seed)) for family, seeds in declared.items() for seed in seeds}
+    if set(by_cell) != expected_cells:
+        raise ValueError("evaluated worlds do not exactly match the preregistered validation schedule")
+
     families = sorted({family for family, _ in by_cell})
     per_family: dict[str, Any] = {}
     paired_vs_heuristic: dict[str, Any] = {}

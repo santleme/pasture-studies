@@ -27,7 +27,8 @@ def evaluation_fixture():
                              (("forage_success", 2), ("forage_depleted", 1),
                               ("water_success", 1), ("water_blocked", 0))}})
     return {"schema_version": 1, "paired_world_seeds": True,
-            "seed_split": {"evaluation_split": "validation", "manifest_sha256": "abc"},
+            "seed_split": {"evaluation_split": "validation", "manifest_sha256": "abc",
+                           "validation_world_seeds": {"starter": [8001], "wide": [8002]}},
             "training_validation_test_disjoint_check": {"pass": True, "training_vs_eval_collision_count": 0},
             "training_seed": 71001, "runs": runs}
 
