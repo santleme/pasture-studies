@@ -5,6 +5,7 @@ from pathlib import Path
 import unittest
 
 from validation.benchmark_torch_fixed_corpus import compare_reports, summarize
+from validation.evaluate_torch_mvp1 import evaluation_world_schedule
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,6 +68,29 @@ class PastureNotebookHelperTests(unittest.TestCase):
         right = self.comparison_report(repeats=(0,))
         with self.assertRaisesRegex(ValueError, "same number of repeats"):
             compare_reports(left, right)
+
+    def test_locked_schedule_rejects_pending_manifest_and_unfrozen_delta0(self):
+        from unittest.mock import patch
+
+        pending = {"status": "PRE_OUTCOME_PREREGISTRATION_PENDING_PILOT_DELTA0",
+                   "acceptance_thresholds": {"training_validity": {
+                       "near_zero_margin_delta0_by_family": None}}}
+        with patch("validation.preregister_torch_mvp1.verify_manifest") as verify:
+            with self.assertRaisesRegex(ValueError, "locked evaluation prohibited"):
+                evaluation_world_schedule(eval_seed=None, episodes_per_family=1,
+                                          seed_manifest=pending, split_name="locked_test")
+        verify.assert_called_once_with(pending, verify_current_sources=True)
+
+        locked_without_delta0 = {
+            "status": "LOCKED_PRE_OUTCOME",
+            "acceptance_thresholds": {"training_validity": {
+                "near_zero_margin_delta0_by_family": None}},
+        }
+        with patch("validation.preregister_torch_mvp1.verify_manifest"):
+            with self.assertRaisesRegex(ValueError, "locked evaluation prohibited"):
+                evaluation_world_schedule(eval_seed=None, episodes_per_family=1,
+                                          seed_manifest=locked_without_delta0,
+                                          split_name="locked_test")
 
     def test_benchmark_summary_has_stable_empty_and_populated_schema(self):
         expected_metrics = {"raw", "median", "p95", "bootstrap_ci95_mean"}
