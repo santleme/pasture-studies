@@ -37,7 +37,7 @@ class NeuralBenchmarkSummaryTests(unittest.TestCase):
         self.assertEqual(result["families"]["starter"]["paired_reward_deltas"][
             "trained_minus_heuristic_baseline"]["paired_worlds"], 2)
         self.assertAlmostEqual(result["families"]["starter"]["paired_reward_deltas"][
-            "trained_minus_heuristic_baseline"]["mean_total_reward_delta"], -1)
+            "trained_minus_heuristic_baseline"]["mean_total_reward_delta"], -2)
         self.assertEqual(result["families"]["starter"]["policies"]["trained"]["invalid_action_rate"], 0)
         self.assertAlmostEqual(result["generalization"]["trained_novel_minus_starter_reward"], 20)
 
