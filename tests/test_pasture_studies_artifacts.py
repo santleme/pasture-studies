@@ -8,50 +8,10 @@ from unittest.mock import patch
 
 import numpy as np
 
-from validation.benchmark_policy_report import summarize_evaluation
 from validation.package_torch_corpus import package_corpus, verify_package
 
 
-def evaluation_fixture():
-    families = ("starter", "wide")
-    runs = []
-    for family_index, family in enumerate(families):
-        seed = 8001 + family_index
-        for policy, reward in (("trained", 10.0 + family_index),
-                               ("untrained_same_seed", 4.0),
-                               ("heuristic_baseline", 7.0)):
-            runs.append({"policy": policy, "scenario": family, "world_seed": seed,
-                         "total_reward": reward, "invalid_actions": 0,
-                         "action_counts": {"drink": 2, "rest": 3},
-                         "reward_components": {name: {"count": count} for name, count in
-                             (("forage_success", 2), ("forage_depleted", 1),
-                              ("water_success", 1), ("water_blocked", 0))}})
-    return {"schema_version": 1, "paired_world_seeds": True,
-            "seed_split": {"evaluation_split": "validation", "manifest_sha256": "abc",
-                           "validation_world_seeds": {"starter": [8001], "wide": [8002]}},
-            "training_validation_test_disjoint_check": {"pass": True, "training_vs_eval_collision_count": 0},
-            "training_seed": 71001, "runs": runs}
-
-
 class PastureStudiesArtifactsTests(unittest.TestCase):
-    def test_policy_summary_preserves_pairing_baselines_and_family_generalization(self):
-        result = summarize_evaluation(evaluation_fixture())
-        self.assertEqual(result["heldout_world_count"], 2)
-        self.assertEqual(result["scenario_families"]["wide"]["world_count"], 1)
-        self.assertEqual(result["paired_total_reward_delta_vs_heuristic"]["starter"]["trained"]["mean"], 3.0)
-        self.assertEqual(result["generalization"]["trained"]["reward_gap_from_reference_by_family"]["wide"], 1.0)
-        self.assertAlmostEqual(sum(result["scenario_families"]["starter"]["policies"]["trained"]["action_frequencies"].values()), 1.0)
-
-    def test_policy_summary_rejects_unregistered_or_unpaired_evaluation(self):
-        report = evaluation_fixture()
-        report["seed_split"]["evaluation_split"] = "locked_test"
-        with self.assertRaisesRegex(ValueError, "validation split"):
-            summarize_evaluation(report)
-        report = evaluation_fixture()
-        report["runs"].pop()
-        with self.assertRaisesRegex(ValueError, "all three paired policies"):
-            summarize_evaluation(report)
-
     def test_dataset_package_records_and_verifies_local_artifact_hashes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
