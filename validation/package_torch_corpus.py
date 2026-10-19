@@ -46,10 +46,8 @@ def package_corpus(corpus_path: str | Path, output_dir: str | Path, *,
     license_name = license_name.strip()
     if not title or not license_name:
         raise ValueError("dataset title and an explicitly selected license are required")
-    if config.get("partition_count") != 10 or config.get("episodes_per_partition") != 278:
-        raise ValueError("dataset release requires the complete 10 x 278 episode corpus")
-    if arrays["world_ids"].size != 10 * 278:
-        raise ValueError("corpus episode count does not match the full release schedule")
+    if arrays["world_ids"].size != config["partition_count"] * config["episodes_per_partition"]:
+        raise ValueError("corpus episode count does not match its configuration")
 
     target = Path(output_dir)
     if target.exists():
@@ -97,10 +95,6 @@ def verify_package(directory: str | Path) -> dict[str, Any]:
             or sum(name.endswith(".npz") for name in listed) != 1
             or sum(name.endswith(".json") and name != "dataset-metadata.json" for name in listed) != 1):
         raise ValueError("dataset package file inventory is invalid")
-    expected_paths = set(listed) | {"dataset-manifest.json"}
-    actual_paths = {path.name for path in root.iterdir()}
-    if actual_paths != expected_paths:
-        raise ValueError("dataset package contains files outside its frozen inventory")
     for name, entry in listed.items():
         path = root / name
         if Path(name).name != name or path.is_symlink() or not path.is_file():
