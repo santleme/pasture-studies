@@ -37,18 +37,18 @@ EXPLORATORY_A2C_EVAL_EPISODES = 5
 EXPLORATORY_BATCH_EPISODES = 512
 EXPLORATORY_BATCH_EVAL_EPISODES = 5
 EXPLORATORY_BATCH_STATE_REWARD_SCALE = 0.1
-EXPLORATORY_BATCH_DISCOUNT_FACTOR = 0.99
+EXPLORATORY_BATCH_DISCOUNT_FACTOR = 1.0
 EXPLORATORY_BATCH_SEEDS = (9483001, 9483002, 9483003)
 EXPLORATORY_BATCH_MAX_JOBS = 24
 EXPLORATORY_BATCH_VARIANTS = {
     "A": {"reward_variant": "original", "state_reward_scale": 0.1,
-          "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 0.99},
+          "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
     "B": {"reward_variant": "original", "state_reward_scale": 0.1,
-          "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 0.99},
+          "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
     "C": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
-          "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 0.99},
+          "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
     "D": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
-          "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 0.99},
+          "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
 }
 
 
@@ -410,7 +410,7 @@ def train_algorithm(algorithm: str, *, seed: int, episodes: int, output: Path,
                     eval_only: bool = False, allow_execution_migration: bool = False, exploratory: bool = False,
                     exploratory_variant: str | None = None, reward_variant: str = "original",
                     state_reward_scale: float = 0.1, normalize_advantage: bool = False,
-                    entropy_coefficient: float = 0.0, discount_factor: float = 0.99) -> dict:
+                    entropy_coefficient: float = 0.0, discount_factor: float = 1.0) -> dict:
     torch = require_torch()
     device = resolve_device(device)
     set_deterministic(seed, device)
