@@ -30,9 +30,11 @@ The package contains `procedural-worlds.jsonl`, `oracle-trajectories.jsonl`,
 `dagger-trajectories.jsonl`, Kaggle metadata, and a versioned checksum manifest.
 World snapshots use deterministic `farm_sim.make_world`; route rows use the
 independent deterministic BFS navigation oracle; DAgger-style rows collect
-states visited by a seeded initialized policy and query the existing heuristic
-teacher once. This is a single aggregation pass, not iterative DAgger, and the
-BFS expert is only an oracle for shortest paths, not reward-optimal behavior.
+states visited by a seeded initialized policy, query the existing heuristic
+teacher, and retrain the learner on accumulated labels across two deterministic
+aggregation rounds. The BFS expert is only an oracle for shortest paths, not
+reward-optimal behavior; DAgger labels use the heuristic teacher, not a
+biological or optimal expert.
 Packaging requires an explicit Kaggle `owner/slug`, title and license. The split
 is training-only; held-out validation, pilot, locked-test and reserve worlds are
 not packaged. Keep each output directory empty and review its files before any

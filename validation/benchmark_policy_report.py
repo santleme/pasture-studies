@@ -15,6 +15,7 @@ from typing import Any
 import numpy as np
 
 POLICIES = ("trained", "untrained_same_seed", "heuristic_baseline")
+EXPECTED_FAMILIES = ("starter", "resource_scarce_relocated", "wide", "unseen_corridor")
 METRICS = ("total_reward", "invalid_actions", "forage_success", "forage_depleted",
            "water_success", "water_blocked")
 
@@ -27,11 +28,33 @@ def summarize_evaluation(report: dict[str, Any]) -> dict[str, Any]:
     """Validate held-out pairing and report per-family and baseline-relative metrics."""
     if report.get("schema_version") != 1 or report.get("paired_world_seeds") is not True:
         raise ValueError("input must be a schema-v1 paired held-out evaluation report")
-    split = report.get("seed_split", {})
+    split = report.get("seed_split")
+    if not isinstance(split, dict):
+        raise ValueError("evaluation report lacks its frozen validation seed map")
     if split.get("evaluation_split") != "validation":
         raise ValueError("policy benchmark requires an explicitly preregistered validation split")
+    manifest_hash = split.get("manifest_sha256")
+    frozen_seeds = split.get("validation_world_seeds")
+    declared_families = split.get("families")
+    if (not isinstance(manifest_hash, str) or len(manifest_hash) != 64
+            or any(character not in "0123456789abcdef" for character in manifest_hash.lower())
+            or not isinstance(frozen_seeds, dict)
+            or set(frozen_seeds) != set(EXPECTED_FAMILIES)
+            or not isinstance(declared_families, list)
+            or set(declared_families) != set(EXPECTED_FAMILIES)):
+        raise ValueError("evaluation report lacks its frozen validation seed map")
+    expected_by_family: dict[str, set[int]] = {}
+    for family in EXPECTED_FAMILIES:
+        seeds = frozen_seeds[family]
+        if (not isinstance(seeds, list) or not seeds
+                or any(isinstance(seed, bool) or not isinstance(seed, int) for seed in seeds)
+                or len(set(seeds)) != len(seeds)):
+            raise ValueError("evaluation report has an invalid frozen validation seed map")
+        expected_by_family[family] = set(seeds)
     check = report.get("training_validation_test_disjoint_check", {})
     if check.get("pass") is not True or check.get("training_vs_eval_collision_count") != 0:
+        raise ValueError("evaluation report does not attest a disjoint held-out split")
+    if check.get("all_registered_splits_pairwise_disjoint") is not True:
         raise ValueError("evaluation report does not attest a disjoint held-out split")
     rows = report.get("runs")
     if not isinstance(rows, list) or not rows:
@@ -51,7 +74,13 @@ def summarize_evaluation(report: dict[str, Any]) -> dict[str, Any]:
     if any(set(cell) != set(POLICIES) for cell in by_cell.values()):
         raise ValueError("every held-out world must contain all three paired policies")
 
-    families = sorted({family for family, _ in by_cell})
+    observed_by_family = {family: {seed for name, seed in by_cell if name == family}
+                          for family in EXPECTED_FAMILIES}
+    if {family for family, _ in by_cell} != set(EXPECTED_FAMILIES):
+        raise ValueError("evaluation report scenario families do not match the preregistration")
+    if observed_by_family != expected_by_family:
+        raise ValueError("evaluation world seeds do not match the frozen validation seed map")
+    families = list(EXPECTED_FAMILIES)
     per_family: dict[str, Any] = {}
     paired_vs_heuristic: dict[str, Any] = {}
     policy_reward_by_family: dict[str, dict[str, float]] = {}

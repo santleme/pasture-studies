@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -19,8 +20,16 @@ class PastureStudiesDatasetTests(unittest.TestCase):
             self.assertEqual(one["family_counts"], {
                 "procedural-worlds.jsonl": 2,
                 "oracle-trajectories.jsonl": 40,
-                "dagger-trajectories.jsonl": 720,
+                "dagger-trajectories.jsonl": 1440,
             })
+            self.assertEqual(one["dagger_aggregation_rounds"], 2)
+            dagger_rows = [json.loads(line) for line in
+                           (first / "dagger-trajectories.jsonl").read_text().splitlines()]
+            iterations = {row["aggregation_iteration"] for row in dagger_rows}
+            self.assertEqual(iterations, {1, 2})
+            for iteration in iterations:
+                self.assertEqual({row["tick"] for row in dagger_rows
+                                  if row["aggregation_iteration"] == iteration}, set(range(72)))
             self.assertEqual(verify_bundle(first)["split"], "training-only")
             self.assertEqual(verify_bundle(first)["world_ids"], one["world_ids"])
 
