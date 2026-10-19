@@ -51,13 +51,13 @@ EXPLORATORY_COMPARISON_CONFIG_VALUE = {
     "max_training_jobs": 24, "max_devices": 2, "locked_test_access": False,
     "variant_config": {
         "A": {"reward_variant": "original", "state_reward_scale": 0.1,
-              "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 0.99},
+              "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
         "B": {"reward_variant": "original", "state_reward_scale": 0.1,
-              "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 0.99},
+              "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
         "C": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
-              "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 0.99},
+              "normalize_advantage": False, "entropy_coefficient": 0.0, "discount_factor": 1.0},
         "D": {"reward_variant": "state_aware", "state_reward_scale": 0.1,
-              "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 0.99},
+              "normalize_advantage": True, "entropy_coefficient": 0.01, "discount_factor": 1.0},
     },
     "formal_eligible": False, "benchmark_eligible": False, "checkpoint_promotion": False,
 }

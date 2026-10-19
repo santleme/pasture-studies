@@ -15,10 +15,10 @@ class ExploratoryBatchCliTests(unittest.TestCase):
         self.assertEqual({spec["seed"] for spec in specs}, set(trainer.EXPLORATORY_BATCH_SEEDS))
         self.assertEqual({spec["episodes"] for spec in specs}, {512})
         expected = {
-            "A": ("original", 0.1, False, 0.0, 0.99),
-            "B": ("original", 0.1, True, 0.01, 0.99),
-            "C": ("state_aware", 0.1, False, 0.0, 0.99),
-            "D": ("state_aware", 0.1, True, 0.01, 0.99),
+            "A": ("original", 0.1, False, 0.0, 1.0),
+            "B": ("original", 0.1, True, 0.01, 1.0),
+            "C": ("state_aware", 0.1, False, 0.0, 1.0),
+            "D": ("state_aware", 0.1, True, 0.01, 1.0),
         }
         for spec in specs:
             self.assertEqual((spec["reward_variant"], spec["state_reward_scale"], spec["normalize_advantage"],
