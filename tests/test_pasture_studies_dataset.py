@@ -13,8 +13,8 @@ class PastureStudiesDatasetTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             first = Path(directory) / "first"
             second = Path(directory) / "second"
-            one = generate_bundle(first, root_seeds=[71001], episodes_per_root=1)
-            two = generate_bundle(second, root_seeds=[71001], episodes_per_root=1)
+            one = generate_bundle(first, root_seeds=[71001], episodes_per_root=1, license_name="CC0-1.0")
+            two = generate_bundle(second, root_seeds=[71001], episodes_per_root=1, license_name="CC0-1.0")
             self.assertEqual(one["manifest_sha256"], two["manifest_sha256"])
             self.assertEqual(one["family_counts"], {
                 "procedural-worlds.jsonl": 2,
@@ -27,9 +27,9 @@ class PastureStudiesDatasetTests(unittest.TestCase):
     def test_rejects_nontraining_root_and_tampered_family_file(self):
         with tempfile.TemporaryDirectory() as directory:
             with self.assertRaisesRegex(ValueError, "training root seeds"):
-                generate_bundle(Path(directory) / "bad", root_seeds=[72001])
+                generate_bundle(Path(directory) / "bad", root_seeds=[72001], license_name="CC0-1.0")
             bundle = Path(directory) / "bundle"
-            generate_bundle(bundle, root_seeds=[71001], episodes_per_root=1)
+            generate_bundle(bundle, root_seeds=[71001], episodes_per_root=1, license_name="CC0-1.0")
             (bundle / "dagger-trajectories.jsonl").write_text("{}\n")
             with self.assertRaisesRegex(ValueError, "integrity mismatch"):
                 verify_bundle(bundle)

@@ -21,7 +21,7 @@ class KaggleDatasetPublishTests(unittest.TestCase):
     def test_default_is_verified_dry_run_and_never_calls_kaggle(self):
         with tempfile.TemporaryDirectory() as directory:
             package = Path(directory) / "data"
-            generate_bundle(package, root_seeds=[71001], episodes_per_root=1)
+            generate_bundle(package, root_seeds=[71001], episodes_per_root=1, license_name="CC0-1.0")
             with patch("scripts.kaggle_dataset_publish.subprocess.run") as run:
                 result = publish(package, operation="create")
             run.assert_not_called()
