@@ -90,7 +90,7 @@ python3 scripts/kaggle_deploy.py verify \
   --artifacts /path/to/extracted/pasture-exploratory-model-artifacts
 ```
 
-Local evaluation used Python 3.12.3, NumPy 1.26.4, PyTorch 2.11.0 CPU. This was evaluation and checkpoint-load verification only; no model training was run locally. `tests/test_exploratory_learning.py`, `tests/test_exploratory_checkpoint_comparison.py`, `tests/test_exploratory_batch_cli.py`, `tests/test_kaggle_deploy.py`, `tests/test_kaggle_release.py`, `tests/test_torch_training.py`, and `tests/test_torch_evaluation.py` were run. At the time of this report, 64 passed, 25 skipped, and one deployment test failed because the working tree was intentionally dirty (it enforces a clean committed source checkout before staging); the same suite must be rerun after committing this report and comparator update.
+Local evaluation used Python 3.12.3, NumPy 1.26.4, PyTorch 2.11.0 CPU. This was evaluation and checkpoint-load verification only; no model training was run locally. The targeted suite (`tests/test_exploratory_learning.py`, `tests/test_exploratory_checkpoint_comparison.py`, `tests/test_exploratory_batch_cli.py`, `tests/test_kaggle_deploy.py`, `tests/test_kaggle_release.py`, `tests/test_torch_training.py`, `tests/test_torch_evaluation.py`) passed after the working tree was committed: **65 passed, 25 skipped, 0 failed**. The skips are existing optional/environment-gated cases. Earlier, the deployment clean-check test correctly rejected staging while the tree was dirty; it passed in the final clean-tree run.
 
 ## Verdict
 
