@@ -12,6 +12,15 @@ NOTEBOOK = ROOT / "notebooks" / "pasture_studies_kaggle.ipynb"
 
 
 class PastureNotebookHelperTests(unittest.TestCase):
+    @staticmethod
+    def comparison_report(*, corpus_hash="same", workload="fixed", repeats=(0, 1)):
+        return {
+            "device": "cpu",
+            "workload": workload,
+            "corpus_config": {"corpus_sha256": corpus_hash},
+            "runs": [{"repeat_index": index, "duration_seconds": 1.0} for index in repeats],
+        }
+
     def test_fixed_corpus_comparison_schema_and_pairing(self):
         left = {"device": "cpu", "workload": "fixed", "corpus_config": {"corpus_sha256": "same"},
                 "runs": [{"repeat_index": 1, "duration_seconds": 6.0},
@@ -35,6 +44,29 @@ class PastureNotebookHelperTests(unittest.TestCase):
                             for value in speedup["bootstrap_ci95_mean"].values()))
         self.assertLessEqual(speedup["bootstrap_ci95_mean"]["lower_95"],
                              speedup["bootstrap_ci95_mean"]["upper_95"])
+
+    def test_fixed_corpus_comparison_rejects_different_corpus_or_workload(self):
+        left = self.comparison_report()
+        with self.subTest("corpus hash"):
+            right = self.comparison_report(corpus_hash="different")
+            with self.assertRaisesRegex(ValueError, "same frozen corpus hash"):
+                compare_reports(left, right)
+        with self.subTest("workload"):
+            right = self.comparison_report(workload="smoke")
+            with self.assertRaisesRegex(ValueError, "same full/smoke workload"):
+                compare_reports(left, right)
+
+    def test_fixed_corpus_comparison_rejects_unmatched_repeat_indices(self):
+        left = self.comparison_report(repeats=(0, 2))
+        right = self.comparison_report(repeats=(0, 1))
+        with self.assertRaisesRegex(ValueError, "unmatched repeat indices"):
+            compare_reports(left, right)
+
+    def test_fixed_corpus_comparison_rejects_different_repeat_counts(self):
+        left = self.comparison_report(repeats=(0, 1))
+        right = self.comparison_report(repeats=(0,))
+        with self.assertRaisesRegex(ValueError, "same number of repeats"):
+            compare_reports(left, right)
 
     def test_benchmark_summary_has_stable_empty_and_populated_schema(self):
         expected_metrics = {"raw", "median", "p95", "bootstrap_ci95_mean"}
