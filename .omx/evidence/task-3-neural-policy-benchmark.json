@@ -6,7 +6,8 @@
   "unverified": [
     "Python type-check/lint not run: mypy, ruff, and pycodestyle are unavailable.",
     "PyTorch evaluator end-to-end tests skipped because optional PyTorch is not installed.",
-    "Full suite is not green for the environment/pre-existing failures listed above."
+    "Full suite is not green for the environment/pre-existing failures listed above.",
+    "Full suite was attempted but is not green: 50 optional-dependency skips, four unrelated errors, and one worktree-path guard failure; this is detailed in the completion result."
   ],
   "verification": [
     {
@@ -28,11 +29,6 @@
       "command": "git diff --check",
       "output": "No whitespace errors.",
       "result": "passed"
-    },
-    {
-      "command": "python3 -m unittest discover -s tests -v",
-      "output": "174 tests: 50 skipped because optional dependencies are absent; 4 errors (missing jupyter_client, absent ignored .omx/research fixture, and profile report KeyError parity_pass) plus 1 preregistration failure because worktree parent path itself contains .omx and the test guard rejects all paths containing that component.",
-      "result": "failed"
     }
   ]
 }
