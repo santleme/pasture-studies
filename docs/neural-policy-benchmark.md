@@ -32,36 +32,21 @@ or make claims from locked outcomes. The candidate protocol also remains
 subject to its independently reviewed readiness gates. No result here
 authorizes a Kaggle run or publication.
 
-## Local workflow
+## Execution boundary
 
-Install the optional training dependencies in an isolated environment, then
-evaluate one committed generation against the registered validation seeds:
+Full registered evaluations and extensive benchmarks are Kaggle-only. The
+commands below are not a supported local workflow: do not run the 30-world
+registered evaluation or aggregate benchmark on a workstation. The current
+Kaggle launcher is fail-closed for EXPERIMENT/FULL_VALIDATION pending
+independently trusted release approval, so those extensive runs are not
+currently authorized merely because Kaggle is mandatory.
 
-```sh
-.venv/bin/python validation/evaluate_torch_mvp1.py \
-  --generation artifacts/checkpoints/a2c/seed-71001/generation-00000001 \
-  --algorithm a2c --seed 71001 \
-  --seed-manifest validation/kaggle-mvp1/preregistration.json \
-  --split validation --output artifacts/validation/a2c-71001-validation.json
-
-.venv/bin/python validation/benchmark_policy_report.py \
-  --input artifacts/validation/a2c-71001-validation.json \
-  --output artifacts/validation/a2c-71001-benchmark.json
-```
-
-The first command runs 30 registered validation worlds per scenario family and
-three policy arms per world. The second validates the report's schema, paired
-worlds, validation split, and zero-collision attestation before creating
-per-family reward, invalid-action, resource-event, and action-frequency
-aggregates; matched trained/untrained-versus-heuristic reward deltas; and
-descriptive per-policy generalization gaps from `starter`. It retains raw paired
-reward deltas and the preregistration manifest hash. Keep the raw episode report
-alongside the aggregate report.
-
-For a small unregistered smoke check only, the evaluator accepts an explicit
-`--eval-seed` and `--episodes-per-family`; such an evaluator output is useful
-only as a smoke check and is not accepted by the aggregate report entry point or
-protocol evidence.
+Local execution may use only an explicitly bounded smoke check. For example,
+a small unregistered evaluator smoke must specify `--eval-seed` and a small
+`--episodes-per-family`; its output is diagnostic only and is not accepted by
+the aggregate report entry point or protocol evidence. Development and
+lightweight unit tests remain local. See [Kaggle training](kaggle-training.md)
+for the release and execution boundary.
 
 ## Interpretation
 

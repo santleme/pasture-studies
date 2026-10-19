@@ -4,6 +4,12 @@ This workflow generates offline, reproducible **training-only** artifacts. It
 does not establish biological validity. The fixed-corpus compute workload is
 stale/off-policy data and is not evidence of policy quality.
 
+Full or mass trajectory generation and extensive benchmarks are Kaggle-only; do
+not use the local commands in this document for full research workloads. Local
+execution is limited to development, lightweight tests, and explicitly bounded
+smoke diagnostics. The current Kaggle release gate still blocks EXPERIMENT and
+FULL_VALIDATION absent independent trusted approval.
+
 ## Generate and package a dataset
 
 The full PyTorch fixed-corpus workload remains available separately; the dataset
