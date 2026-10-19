@@ -1,13 +1,17 @@
 import unittest
+import importlib.util
 
 import numpy as np
 
 from farm_sim.model import Action, FEATURE_NAMES
 from farm_sim.exploratory_learning import (
+    calculate_exploratory_loss,
     entropy_regularized_actor_loss,
     normalize_advantages,
     state_aware_rewards,
 )
+
+HAS_TORCH = importlib.util.find_spec("torch") is not None
 
 
 class ExploratoryLearningTests(unittest.TestCase):
@@ -46,6 +50,42 @@ class ExploratoryLearningTests(unittest.TestCase):
             entropy_regularized_actor_loss(1.0, 1.0, coefficient=-1)
         with self.assertRaisesRegex(ValueError, "finite and positive"):
             normalize_advantages(np.ones(2), enabled=True, eps=0)
+
+    @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
+    def test_exploratory_loss_default_matches_original_control_exactly(self):
+        import torch
+        from farm_sim.torch_training import ActorCritic, Trajectory, calculate_loss
+        model = ActorCritic(seed=30, value_head=True)
+        observations = np.zeros((2, 1, len(FEATURE_NAMES)), np.float32)
+        actions = np.zeros((2, 1), np.int64)
+        rewards = np.array([[0.25], [-0.1]], np.float32)
+        trajectory = Trajectory(observations, actions, rewards, np.zeros_like(rewards), 7)
+        original_loss, original_metrics = calculate_loss(model, [trajectory], "a2c")
+        exploratory_loss, exploratory_metrics = calculate_exploratory_loss(model, [trajectory], "a2c")
+        torch.testing.assert_close(original_loss, exploratory_loss, rtol=0, atol=0)
+        self.assertEqual(original_metrics, exploratory_metrics)
+
+    @unittest.skipUnless(HAS_TORCH, "optional PyTorch training dependency is not installed")
+    def test_exploratory_loss_applies_opt_in_entropy_and_advantage_options(self):
+        import torch
+        from farm_sim.torch_training import ActorCritic, Trajectory
+        model = ActorCritic(seed=31, value_head=True)
+        observations = np.zeros((2, 1, len(FEATURE_NAMES)), np.float32)
+        observations[:, :, FEATURE_NAMES.index("fatigue")] = np.array([0.0, 1.0])[:, None]
+        actions = np.full((2, 1), list(Action).index(Action.REST), np.int64)
+        rewards = np.zeros((2, 1), np.float32)
+        trajectory = Trajectory(observations, actions, rewards, np.zeros_like(rewards), 8)
+        control, base = calculate_exploratory_loss(model, [trajectory], "a2c")
+        shaped, shaped_stats = calculate_exploratory_loss(
+            model, [trajectory], "a2c", reward_variant="state_aware")
+        self.assertGreater(shaped_stats["mean_return_to_go"], base["mean_return_to_go"])
+        regularized, _ = calculate_exploratory_loss(
+            model, [trajectory], "a2c", entropy_coefficient=0.2)
+        torch.testing.assert_close(regularized, control - 0.2 * base["entropy"])
+        normalized, normalized_stats = calculate_exploratory_loss(
+            model, [trajectory], "a2c", normalize_advantage=True)
+        self.assertTrue(torch.isfinite(normalized))
+        self.assertAlmostEqual(normalized_stats["mean_advantage"], 0.0, places=6)
 
 
 if __name__ == "__main__":
