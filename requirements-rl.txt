@@ -1,0 +1,4 @@
+# Optional Gymnasium + Stable-Baselines3 integration; core runtime remains dependency-free.
+-r requirements-training.txt
+gymnasium==1.2.3
+stable-baselines3==2.7.1
