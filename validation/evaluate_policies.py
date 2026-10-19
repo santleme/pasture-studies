@@ -22,11 +22,17 @@ DAYS = 3
 STEPS = TICKS_PER_DAY * DAYS
 PRIMARY_EVALUATION_SEEDS = [11, 29, 47, 83, 101]
 HELD_OUT_SEEDS = [17, 23, 71]
-POLICIES = {
-    "untrained_seed11": lambda: load_checkpoint(ROOT / "artifacts/policies/cattle-policy-seed-11.initial.npz"),
-    "trained_seed11": lambda: load_checkpoint(ROOT / "artifacts/policies/default-policy.npz"),
-    "heuristic_baseline": HeuristicBaseline,
-}
+def discover_policies():
+    """Use every packaged NPZ checkpoint, plus the explicit heuristic control."""
+    policies = {
+        f"checkpoint_{path.stem}": (lambda path=path: load_checkpoint(path))
+        for path in sorted((ROOT / "artifacts/policies").glob("*.npz"))
+    }
+    policies["heuristic_baseline"] = HeuristicBaseline
+    return policies
+
+
+POLICIES = discover_policies()
 
 
 def valid_decision(action, probs):
@@ -51,6 +57,7 @@ def scenario_world(scenario, seed):
 def evaluate(policy_name, seed, scenario="starter_seed"):
     sim = Simulation(scenario_world(scenario, seed), POLICIES[policy_name]())
     actions = Counter(); rewards=[]; invalid=0; requested=0; no_move=0
+    entropy_sum = 0.0; entropy_count = 0
     nav_reasons = Counter()
     original_navigate = simulation_module.navigate
     def counted_navigate(*args, **kwargs):
@@ -74,6 +81,10 @@ def evaluate(policy_name, seed, scenario="starter_seed"):
                     requested += 1
                     if a.position == before[a.animal_id]: no_move += 1
                 if not valid_decision(a.action,a.last_probabilities): invalid += 1
+                probs = a.last_probabilities
+                if probs and all(math.isfinite(p) and p >= 0 for p in probs):
+                    entropy_sum += -sum(p * math.log(p) for p in probs if p > 0)
+                    entropy_count += 1
             rewards.append(tick_reward)
     finally:
         simulation_module.navigate = original_navigate
@@ -89,6 +100,7 @@ def evaluate(policy_name, seed, scenario="starter_seed"):
             "cumulative_reward":round(total,6),"mean_summed_agent_reward_per_tick":round(total/STEPS,6),
             "toy_episode_success_positive_cumulative_reward":total>0,
             "invalid_actions_or_probability_vectors":invalid,
+            "mean_action_entropy_nats":round(entropy_sum/entropy_count,6) if entropy_count else None,
             "navigation_no_movement_proxy":{"navigation_routed_action_count":requested,"no_movement_count":no_move,
              "no_movement_fraction":round(no_move/requested,6) if requested else None,
              "definition":"navigation-routed action with unchanged position; may include at-target/no-target outcomes and is not a confirmed pathfinding failure"},
@@ -218,15 +230,43 @@ def main():
              "mean_confirmed_no_reachable_target_failures":sum(r["confirmed_no_reachable_target_failures"] for r in group)/len(group),
              "mean_navigation_no_movement_fraction":round(sum(r["navigation_no_movement_proxy"]["no_movement_fraction"] for r in group)/len(group),6),
              "mean_final_toy_drives":{k:round(sum(r["final_toy_physiology"][k]["mean_over_final_animals"] for r in group)/len(group),6) for k in ("hunger","thirst","fatigue","social_need")}})
+    # Simple aggregate ranking over the common original-reward worlds only. This is
+    # descriptive (not a validated welfare or biological score).
+    ranked=[]
+    for p in POLICIES:
+        group=[r for r in rows if r["policy"]==p and r["scenario"]=="starter_seed"
+               and r["world_seed"] in PRIMARY_EVALUATION_SEEDS+HELD_OUT_SEEDS]
+        ranked.append({"policy":p,"runs":len(group),
+                       "mean_cumulative_reward":round(sum(r["cumulative_reward"] for r in group)/len(group),6),
+                       "mean_action_entropy_nats":round(sum(r["mean_action_entropy_nats"] for r in group)/len(group),6)})
+    ranked.sort(key=lambda row:(-row["mean_cumulative_reward"],row["policy"]))
+    for rank,row in enumerate(ranked,1): row["rank"]=rank
+    # Dependency-free SVG chart accompanies the machine-readable ranking.
+    chart_width, row_height = 760, 30
+    min_reward=min((row["mean_cumulative_reward"] for row in ranked),default=0.0)
+    max_reward=max((row["mean_cumulative_reward"] for row in ranked),default=1.0)
+    span=max(1.0,max_reward-min_reward)
+    bars=[]
+    for i,row in enumerate(ranked):
+        y=35+i*row_height
+        width=300*(row["mean_cumulative_reward"]-min_reward)/span
+        bars.append(f'<text x="8" y="{y+15}" font-size="12">{row["rank"]}. {row["policy"]}</text>'
+                    f'<rect x="330" y="{y}" width="{max(0,width):.1f}" height="18" fill="#3977b8"/>'
+                    f'<text x="{335+max(0,width):.1f}" y="{y+14}" font-size="12">{row["mean_cumulative_reward"]:.2f}</text>')
+    chart = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{chart_width}" '
+             f'height="{max(60,45+len(ranked)*row_height)}"><text x="8" y="20" font-size="14">'
+             'Common-world mean cumulative original toy reward (descriptive)</text>'
+             + ''.join(bars) + '</svg>')
     doc={"title":"Pasture Studies MVP 1 policy evaluation","generated_by":"validation/evaluate_policies.py",
       "reproducible_command":"python3 validation/evaluate_policies.py",
       "scope":{"ticks_per_day":TICKS_PER_DAY,"ticks_convention":"24 discrete simulation ticks per synthetic day; this is an evaluation unit, not a biological timescale","days_per_run":DAYS,"ticks_per_run":STEPS,"primary_evaluation_world_seeds":PRIMARY_EVALUATION_SEEDS,"held_out_evaluation_world_seeds":HELD_OUT_SEEDS,"structural_stress_scenarios":stress_scenarios,"policies":list(POLICIES),"identical_world_seeds_paired":True,"all_policy_inference_deterministic":True,"checkpoint_training_task":"four-case one-step paired-memory task; evaluation world seeds were not training worlds"},
       "scientific_scope":"Toy software-task rewards and normalized drives are not empirically validated cattle physiology, behavior, welfare, or cognition. Held-out world seeds are not an empirical generalization benchmark.",
-      "aggregate_results":aggregates,"runs":rows,"controlled_feature_interventions":causal(),
-      "limitations":["Initial/untrained comparator is seed-11 initialization; trained policy is packaged default trained checkpoint.","Simulation policy decide is argmax deterministic inference; no stochastic policy sampling is used.","Navigation reason counts are captured by a temporary validation wrapper around the simulator's existing navigate function; no product behavior is changed.","The no-movement proxy remains distinct from exact no_reachable_target navigation failures and also includes at-target/no-target actions.","Feature counterfactuals, including production encoder-path tests, probe the policy-input pathway only and do not establish whole-simulation causal effects.","One encoder-path water relocation intervention jointly changes visibility and distance; it is labeled accordingly.","Positive cumulative toy reward is a reporting convention, not a validated success threshold.","Physiology summaries describe only normalized toy variables and synthetic transition equations.","Different starter seeds and the two structural stress worlds are synthetic software stress tests, not ecological generalization or husbandry validation."]}
+      "aggregate_results":aggregates,"common_world_ranking":ranked,"runs":rows,"controlled_feature_interventions":causal(),
+      "limitations":["All packaged NPZ checkpoints, including explicitly identified .initial untrained snapshots, are evaluated alongside the heuristic baseline.","The common-world ranking is descriptive and uses only the simulator's original toy reward; it is not a validated welfare or biological score.","Simulation policy decide is argmax deterministic inference; no stochastic policy sampling is used.","Navigation reason counts are captured by a temporary validation wrapper around the simulator's existing navigate function; no product behavior is changed.","The no-movement proxy remains distinct from exact no_reachable_target navigation failures and also includes at-target/no-target actions.","Feature counterfactuals, including production encoder-path tests, probe the policy-input pathway only and do not establish whole-simulation causal effects.","One encoder-path water relocation intervention jointly changes visibility and distance; it is labeled accordingly.","Positive cumulative toy reward is a reporting convention, not a validated success threshold.","Physiology summaries describe only normalized toy variables and synthetic transition equations.","Different starter seeds and the two structural stress worlds are synthetic software stress tests, not ecological generalization or husbandry validation."]}
     target=ROOT/".omx/research/mvp1-policy-evaluation.json"
     target.parent.mkdir(parents=True,exist_ok=True)
     target.write_text(json.dumps(doc,indent=2,sort_keys=True)+"\n")
+    target.with_suffix(".svg").write_text(chart)
     print(json.dumps({"output":str(target.relative_to(ROOT)),"runs":len(rows),"ticks_per_run":STEPS,"total_policy_ticks":len(rows)*STEPS,
        "aggregates":aggregates,"fixed_vector_interventions":len(doc["controlled_feature_interventions"]["fixed_vector_interventions"]),
        "production_input_interventions":len(doc["controlled_feature_interventions"]["production_input_pathway_interventions"]),
