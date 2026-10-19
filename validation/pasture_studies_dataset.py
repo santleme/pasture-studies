@@ -76,13 +76,15 @@ def generate_bundle(output_dir: str | Path, *, root_seeds: list[int] | None = No
                     episodes_per_root: int = 1, data_version: str = "v1",
                     dataset_id: str = "pasture-studies/pasture-training-data",
                     title: str = "Pasture Studies synthetic training data",
-                    license_name: str = "CC0-1.0",
+                    license_name: str,
                     preregistration_path: str | Path = OUTPUT_PATH) -> dict[str, Any]:
     """Generate three local JSONL data families against frozen training IDs."""
-    if isinstance(episodes_per_root, bool) or episodes_per_root <= 0:
+    if isinstance(episodes_per_root, bool) or not isinstance(episodes_per_root, int) or episodes_per_root <= 0:
         raise ValueError("episodes_per_root must be positive")
     if not re.fullmatch(r"[A-Za-z0-9_-]+/[A-Za-z0-9_-]+", dataset_id):
         raise ValueError("dataset id must be an owner/slug pair")
+    if not re.fullmatch(r"[A-Za-z0-9._-]+", data_version):
+        raise ValueError("data version must be a safe version slug")
     for label, value in (("data version", data_version), ("title", title), ("license", license_name)):
         if not isinstance(value, str) or not value.strip():
             raise ValueError(f"{label} must be a non-empty string")
